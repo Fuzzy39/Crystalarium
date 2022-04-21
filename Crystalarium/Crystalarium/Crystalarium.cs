@@ -8,10 +8,10 @@ namespace Crystalarium
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private SimulationManager simulationManager;
 
-        int elapsed = 0;
-        int updateCycles = 0;
-        int drawCycles = 0;
+        // build: 4
+
         public Crystalarium()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -19,10 +19,16 @@ namespace Crystalarium
             IsMouseVisible = true;
         }
 
+       
+
+
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            
+            // create the simulation manager.
+            simulationManager = new SimulationManager(this.TargetElapsedTime.TotalSeconds);
+            simulationManager.TargetStepsPS = 1000;
             base.Initialize();
         }
 
@@ -38,16 +44,11 @@ namespace Crystalarium
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // System.Console.WriteLine(gameTime.TotalGameTime.TotalSeconds);
+            simulationManager.Update(gameTime);
+
+            System.Console.WriteLine(simulationManager.ActualStepsPS+" SPS");
             // TODO: Add your update logic here
-            updateCycles++;
-            if((int)gameTime.TotalGameTime.TotalSeconds>elapsed)
-            {
-                elapsed++;
-                System.Console.WriteLine(updateCycles+" update cycles and "+drawCycles+"draw cycles");
-                updateCycles = 0;
-                drawCycles = 0;
-            }
+            
             base.Update(gameTime);
         }
 
@@ -56,7 +57,7 @@ namespace Crystalarium
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            drawCycles++;
+           
             base.Draw(gameTime);
         }
     }
