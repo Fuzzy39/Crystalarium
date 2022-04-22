@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using Crystalarium.Sim;
 
 namespace Crystalarium
 {
@@ -24,7 +25,7 @@ namespace Crystalarium
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
+            
         }
 
        
@@ -85,7 +86,7 @@ namespace Crystalarium
 
             // some debug text. We'll clear this out sooner or later...
 
-            spriteBatch.DrawString(testFont, "Milestone 0, Build " + BUILD, new Vector2(10, height - 25), Color.White); ; ;
+            spriteBatch.DrawString(testFont, "Milestone 0, Build " + BUILD, new Vector2(10, height - 25), Color.White); 
             spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + simulationManager.ActualStepsPS, new Vector2(10, 10), Color.White);
 
             spriteBatch.End();

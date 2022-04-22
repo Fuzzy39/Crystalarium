@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 
 
-namespace Crystalarium
+namespace Crystalarium.Sim
 {
     class SimulationManager
     {
@@ -24,18 +24,17 @@ namespace Crystalarium
 
         private int _targetStepsPS; // the amount of times the simulation needs to update per second.
         private int _actualStepsPS; // the amount of times that the simulation is currently running per second.
-                                      // Unless the game is lagging, it should be the same as the target.
-
-     
-
-
+                                    // Unless the game is lagging, it should be the same as the target.
 
         public const int MIN_STEPS_PER_SECOND = 10; // the minimum allowable steps per second.
 
         private double overdueSteps; // the progress/amount of steps that need to happen, but have not.
                                      // Note that overdue steps does not count the descrepancy between target and actual SPS.
 
-        //private arraylist? <Grid> activeGrids; // yeah, make this actually work when simulation is a thing...
+        private bool _paused; // TODO: implement simulation pausing
+
+        private List<Grid> _grids; // The grids currently in existence.
+
 
 
         // public properties
@@ -51,6 +50,8 @@ namespace Crystalarium
 
         public int ActualStepsPS => _actualStepsPS;
 
+        public List<Grid> Grids => _grids;
+
         public SimulationManager( double secondsBetweenFrames )
         {
             // I feel like I should comment this, but I don't think anything here needs explaining...
@@ -60,6 +61,8 @@ namespace Crystalarium
             _actualStepsPS = _targetStepsPS;
             
             overdueSteps = 0;
+
+            _grids = new List<Grid>();
        
         }
 
@@ -105,7 +108,7 @@ namespace Crystalarium
         {
 
             // the rate that SPS will change in a frame. Fairly arbitrary.
-            int SPSChange = 5;
+            int SPSChange = 10;
              
 
             // this code feels dirty...
@@ -155,5 +158,20 @@ namespace Crystalarium
              * }
              */
         }
+
+        // add a grid to the list of grids
+        // I wanted to make this protected, but apparently in C# that means something slightly different than java.
+        // Apparently internal is closer to what I wanted, but still isn't...
+        internal void addGrid(Grid g)
+        {
+            _grids.Add(g);
+        }
+
+        // remove a grid from the list of grids.
+        internal void removeGrid(Grid g)
+        {
+            _grids.Remove(g);
+        }
+
     }
 }
