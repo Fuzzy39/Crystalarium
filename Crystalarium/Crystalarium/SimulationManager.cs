@@ -89,7 +89,7 @@ namespace Crystalarium
 
             adjustActualSPS(time.IsRunningSlowly);
 
-            System.Console.WriteLine(StepsNextFrame() + " steps this frame");
+         
             for(int i=0; i<StepsNextFrame(); i++)
             {
                 // do a step.
@@ -105,7 +105,7 @@ namespace Crystalarium
         {
 
             // the rate that SPS will change in a frame. Fairly arbitrary.
-            int SPSChange = 3;
+            int SPSChange = 5;
              
 
             // this code feels dirty...
