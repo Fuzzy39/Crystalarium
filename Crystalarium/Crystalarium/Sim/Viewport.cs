@@ -18,10 +18,16 @@ namespace Crystalarium.Sim
         private Rectangle _pixelBounds; // the bounds, in pixels, of the viewport on the game window.
         private Grid _grid; // the grid that this viewport is rendering.
 
+        // Graphical Features
         private Texture2D sideTexture; // the side border texture of this viewport
         private Texture2D cornerTexture; // the corner border texture of this viewport
         private int _borderWidth; // the width, in pixels, of the border of the viewport
+        private Color borderColor;
 
+        private Texture2D _background;
+        private Color backgroundColor;
+
+        // 'Camera' controls
         private double _scale; // the number of pixels that currently represent one tile in gridspace
         private Vector2 _position; // the position of the top left corner of the viewport, in tiles, in grid space
 
@@ -32,7 +38,9 @@ namespace Crystalarium.Sim
         // #### TEST CODE: REMOVE WHEN POSSIBLE ###
         // this is just to showcase the idea behind rendering things, more or less.
         public Texture2D testTexture;
-        private Rectangle locationInGameSpace= new Rectangle(0,0,1,1);
+       
+
+        // Properties
 
         public int BorderWidth
         {
@@ -89,19 +97,29 @@ namespace Crystalarium.Sim
             }
         }
 
-        // when setting position with the position property, position is the location, in tile space, of the center of the screen.
+        // when setting position with the position property, position is the location, in tile space, of the center of the viewport.
         public Vector2 Position
         {
             //get => _position; // too lazy to implement this properly. If we need it, I'll add it later.
             set
             {
+               
                 float x = (float)(-1f * ( (TileBounds().Size.X) / 2f))+ value.X+.5f;
                 float y = (float)(-1f * ( (TileBounds().Size.Y)/2f)) + value.Y+.5f;
                 _position = new Vector2(x, y);
-                //System.Console.WriteLine(TileBounds() + "\n pos "+_position+"\n scale "+_scale+"\n pixel coords "+TiletoPixelCoords(locationInGameSpace.Location.ToVector2()));
+                
 
             }
         }
+
+        // this is pretty simple, honestly.
+        public Texture2D Background
+        {
+            get => _background;
+            set => _background = value;
+        }
+
+        
 
 
 
@@ -119,6 +137,9 @@ namespace Crystalarium.Sim
             sideTexture = null;
             cornerTexture = null;
 
+            //background
+            _background = null;
+
             // default scale values
             _minScale = 10;
             _maxScale = 50;
@@ -126,6 +147,12 @@ namespace Crystalarium.Sim
             // set the 'camera' to reasonable values
             _scale = (_minScale + _maxScale) / 2.0;
             Position = new Vector2(0, 0);
+
+            // set default colors.
+            borderColor = Color.White;
+            backgroundColor = Color.White;
+
+
            
 
         }
@@ -140,28 +167,74 @@ namespace Crystalarium.Sim
             container.Remove(this);
         }
 
-        public void setTextures(Texture2D sides, Texture2D corners)
+
+        // sets all textures that are part of a viewport itself.
+        public void setTextures(Texture2D background, Texture2D sides, Texture2D corners)
         {
+            Background = background;
             sideTexture = sides;
             cornerTexture = corners;
+        }
 
+        // only sets the textures for the viewport's borders.
+        public void setTextures(Texture2D sides, Texture2D corners)
+        {
+            setTextures(Background, sides, corners);
         }
 
         public void draw(SpriteBatch sb)
         {
-            // we drawin' the thing!
-            if(!RenderTexture(sb, testTexture, locationInGameSpace))
-            {
-               // System.Console.WriteLine("it borked!");
-            }
-            
-           
 
-            // the last thing we do is draw the border.
+            // draw the background.
+            drawBackground(sb);
+
+            // Render Textures in the viewport.
+
+            // this is a test texture, forcibly shoved here.
+            Rectangle rect;
+
+            // head
+            rect = new Rectangle(0, -2, 1, 1);
+
+            RenderTexture(sb, testTexture, rect);
+
+            // arms
+            rect = new Rectangle(-1, 0, 3, 1);
+
+            RenderTexture(sb, testTexture, rect);
+
+
+
+            // body
+            rect = new Rectangle(0, 0, 1, 2);
+
+            RenderTexture(sb, testTexture, rect);
+
+            
+
+            // legs
+            rect = new Rectangle(-1, 2, 1, 1);
+
+            RenderTexture(sb, testTexture, rect);
+
+            rect = new Rectangle(1, 2, 1, 1);
+
+            RenderTexture(sb, testTexture, rect);
+
+
+            // finnally, draw the border.
             drawBorders(sb);
             drawCorners(sb);
         }
 
+        private void drawBackground(SpriteBatch sb)
+        {
+            // do not draw the background if no background is set.
+            if (Background == null)
+                return;
+
+            sb.Draw(Background, _pixelBounds, backgroundColor);
+        }
 
         private void drawBorders(SpriteBatch sb)
         {
@@ -170,59 +243,45 @@ namespace Crystalarium.Sim
                 return;
             }
 
-            // draw the four sides of the container.
-            // this is ugly, but what was I gonna do about it?
+            // I could make this a loop like drawCorners.
+            // I'm not sure which is better...
+
+            Point pos;
 
             // top side.
-            sb.Draw(
-                cornerTexture,
-                new Rectangle(_pixelBounds.X, _pixelBounds.Y, _pixelBounds.Width, BorderWidth),
-                null,
-                Color.White,
-                0, // no rotation
-                new Vector2(0,0),
-                new SpriteEffects(),
-                1f
-            );
-
+            pos = new Point(_pixelBounds.X, _pixelBounds.Y);
+            DrawSingleBorder(sb, pos, 0);
+           
             // bottom side.
-            sb.Draw(
-                cornerTexture,
-                new Rectangle(_pixelBounds.X,  _pixelBounds.Y+_pixelBounds.Height - BorderWidth, _pixelBounds.Width,BorderWidth),
-                null,
-                Color.White,
-                0, // no rotation
-                new Vector2(0, 0),
-                new SpriteEffects(),
-                1f
-            );
+            pos = new Point(_pixelBounds.X, _pixelBounds.Y + _pixelBounds.Height);
+            DrawSingleBorder(sb, pos, 0);
 
             // left side.
-            sb.Draw(
-                cornerTexture,
-                new Rectangle(_pixelBounds.X+BorderWidth, _pixelBounds.Y, _pixelBounds.Height, BorderWidth),
-                null,
-                Color.White,
-                MathF.PI / 2,
-                new Vector2(0, 0),
-                new SpriteEffects(),
-                1f
-            );
-
+            pos = new Point(_pixelBounds.X + BorderWidth, _pixelBounds.Y);
+            DrawSingleBorder(sb, pos, MathF.PI / 2);
+               
             //right side.
+            pos = new Point(_pixelBounds.X + _pixelBounds.Width, _pixelBounds.Y);
+            DrawSingleBorder(sb, pos, MathF.PI / 2);
+
+        }
+
+
+        // draws one border of the viewport, given appropriate values.
+        private void DrawSingleBorder(SpriteBatch sb, Point pos, float rotation)
+        {
+            Point size = new Point(_pixelBounds.Height, BorderWidth);
+
             sb.Draw(
-                cornerTexture,
-                new Rectangle(_pixelBounds.X+_pixelBounds.Width, _pixelBounds.Y, _pixelBounds.Height, BorderWidth),
+                sideTexture,
+                new Rectangle(pos, size),
                 null,
-                Color.White,
-                MathF.PI / 2,
+                borderColor,
+                rotation,
                 new Vector2(0, 0),
                 new SpriteEffects(),
                 1f
             );
-
-
-            // this is hideous.
 
         }
 
@@ -250,7 +309,7 @@ namespace Crystalarium.Sim
                     sb.Draw(
                         cornerTexture,
                         new Rectangle(x, y, BorderWidth, BorderWidth),
-                        Color.White
+                        borderColor
                     );
 
                 }
@@ -302,37 +361,10 @@ namespace Crystalarium.Sim
             Point pixelCoords = TiletoPixelCoords(bounds.Location.ToVector2());
             Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale));
 
-            // if true, the entire image is inside of this
-            if (TileBounds().Contains(bounds))
-            {
-                
-               
-                sb.Draw(
-                       texture,
-                       new Rectangle(pixelCoords+_pixelBounds.Location,pixelSize),
-                       Color.White
-                   );
-
-                return true;
-            }
-
-
+          
             // partial rendering...
             // render it!
-            renderPartialTexture(sb, texture, new Rectangle(pixelCoords, pixelSize));
-            return true;
-        }
-
-        
-
-
-        // pixelBounds: the bounds of the texture to be rendered, in pixels, relative to the viewframe.
-        // this is disgusting.
-        private void renderPartialTexture(SpriteBatch sb, Texture2D texture, Rectangle pixelBounds)
-        {
-            // oh jeez
-            // oh no
-            // oh god
+            Rectangle texturePixelBounds = new Rectangle(pixelCoords, pixelSize);
 
             // figure out the rectangle we need to draw.
 
@@ -344,10 +376,10 @@ namespace Crystalarium.Sim
             int leftCut = 0;
 
             // get the top left point of the drawing area
-            Point topLeft = pixelBounds.Location;
-            Point size = pixelBounds.Size;
+            Point topLeft = texturePixelBounds.Location;
+            Point size = texturePixelBounds.Size;
 
-            
+
             if (topLeft.X < 0)
             {
                 // adjust the size to match what is visible
@@ -373,50 +405,87 @@ namespace Crystalarium.Sim
 
             }
 
-            
+
             topLeft = topLeft + this._pixelBounds.Location;
 
-           
             // figure out the size of the rectangle we need to draw.
             int rightSide = this._pixelBounds.X + this._pixelBounds.Width;
-
-            if (size.X + topLeft.X > rightSide)
-            {
-                size.X = rightSide - topLeft.X;
-                rightCut = pixelBounds.Size.X - size.X;
-            }
+            size.X = getRenderSize(rightSide, texturePixelBounds.Size.X, leftCut, topLeft.X, out rightCut);
 
             int bottomSide = this._pixelBounds.Y + this._pixelBounds.Height;
+            size.Y = getRenderSize(bottomSide, texturePixelBounds.Size.Y, topCut, topLeft.Y, out bottomCut);
 
-            if (size.Y + topLeft.Y > bottomSide)
-            {
-                size.Y = bottomSide - topLeft.Y;
-                bottomCut = pixelBounds.Size.Y - size.Y;
-            }
 
-            // now figure out the source rectangle. what part of the image do we need to draw?
-            int sourceX = (int)((float)leftCut / (float)pixelBounds.Width * texture.Width);
-            int sourceY = (int)((float)topCut / (float)pixelBounds.Height * texture.Height);
+            Rectangle sourceRect = getTextureSourceBounds(topCut, bottomCut, leftCut, rightCut, texturePixelBounds, texture);
 
-            // yep, this is ugly.
-            int sourceWidth = (int)((float)(pixelBounds.Width - leftCut - rightCut) / (float)pixelBounds.Width * texture.Width);
-            int sourceHeight = (int)((float)(pixelBounds.Height - topCut - bottomCut) / (float)pixelBounds.Height * texture.Height);
 
-            // okay, hopefully that works...
-            Rectangle sourceRect = new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
-
-            
             sb.Draw(
                        texture,
                        new Rectangle(topLeft, size),
                        sourceRect,
                        Color.White
-                      
+
 
                    );
+            return true;
+        }
+
+
+
+        private int getRenderSize(int viewportFarPos, int size, int nearCut, int position, out int farCut)
+        {
+            int currentSize = size - nearCut;
+
+            if (!(currentSize + position > viewportFarPos))
+            {
+                farCut = 0;
+                return currentSize;
+            }
+
+            currentSize = viewportFarPos - position;
+            farCut = size - currentSize;
+
+            return currentSize;
+        }
+
+        private Rectangle getTextureSourceBounds(int topCut, int bottomCut, int leftCut, int rightCut, Rectangle texturePixelBounds, Texture2D texture)
+        {
+            // now figure out the source rectangle. what part of the image do we need to draw?
+
+            // get the ratio of the destinations's position, multiply it by the source.
+            int sourceX = (int)((float)leftCut / (float)texturePixelBounds.Width * texture.Width);
+            int sourceY = (int)((float)topCut / (float)texturePixelBounds.Height * texture.Height);
+
+           
+            // figure out the size of the source rectangle:
+
+
+            // get the width, in pixels, of the destination.
+            float textureWidth = (float)(texturePixelBounds.Width - leftCut - rightCut); 
+
+            // get the width of the source rectangle, as a ratio of total width of the texuture
+            float textureWidthRatio = textureWidth / (float)texturePixelBounds.Width;
+
+            // get the width of the source rectangle in pixels
+            int sourceWidth = (int)( textureWidthRatio * texture.Width );
+
+
+            // get the height, in pixels, of the destination.
+            float textureHeight = (float)(texturePixelBounds.Height - topCut - bottomCut);
+
+            // get the height of the source rectangle, as a ratio of total width of the texuture
+            float textureHeightRatio = textureHeight / (float)texturePixelBounds.Height;
+
+            // get the height of the source rectangle in pixels
+            int sourceHeight = (int)(textureHeightRatio * texture.Height);
+
+            
+
+            return new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
 
         }
-      
+
+        
 
 
 

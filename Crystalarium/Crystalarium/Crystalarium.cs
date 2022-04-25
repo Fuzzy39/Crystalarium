@@ -15,15 +15,17 @@ namespace Crystalarium
         private List<Sim.Viewport> viewports;
         
 
-        private const int BUILD = 62;
+        private const int BUILD = 73;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
         private Texture2D pixel;
         private Texture2D tile;
+        private Texture2D viewportBG;
 
         // TEST
         Sim.Viewport v;
+        Sim.Viewport w;
         double i= 0;
         double j = 0;
 
@@ -46,6 +48,7 @@ namespace Crystalarium
             sim = new SimulationManager(this.TargetElapsedTime.TotalSeconds);
             sim.TargetStepsPS = 240; // completely arbitrary.
 
+            // and viewports
             viewports = new List<Sim.Viewport>();
 
           
@@ -64,17 +67,21 @@ namespace Crystalarium
             testFont = Content.Load<SpriteFont>("testFont");
             pixel = Content.Load<Texture2D>("pixel");
             tile = Content.Load<Texture2D>("tile");
-            
+            viewportBG = Content.Load<Texture2D>("ViewportBG");
 
-            // create a test viewport.
-
-            v = new Sim.Viewport(viewports, new Grid(sim), 100, 100, 300, 300);
-            v.setTextures(pixel, pixel);
+            // create a couple test viewports.
+            v = new Sim.Viewport(viewports, new Grid(sim), 80, 100, 300, 300);
+            v.setTextures(viewportBG, pixel, pixel);
             v.BorderWidth = 2;
-           
+
+            w = new Sim.Viewport(viewports, new Grid(sim), 420, 100, 300, 300);
+            w.setTextures(viewportBG, pixel, pixel);
+            w.BorderWidth = 2;
+
 
             // this line sets up a demo later. This field of Viewport is temporary, and for testing only.
             v.testTexture = tile;
+            w.testTexture = tile;
 
         }
 
@@ -89,9 +96,14 @@ namespace Crystalarium
             sim.Update(gameTime);
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
-            i += .025;
-            j += .01;
-            float loopSize = 3.5f;
+            
+
+            i += .025; // i is a counter for the viewport's position.
+            j += .01; // j is a counter for the viewport's zoom.
+            float loopSize = 3f; // the size, in tiles, of the loop the viewport will travel.
+
+            // position goes around in a circle while the viewport is slowly zoomed in and out.
+
             Vector2 pos = new Vector2();
             pos.X = (float)(Math.Sin(i) * loopSize );
             pos.Y = (float)(Math.Cos(i)*loopSize);
@@ -100,6 +112,13 @@ namespace Crystalarium
             v.Scale = v.MinScale + (Math.Sin(j)+1) * ((v.MaxScale - v.MinScale))/2;
             v.Position = pos;
 
+            pos = new Vector2();
+            pos.X = (float)(Math.Sin(-i) * loopSize);
+            pos.Y = (float)(Math.Cos(-i) * loopSize);
+
+            // set W viewport values
+            w.Scale = w.MinScale + (Math.Sin(-j) + 1) * ((w.MaxScale - w.MinScale)) / 2;
+            w.Position = pos;
 
 
             base.Update(gameTime);
@@ -118,7 +137,7 @@ namespace Crystalarium
             spriteBatch.Begin();
 
             // make everything a flat color.
-            GraphicsDevice.Clear(Color.Silver);
+            GraphicsDevice.Clear(new Color(70,70,70));
 
             // draw viewports
             foreach(Sim.Viewport v in viewports)
