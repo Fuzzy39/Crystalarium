@@ -17,8 +17,6 @@ namespace Crystalarium.Sim
 
 
         public Rectangle Bounds
-
-
         {
             get => _bounds;
             // I'm not sure if setting this is a good idea, so, I won't allow it for now.

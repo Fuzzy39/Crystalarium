@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Crystalarium.Sim;
 using Crystalarium.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,13 +8,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Crystalarium.Render
 {
-    class Viewport
+    class Viewbox
     {
         /*
          * A viewport renders a grid.
          */
 
-        private List<Viewport> container; // the list of all existing viewports.
+        private List<Viewbox> container; // the list of all existing viewports.
         private Rectangle _pixelBounds; // the bounds, in pixels, of the viewport on the game window.
         private Grid _grid; // the grid that this viewport is rendering.
 
@@ -124,7 +124,7 @@ namespace Crystalarium.Render
 
 
         // create the viewport
-        public Viewport(List<Viewport> viewports, Grid g, Point pos, Point dimensions)
+        public Viewbox(List<Viewbox> viewports, Grid g, Point pos, Point dimensions)
         {
             // initialize from parameters
             _grid = g;
@@ -158,7 +158,7 @@ namespace Crystalarium.Render
         }
 
         // an alternate viewport constructor, without points.
-        public Viewport(List<Viewport> viewports, Grid g, int x, int y, int width, int height)
+        public Viewbox(List<Viewbox> viewports, Grid g, int x, int y, int width, int height)
             : this(viewports, g, new Point(x, y), new Point(width, height)) { }
 
 

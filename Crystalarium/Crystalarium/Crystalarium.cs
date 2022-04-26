@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using Crystalarium.Sim;
 using Crystalarium.Render;
+using Crystalarium.Util;
 using System.Collections.Generic;
 
 namespace Crystalarium
@@ -13,10 +14,10 @@ namespace Crystalarium
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
         private SimulationManager sim;
-        private List<Render.Viewport> viewports;
+        private List<Viewbox> viewports;
         
 
-        private const int BUILD = 73;
+        private const int BUILD = 84;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -25,8 +26,9 @@ namespace Crystalarium
         private Texture2D viewportBG;
 
         // TEST
-        Sim.Viewport v;
-        Sim.Viewport w;
+        Viewbox v;
+        Viewbox w;
+        Grid g;
         double i= 0;
         double j = 0;
 
@@ -50,7 +52,7 @@ namespace Crystalarium
             sim.TargetStepsPS = 240; // completely arbitrary.
 
             // and viewports
-            viewports = new List<Sim.Viewport>();
+            viewports = new List<Viewbox>();
 
           
            
@@ -70,12 +72,21 @@ namespace Crystalarium
             tile = Content.Load<Texture2D>("tile");
             viewportBG = Content.Load<Texture2D>("ViewportBG");
 
+
+            // create a test grid, and do some test things to it.
+            g = new Grid(sim);
+
+            g.ExpandGrid(Direction.right);
+            g.ExpandGrid(Direction.down);
+            g.DebugReport();
+
+
             // create a couple test viewports.
-            v = new Sim.Viewport(viewports, new Grid(sim), 80, 100, 300, 300);
+            v = new Viewbox(viewports, g, 80, 100, 300, 300);
             v.setTextures(viewportBG, pixel, pixel);
             v.BorderWidth = 2;
 
-            w = new Sim.Viewport(viewports, new Grid(sim), 420, 100, 300, 300);
+            w = new Viewbox(viewports, g, 420, 100, 300, 300);
             w.setTextures(viewportBG, pixel, pixel);
             w.BorderWidth = 2;
 
@@ -141,7 +152,7 @@ namespace Crystalarium
             GraphicsDevice.Clear(new Color(70,70,70));
 
             // draw viewports
-            foreach(Sim.Viewport v in viewports)
+            foreach(Viewbox v in viewports)
             {
                 v.draw(spriteBatch);
             }

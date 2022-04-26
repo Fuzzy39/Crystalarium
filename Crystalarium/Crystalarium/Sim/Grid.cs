@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Crystalarium.Util;
 
 namespace Crystalarium.Sim
 {
@@ -15,7 +16,14 @@ namespace Crystalarium.Sim
 
         SimulationManager sim;
 
-        private List<List<Chunk>> chunks; // a 2d array where the outer array represents rows and the inner array represents collumns.
+        private List<List<Chunk>> _chunks; // a 2d array where the outer array represents rows and the inner array represents columns. [x][y]
+        private Point chunksOrigin; // the chunk coords where the chunk array, chunks, starts.
+        private Point chunksSize;
+
+        public List<List<Chunk>> Chunks
+        {
+            get => _chunks;
+        }
 
         public Grid(SimulationManager sim)
         {
@@ -23,13 +31,38 @@ namespace Crystalarium.Sim
             sim.addGrid(this);
 
             // initialize the chunk array.
-            chunks = new List<List<Chunk>>();
-            //chunks.Add(new List<Chunk>());
+            _chunks = new List<List<Chunk>>();
+            _chunks.Add(new List<Chunk>());
+
             // create initial chunk.
-            chunks[0][0] = new Chunk( this, new Point(0,0) );
+            _chunks[0].Add(null);
+            new Chunk( this, new Point(0,0) );
 
-            // temporary code. Add some chunks, for testing!
+            // set the chunk origin.
+            chunksOrigin = new Point(0, 0);
+            chunksSize = new Point(1, 1);
 
+
+
+        }
+
+        // Probably temporary.
+        public void DebugReport()
+        {
+            Console.WriteLine("Size: " + chunksSize + "\nOrigin:" + chunksOrigin+"\n"); 
+
+            foreach (List<Chunk> list in _chunks)
+            {
+                String s = "{";
+                foreach(Chunk ch in list)
+                {
+                    // this is silly! why do I have to write all of this?
+                    s += ((ch!=null)?ch.ToString():"null")+", ";
+                }
+
+                s= s.Substring(0, s.Length - 2)+"},";
+                Console.WriteLine(s);
+            }
         }
 
         public void Destroy()
@@ -40,12 +73,17 @@ namespace Crystalarium.Sim
         public void Add( GridObject o)
         {
             // what we do with the gridobject depends on what kind of object it is.
+
+            // note that you are not meant to add chunks to the grid using the add method.
+            // use expandChunkGrid instead.
             if(o is Chunk)
             {
                 Chunk ch = (Chunk)o;
 
-                //  this will not work.
-                chunks[ch.Bounds.X][ch.Bounds.Y] = ch;
+               
+                Point coords =   ch.Coords;
+
+                _chunks[coords.X][coords.Y] = ch;
 
                 return;
             }
@@ -59,13 +97,84 @@ namespace Crystalarium.Sim
         {
 
             // Remove a grid object from it's appropriate containers
-            if( o is Chunk)
-            {
-                chunks.Remove((Chunk)o);
+
+            /*if( o is Chunk) // chunks can't be removed once added.
+            { 
+                _chunks.Remove((Chunk)o);
                 return;
-            }
+            }*/
 
             throw new ArgumentException("Unknown or Invalid type of GridObject to remove from this grid.");
+
+        }
+
+        public void ExpandGrid(Direction d)
+        {
+             if(d.IsHorizontal())
+             {
+                // We are adding a new list to the primary array.
+                // this increases the horizontal distance.
+
+
+                List<Chunk> newColumn = new List<Chunk>();
+                chunksSize.X++;
+
+                int X; // the index that the new column is in
+
+                if (d == Direction.left)
+                {
+                    chunksOrigin.X --;
+                    _chunks.Insert(0, newColumn);
+                    X = 0;
+                }
+                else
+                {
+                    X = _chunks.Count;
+                    _chunks.Add(newColumn);
+                }
+
+
+                // fill it with chunks.
+                for(int y = 0; y<chunksSize.Y; y++)
+                {
+                    newColumn.Add(null);
+                    new Chunk(this, new Point(X+chunksOrigin.X, y+chunksOrigin.Y));
+                }
+                return;
+
+             }
+
+            // we are adding one additional elemtn to all existing arrays.
+            // this increases the height of the chunk array.
+            chunksSize.X++;
+            int Y;
+            if (d == Direction.up)
+            {
+                chunksOrigin.Y--;
+                Y = 0;
+            }
+            else
+            {
+                Y = _chunks.Count;
+
+            }
+
+            // create the new chunks.
+
+            for(int x = 0; x<_chunks.Count; x++)
+            {
+                if (d == Direction.up)
+                    _chunks[x].Insert(Y, null);
+                else
+                    _chunks[x].Add(null);
+
+                // including chunk origins is important to get the correct coords for this chunk.
+                new Chunk(this, new Point(x + chunksOrigin.X, Y + chunksOrigin.Y));
+            }
+                
+
+            
+            
 
         }
 

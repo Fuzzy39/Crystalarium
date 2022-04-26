@@ -12,21 +12,51 @@ namespace Crystalarium.Sim
          */
 
         public const int SIZE = 16;
+        private Point _coords; // the coordinates, in chunks, of this chunk.
+                               // (equal to top left position divided by size)
+
+        public Point Coords
+        {
+            get => _coords;
+        }
+
 
         public Chunk(Grid g, Point pos) : base(g, pos*new Point(SIZE), new Point(SIZE))
         {
            // check that this chunk does not exist over another chunk.
-           foreach(Chunk ch in Parent.GetChunks())
+           foreach(List<Chunk> chunks in Parent.Chunks)
            {
-                if(!ch.Bounds.Intersects(this.Bounds))
+                foreach (Chunk ch in chunks)
                 {
-                    continue;   
-                }
+                    if(ch == null)
+                    {
+                        continue;
+                    }
 
-                // uh oh, this chunk intersects another chunk! bail!
-                Console.WriteLine("Chunk intersected another chunk at " + Bounds);
-                this.Destroy();
+
+                    if (!ch.Bounds.Intersects(this.Bounds))
+                    {
+                        continue;
+                    }
+
+                    if(ch==this)
+                    {
+                        continue;
+                    }
+
+                    // uh oh, this chunk intersects another chunk! bail!
+                    Console.WriteLine("Chunk intersected another chunk at " + Bounds);
+                    this.Destroy();
+                }
            }
+
+            _coords = pos;
         }
+
+        public string ToString()
+        {
+            return "Chunk " + Coords;
+        }
+
     }
 }
