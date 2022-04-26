@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using Crystalarium.Sim;
+using Crystalarium.Render;
 using System.Collections.Generic;
 
 namespace Crystalarium
@@ -12,7 +13,7 @@ namespace Crystalarium
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
         private SimulationManager sim;
-        private List<Sim.Viewport> viewports;
+        private List<Render.Viewport> viewports;
         
 
         private const int BUILD = 73;
@@ -105,19 +106,19 @@ namespace Crystalarium
             // position goes around in a circle while the viewport is slowly zoomed in and out.
 
             Vector2 pos = new Vector2();
-            pos.X = (float)(Math.Sin(i) * loopSize );
-            pos.Y = (float)(Math.Cos(i)*loopSize);
+            pos.X = (float)(Math.Sin(-i) * loopSize );
+            pos.Y = (float)(Math.Cos(-i)*loopSize);
 
             // set viewport values.
-            v.Scale = v.MinScale + (Math.Sin(j)+1) * ((v.MaxScale - v.MinScale))/2;
+            v.Scale = v.MinScale + (Math.Sin(-j)+1) * ((v.MaxScale - v.MinScale))/2;
             v.Position = pos;
 
             pos = new Vector2();
-            pos.X = (float)(Math.Sin(-i) * loopSize);
-            pos.Y = (float)(Math.Cos(-i) * loopSize);
+            pos.X = (float)(Math.Sin(i) * loopSize);
+            pos.Y = (float)(Math.Cos(i) * loopSize);
 
             // set W viewport values
-            w.Scale = w.MinScale + (Math.Sin(-j) + 1) * ((w.MaxScale - w.MinScale)) / 2;
+            w.Scale = w.MinScale + (Math.Sin(j) + 1) * ((w.MaxScale - w.MinScale)) / 2;
             w.Position = pos;
 
 

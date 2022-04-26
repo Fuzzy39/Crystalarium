@@ -4,9 +4,9 @@ using System.Text;
 using Crystalarium.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
-namespace Crystalarium.Sim
+
+namespace Crystalarium.Render
 {
     class Viewport
     {
