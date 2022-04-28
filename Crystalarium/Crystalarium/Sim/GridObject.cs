@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace Crystalarium.Sim
 {
-    abstract class GridObject
+    abstract public class GridObject
     {
 
         /*

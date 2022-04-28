@@ -17,7 +17,7 @@ namespace Crystalarium
         private List<Viewbox> viewports;
         
 
-        private const int BUILD = 88;
+        private const int BUILD = 90;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -89,11 +89,11 @@ namespace Crystalarium
             // create a couple test viewports.
             v = new Viewbox(viewports, g, 80, 100, 300, 300);
             v.setTextures(viewportBG, pixel, pixel);
-            v.BorderWidth = 2;
+            v.Border.Width = 2;
 
             w = new Viewbox(viewports, g, 420, 100, 300, 300);
             w.setTextures(viewportBG, pixel, pixel);
-            w.BorderWidth = 2;
+            w.Border.Width = 2;
 
 
             // this line sets up a demo later. This field of Viewport is temporary, and for testing only.

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace Crystalarium.Sim
 {
-    class SimulationManager
+    public class SimulationManager
     {
         // oh, my oh my...
         // it begins.

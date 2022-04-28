@@ -8,21 +8,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Crystalarium.Render
 {
-    class Viewbox
+    public class Viewbox
     {
         /*
          * A viewport renders a grid.
+         * TODO expose border and bg color
          */
 
         private List<Viewbox> container; // the list of all existing viewports.
         private Rectangle _pixelBounds; // the bounds, in pixels, of the viewport on the game window.
         private Grid _grid; // the grid that this viewport is rendering.
-
+        private Border _border;
         // Graphical Features
-        private Texture2D sideTexture; // the side border texture of this viewport
-        private Texture2D cornerTexture; // the corner border texture of this viewport
-        private int _borderWidth; // the width, in pixels, of the border of the viewport
-        private Color borderColor;
+        
+       
 
         private Texture2D _background;
         private Color backgroundColor;
@@ -42,11 +41,17 @@ namespace Crystalarium.Render
 
         // Properties
 
-        public int BorderWidth
+        public Border Border
         {
-            get => _borderWidth;
-            set { _borderWidth = (value < 0) ? 0 : value; }
+            get => _border;
         }
+
+        public Rectangle PixelBounds
+        {
+            get => _pixelBounds;
+        }
+
+       
 
         public int MinScale
         {
@@ -119,9 +124,6 @@ namespace Crystalarium.Render
             set => _background = value;
         }
 
-        
-
-
 
         // create the viewport
         public Viewbox(List<Viewbox> viewports, Grid g, Point pos, Point dimensions)
@@ -131,11 +133,6 @@ namespace Crystalarium.Render
             container = viewports;
             container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
-
-            // border related variables
-            _borderWidth = 0;
-            sideTexture = null;
-            cornerTexture = null;
 
             //background
             _background = null;
@@ -149,11 +146,11 @@ namespace Crystalarium.Render
             Position = new Vector2(0, 0);
 
             // set default colors.
-            borderColor = Color.White;
             backgroundColor = Color.White;
 
+            // border
+            _border = new Border(this);
 
-           
 
         }
 
@@ -167,13 +164,13 @@ namespace Crystalarium.Render
             container.Remove(this);
         }
 
-
         // sets all textures that are part of a viewport itself.
         public void setTextures(Texture2D background, Texture2D sides, Texture2D corners)
         {
+
             Background = background;
-            sideTexture = sides;
-            cornerTexture = corners;
+            _border.SetTextures(sides, corners);
+           
         }
 
         // only sets the textures for the viewport's borders.
@@ -203,14 +200,10 @@ namespace Crystalarium.Render
 
             RenderTexture(sb, testTexture, rect);
 
-
-
             // body
             rect = new Rectangle(0, 0, 1, 2);
 
             RenderTexture(sb, testTexture, rect);
-
-            
 
             // legs
             rect = new Rectangle(-1, 2, 1, 1);
@@ -223,8 +216,7 @@ namespace Crystalarium.Render
 
 
             // finnally, draw the border.
-            drawBorders(sb);
-            drawCorners(sb);
+            _border.Draw(sb);
         }
 
         private void drawBackground(SpriteBatch sb)
@@ -236,95 +228,11 @@ namespace Crystalarium.Render
             sb.Draw(Background, _pixelBounds, backgroundColor);
         }
 
-        private void drawBorders(SpriteBatch sb)
-        {
-            if(sideTexture== null || BorderWidth <1)
-            {
-                return;
-            }
-
-            // I could make this a loop like drawCorners.
-            // I'm not sure which is better...
-
-            Point pos;
-
-            // top side.
-            pos = new Point(_pixelBounds.X, _pixelBounds.Y);
-            DrawSingleBorder(sb, pos, 0);
-           
-            // bottom side.
-            pos = new Point(_pixelBounds.X, _pixelBounds.Y + _pixelBounds.Height);
-            DrawSingleBorder(sb, pos, 0);
-
-            // left side.
-            pos = new Point(_pixelBounds.X + BorderWidth, _pixelBounds.Y);
-            DrawSingleBorder(sb, pos, MathF.PI / 2);
-               
-            //right side.
-            pos = new Point(_pixelBounds.X + _pixelBounds.Width, _pixelBounds.Y);
-            DrawSingleBorder(sb, pos, MathF.PI / 2);
-
-        }
-
-
-        // draws one border of the viewport, given appropriate values.
-        private void DrawSingleBorder(SpriteBatch sb, Point pos, float rotation)
-        {
-            Point size = new Point(_pixelBounds.Height, BorderWidth);
-
-            sb.Draw(
-                sideTexture,
-                new Rectangle(pos, size),
-                null,
-                borderColor,
-                rotation,
-                new Vector2(0, 0),
-                new SpriteEffects(),
-                1f
-            );
-
-        }
-
-        private void drawCorners(SpriteBatch sb)
-        {
-
-            // do not draw corners if we don't have corners to draw.
-            if(cornerTexture==null || BorderWidth<1)
-            {
-                return;
-            }
-
-            // draw all 4 corners
-
-            // TODO: rotate sprites here so that corner designs are facing the correct way.
-
-            // this might be stupid, but I'm not repeating code..
-            int x = _pixelBounds.X;
-            for (int xCounter = 0; xCounter < 2; xCounter++, x += _pixelBounds.Width - BorderWidth)
-            {
-                int y = _pixelBounds.Y;
-                for (int yCounter = 0; yCounter < 2; yCounter++, y += _pixelBounds.Height - BorderWidth)
-                {
-                    
-                    sb.Draw(
-                        cornerTexture,
-                        new Rectangle(x, y, BorderWidth, BorderWidth),
-                        borderColor
-                    );
-
-                }
-            }
-
-            
-
-        }
-
         // returns the bounds in tilespace of the viewport
         private RectangleF TileBounds()
         {
             return new RectangleF(_position.X, _position.Y, (float)(_pixelBounds.Width / Scale), (float)(_pixelBounds.Height / Scale));
         }
-
 
         // returns  pixel coords relative to start of viewport.
         // this also works outside of the viewport.
@@ -344,8 +252,6 @@ namespace Crystalarium.Render
             return new Point(x, y);
 
         }
-
-
 
         // bounds of object to render in tilespace
         private bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds)
@@ -405,7 +311,6 @@ namespace Crystalarium.Render
 
             }
 
-
             topLeft = topLeft + this._pixelBounds.Location;
 
             // figure out the size of the rectangle we need to draw.
@@ -429,8 +334,6 @@ namespace Crystalarium.Render
                    );
             return true;
         }
-
-
 
         private int getRenderSize(int viewportFarPos, int size, int nearCut, int position, out int farCut)
         {
@@ -456,9 +359,8 @@ namespace Crystalarium.Render
             int sourceX = (int)((float)leftCut / (float)texturePixelBounds.Width * texture.Width);
             int sourceY = (int)((float)topCut / (float)texturePixelBounds.Height * texture.Height);
 
-           
-            // figure out the size of the source rectangle:
 
+            // figure out the size of the source rectangle:
 
             // get the width, in pixels, of the destination.
             float textureWidth = (float)(texturePixelBounds.Width - leftCut - rightCut); 
@@ -479,15 +381,9 @@ namespace Crystalarium.Render
             // get the height of the source rectangle in pixels
             int sourceHeight = (int)(textureHeightRatio * texture.Height);
 
-            
 
             return new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
 
         }
-
-        
-
-
-
     }
 }

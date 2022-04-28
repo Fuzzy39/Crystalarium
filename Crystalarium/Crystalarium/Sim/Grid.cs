@@ -6,7 +6,7 @@ using Crystalarium.Util;
 
 namespace Crystalarium.Sim
 {
-    class Grid
+    public class Grid
     {
         /* the grid class represents a grid.
         * In Crystalarium, a grid is a 2d plane where devices can be built using a number of systems,

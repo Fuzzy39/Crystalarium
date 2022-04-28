@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Crystalarium.Sim
 {
-    class Chunk : GridObject
+    public class Chunk : GridObject
     {
         /*
          * A chunk is a unit of several tiles. together, they make up the grid. 
