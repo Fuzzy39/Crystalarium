@@ -17,17 +17,17 @@ namespace Crystalarium
         private List<Viewbox> viewports;
         
 
-        private const int BUILD = 90;
+        private const int BUILD = 99;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
         private Texture2D pixel;
-        private Texture2D tile;
+        
         private Texture2D viewportBG;
 
         // TEST
         Viewbox v;
-        Viewbox w;
+        //Viewbox w;
         Grid g;
         double i= 0;
         double j = 0;
@@ -69,7 +69,7 @@ namespace Crystalarium
             // initialize fonts
             testFont = Content.Load<SpriteFont>("testFont");
             pixel = Content.Load<Texture2D>("pixel");
-            tile = Content.Load<Texture2D>("tile");
+            Textures.tile = Content.Load<Texture2D>("tile");
             viewportBG = Content.Load<Texture2D>("ViewportBG");
 
 
@@ -78,27 +78,27 @@ namespace Crystalarium
 
 
             g.ExpandGrid(Direction.left);
-            g.ExpandGrid(Direction.down);
+            //g.ExpandGrid(Direction.down);
             g.ExpandGrid(Direction.up);
-            g.ExpandGrid(Direction.right);
+            //g.ExpandGrid(Direction.right);
            
            
             g.DebugReport();
 
 
             // create a couple test viewports.
-            v = new Viewbox(viewports, g, 80, 100, 300, 300);
-            v.setTextures(viewportBG, pixel, pixel);
+            v = new Viewbox(viewports, g, 40, 40, 700, 400 );
+            v.SetTextures(viewportBG, pixel, pixel);
             v.Border.Width = 2;
 
-            w = new Viewbox(viewports, g, 420, 100, 300, 300);
-            w.setTextures(viewportBG, pixel, pixel);
-            w.Border.Width = 2;
+            /*w = new Viewbox(viewports, g, 420, 100, 300, 300);
+            w.SetTextures(viewportBG, pixel, pixel);
+            w.Border.Width = 2;*/
 
 
             // this line sets up a demo later. This field of Viewport is temporary, and for testing only.
-            v.testTexture = tile;
-            w.testTexture = tile;
+            v.testTexture = Textures.tile;
+            //w.testTexture = Textures.tile;
 
         }
 
@@ -129,13 +129,13 @@ namespace Crystalarium
             v.Scale = v.MinScale + (Math.Sin(-j)+1) * ((v.MaxScale - v.MinScale))/2;
             v.Position = pos;
 
-            pos = new Vector2();
+           /* pos = new Vector2();
             pos.X = (float)(Math.Sin(i) * loopSize);
             pos.Y = (float)(Math.Cos(i) * loopSize);
 
             // set W viewport values
             w.Scale = w.MinScale + (Math.Sin(j) + 1) * ((w.MaxScale - w.MinScale)) / 2;
-            w.Position = pos;
+            w.Position = pos;*/
 
 
             base.Update(gameTime);
@@ -159,7 +159,7 @@ namespace Crystalarium
             // draw viewports
             foreach(Viewbox v in viewports)
             {
-                v.draw(spriteBatch);
+                v.Draw(spriteBatch);
             }
 
 

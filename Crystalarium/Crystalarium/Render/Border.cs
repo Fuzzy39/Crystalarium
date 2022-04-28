@@ -27,7 +27,7 @@ namespace Crystalarium.Render
         public int Width
         {
             get => _width;
-            set { _width = (value < 0) ? 0 : value; }
+            set { _width = (value < 0) ? 0 : value;  }
         }
 
         public Color Color
@@ -75,37 +75,40 @@ namespace Crystalarium.Render
             // I'm not sure which is better...
 
             Point pos;
+            Point size;
 
             // top side.
             pos = new Point(parent.PixelBounds.X, parent.PixelBounds.Y);
-            DrawSingleBorder(sb, pos, 0);
+            size = new Point(parent.PixelBounds.Width,Width);
+            DrawSingleBorder(sb, pos, size);
 
             // bottom side.
             pos = new Point(parent.PixelBounds.X, parent.PixelBounds.Y + parent.PixelBounds.Height);
-            DrawSingleBorder(sb, pos, 0);
+            DrawSingleBorder(sb, pos, size);
 
             // left side.
-            pos = new Point(parent.PixelBounds.X + Width, parent.PixelBounds.Y);
-            DrawSingleBorder(sb, pos, MathF.PI / 2);
+            pos = new Point(parent.PixelBounds.X, parent.PixelBounds.Y) ;
+            size = new Point(Width, parent.PixelBounds.Height );
+            DrawSingleBorder(sb, pos, size);
 
             //right side.
-            pos = new Point(parent.PixelBounds.X + parent.PixelBounds.Width, parent.PixelBounds.Y);
-            DrawSingleBorder(sb, pos, MathF.PI / 2);
+            pos = new Point(parent.PixelBounds.X + parent.PixelBounds.Width-Width, parent.PixelBounds.Y);
+            DrawSingleBorder(sb, pos, size);
 
         }
 
 
         // draws one border of the viewport, given appropriate values.
-        private void DrawSingleBorder(SpriteBatch sb, Point pos, float rotation)
+        private void DrawSingleBorder(SpriteBatch sb, Point pos, Point size)
         {
-            Point size = new Point(parent.PixelBounds.Height, Width);
+            
 
             sb.Draw(
                 _sideTexture,
                 new Rectangle(pos, size),
                 null,
                 _color,
-                rotation,
+                0f,
                 new Vector2(0, 0),
                 new SpriteEffects(),
                 1f

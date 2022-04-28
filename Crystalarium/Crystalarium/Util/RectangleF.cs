@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Crystalarium.Util
 {
-    struct RectangleF
+    public struct RectangleF
     {
         // defines a rectangle, but made with floats.
         // this, shockingly, does not exist in monogame.
@@ -112,11 +112,17 @@ namespace Crystalarium.Util
         public bool Intersects(RectangleF rect)
         {
 
+            return this.IntersectsStrict(rect)
+                || rect.IntersectsStrict(this);
+
+        }
+
+        private bool IntersectsStrict(RectangleF rect)
+        {
             return this.Contains(rect.TopLeft)
                 || this.Contains(rect.TopRight)
                 || this.Contains(rect.BottomRight)
                 || this.Contains(rect.BottomLeft);
-
         }
 
         public bool Intersects(Rectangle rect)

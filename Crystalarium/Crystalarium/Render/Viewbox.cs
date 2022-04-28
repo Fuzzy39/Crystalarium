@@ -4,6 +4,7 @@ using Crystalarium.Sim;
 using Crystalarium.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Crystalarium.Render.ChunkRender;
 
 
 namespace Crystalarium.Render
@@ -19,10 +20,9 @@ namespace Crystalarium.Render
         private Rectangle _pixelBounds; // the bounds, in pixels, of the viewport on the game window.
         private Grid _grid; // the grid that this viewport is rendering.
         private Border _border;
-        // Graphical Features
-        
-       
+        private List<Renderer> _renderers;
 
+        // Graphical Features
         private Texture2D _background;
         private Color backgroundColor;
 
@@ -40,6 +40,8 @@ namespace Crystalarium.Render
        
 
         // Properties
+
+     
 
         public Border Border
         {
@@ -133,6 +135,7 @@ namespace Crystalarium.Render
             container = viewports;
             container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
+            _renderers = new List<Renderer>();
 
             //background
             _background = null;
@@ -159,13 +162,23 @@ namespace Crystalarium.Render
             : this(viewports, g, new Point(x, y), new Point(width, height)) { }
 
 
-        public void destroy()
+        public void Sestroy()
         {
             container.Remove(this);
         }
 
+        public void AddRenderer( Renderer renderer) 
+        {
+            _renderers.Add(renderer);
+        }
+
+        public void RemoveRenderer(Renderer renderer)
+        {
+            _renderers.Remove(renderer);
+        }
+
         // sets all textures that are part of a viewport itself.
-        public void setTextures(Texture2D background, Texture2D sides, Texture2D corners)
+        public void SetTextures(Texture2D background, Texture2D sides, Texture2D corners)
         {
 
             Background = background;
@@ -174,21 +187,33 @@ namespace Crystalarium.Render
         }
 
         // only sets the textures for the viewport's borders.
-        public void setTextures(Texture2D sides, Texture2D corners)
+        public void SetTextures(Texture2D sides, Texture2D corners)
         {
-            setTextures(Background, sides, corners);
+            SetTextures(Background, sides, corners);
         }
 
-        public void draw(SpriteBatch sb)
+        public void Draw(SpriteBatch sb)
         {
 
             // draw the background.
-            drawBackground(sb);
+            DrawBackground(sb);
 
             // Render Textures in the viewport.
 
+            // update chunks to render.
+            AddChunks();
+
+            // render them
+            for(int i = 0; i<_renderers.Count;i++)
+            {
+                Renderer r = _renderers[i];
+                r.Draw(sb);
+            }
+
+
+
             // this is a test texture, forcibly shoved here.
-            Rectangle rect;
+            /*Rectangle rect;
 
             // head
             rect = new Rectangle(0, -2, 1, 1);
@@ -212,14 +237,29 @@ namespace Crystalarium.Render
 
             rect = new Rectangle(1, 2, 1, 1);
 
-            RenderTexture(sb, testTexture, rect);
+            RenderTexture(sb, testTexture, rect);*/
 
 
             // finnally, draw the border.
             _border.Draw(sb);
         }
 
-        private void drawBackground(SpriteBatch sb)
+
+        private void AddChunks()
+        {
+            foreach(List<Chunk> list in _grid.Chunks)
+            {
+                foreach (Chunk ch in list)
+                {
+                    if (TileBounds().Intersects(ch.Bounds))
+                    {
+                        new ChunkRender.Default(this, ch);
+                    }
+                }
+            }
+        }
+
+        private void DrawBackground(SpriteBatch sb)
         {
             // do not draw the background if no background is set.
             if (Background == null)
@@ -229,7 +269,7 @@ namespace Crystalarium.Render
         }
 
         // returns the bounds in tilespace of the viewport
-        private RectangleF TileBounds()
+        public RectangleF TileBounds()
         {
             return new RectangleF(_position.X, _position.Y, (float)(_pixelBounds.Width / Scale), (float)(_pixelBounds.Height / Scale));
         }
@@ -254,7 +294,7 @@ namespace Crystalarium.Render
         }
 
         // bounds of object to render in tilespace
-        private bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds)
+        public bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds)
         {
             // check if the texture needs to be rendered by this viewport
             if(!TileBounds().Intersects(bounds))
@@ -315,13 +355,13 @@ namespace Crystalarium.Render
 
             // figure out the size of the rectangle we need to draw.
             int rightSide = this._pixelBounds.X + this._pixelBounds.Width;
-            size.X = getRenderSize(rightSide, texturePixelBounds.Size.X, leftCut, topLeft.X, out rightCut);
+            size.X = GetRenderSize(rightSide, texturePixelBounds.Size.X, leftCut, topLeft.X, out rightCut);
 
             int bottomSide = this._pixelBounds.Y + this._pixelBounds.Height;
-            size.Y = getRenderSize(bottomSide, texturePixelBounds.Size.Y, topCut, topLeft.Y, out bottomCut);
+            size.Y = GetRenderSize(bottomSide, texturePixelBounds.Size.Y, topCut, topLeft.Y, out bottomCut);
 
 
-            Rectangle sourceRect = getTextureSourceBounds(topCut, bottomCut, leftCut, rightCut, texturePixelBounds, texture);
+            Rectangle sourceRect = GetTextureSourceBounds(topCut, bottomCut, leftCut, rightCut, texturePixelBounds, texture);
 
 
             sb.Draw(
@@ -335,7 +375,7 @@ namespace Crystalarium.Render
             return true;
         }
 
-        private int getRenderSize(int viewportFarPos, int size, int nearCut, int position, out int farCut)
+        private int GetRenderSize(int viewportFarPos, int size, int nearCut, int position, out int farCut)
         {
             int currentSize = size - nearCut;
 
@@ -351,7 +391,7 @@ namespace Crystalarium.Render
             return currentSize;
         }
 
-        private Rectangle getTextureSourceBounds(int topCut, int bottomCut, int leftCut, int rightCut, Rectangle texturePixelBounds, Texture2D texture)
+        private Rectangle GetTextureSourceBounds(int topCut, int bottomCut, int leftCut, int rightCut, Rectangle texturePixelBounds, Texture2D texture)
         {
             // now figure out the source rectangle. what part of the image do we need to draw?
 
