@@ -35,8 +35,7 @@ namespace Crystalarium.Sim
             _chunks.Add(new List<Chunk>());
 
             // create initial chunk.
-            _chunks[0].Add(null);
-            new Chunk( this, new Point(0,0) );
+            _chunks[0].Add(new Chunk( this, new Point(0,0) ));
 
             // set the chunk origin.
             chunksOrigin = new Point(0, 0);
@@ -78,13 +77,7 @@ namespace Crystalarium.Sim
             // use expandChunkGrid instead.
             if(o is Chunk)
             {
-                Chunk ch = (Chunk)o;
-
-               
-                Point coords =   ch.Coords;
-
-                _chunks[coords.X][coords.Y] = ch;
-
+           
                 return;
             }
 
@@ -108,75 +101,86 @@ namespace Crystalarium.Sim
 
         }
 
-        public void ExpandGrid(Direction d)
+        public void ExpandGrid( Direction d)
         {
-             if(d.IsHorizontal())
-             {
-                // We are adding a new list to the primary array.
-                // this increases the horizontal distance.
-
-
-                List<Chunk> newColumn = new List<Chunk>();
-                chunksSize.X++;
-
-                int X; // the index that the new column is in
-
-                if (d == Direction.left)
-                {
-                    chunksOrigin.X --;
-                    _chunks.Insert(0, newColumn);
-                    X = 0;
-                }
-                else
-                {
-                    X = _chunks.Count;
-                    _chunks.Add(newColumn);
-                }
-
-
-                // fill it with chunks.
-                for(int y = 0; y<chunksSize.Y; y++)
-                {
-                    newColumn.Add(null);
-                    new Chunk(this, new Point(X+chunksOrigin.X, y+chunksOrigin.Y));
-                }
-                return;
-
-             }
-
-            // we are adding one additional elemtn to all existing arrays.
-            // this increases the height of the chunk array.
-            chunksSize.X++;
-            int Y;
-            if (d == Direction.up)
+            if (d.IsHorizontal())
             {
-                chunksOrigin.Y--;
-                Y = 0;
+                ExpandHorizontal(d); 
             }
             else
             {
-                Y = _chunks.Count;
-
+                ExpandVertical(d);
             }
+        }
 
-            // create the new chunks.
+        private void ExpandHorizontal(Direction d)
+        {
+            // we are adding a new list<Chunk> to _chunks.
+            List<Chunk> newList = new List<Chunk>();
+            chunksSize.X++;
+            int x;
 
-            for(int x = 0; x<_chunks.Count; x++)
+
+            if (d == Direction.left)
             {
-                if (d == Direction.up)
-                    _chunks[x].Insert(Y, null);
-                else
-                    _chunks[x].Add(null);
-
-                // including chunk origins is important to get the correct coords for this chunk.
-                new Chunk(this, new Point(x + chunksOrigin.X, Y + chunksOrigin.Y));
+                x = 0;
+                _chunks.Insert(x, new List<Chunk>());
+                chunksOrigin.X--; 
             }
-                
+            else
+            {
+                x = _chunks.Count;
+                _chunks.Add(newList);
+            }
 
-            
-            
+
+            // generate the new chunks
+            for(int y = 0; y<chunksSize.Y; y++)
+            {
+                Point gridLoc = new Point(x, y) + chunksOrigin;
+                Chunk ch = new Chunk(this, gridLoc);
+                _chunks[x].Add(ch);
+
+            }
 
         }
+
+        private void ExpandVertical(Direction d)
+        {
+            // we are adding a new Chunk to every list<Chunk> in _chunk.
+            chunksSize.Y++;
+           
+
+            if (d == Direction.up)
+                chunksOrigin.Y--;
+          
+            // create the new chunks.
+
+            for (int x = 0; x < _chunks.Count; x++)
+            {
+
+                int y;
+
+                if (d == Direction.up)
+                {
+                    y = 0;
+                    _chunks[x].Insert(0, null);
+                }
+                else
+                {
+                    y = _chunks[x].Count;
+                    _chunks[x].Add(null);
+                    
+                }
+
+                // including chunk origins is important to get the correct coords for this chunk.
+                Chunk ch = new Chunk(this, new Point(x + chunksOrigin.X, y+ chunksOrigin.Y));
+
+                _chunks[x][y] = ch;
+
+            }
+        }
+
 
     }
 }
