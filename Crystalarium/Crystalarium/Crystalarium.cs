@@ -17,7 +17,7 @@ namespace Crystalarium
         private List<Viewbox> viewports;
         
 
-        private const int BUILD = 99;
+        private const int BUILD = 103;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -78,16 +78,17 @@ namespace Crystalarium
 
 
             g.ExpandGrid(Direction.left);
-            //g.ExpandGrid(Direction.down);
+           // g.ExpandGrid(Direction.down);
             g.ExpandGrid(Direction.up);
-            //g.ExpandGrid(Direction.right);
+            g.ExpandGrid(Direction.right);
+            g.ExpandGrid(Direction.left);
            
            
             g.DebugReport();
 
 
             // create a couple test viewports.
-            v = new Viewbox(viewports, g, 40, 40, 700, 400 );
+            v = new Viewbox(viewports, g, 40, 40, 720, 400 );
             v.SetTextures(viewportBG, pixel, pixel);
             v.Border.Width = 2;
 

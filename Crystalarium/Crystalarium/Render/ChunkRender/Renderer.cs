@@ -14,8 +14,21 @@ namespace Crystalarium.Render.ChunkRender
         protected Viewbox renderTarget;
         protected Chunk renderData;
 
-        public Renderer( Viewbox v, Chunk ch)
+        public Chunk Chunk
         {
+            get => renderData;
+        }
+
+
+        public Renderer( Viewbox v, Chunk ch, List<Renderer> others)
+        {
+            // check that we don't already exist
+            foreach (Renderer r in others)
+            {
+                if (r.Chunk == ch)
+                    return;
+            }
+
             // add ourselves to the list of renderers.
             v.AddRenderer(this);
 
@@ -50,6 +63,21 @@ namespace Crystalarium.Render.ChunkRender
 
         protected abstract void Render(SpriteBatch sb);
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if(!(obj is Renderer))
+                return false;
+            Renderer rend = (Renderer)obj;
+            if(rend.renderData==renderData & rend.renderTarget== renderTarget )
+            {
+                return true;
+            }
+
+            return false;
+           
+        }
 
     }
 }

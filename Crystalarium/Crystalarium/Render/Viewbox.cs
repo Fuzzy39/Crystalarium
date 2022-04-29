@@ -162,13 +162,15 @@ namespace Crystalarium.Render
             : this(viewports, g, new Point(x, y), new Point(width, height)) { }
 
 
-        public void Sestroy()
+        public void Destroy()
         {
             container.Remove(this);
         }
 
         public void AddRenderer( Renderer renderer) 
         {
+           
+
             _renderers.Add(renderer);
         }
 
@@ -204,6 +206,7 @@ namespace Crystalarium.Render
             AddChunks();
 
             // render them
+            Console.WriteLine(_renderers.Count);
             for(int i = 0; i<_renderers.Count;i++)
             {
                 Renderer r = _renderers[i];
@@ -213,10 +216,10 @@ namespace Crystalarium.Render
 
 
             // this is a test texture, forcibly shoved here.
-            /*Rectangle rect;
+            Rectangle rect;
 
             // head
-            rect = new Rectangle(0, -2, 1, 1);
+            /*rect = new Rectangle(0, -2, 1, 1);
 
             RenderTexture(sb, testTexture, rect);
 
@@ -237,7 +240,7 @@ namespace Crystalarium.Render
 
             rect = new Rectangle(1, 2, 1, 1);
 
-            RenderTexture(sb, testTexture, rect);*/
+            RenderTexture(sb, testTexture, rect);*/                                                                                                                   
 
 
             // finnally, draw the border.
@@ -249,11 +252,12 @@ namespace Crystalarium.Render
         {
             foreach(List<Chunk> list in _grid.Chunks)
             {
-                foreach (Chunk ch in list)
+                chunks: foreach (Chunk ch in list)
                 {
                     if (TileBounds().Intersects(ch.Bounds))
                     {
-                        new ChunkRender.Default(this, ch);
+
+                        new ChunkRender.Default(this, ch, _renderers);
                     }
                 }
             }
