@@ -13,7 +13,7 @@ namespace Crystalarium.Render.ChunkRender
         protected override void Render(SpriteBatch sb)
         {
             // do... things.
-            renderTarget.RenderTexture(sb, Textures.tile, renderData.Bounds);
+            renderTarget.RenderTexture(sb, Textures.testSquare, renderData.Bounds);
 
         }
     }

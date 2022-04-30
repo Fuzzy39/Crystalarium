@@ -34,9 +34,7 @@ namespace Crystalarium.Render
         private int _maxScale;
 
 
-        // #### TEST CODE: REMOVE WHEN POSSIBLE ###
-        // this is just to showcase the idea behind rendering things, more or less.
-        public Texture2D testTexture;
+        
        
 
         // Properties
@@ -138,7 +136,7 @@ namespace Crystalarium.Render
             _renderers = new List<Renderer>();
 
             //background
-            _background = null;
+            _background = Textures.viewboxBG;
 
             // default scale values
             _minScale = 10;
@@ -212,36 +210,6 @@ namespace Crystalarium.Render
                 Renderer r = _renderers[i];
                 r.Draw(sb);
             }
-
-
-
-            // this is a test texture, forcibly shoved here.
-            Rectangle rect;
-
-            // head
-            /*rect = new Rectangle(0, -2, 1, 1);
-
-            RenderTexture(sb, testTexture, rect);
-
-            // arms
-            rect = new Rectangle(-1, 0, 3, 1);
-
-            RenderTexture(sb, testTexture, rect);
-
-            // body
-            rect = new Rectangle(0, 0, 1, 2);
-
-            RenderTexture(sb, testTexture, rect);
-
-            // legs
-            rect = new Rectangle(-1, 2, 1, 1);
-
-            RenderTexture(sb, testTexture, rect);
-
-            rect = new Rectangle(1, 2, 1, 1);
-
-            RenderTexture(sb, testTexture, rect);*/                                                                                                                   
-
 
             // finnally, draw the border.
             _border.Draw(sb);
