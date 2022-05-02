@@ -13,6 +13,8 @@ namespace Crystalarium.Render.ChunkRender
 
         protected Viewbox renderTarget;
         protected Chunk renderData;
+        private int invisibleFrames; // the number of frames where this renderer has not been visible.
+        public const int MAX_INVISIBLE_FRAMES = 10; // the number of invisible frames required for this renderer to remove itself.
 
         public Chunk Chunk
         {
@@ -51,11 +53,16 @@ namespace Crystalarium.Render.ChunkRender
             // check that we are visible on screen.
             if (renderTarget.TileBounds().Intersects(renderData.Bounds))
             {
+                invisibleFrames = 0;
                 Render(sb);
             }
             else
             {
-                this.Destroy();
+                invisibleFrames++;
+                if (invisibleFrames >= MAX_INVISIBLE_FRAMES)
+                {
+                   // this.Destroy();
+                }
             }
 
 
@@ -79,7 +86,7 @@ namespace Crystalarium.Render.ChunkRender
            
         }
 
-
+        // I guess that this implements the factory pattern? At least that was the attempt.
         public static Renderer Create( Type t, Viewbox v, Chunk ch, List<Renderer> others)
         {
             switch(t)
@@ -88,6 +95,8 @@ namespace Crystalarium.Render.ChunkRender
                     return new Default(v, ch, others);
                 case Type.Standard:
                     return new Standard(v, ch, others);
+                case Type.Debug:
+                    return new Debug(v, ch, others);
                 default:
                     throw new ArgumentException(t+" is not a valid type of Chunk Renderer.");
             }

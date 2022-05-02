@@ -17,7 +17,7 @@ namespace Crystalarium
         private List<Viewbox> viewports;
         
 
-        private const int BUILD = 131;
+        private const int BUILD = 141;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -26,7 +26,7 @@ namespace Crystalarium
         Viewbox v;
         Viewbox w;
         Grid g;
-        double i= 0;
+        double i= 5.23;
         double j = 0;
 
         public Crystalarium()
@@ -78,13 +78,18 @@ namespace Crystalarium
             g = new Grid(sim);
 
 
+            // make it a size or something.
             g.ExpandGrid(Direction.left);
            // g.ExpandGrid(Direction.down);
             g.ExpandGrid(Direction.up);
             g.ExpandGrid(Direction.right);
             g.ExpandGrid(Direction.left);
-           
-           
+
+
+            g.ExpandGrid(Direction.down);
+            g.ExpandGrid(Direction.up);
+
+
             g.DebugReport();
 
             int width = GraphicsDevice.Viewport.Width;
@@ -92,16 +97,17 @@ namespace Crystalarium
 
             // create a couple test viewports.
             v = new Viewbox(viewports, g, 0, 0, width, height);
-           
+            //v.RendererType = Render.ChunkRender.Type.Default;
           
 
-            w = new Viewbox(viewports, g, width-300, 0, 300, 900/4);
+            w = new Viewbox(viewports, g, width-250, 0, 250, 250);
             w.SetTextures(Textures.pixel, Textures.pixel);
             w.Border.Width = 2;
             w.MinScale = 1;
-            w.Scale = 4;
-            w.RendererType = Render.ChunkRender.Type.Default;
-
+            w.Scale = 3;
+            w.RendererType = Render.ChunkRender.Type.Debug;
+            w.SetDebugRenderTarget(v);
+            w.Position = new Vector2(-2, -2);
 
 
         }
@@ -119,9 +125,10 @@ namespace Crystalarium
             // this is temporary code, meant to demonstrate a viewport's capabilities.
             
 
-            i += .025; // i is a counter for the viewport's position.
+            i += 0.01; // i is a counter for the viewport's position.
+            Console.WriteLine(i);
             j += .005; // j is a counter for the viewport's zoom.
-            float loopSize = 5f; // the size, in tiles, of the loop the viewport will travel.
+            float loopSize = 15f; // the size, in tiles, of the loop the viewport will travel.
 
             // position goes around in a circle while the viewport is slowly zoomed in and out.
 
@@ -130,7 +137,7 @@ namespace Crystalarium
             pos.Y = (float)(Math.Cos(i)*loopSize);
 
             // set viewport values.
-            v.Scale = v.MinScale + (Math.Sin(j)+1) * ((v.MaxScale - v.MinScale))/2;
+            v.Scale = v.MinScale + /*(Math.Sin(j)+1) **/ ((v.MaxScale - v.MinScale))*.6;
             v.Position = pos;
 
             /*pos = new Vector2();
@@ -139,7 +146,7 @@ namespace Crystalarium
 
             // set W viewport values
             
-            w.Position = pos;
+           
 
 
             base.Update(gameTime);

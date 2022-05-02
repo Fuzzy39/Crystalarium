@@ -10,6 +10,7 @@ namespace Crystalarium.Render.ChunkRender
         // types of chunk renderers.
 
         Default,
-        Standard
+        Standard,
+        Debug
     }
 }

@@ -35,9 +35,21 @@ namespace Crystalarium.Render
 
 
         private ChunkRender.Type _rendererType;
+
+        private Viewbox debugRenderTarget; // if using debug renderers, this is the viewbox those renderers target.
        
 
         // Properties
+
+        public Grid Grid
+        {
+            get => _grid;
+        }
+
+        public List<Renderer> Renderers
+        {
+            get => _renderers;
+        }
 
      
 
@@ -224,10 +236,31 @@ namespace Crystalarium.Render
                     {
 
                         Renderer.Create(_rendererType, this, ch, _renderers);
+
+
                     }
                 }
             }
+
+            // for debug renderers, we need to update (or set) their target.
+            if(RendererType == ChunkRender.Type.Debug )
+            {
+                SetDebugRenderTarget(debugRenderTarget);
+            }
+
+
         }
+
+   
+        public void SetDebugRenderTarget(Viewbox v)
+        {
+            debugRenderTarget = v;
+            foreach (Renderer r in _renderers)
+            {
+                ((ChunkRender.Debug)r).Target =v;
+            }
+        }
+
 
 
 
@@ -291,8 +324,14 @@ namespace Crystalarium.Render
 
         }
 
-        // bounds of object to render in tilespace
+
         public bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds)
+        {
+            return RenderTexture(sb, texture, bounds, Color.White);
+        }
+
+        // bounds of object to render in tilespace
+        public bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c)
         {
             // check if the texture needs to be rendered by this viewport
             if(!TileBounds().Intersects(bounds))
@@ -367,7 +406,7 @@ namespace Crystalarium.Render
                        texture,
                        new Rectangle(topLeft, size),
                        sourceRect,
-                       Color.White
+                       c // the color of the texture
 
 
                    );
