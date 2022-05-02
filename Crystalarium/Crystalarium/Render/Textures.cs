@@ -16,7 +16,8 @@ namespace Crystalarium.Render
 
 
         //crysim textures
-        public static Texture2D tile;
+        public static Texture2D tile; // unused
+        public static Texture2D chunkGrid;
 
         // other textrues
         public static Texture2D viewboxBG;

@@ -20,7 +20,7 @@ namespace Crystalarium.Render.ChunkRender
         }
 
 
-        public Renderer( Viewbox v, Chunk ch, List<Renderer> others)
+        protected Renderer( Viewbox v, Chunk ch, List<Renderer> others)
         {
             // check that we don't already exist
             foreach (Renderer r in others)
@@ -77,6 +77,20 @@ namespace Crystalarium.Render.ChunkRender
 
             return false;
            
+        }
+
+
+        public static Renderer Create( Type t, Viewbox v, Chunk ch, List<Renderer> others)
+        {
+            switch(t)
+            {
+                case Type.Default:
+                    return new Default(v, ch, others);
+                case Type.Standard:
+                    return new Standard(v, ch, others);
+                default:
+                    throw new ArgumentException(t+" is not a valid type of Chunk Renderer.");
+            }
         }
 
     }

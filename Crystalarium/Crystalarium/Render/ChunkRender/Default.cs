@@ -8,6 +8,9 @@ namespace Crystalarium.Render.ChunkRender
 {
     public class Default: Renderer
     {
+
+        // a very simple renderer, that does very little.
+
         public Default(Viewbox v, Chunk ch, List<Renderer> others) : base(v, ch, others) { }
 
         protected override void Render(SpriteBatch sb)

@@ -34,7 +34,7 @@ namespace Crystalarium.Render
         private int _maxScale;
 
 
-        
+        private ChunkRender.Type _rendererType;
        
 
         // Properties
@@ -124,6 +124,20 @@ namespace Crystalarium.Render
             set => _background = value;
         }
 
+        // makes enough sense.
+        public ChunkRender.Type RendererType
+        {
+            get => _rendererType;
+            set
+            { 
+                _rendererType = value;
+                _renderers.Clear();
+            }
+        }
+
+
+
+
 
         // create the viewport
         public Viewbox(List<Viewbox> viewports, Grid g, Point pos, Point dimensions)
@@ -152,12 +166,19 @@ namespace Crystalarium.Render
             // border
             _border = new Border(this);
 
+            // renderer type
+            _rendererType = ChunkRender.Type.Standard;
+
 
         }
 
         // an alternate viewport constructor, without points.
         public Viewbox(List<Viewbox> viewports, Grid g, int x, int y, int width, int height)
             : this(viewports, g, new Point(x, y), new Point(width, height)) { }
+
+
+
+
 
 
         public void Destroy()
@@ -192,6 +213,27 @@ namespace Crystalarium.Render
             SetTextures(Background, sides, corners);
         }
 
+        // adds chunks to be rendered, if needbe.
+        private void AddChunks()
+        {
+            foreach(List<Chunk> list in _grid.Chunks)
+            {
+                foreach (Chunk ch in list)
+                {
+                    if (TileBounds().Intersects(ch.Bounds))
+                    {
+
+                        Renderer.Create(_rendererType, this, ch, _renderers);
+                    }
+                }
+            }
+        }
+
+
+
+
+        // Drawing code:
+
         public void Draw(SpriteBatch sb)
         {
 
@@ -204,8 +246,7 @@ namespace Crystalarium.Render
             AddChunks();
 
             // render them
-            Console.WriteLine(_renderers.Count);
-            for(int i = 0; i<_renderers.Count;i++)
+            for (int i = 0; i < _renderers.Count; i++)
             {
                 Renderer r = _renderers[i];
                 r.Draw(sb);
@@ -215,21 +256,6 @@ namespace Crystalarium.Render
             _border.Draw(sb);
         }
 
-
-        private void AddChunks()
-        {
-            foreach(List<Chunk> list in _grid.Chunks)
-            {
-                chunks: foreach (Chunk ch in list)
-                {
-                    if (TileBounds().Intersects(ch.Bounds))
-                    {
-
-                        new ChunkRender.Default(this, ch, _renderers);
-                    }
-                }
-            }
-        }
 
         private void DrawBackground(SpriteBatch sb)
         {
@@ -276,8 +302,9 @@ namespace Crystalarium.Render
 
 
             //it does! collect some basic information.
-            Point pixelCoords = TiletoPixelCoords(bounds.Location.ToVector2());
-            Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale));
+            // we add a couple pixels to the size of things
+            Point pixelCoords = TiletoPixelCoords(bounds.Location.ToVector2())+new Point(1);
+            Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale))+new Point(1);
 
           
             // partial rendering...

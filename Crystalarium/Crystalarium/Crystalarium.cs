@@ -17,7 +17,7 @@ namespace Crystalarium
         private List<Viewbox> viewports;
         
 
-        private const int BUILD = 126;
+        private const int BUILD = 131;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -71,6 +71,7 @@ namespace Crystalarium
             Textures.tile = Content.Load<Texture2D>("tile");
             Textures.testSquare = Content.Load<Texture2D>("testSquare");
             Textures.viewboxBG = Content.Load<Texture2D>("ViewportBG");
+            Textures.chunkGrid = Content.Load<Texture2D>("chunkGrid");
 
 
             // create a test grid, and do some test things to it.
@@ -98,7 +99,8 @@ namespace Crystalarium
             w.SetTextures(Textures.pixel, Textures.pixel);
             w.Border.Width = 2;
             w.MinScale = 1;
-            w.Scale = 4; 
+            w.Scale = 4;
+            w.RendererType = Render.ChunkRender.Type.Default;
 
 
 
