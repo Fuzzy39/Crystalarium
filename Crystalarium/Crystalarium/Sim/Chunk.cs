@@ -53,7 +53,7 @@ namespace Crystalarium.Sim
             _coords = pos;
         }
 
-        public string ToString()
+        public override string ToString()
         {
             return "Chunk " + Coords;
         }

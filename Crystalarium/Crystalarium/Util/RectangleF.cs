@@ -30,6 +30,11 @@ namespace Crystalarium.Util
 
         }
 
+        public Rectangle toRectangle()
+        {
+            return new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
+        }
+
         public float X { get; set; }
         public float Y { get; set; }
 
@@ -69,6 +74,26 @@ namespace Crystalarium.Util
         public Vector2 Size
         {
             get => new Vector2(Width, Height);
+        }
+
+        public float Top
+        {
+            get => Y;
+        }
+
+        public float Left
+        {
+            get => X;
+        }
+
+        public float Right
+        {
+            get => X + Width;
+        }
+
+        public float Bottom
+        {
+            get => Y + Height;
         }
 
 
@@ -112,18 +137,21 @@ namespace Crystalarium.Util
         public bool Intersects(RectangleF rect)
         {
 
-            return this.IntersectsStrict(rect)
-                || rect.IntersectsStrict(this);
+            // this hurts my brain.
+            return this.Right >= rect.Left
+                 & this.Left <= rect.Right
+                 & this.Top <= rect.Bottom
+                 & this.Bottom >= rect.Top;
 
         }
 
-        private bool IntersectsStrict(RectangleF rect)
+        /*private bool IntersectsStrict(RectangleF rect)
         {
             return this.Contains(rect.TopLeft)
                 || this.Contains(rect.TopRight)
                 || this.Contains(rect.BottomRight)
                 || this.Contains(rect.BottomLeft);
-        }
+        }*/
 
         public bool Intersects(Rectangle rect)
         {

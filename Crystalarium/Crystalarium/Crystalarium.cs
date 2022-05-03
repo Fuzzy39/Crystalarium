@@ -11,13 +11,16 @@ namespace Crystalarium
 {
     public class Crystalarium : Game
     {
+
+        // Much of the code here is temporary, meant to demonstrate and test the systems being worked on.
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
         private SimulationManager sim;
         private List<Viewbox> viewports;
         
 
-        private const int BUILD = 141;
+        private const int BUILD = 169;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -26,8 +29,10 @@ namespace Crystalarium
         Viewbox v;
         Viewbox w;
         Grid g;
-        double i= 5.23;
+        double i= 3.6;
         double j = 0;
+        // temporary.
+        public static int frames = 0;
 
         public Crystalarium()
         {
@@ -35,7 +40,10 @@ namespace Crystalarium
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            
+
+    
+
+
         }
 
        
@@ -51,8 +59,8 @@ namespace Crystalarium
             // and viewports
             viewports = new List<Viewbox>();
 
-          
-           
+            //TargetElapsedTime = TimeSpan.FromSeconds(1 / 2.0f);
+
 
             base.Initialize();
 
@@ -79,15 +87,17 @@ namespace Crystalarium
 
 
             // make it a size or something.
-            g.ExpandGrid(Direction.left);
-           // g.ExpandGrid(Direction.down);
-            g.ExpandGrid(Direction.up);
+     
+    
+           
             g.ExpandGrid(Direction.right);
             g.ExpandGrid(Direction.left);
+            g.ExpandGrid(Direction.left);
 
-
-            g.ExpandGrid(Direction.down);
             g.ExpandGrid(Direction.up);
+            g.ExpandGrid(Direction.up);
+            g.ExpandGrid(Direction.down);
+ 
 
 
             g.DebugReport();
@@ -107,7 +117,7 @@ namespace Crystalarium
             w.Scale = 3;
             w.RendererType = Render.ChunkRender.Type.Debug;
             w.SetDebugRenderTarget(v);
-            w.Position = new Vector2(-2, -2);
+            w.Position = new Vector2(0, 0);
 
 
         }
@@ -124,20 +134,21 @@ namespace Crystalarium
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
             
+        
 
-            i += 0.01; // i is a counter for the viewport's position.
-            Console.WriteLine(i);
+            i += 0.008; // i is a counter for the viewport's position.
+            
             j += .005; // j is a counter for the viewport's zoom.
-            float loopSize = 15f; // the size, in tiles, of the loop the viewport will travel.
+            float loopSize = 20f; // the size, in tiles, of the loop the viewport will travel.
 
             // position goes around in a circle while the viewport is slowly zoomed in and out.
 
             Vector2 pos = new Vector2();
-            pos.X = (float)(Math.Sin(i) * loopSize );
+            pos.X =  (float)(Math.Sin(i) * loopSize );
             pos.Y = (float)(Math.Cos(i)*loopSize);
 
             // set viewport values.
-            v.Scale = v.MinScale + /*(Math.Sin(j)+1) **/ ((v.MaxScale - v.MinScale))*.6;
+            v.Scale = v.MinScale + (Math.Sin(j)+1) * ((v.MaxScale - v.MinScale))*.5;
             v.Position = pos;
 
             /*pos = new Vector2();
@@ -156,6 +167,7 @@ namespace Crystalarium
         protected override void Draw(GameTime gameTime)
         {
 
+          
             // arguably temporary
             double frameRate = Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds,2);
 

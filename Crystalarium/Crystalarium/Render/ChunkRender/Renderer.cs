@@ -13,8 +13,6 @@ namespace Crystalarium.Render.ChunkRender
 
         protected Viewbox renderTarget;
         protected Chunk renderData;
-        private int invisibleFrames; // the number of frames where this renderer has not been visible.
-        public const int MAX_INVISIBLE_FRAMES = 10; // the number of invisible frames required for this renderer to remove itself.
 
         public Chunk Chunk
         {
@@ -45,24 +43,28 @@ namespace Crystalarium.Render.ChunkRender
         }
 
 
-        public void Draw(SpriteBatch sb)
+        // returns whether drawing was successful.
+        public bool Draw(SpriteBatch sb)
         {
             // probably don't kill anybody.
             // we might have to kill ourselves, if we aren't rendering anything.
 
             // check that we are visible on screen.
+           
             if (renderTarget.TileBounds().Intersects(renderData.Bounds))
             {
-                invisibleFrames = 0;
+              
                 Render(sb);
+                return true;
             }
             else
             {
-                invisibleFrames++;
-                if (invisibleFrames >= MAX_INVISIBLE_FRAMES)
-                {
-                   // this.Destroy();
-                }
+
+                
+                
+                this.Destroy();
+                return false;
+                
             }
 
 

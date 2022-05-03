@@ -166,7 +166,7 @@ namespace Crystalarium.Render
 
             // default scale values
             _minScale = 10;
-            _maxScale = 50;
+            _maxScale = 75;
 
             // set the 'camera' to reasonable values
             _scale = (_minScale + _maxScale) / 2.0;
@@ -279,13 +279,25 @@ namespace Crystalarium.Render
             AddChunks();
 
             // render them
-            for (int i = 0; i < _renderers.Count; i++)
+            for (int i = 0; i < _renderers.Count;)
             {
+                
                 Renderer r = _renderers[i];
-                r.Draw(sb);
+              
+
+                // repeat the previous index if this renderer was destroyed.
+                if (r.Draw(sb))
+                    i++;
             }
 
-            // finnally, draw the border.
+            // draw the viewport if in debug mode.
+            if (debugRenderTarget != null)
+            {
+                RenderTexture(sb, Textures.pixel, 
+                    debugRenderTarget.TileBounds().toRectangle(), 
+                    new Color(0, 0, 0, .3f));
+            }
+            // finally, draw the border.
             _border.Draw(sb);
         }
 
@@ -343,7 +355,7 @@ namespace Crystalarium.Render
             //it does! collect some basic information.
             // we add a couple pixels to the size of things
             Point pixelCoords = TiletoPixelCoords(bounds.Location.ToVector2())+new Point(1);
-            Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale))+new Point(1);
+            Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale))+new Point(1,1);
 
           
             // partial rendering...
@@ -441,7 +453,7 @@ namespace Crystalarium.Render
             // figure out the size of the source rectangle:
 
             // get the width, in pixels, of the destination.
-            float textureWidth = (float)(texturePixelBounds.Width - leftCut - rightCut); 
+            float textureWidth = (float)(texturePixelBounds.Width - ((leftCut>rightCut)? leftCut : rightCut)); 
 
             // get the width of the source rectangle, as a ratio of total width of the texuture
             float textureWidthRatio = textureWidth / (float)texturePixelBounds.Width;
@@ -451,7 +463,7 @@ namespace Crystalarium.Render
 
 
             // get the height, in pixels, of the destination.
-            float textureHeight = (float)(texturePixelBounds.Height - topCut - bottomCut);
+            float textureHeight = (float)(texturePixelBounds.Height - ((bottomCut<topCut)? topCut: bottomCut));
 
             // get the height of the source rectangle, as a ratio of total width of the texuture
             float textureHeightRatio = textureHeight / (float)texturePixelBounds.Height;

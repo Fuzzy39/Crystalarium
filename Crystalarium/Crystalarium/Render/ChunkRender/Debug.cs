@@ -26,23 +26,47 @@ namespace Crystalarium.Render.ChunkRender
 
         protected override void Render(SpriteBatch sb)
         {
+            
+
+            renderTarget.RenderTexture(sb, Textures.pixel, renderData.Bounds, determineColor());
+
+          
+            
+           
+
+        }
+
+        private Color determineColor()
+        {
             // determine the color:
-            Color color=Color.Black;
-            if(_debugTarget != null & renderData.Parent == _debugTarget.Grid )
+
+            if (_debugTarget == null || renderData.Parent != _debugTarget.Grid)
             {
-               // check if the target is rendered
-               if(isRenderedByTarget(renderData))
-               {
-                    color = Color.White;
-               }
-               else
-               {
-                    color = Color.Blue;
-               }
+                return Color.Black;
             }
 
-            renderTarget.RenderTexture(sb, Textures.pixel, renderData.Bounds, color);
+            if(renderData.Coords.Equals(new Point(0)))
+            {
+                if (isRenderedByTarget(renderData))
+                {
+                    return Color.Salmon;
+                }
 
+                return Color.Red;
+            }
+
+
+            // check if the target is rendered
+            if (isRenderedByTarget(renderData))
+            {
+                return Color.PowderBlue;
+            }
+           
+            
+
+            return Color.Blue;
+            
+            
         }
 
         private bool isRenderedByTarget(Chunk ch)
