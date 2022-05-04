@@ -11,7 +11,7 @@ namespace Crystalarium.Render.ChunkRender
         // Chunk.Renderer renders a chunk.
         // that's the idea, at least.
 
-        protected Viewbox renderTarget;
+        protected GridView renderTarget;
         protected Chunk renderData;
 
         public Chunk Chunk
@@ -20,7 +20,7 @@ namespace Crystalarium.Render.ChunkRender
         }
 
 
-        protected Renderer( Viewbox v, Chunk ch, List<Renderer> others)
+        protected Renderer( GridView v, Chunk ch, List<Renderer> others)
         {
             // check that we don't already exist
             foreach (Renderer r in others)
@@ -50,8 +50,13 @@ namespace Crystalarium.Render.ChunkRender
             // we might have to kill ourselves, if we aren't rendering anything.
 
             // check that we are visible on screen.
-           
-            if (renderTarget.TileBounds().Intersects(renderData.Bounds))
+            if (renderData == null)
+            {
+                this.Destroy();
+                return false;
+            }
+
+            if (renderTarget.Camera.TileBounds().Intersects(renderData.Bounds))
             {
               
                 Render(sb);
@@ -89,7 +94,7 @@ namespace Crystalarium.Render.ChunkRender
         }
 
         // I guess that this implements the factory pattern? At least that was the attempt.
-        public static Renderer Create( Type t, Viewbox v, Chunk ch, List<Renderer> others)
+        public static Renderer Create( Type t, GridView v, Chunk ch, List<Renderer> others)
         {
             switch(t)
             {

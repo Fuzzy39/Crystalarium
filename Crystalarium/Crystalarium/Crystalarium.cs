@@ -17,20 +17,23 @@ namespace Crystalarium
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
         private SimulationManager sim;
-        private List<Viewbox> viewports;
-        
+        private List<GridView> viewports;
 
-        private const int BUILD = 169;
+
+        private const int BUILD = 198;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
 
         // TEST
-        Viewbox v;
-        Viewbox w;
+        GridView view;
+        GridView minimap;
+
         Grid g;
-        double i= 3.6;
+        double i= 0;
         double j = 0;
+        int mode;
+        bool pressed;
         // temporary.
         public static int frames = 0;
 
@@ -57,7 +60,7 @@ namespace Crystalarium
             sim.TargetStepsPS = 240; // completely arbitrary.
 
             // and viewports
-            viewports = new List<Viewbox>();
+            viewports = new List<GridView>();
 
             //TargetElapsedTime = TimeSpan.FromSeconds(1 / 2.0f);
 
@@ -106,22 +109,31 @@ namespace Crystalarium
             int height = GraphicsDevice.Viewport.Height;
 
             // create a couple test viewports.
-            v = new Viewbox(viewports, g, 0, 0, width, height);
+            view = new GridView(viewports, g, 0, 0, width, height);
             //v.RendererType = Render.ChunkRender.Type.Default;
           
 
-            w = new Viewbox(viewports, g, width-250, 0, 250, 250);
-            w.SetTextures(Textures.pixel, Textures.pixel);
-            w.Border.Width = 2;
-            w.MinScale = 1;
-            w.Scale = 3;
-            w.RendererType = Render.ChunkRender.Type.Debug;
-            w.SetDebugRenderTarget(v);
-            w.Position = new Vector2(0, 0);
+            // setup the minimap.
+            minimap = new GridView(viewports, g, width-250, 0, 250, 250);
+
+            // setup borders
+            minimap.SetTextures(Textures.pixel, Textures.pixel);
+            minimap.Border.Width = 2;
+
+            // Set the render mode to debug.
+            minimap.RendererType = Render.ChunkRender.Type.Debug;
+            minimap.SetDebugRenderTarget(view);
+
+            // Set the camera of the minimap.
+            minimap.Camera.MinScale = 1;
+            minimap.Camera.Scale = 3;
+            minimap.Camera.Position = new Vector2(0, 0);
+       
 
 
         }
 
+        // mostly ugly hacks
         protected override void Update(GameTime gameTime)
         {
 
@@ -130,32 +142,97 @@ namespace Crystalarium
                 Exit();
 
 
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                pressed = true;
+            }
+
+            if (pressed & !Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                pressed = false;
+                mode++;
+                if (mode > 1)
+                    mode = 0;
+
+                switch (mode)
+                {
+                    case 0:
+                        g.Reset();
+                        
+
+
+                        g.ExpandGrid(Direction.right);
+                        g.ExpandGrid(Direction.left);
+                        g.ExpandGrid(Direction.left);
+
+                        g.ExpandGrid(Direction.up);
+                        g.ExpandGrid(Direction.up);
+                        g.ExpandGrid(Direction.down);
+                        break;
+                    case 1:
+                        g.Reset();
+                        g.ExpandGrid(Direction.up);
+                        g.ExpandGrid(Direction.left);
+
+                        g.ExpandGrid(Direction.right);
+                        g.ExpandGrid(Direction.right);
+                        g.ExpandGrid(Direction.right);
+                        g.ExpandGrid(Direction.right);
+                        g.ExpandGrid(Direction.right);
+                        g.ExpandGrid(Direction.right);
+
+                        g.DebugReport();
+                        break;
+                }
+            }
+
+            
+
             sim.Update(gameTime);
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
-            
-        
+
+
 
             i += 0.008; // i is a counter for the viewport's position.
-            
-            j += .005; // j is a counter for the viewport's zoom.
-            float loopSize = 20f; // the size, in tiles, of the loop the viewport will travel.
 
-            // position goes around in a circle while the viewport is slowly zoomed in and out.
+            j += .005; // j is a counter for the viewport's zoom.
 
             Vector2 pos = new Vector2();
-            pos.X =  (float)(Math.Sin(i) * loopSize );
-            pos.Y = (float)(Math.Cos(i)*loopSize);
+            double scale = 0;
 
-            // set viewport values.
-            v.Scale = v.MinScale + (Math.Sin(j)+1) * ((v.MaxScale - v.MinScale))*.5;
-            v.Position = pos;
+            switch (mode)
+            {
+                case 0:
+                    float loopSize = 20f; // the size, in tiles, of the loop the viewport will travel.
 
-            /*pos = new Vector2();
-            pos.X = (float)(Math.Sin(i) * loopSize);
-            pos.Y = (float)(Math.Cos(i) * loopSize);*/
+                    // position goes around in a circle while the viewport is slowly zoomed in and out.
 
-            // set W viewport values
+                   
+                    pos.X = (float)(Math.Sin(i) * loopSize);
+                    pos.Y = (float)(Math.Cos(i) * loopSize);
+
+                    // set viewport values.
+                    scale = view.Camera.MinScale + (Math.Sin(j) + 1) * ((view.Camera.MaxScale - view.Camera.MinScale)) * .5;
+                  
+                    break;
+                case 1:
+                    pos.X = (float)(Math.Sin(i) * 8f* 6f)+48;
+                    pos.Y =0;
+
+                    // doesn't make a ton of sense, but whatever
+                    scale =  (Math.Sin(i) +1) * ((view.Camera.MaxScale - view.Camera.MinScale)) * .5;
+                 
+                    break;
+            }
+
+            // main camera
+            view.Camera.Scale = scale;
+            view.Camera.Position = pos;
+
+            // minimap positions
+            minimap.Camera.Position = pos;
+            minimap.Camera.Scale = scale/12;
             
            
 
@@ -180,7 +257,7 @@ namespace Crystalarium
             GraphicsDevice.Clear(new Color(70,70,70));
 
             // draw viewports
-            foreach(Viewbox v in viewports)
+            foreach(GridView v in viewports)
             {
                 v.Draw(spriteBatch);
             }
@@ -189,7 +266,8 @@ namespace Crystalarium
 
             // some debug text. We'll clear this out sooner or later...
 
-            spriteBatch.DrawString(testFont, "Milestone 0, Build " + BUILD, new Vector2(10, height - 25), Color.White); 
+            spriteBatch.DrawString(testFont, "Milestone 1, Build " + BUILD, new Vector2(10, height - 25), Color.White);
+            spriteBatch.DrawString(testFont, "Demo #"+mode+". Press enter to switch demos.", new Vector2(10, height-45), Color.White);
             spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + sim.ActualStepsPS, new Vector2(10, 10), Color.White);
 
             spriteBatch.End();

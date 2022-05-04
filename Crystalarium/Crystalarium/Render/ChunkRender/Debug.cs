@@ -11,9 +11,9 @@ namespace Crystalarium.Render.ChunkRender
     {
 
         // it is assumed that chunks are on the same grid.
-        private Viewbox _debugTarget; // this is where we get the debug info from.
+        private GridView _debugTarget; // this is where we get the debug info from.
 
-        public Viewbox Target
+        public GridView Target
         {
             get => _debugTarget;
             set
@@ -22,13 +22,13 @@ namespace Crystalarium.Render.ChunkRender
             }
         }
 
-        public Debug(Viewbox v, Chunk ch, List<Renderer> others) : base(v, ch, others) { }
+        public Debug(GridView v, Chunk ch, List<Renderer> others) : base(v, ch, others) { }
 
         protected override void Render(SpriteBatch sb)
         {
             
 
-            renderTarget.RenderTexture(sb, Textures.pixel, renderData.Bounds, determineColor());
+            renderTarget.Camera.RenderTexture(sb, Textures.pixel, renderData.Bounds, determineColor());
 
           
             

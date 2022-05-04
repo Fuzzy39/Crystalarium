@@ -11,12 +11,12 @@ namespace Crystalarium.Render.ChunkRender
 
         // a very simple renderer, that does very little.
 
-        public Default(Viewbox v, Chunk ch, List<Renderer> others) : base(v, ch, others) { }
+        public Default(GridView v, Chunk ch, List<Renderer> others) : base(v, ch, others) { }
 
         protected override void Render(SpriteBatch sb)
         {
             // do... things.
-            renderTarget.RenderTexture(sb, Textures.testSquare, renderData.Bounds);
+            renderTarget.Camera.RenderTexture(sb, Textures.testSquare, renderData.Bounds);
 
         }
     }

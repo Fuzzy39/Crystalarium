@@ -43,6 +43,7 @@ namespace Crystalarium.Sim
             _parent.Remove(this);
             _bounds = new Rectangle(0,0,0,0);
             _parent = null;
+            
         }
 
         public GridObject(Grid g, Point pos, Point size)

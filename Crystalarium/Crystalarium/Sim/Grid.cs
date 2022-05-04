@@ -30,17 +30,8 @@ namespace Crystalarium.Sim
             this.sim = sim;
             sim.addGrid(this);
 
-            // initialize the chunk array.
-            _chunks = new List<List<Chunk>>();
-            _chunks.Add(new List<Chunk>());
-
-            // create initial chunk.
-            _chunks[0].Add(new Chunk( this, new Point(0,0) ));
-
-            // set the chunk origin.
-            chunksOrigin = new Point(0, 0);
-            chunksSize = new Point(1, 1);
-
+            // perform first time setup.
+            Reset();
 
 
         }
@@ -69,6 +60,33 @@ namespace Crystalarium.Sim
             sim.removeGrid(this);
         }
 
+        public void Reset()
+        {
+            // remove any existing chunks.
+            if(_chunks!=null)
+            {
+                foreach(List<Chunk> list in _chunks)
+                {
+                    foreach(Chunk ch in list)
+                    {
+                        ch.Destroy();
+                    }
+                }
+
+            }
+
+            // initialize the chunk array.
+            _chunks = new List<List<Chunk>>();
+            _chunks.Add(new List<Chunk>());
+
+            // create initial chunk.
+            _chunks[0].Add(new Chunk(this, new Point(0, 0)));
+
+            // set the chunk origin.
+            chunksOrigin = new Point(0, 0);
+            chunksSize = new Point(1, 1);
+        }
+
         public void Add( GridObject o)
         {
             // what we do with the gridobject depends on what kind of object it is.
@@ -91,11 +109,11 @@ namespace Crystalarium.Sim
 
             // Remove a grid object from it's appropriate containers
 
-            /*if( o is Chunk) // chunks can't be removed once added.
-            { 
-                _chunks.Remove((Chunk)o);
-                return;
-            }*/
+            if( o is Chunk) // chunks can't be removed once added.
+            {
+                o = null; // Doesn't change the size of the grid. This should be used sparingly.
+                return; 
+            }
 
             throw new ArgumentException("Unknown or Invalid type of GridObject to remove from this grid.");
 

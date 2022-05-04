@@ -20,7 +20,7 @@ namespace Crystalarium.Render
         private int _width; // the width, in pixels, of the border of the viewport
         private Color _color;
 
-        private Viewbox parent;
+        private GridView parent;
   
 
 
@@ -44,7 +44,7 @@ namespace Crystalarium.Render
         }
 
 
-        public Border(Viewbox parent)
+        public Border(GridView parent)
         {
             // border related variables
             _width = 0;

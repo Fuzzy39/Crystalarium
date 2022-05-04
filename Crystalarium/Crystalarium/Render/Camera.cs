@@ -9,22 +9,15 @@ using Crystalarium.Render.ChunkRender;
 
 namespace Crystalarium.Render
 {
-    public class Viewbox
+    public class Camera
     {
         /*
          * A viewport renders a grid.
-         * TODO expose border and bg color
+         * 
          */
 
-        private List<Viewbox> container; // the list of all existing viewports.
-        private Rectangle _pixelBounds; // the bounds, in pixels, of the viewport on the game window.
-        private Grid _grid; // the grid that this viewport is rendering.
-        private Border _border;
-        private List<Renderer> _renderers;
 
-        // Graphical Features
-        private Texture2D _background;
-        private Color backgroundColor;
+        private GridView parent;
 
         // 'Camera' controls
         private double _scale; // the number of pixels that currently represent one tile in gridspace
@@ -34,36 +27,10 @@ namespace Crystalarium.Render
         private int _maxScale;
 
 
-        private ChunkRender.Type _rendererType;
-
-        private Viewbox debugRenderTarget; // if using debug renderers, this is the viewbox those renderers target.
+        
        
 
         // Properties
-
-        public Grid Grid
-        {
-            get => _grid;
-        }
-
-        public List<Renderer> Renderers
-        {
-            get => _renderers;
-        }
-
-     
-
-        public Border Border
-        {
-            get => _border;
-        }
-
-        public Rectangle PixelBounds
-        {
-            get => _pixelBounds;
-        }
-
-       
 
         public int MinScale
         {
@@ -129,202 +96,39 @@ namespace Crystalarium.Render
             }
         }
 
-        // this is pretty simple, honestly.
-        public Texture2D Background
+        // Constructors
+
+        public Camera(GridView parent)
         {
-            get => _background;
-            set => _background = value;
-        }
-
-        // makes enough sense.
-        public ChunkRender.Type RendererType
-        {
-            get => _rendererType;
-            set
-            { 
-                _rendererType = value;
-                _renderers.Clear();
-            }
-        }
-
-
-
-
-
-        // create the viewport
-        public Viewbox(List<Viewbox> viewports, Grid g, Point pos, Point dimensions)
-        {
-            // initialize from parameters
-            _grid = g;
-            container = viewports;
-            container.Add(this);
-            _pixelBounds = new Rectangle(pos, dimensions);
-            _renderers = new List<Renderer>();
-
-            //background
-            _background = Textures.viewboxBG;
+            this.parent = parent;
 
             // default scale values
             _minScale = 10;
-            _maxScale = 75;
+            _maxScale = 50;
 
             // set the 'camera' to reasonable values
             _scale = (_minScale + _maxScale) / 2.0;
             Position = new Vector2(0, 0);
-
-            // set default colors.
-            backgroundColor = Color.White;
-
-            // border
-            _border = new Border(this);
-
-            // renderer type
-            _rendererType = ChunkRender.Type.Standard;
-
-
         }
-
-        // an alternate viewport constructor, without points.
-        public Viewbox(List<Viewbox> viewports, Grid g, int x, int y, int width, int height)
-            : this(viewports, g, new Point(x, y), new Point(width, height)) { }
-
-
-
-
-
-
-        public void Destroy()
-        {
-            container.Remove(this);
-        }
-
-        public void AddRenderer( Renderer renderer) 
-        {
-           
-
-            _renderers.Add(renderer);
-        }
-
-        public void RemoveRenderer(Renderer renderer)
-        {
-            _renderers.Remove(renderer);
-        }
-
-        // sets all textures that are part of a viewport itself.
-        public void SetTextures(Texture2D background, Texture2D sides, Texture2D corners)
-        {
-
-            Background = background;
-            _border.SetTextures(sides, corners);
-           
-        }
-
-        // only sets the textures for the viewport's borders.
-        public void SetTextures(Texture2D sides, Texture2D corners)
-        {
-            SetTextures(Background, sides, corners);
-        }
-
-        // adds chunks to be rendered, if needbe.
-        private void AddChunks()
-        {
-            foreach(List<Chunk> list in _grid.Chunks)
-            {
-                foreach (Chunk ch in list)
-                {
-                    if (TileBounds().Intersects(ch.Bounds))
-                    {
-
-                        Renderer.Create(_rendererType, this, ch, _renderers);
-
-
-                    }
-                }
-            }
-
-            // for debug renderers, we need to update (or set) their target.
-            if(RendererType == ChunkRender.Type.Debug )
-            {
-                SetDebugRenderTarget(debugRenderTarget);
-            }
-
-
-        }
-
-   
-        public void SetDebugRenderTarget(Viewbox v)
-        {
-            debugRenderTarget = v;
-            foreach (Renderer r in _renderers)
-            {
-                ((ChunkRender.Debug)r).Target =v;
-            }
-        }
-
-
 
 
 
         // Drawing code:
-
-        public void Draw(SpriteBatch sb)
-        {
-
-            // draw the background.
-            DrawBackground(sb);
-
-            // Render Textures in the viewport.
-
-            // update chunks to render.
-            AddChunks();
-
-            // render them
-            for (int i = 0; i < _renderers.Count;)
-            {
-                
-                Renderer r = _renderers[i];
-              
-
-                // repeat the previous index if this renderer was destroyed.
-                if (r.Draw(sb))
-                    i++;
-            }
-
-            // draw the viewport if in debug mode.
-            if (debugRenderTarget != null)
-            {
-                RenderTexture(sb, Textures.pixel, 
-                    debugRenderTarget.TileBounds().toRectangle(), 
-                    new Color(0, 0, 0, .3f));
-            }
-            // finally, draw the border.
-            _border.Draw(sb);
-        }
-
-
-        private void DrawBackground(SpriteBatch sb)
-        {
-            // do not draw the background if no background is set.
-            if (Background == null)
-                return;
-
-            sb.Draw(Background, _pixelBounds, backgroundColor);
-        }
+    
 
         // returns the bounds in tilespace of the viewport
         public RectangleF TileBounds()
         {
-            return new RectangleF(_position.X, _position.Y, (float)(_pixelBounds.Width / Scale), (float)(_pixelBounds.Height / Scale));
+            return new RectangleF(_position.X, _position.Y, 
+                (float)(parent.PixelBounds.Width / Scale), 
+                (float)(parent.PixelBounds.Height / Scale));
         }
 
         // returns  pixel coords relative to start of viewport.
         // this also works outside of the viewport.
         private Point TiletoPixelCoords(Vector2 tilePos)
         {
-            /*if (!TileBounds().Contains(tilePos))
-            {
-                return new Point(-1);
-            }*/
+           
             // tile to pixel:
             // first, tile to pixel relative to base coords
             // how do we do that?
@@ -336,14 +140,23 @@ namespace Crystalarium.Render
 
         }
 
-
         public bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds)
+        {
+            return RenderTexture(sb, texture, new RectangleF(bounds), Color.White);
+        }
+
+        public bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c)
+        {
+            return RenderTexture(sb, texture, new RectangleF(bounds), c);
+        }
+
+        public bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds)
         {
             return RenderTexture(sb, texture, bounds, Color.White);
         }
 
         // bounds of object to render in tilespace
-        public bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c)
+        public bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c)
         {
             // check if the texture needs to be rendered by this viewport
             if(!TileBounds().Intersects(bounds))
@@ -354,7 +167,7 @@ namespace Crystalarium.Render
 
             //it does! collect some basic information.
             // we add a couple pixels to the size of things
-            Point pixelCoords = TiletoPixelCoords(bounds.Location.ToVector2())+new Point(1);
+            Point pixelCoords = TiletoPixelCoords(bounds.Location)+new Point(1);
             Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale))+new Point(1,1);
 
           
@@ -401,13 +214,13 @@ namespace Crystalarium.Render
 
             }
 
-            topLeft = topLeft + this._pixelBounds.Location;
+            topLeft = topLeft + parent.PixelBounds.Location;
 
             // figure out the size of the rectangle we need to draw.
-            int rightSide = this._pixelBounds.X + this._pixelBounds.Width;
+            int rightSide = parent.PixelBounds.X + this.parent.PixelBounds.Width;
             size.X = GetRenderSize(rightSide, texturePixelBounds.Size.X, leftCut, topLeft.X, out rightCut);
 
-            int bottomSide = this._pixelBounds.Y + this._pixelBounds.Height;
+            int bottomSide =parent.PixelBounds.Y + parent.PixelBounds.Height;
             size.Y = GetRenderSize(bottomSide, texturePixelBounds.Size.Y, topCut, topLeft.Y, out bottomCut);
 
 
