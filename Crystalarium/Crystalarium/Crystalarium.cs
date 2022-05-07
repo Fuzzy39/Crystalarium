@@ -20,7 +20,7 @@ namespace Crystalarium
         private List<GridView> viewports;
 
 
-        private const int BUILD = 198;
+        private const int BUILD = 200;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -221,7 +221,7 @@ namespace Crystalarium
                     pos.Y =0;
 
                     // doesn't make a ton of sense, but whatever
-                    scale =  (Math.Sin(i) +1) * ((view.Camera.MaxScale - view.Camera.MinScale)) * .5;
+                    scale = view.Camera.MinScale + (2-(Math.Sin(2*i) +1)) * ((view.Camera.MaxScale - view.Camera.MinScale)) * .5;
                  
                     break;
             }
