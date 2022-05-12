@@ -5,6 +5,7 @@ using Crystalarium.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Crystalarium.Render.ChunkRender;
+using Crystalarium.Input;
 
 namespace Crystalarium.Render
 {
@@ -41,8 +42,10 @@ namespace Crystalarium.Render
         // Chunk Renderer related
         private List<Renderer> _renderers; // list of chunk renderers currently in existence
         private ChunkRender.Type _rendererType; // how are we rendering chunks?
+
         private GridView debugRenderTarget; // if using debug renderers, this is the viewbox those renderers target.
-                                          // I'll admit, this is hacky.
+                                            // I'll admit, this is hacky.
+        private Controller _controller; // The controller controlling this gridview. Null if the controller is controlling another grid.
 
 
         // Properties
@@ -89,6 +92,12 @@ namespace Crystalarium.Render
                 _rendererType = value;
                 _renderers.Clear();
             }
+        }
+
+        public Controller Controller
+        {
+            get => _controller;
+            set => _controller = value;
         }
 
         // Contstructors

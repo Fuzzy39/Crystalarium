@@ -6,6 +6,7 @@ using Crystalarium.Sim;
 using Crystalarium.Render;
 using Crystalarium.Util;
 using System.Collections.Generic;
+using Crystalarium.Input;
 
 namespace Crystalarium
 {
@@ -18,9 +19,10 @@ namespace Crystalarium
         private SpriteBatch spriteBatch;
         private SimulationManager sim;
         private List<GridView> viewports;
+        private Controller controller;
 
 
-        private const int BUILD = 200;
+        private const int BUILD = 207;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -32,10 +34,8 @@ namespace Crystalarium
         Grid g;
         double i= 0;
         double j = 0;
-        int mode;
-        bool pressed;
-        // temporary.
-        public static int frames = 0;
+       
+       
 
         public Crystalarium()
         {
@@ -43,9 +43,6 @@ namespace Crystalarium
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
-    
-
 
         }
 
@@ -55,14 +52,10 @@ namespace Crystalarium
         protected override void Initialize()
         {
             
-            // create the simulation manager.
+            // create the basics.
             sim = new SimulationManager(this.TargetElapsedTime.TotalSeconds);
-            sim.TargetStepsPS = 240; // completely arbitrary.
-
-            // and viewports
             viewports = new List<GridView>();
-
-            //TargetElapsedTime = TimeSpan.FromSeconds(1 / 2.0f);
+            controller = new Controller();
 
 
             base.Initialize();
@@ -88,11 +81,7 @@ namespace Crystalarium
             // create a test grid, and do some test things to it.
             g = new Grid(sim);
 
-
             // make it a size or something.
-     
-    
-           
             g.ExpandGrid(Direction.right);
             g.ExpandGrid(Direction.left);
             g.ExpandGrid(Direction.left);
@@ -100,10 +89,10 @@ namespace Crystalarium
             g.ExpandGrid(Direction.up);
             g.ExpandGrid(Direction.up);
             g.ExpandGrid(Direction.down);
- 
 
 
-            g.DebugReport();
+
+
 
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
@@ -114,6 +103,7 @@ namespace Crystalarium
           
 
             // setup the minimap.
+
             minimap = new GridView(viewports, g, width-250, 0, 250, 250);
 
             // setup borders
@@ -142,52 +132,7 @@ namespace Crystalarium
                 Exit();
 
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
-            {
-                pressed = true;
-            }
-
-            if (pressed & !Keyboard.GetState().IsKeyDown(Keys.Enter))
-            {
-                pressed = false;
-                mode++;
-                if (mode > 1)
-                    mode = 0;
-
-                switch (mode)
-                {
-                    case 0:
-                        g.Reset();
-                        
-
-
-                        g.ExpandGrid(Direction.right);
-                        g.ExpandGrid(Direction.left);
-                        g.ExpandGrid(Direction.left);
-
-                        g.ExpandGrid(Direction.up);
-                        g.ExpandGrid(Direction.up);
-                        g.ExpandGrid(Direction.down);
-                        break;
-                    case 1:
-                        g.Reset();
-                        g.ExpandGrid(Direction.up);
-                        g.ExpandGrid(Direction.left);
-
-                        g.ExpandGrid(Direction.right);
-                        g.ExpandGrid(Direction.right);
-                        g.ExpandGrid(Direction.right);
-                        g.ExpandGrid(Direction.right);
-                        g.ExpandGrid(Direction.right);
-                        g.ExpandGrid(Direction.right);
-
-                        g.DebugReport();
-                        break;
-                }
-            }
-
-            
-
+            controller.Update();
             sim.Update(gameTime);
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
@@ -201,31 +146,15 @@ namespace Crystalarium
             Vector2 pos = new Vector2();
             double scale = 0;
 
-            switch (mode)
-            {
-                case 0:
-                    float loopSize = 20f; // the size, in tiles, of the loop the viewport will travel.
+            float loopSize = 20f; // the size, in tiles, of the loop the viewport will travel.
 
-                    // position goes around in a circle while the viewport is slowly zoomed in and out.
+            // position goes around in a circle while the viewport is slowly zoomed in and out.     
+            pos.X = (float)(Math.Sin(i) * loopSize);
+            pos.Y = (float)(Math.Cos(i) * loopSize);
 
-                   
-                    pos.X = (float)(Math.Sin(i) * loopSize);
-                    pos.Y = (float)(Math.Cos(i) * loopSize);
-
-                    // set viewport values.
-                    scale = view.Camera.MinScale + (Math.Sin(j) + 1) * ((view.Camera.MaxScale - view.Camera.MinScale)) * .5;
+            // set viewport values.
+            scale = view.Camera.MinScale + (Math.Sin(j) + 1) * ((view.Camera.MaxScale - view.Camera.MinScale)) * .5;
                   
-                    break;
-                case 1:
-                    pos.X = (float)(Math.Sin(i) * 8f* 6f)+48;
-                    pos.Y =0;
-
-                    // doesn't make a ton of sense, but whatever
-                    scale = view.Camera.MinScale + (2-(Math.Sin(2*i) +1)) * ((view.Camera.MaxScale - view.Camera.MinScale)) * .5;
-                 
-                    break;
-            }
-
             // main camera
             view.Camera.Scale = scale;
             view.Camera.Position = pos;
@@ -267,7 +196,7 @@ namespace Crystalarium
             // some debug text. We'll clear this out sooner or later...
 
             spriteBatch.DrawString(testFont, "Milestone 1, Build " + BUILD, new Vector2(10, height - 25), Color.White);
-            spriteBatch.DrawString(testFont, "Demo #"+mode+". Press enter to switch demos.", new Vector2(10, height-45), Color.White);
+            //spriteBatch.DrawString(testFont, "Demo #"+mode+". Press enter to switch demos.", new Vector2(10, height-45), Color.White);
             spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + sim.ActualStepsPS, new Vector2(10, 10), Color.White);
 
             spriteBatch.End();
