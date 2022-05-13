@@ -22,8 +22,8 @@ namespace Crystalarium.Render
         // 'Camera' controls
         private double _scale; // the number of pixels that currently represent one tile in gridspace
         private Vector2 _position; // the position of the top left corner of the viewport, in tiles, in grid space
-        private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions.
-        private const double FRICTION = .1;
+        private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions. (in pixels/frame)
+        private const float FRICTION = .3f;
 
         private int _minScale; // the minumum and maximum amount of pixels that can represent one tile.
         private int _maxScale;
@@ -39,6 +39,25 @@ namespace Crystalarium.Render
             set => _velocity = value;
         
         }
+
+        public float VelX
+        {
+            get => _velocity.X;
+            set => _velocity.X = value;
+        }
+
+        public float VelY
+        {
+            get => _velocity.Y;
+            set => _velocity.Y = value;
+        }
+
+        public float VelZ
+        {
+            get => _velocity.Z;
+            set => _velocity.Z = value;
+        }
+
 
         public int MinScale
         {
@@ -80,9 +99,15 @@ namespace Crystalarium.Render
             {
                 // insure the scale is not set outside of bounds.
                 if (value > _maxScale)
+                {
                     value = _maxScale;
+                    VelZ = 0;
+                }
                 if (value < _minScale)
+                {
                     value = _minScale;
+                    VelZ = 0;
+                }
 
                     
                 _scale = value;
@@ -95,8 +120,8 @@ namespace Crystalarium.Render
             get 
             {
                 Vector2 toReturn = new Vector2();
-                toReturn.X = _position.X + (TileBounds().Size.X / 2.0f);
-                toReturn.Y = _position.Y + (TileBounds().Size.Y / 2.0f);
+                toReturn.X = _position.X + (TileBounds().Size.X / 2.0f)-.5f;
+                toReturn.Y = _position.Y + (TileBounds().Size.Y / 2.0f) -.5f;
                 return toReturn;
             }// too lazy to implement this properly. If we need it, I'll add it later.
             set
@@ -302,11 +327,57 @@ namespace Crystalarium.Render
             return new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
 
         }
+
+        public void Update()
+        {
+            // somewhat naive camera movement functionality.
+            _position += new Vector2(Velocity.X/(float)Scale, Velocity.Y/(float)Scale);
+            Scale += Velocity.Z;
+
+            _velocity.X = Reduce(Velocity.X, FRICTION);
+            _velocity.Y = Reduce(Velocity.Y, FRICTION);
+            _velocity.Z = Reduce(Velocity.Z, FRICTION/4);
+
+            
+            
+          
+
+
+        }
+
+        // pull 'a' closer to zero by 'b' amount. don't let 'a' overshoot zero.
+        private float Reduce(float a, float b)
+        {
+            // a should remain at zero if it is already there.
+            if(a==0)
+            {
+                return a;
+            }
+
+            b = MathF.Abs(b);
+            if (a > 0)
+            {
+                a -= b;
+                if (a < 0)
+                {
+                    a = 0;
+                }
+
+                return a;
+
+            }
+
+            a += b;
+            if(a>0)
+            {
+                a = 0;
+            }
+
+            return a;
+        }
+
     }
 
 
-    public void update()
-    {
-      // this.Position = 
-    }
+   
 }

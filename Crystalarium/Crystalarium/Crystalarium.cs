@@ -22,7 +22,7 @@ namespace Crystalarium
         private Controller controller;
 
 
-        private const int BUILD = 217;
+        private const int BUILD = 240;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -32,8 +32,7 @@ namespace Crystalarium
         GridView minimap;
 
         Grid g;
-        double i= 0;
-        double j = 0;
+        private MouseState prevMouse;
        
        
 
@@ -61,22 +60,50 @@ namespace Crystalarium
 
             // make an action
 
-            //copy
-            controller.addAction("copy", () => Console.WriteLine("Copied!"));
-            new Keybind(controller, Keystate.OnPress, "copy", Button.LeftControl, Button.C);
-
-            //paste
-            controller.addAction("paste", () => Console.WriteLine("Pasted!"));
-            new Keybind(controller, Keystate.OnPress, "paste", Button.LeftControl, Button.V);
-
-            // shift click
-            controller.addAction("click", () => Console.WriteLine("Shift Clicked!"));
-            new Keybind(controller, Keystate.OnRelease, "click", Button.MouseLeft, Button.LeftShift);
-
-            // W
-            controller.addAction("up", () => Console.WriteLine("Going Up!"));
+            // shitty test code.
+            float cameraSpeed = 1f;
+            float maxSpeed = 10f;
+            // camera up
+            controller.addAction("up", () => 
+            {
+                view.Camera.VelY -= cameraSpeed;
+                if (view.Camera.VelY < -maxSpeed)
+                    view.Camera.VelY = -maxSpeed;
+            });
             new Keybind(controller, Keystate.Down, "up", Button.W);
             new Keybind(controller, Keystate.Down, "up", Button.Up);
+
+
+            // camera down
+            controller.addAction("down", () =>
+            {
+                view.Camera.VelY += cameraSpeed;
+                if (view.Camera.VelY > maxSpeed)
+                    view.Camera.VelY = maxSpeed;
+            });
+            new Keybind(controller, Keystate.Down, "down", Button.S);
+            new Keybind(controller, Keystate.Down, "down", Button.Down);
+
+            // camera left
+            controller.addAction("left", () =>
+            {
+                view.Camera.VelX -= cameraSpeed;
+                if (view.Camera.VelX < -maxSpeed)
+                    view.Camera.VelX = -maxSpeed;
+            });
+            new Keybind(controller, Keystate.Down, "left", Button.A);
+            new Keybind(controller, Keystate.Down, "left", Button.Left);
+
+            // camera right
+            controller.addAction("right", () =>
+            {
+                view.Camera.VelX += cameraSpeed;
+                if (view.Camera.VelX > maxSpeed)
+                    view.Camera.VelX = maxSpeed;
+            });
+            new Keybind(controller, Keystate.Down, "right", Button.D);
+            new Keybind(controller, Keystate.Down, "right", Button.Right);
+
 
 
 
@@ -123,7 +150,7 @@ namespace Crystalarium
             // create a couple test viewports.
             view = new GridView(viewports, g, 0, 0, width, height);
             //v.RendererType = Render.ChunkRender.Type.Default;
-          
+            view.Camera.Scale = view.Camera.MinScale;
 
             // setup the minimap.
 
@@ -158,36 +185,29 @@ namespace Crystalarium
             controller.Update();
             sim.Update(gameTime);
 
+            // update viewport.
+
+            // update viewports.
+            foreach (GridView v in viewports)
+            {
+                v.Update();
+            }
+
+
+
+
             // this is temporary code, meant to demonstrate a viewport's capabilities.
 
-
-
-            i += 0.008; // i is a counter for the viewport's position.
-
-            j += .005; // j is a counter for the viewport's zoom.
-
-            Vector2 pos = new Vector2();
-            double scale = 0;
-
-            float loopSize = 20f; // the size, in tiles, of the loop the viewport will travel.
-
-            // position goes around in a circle while the viewport is slowly zoomed in and out.     
-            pos.X = (float)(Math.Sin(i) * loopSize);
-            pos.Y = (float)(Math.Cos(i) * loopSize);
-
-            // set viewport values.
-            scale = view.Camera.MinScale + (Math.Sin(j) + 1) * ((view.Camera.MaxScale - view.Camera.MinScale)) * .5;
-                  
-            // main camera
-            view.Camera.Scale = scale;
-            view.Camera.Position = pos;
-
-            // minimap positions
-            minimap.Camera.Position = pos;
-            minimap.Camera.Scale = scale/12;
-            
+            float scrollDiff = Mouse.GetState().ScrollWheelValue - prevMouse.ScrollWheelValue;
+            view.Camera.VelZ += scrollDiff/200f;
            
 
+            // minimap positions
+            minimap.Camera.Position = view.Camera.Position;
+            minimap.Camera.Scale = view.Camera.Scale/12;
+
+
+            prevMouse = Mouse.GetState();
 
             base.Update(gameTime);
 

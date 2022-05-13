@@ -257,5 +257,10 @@ namespace Crystalarium.Render
             _border.SetTextures(sides, corners);
 
         }
+
+        public void Update()
+        {
+            _camera.Update();
+        }
     }
 }
