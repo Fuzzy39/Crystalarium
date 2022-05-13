@@ -22,6 +22,8 @@ namespace Crystalarium.Render
         // 'Camera' controls
         private double _scale; // the number of pixels that currently represent one tile in gridspace
         private Vector2 _position; // the position of the top left corner of the viewport, in tiles, in grid space
+        private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions.
+        private const double FRICTION = .1;
 
         private int _minScale; // the minumum and maximum amount of pixels that can represent one tile.
         private int _maxScale;
@@ -31,6 +33,12 @@ namespace Crystalarium.Render
        
 
         // Properties
+        public Vector3 Velocity
+        {
+            get => _velocity;
+            set => _velocity = value;
+        
+        }
 
         public int MinScale
         {
@@ -84,14 +92,20 @@ namespace Crystalarium.Render
         // when setting position with the position property, position is the location, in tile space, of the center of the viewport.
         public Vector2 Position
         {
-            //get => _position; // too lazy to implement this properly. If we need it, I'll add it later.
+            get 
+            {
+                Vector2 toReturn = new Vector2();
+                toReturn.X = _position.X + (TileBounds().Size.X / 2.0f);
+                toReturn.Y = _position.Y + (TileBounds().Size.Y / 2.0f);
+                return toReturn;
+            }// too lazy to implement this properly. If we need it, I'll add it later.
             set
             {
                
                 float x = (float)(-1f * ( (TileBounds().Size.X) / 2f))+ value.X+.5f;
                 float y = (float)(-1f * ( (TileBounds().Size.Y)/2f)) + value.Y+.5f;
                 _position = new Vector2(x, y);
-                
+                _velocity = new Vector3(0);
 
             }
         }
@@ -288,5 +302,11 @@ namespace Crystalarium.Render
             return new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
 
         }
+    }
+
+
+    public void update()
+    {
+      // this.Position = 
     }
 }

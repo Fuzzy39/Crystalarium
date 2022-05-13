@@ -5,8 +5,8 @@ using System.Text;
 namespace Crystalarium.Input
 {
     public enum Button
-    {
-        // most of this was stoled from Monogame's keys
+    { 
+        // most of this was stolen from Monogame's keys
         None = 0,
         //
         // Summary:

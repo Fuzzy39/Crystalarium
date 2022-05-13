@@ -18,6 +18,7 @@ namespace Crystalarium.Input
 
         //keybinds
         private List<Keybind> _keybinds;
+        private List<Action> _actions;
 
 
 
@@ -30,6 +31,11 @@ namespace Crystalarium.Input
         public List<Keybind> Keybinds
         {
             get => _keybinds;
+        }
+
+        public List<Action> Actions
+        {
+            get => _actions;
         }
 
         public GridView View
@@ -69,34 +75,66 @@ namespace Crystalarium.Input
             ih = new InputHandler();
             View = null;
 
+            _keybinds = new List<Keybind>();
+            _actions = new List<Action>();
+
+
         }
+
+
+        public void addAction(string name, Act action)
+        {
+
+            foreach(Action a in _actions)
+            {
+                if(a.name==name)
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+
+            _actions.Add(new Action(name, this, action));
+            
+        }
+
+
+        public Action getAction(string name)
+        {
+            foreach (Action a in _actions)
+            {
+                if (a.name == name)
+                {
+                    return a;
+                }
+            }
+
+            return null;
+        }
+
+        public void addKeybind(Keybind k)
+        {
+            _keybinds.Add(k);
+        }
+
+        public void removeKeybind(Keybind k)
+        {
+            _keybinds.Remove(k);
+        }
+
 
 
         public void Update()
         {
            
 
-            // test code.
-            if(ih.KeyIsState(Button.Enter, Keystate.OnPress))
+            // run keybindss
+            foreach(Keybind k in _keybinds)
             {
-                Console.WriteLine("Enter Pressed.");
+                k.update(ih);
             }
 
-            if (ih.KeyIsState(Button.Enter, Keystate.OnRelease))
-            {
-                Console.WriteLine("Enter Released.");
-            }
 
-            if (ih.KeyIsState(Button.MouseRight, Keystate.OnPress))
-            {
-                Console.WriteLine("Right Mouse Button Clicked.");
-            }
-
-            if (ih.KeyIsState(Button.MouseRight, Keystate.OnRelease))
-            {
-                Console.WriteLine("Right Mouse Button Released.");
-            }
-
+            
             // Update the input handler.
             ih.Update();
 

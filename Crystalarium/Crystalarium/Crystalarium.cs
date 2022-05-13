@@ -22,7 +22,7 @@ namespace Crystalarium
         private Controller controller;
 
 
-        private const int BUILD = 207;
+        private const int BUILD = 217;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -47,7 +47,7 @@ namespace Crystalarium
         }
 
        
-
+       
 
         protected override void Initialize()
         {
@@ -55,7 +55,30 @@ namespace Crystalarium
             // create the basics.
             sim = new SimulationManager(this.TargetElapsedTime.TotalSeconds);
             viewports = new List<GridView>();
+
+            // test the controller.
             controller = new Controller();
+
+            // make an action
+
+            //copy
+            controller.addAction("copy", () => Console.WriteLine("Copied!"));
+            new Keybind(controller, Keystate.OnPress, "copy", Button.LeftControl, Button.C);
+
+            //paste
+            controller.addAction("paste", () => Console.WriteLine("Pasted!"));
+            new Keybind(controller, Keystate.OnPress, "paste", Button.LeftControl, Button.V);
+
+            // shift click
+            controller.addAction("click", () => Console.WriteLine("Shift Clicked!"));
+            new Keybind(controller, Keystate.OnRelease, "click", Button.MouseLeft, Button.LeftShift);
+
+            // W
+            controller.addAction("up", () => Console.WriteLine("Going Up!"));
+            new Keybind(controller, Keystate.Down, "up", Button.W);
+            new Keybind(controller, Keystate.Down, "up", Button.Up);
+
+
 
 
             base.Initialize();
