@@ -10,6 +10,7 @@ namespace Crystalarium.Render.ChunkRender
     {
 
         // a very simple renderer, that does very little.
+ 
 
         public Default(GridView v, Chunk ch, List<Renderer> others) : base(v, ch, others) { }
 
