@@ -22,7 +22,7 @@ namespace Crystalarium
         private Controller controller;
 
 
-        private const int BUILD = 240;
+        private const int BUILD = 255;
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -150,7 +150,7 @@ namespace Crystalarium
             // create a couple test viewports.
             view = new GridView(viewports, g, 0, 0, width, height);
             //v.RendererType = Render.ChunkRender.Type.Default;
-            view.Camera.Scale = view.Camera.MinScale;
+            
 
             // setup the minimap.
 
@@ -182,7 +182,7 @@ namespace Crystalarium
                 Exit();
 
 
-            controller.Update();
+          
             sim.Update(gameTime);
 
             // update viewport.
@@ -198,17 +198,16 @@ namespace Crystalarium
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
 
-            float scrollDiff = Mouse.GetState().ScrollWheelValue - prevMouse.ScrollWheelValue;
-            view.Camera.VelZ += scrollDiff/200f;
-           
+            view.Camera.VelZ += controller.DeltaScroll/200f;
+            view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
 
             // minimap positions
             minimap.Camera.Position = view.Camera.Position;
             minimap.Camera.Scale = view.Camera.Scale/12;
 
 
-            prevMouse = Mouse.GetState();
-
+     
+            controller.Update();
             base.Update(gameTime);
 
         }
@@ -239,7 +238,7 @@ namespace Crystalarium
             // some debug text. We'll clear this out sooner or later...
 
             spriteBatch.DrawString(testFont, "Milestone 1, Build " + BUILD, new Vector2(10, height - 25), Color.White);
-            //spriteBatch.DrawString(testFont, "Demo #"+mode+". Press enter to switch demos.", new Vector2(10, height-45), Color.White);
+            spriteBatch.DrawString(testFont, "WASD to pan. Scroll to zoom.", new Vector2(10, height-45), Color.White);
             spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + sim.ActualStepsPS, new Vector2(10, 10), Color.White);
 
             spriteBatch.End();

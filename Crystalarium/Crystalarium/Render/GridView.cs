@@ -11,7 +11,7 @@ namespace Crystalarium.Render
 {
     public class GridView
     {
-        /* A GridView represents an area that renders a grid.
+        /* A GridView represents an area that renders a grid.   
          * 
          * it has a camera, which controls where elements of the grid appear in the gridview, and if they appear at all.
          * it also has a border, which can be optionally rendered to show where this gridview exists.
@@ -141,6 +141,12 @@ namespace Crystalarium.Render
 
 
         // Methods
+
+        public  Point LocalizeCoords(Point p)
+        {
+            return p - _pixelBounds.Location;
+        }
+
 
         public void Draw(SpriteBatch sb)
         {

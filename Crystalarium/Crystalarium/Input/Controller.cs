@@ -12,6 +12,7 @@ namespace Crystalarium.Input
 
         private Grid _grid;
         private GridView _view;
+        private MouseState _prevMouseState;
 
         // actual control related things.
         private InputHandler ih;
@@ -22,7 +23,7 @@ namespace Crystalarium.Input
 
 
 
-
+        
         public Grid Grid
         {
             get => _grid;
@@ -67,6 +68,12 @@ namespace Crystalarium.Input
                 // set our view and tell it that we are controlling it.
                 _view = value;
             }
+        }
+
+
+        public int DeltaScroll
+        {
+            get => Mouse.GetState().ScrollWheelValue - _prevMouseState.ScrollWheelValue;
         }
 
 
@@ -137,6 +144,7 @@ namespace Crystalarium.Input
             
             // Update the input handler.
             ih.Update();
+            _prevMouseState = Mouse.GetState();
 
 
         }

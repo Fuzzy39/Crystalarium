@@ -28,16 +28,18 @@ namespace Crystalarium.Render
         private int _minScale; // the minumum and maximum amount of pixels that can represent one tile.
         private int _maxScale;
 
+        private Point _zoomOrigin;
 
-        
-       
+
+
+
 
         // Properties
         public Vector3 Velocity
         {
             get => _velocity;
             set => _velocity = value;
-        
+
         }
 
         public float VelX
@@ -109,7 +111,7 @@ namespace Crystalarium.Render
                     VelZ = 0;
                 }
 
-                    
+
                 _scale = value;
             }
         }
@@ -117,23 +119,32 @@ namespace Crystalarium.Render
         // when setting position with the position property, position is the location, in tile space, of the center of the viewport.
         public Vector2 Position
         {
-            get 
+            get
             {
                 Vector2 toReturn = new Vector2();
-                toReturn.X = _position.X + (TileBounds().Size.X / 2.0f)-.5f;
-                toReturn.Y = _position.Y + (TileBounds().Size.Y / 2.0f) -.5f;
+                toReturn.X = _position.X + (TileBounds().Size.X / 2.0f) - .5f;
+                toReturn.Y = _position.Y + (TileBounds().Size.Y / 2.0f) - .5f;
                 return toReturn;
             }// too lazy to implement this properly. If we need it, I'll add it later.
             set
             {
-               
-                float x = (float)(-1f * ( (TileBounds().Size.X) / 2f))+ value.X+.5f;
-                float y = (float)(-1f * ( (TileBounds().Size.Y)/2f)) + value.Y+.5f;
+
+                float x = (float)(-1f * ((TileBounds().Size.X) / 2f)) + value.X + .5f;
+                float y = (float)(-1f * ((TileBounds().Size.Y) / 2f)) + value.Y + .5f;
                 _position = new Vector2(x, y);
                 _velocity = new Vector3(0);
 
             }
         }
+
+
+        public Point ZoomOrigin
+        {
+            get => _zoomOrigin;
+            set => _zoomOrigin = value; 
+        
+        }
+
 
         // Constructors
 
@@ -148,26 +159,29 @@ namespace Crystalarium.Render
             // set the 'camera' to reasonable values
             _scale = (_minScale + _maxScale) / 2.0;
             Position = new Vector2(0, 0);
+
+            _zoomOrigin = new Point(0);
         }
 
 
 
         // Drawing code:
-    
+
+
 
         // returns the bounds in tilespace of the viewport
         public RectangleF TileBounds()
         {
-            return new RectangleF(_position.X, _position.Y, 
-                (float)(parent.PixelBounds.Width / Scale), 
+            return new RectangleF(_position.X, _position.Y,
+                (float)(parent.PixelBounds.Width / Scale),
                 (float)(parent.PixelBounds.Height / Scale));
         }
 
         // returns  pixel coords relative to start of viewport.
         // this also works outside of the viewport.
-        private Point TiletoPixelCoords(Vector2 tilePos)
+        private Point TileToPixelCoords(Vector2 tilePos)
         {
-           
+
             // tile to pixel:
             // first, tile to pixel relative to base coords
             // how do we do that?
@@ -178,6 +192,15 @@ namespace Crystalarium.Render
             return new Point(x, y);
 
         }
+
+        // assumes pixelPos is localized.
+        private Vector2 PixelToTileCoords(Point pixelPos)
+        {
+            float x = (float)(_position.X + (pixelPos.X / _scale));
+            float y = (float)(_position.Y + (pixelPos.Y / _scale));
+            return new Vector2(x, y);
+        }
+
 
         public bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds)
         {
@@ -198,7 +221,7 @@ namespace Crystalarium.Render
         public bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c)
         {
             // check if the texture needs to be rendered by this viewport
-            if(!TileBounds().Intersects(bounds))
+            if (!TileBounds().Intersects(bounds))
             {
                 return false;
             }
@@ -206,10 +229,10 @@ namespace Crystalarium.Render
 
             //it does! collect some basic information.
             // we add a couple pixels to the size of things
-            Point pixelCoords = TiletoPixelCoords(bounds.Location)+new Point(1);
-            Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale))+new Point(1,1);
+            Point pixelCoords = TileToPixelCoords(bounds.Location) + new Point(1);
+            Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale)) + new Point(1, 1);
 
-          
+
             // partial rendering...
             // render it!
             Rectangle texturePixelBounds = new Rectangle(pixelCoords, pixelSize);
@@ -259,7 +282,7 @@ namespace Crystalarium.Render
             int rightSide = parent.PixelBounds.X + this.parent.PixelBounds.Width;
             size.X = GetRenderSize(rightSide, texturePixelBounds.Size.X, leftCut, topLeft.X, out rightCut);
 
-            int bottomSide =parent.PixelBounds.Y + parent.PixelBounds.Height;
+            int bottomSide = parent.PixelBounds.Y + parent.PixelBounds.Height;
             size.Y = GetRenderSize(bottomSide, texturePixelBounds.Size.Y, topCut, topLeft.Y, out bottomCut);
 
 
@@ -305,17 +328,17 @@ namespace Crystalarium.Render
             // figure out the size of the source rectangle:
 
             // get the width, in pixels, of the destination.
-            float textureWidth = (float)(texturePixelBounds.Width - ((leftCut>rightCut)? leftCut : rightCut)); 
+            float textureWidth = (float)(texturePixelBounds.Width - ((leftCut > rightCut) ? leftCut : rightCut));
 
             // get the width of the source rectangle, as a ratio of total width of the texuture
             float textureWidthRatio = textureWidth / (float)texturePixelBounds.Width;
 
             // get the width of the source rectangle in pixels
-            int sourceWidth = (int)( textureWidthRatio * texture.Width );
+            int sourceWidth = (int)(textureWidthRatio * texture.Width);
 
 
             // get the height, in pixels, of the destination.
-            float textureHeight = (float)(texturePixelBounds.Height - ((bottomCut<topCut)? topCut: bottomCut));
+            float textureHeight = (float)(texturePixelBounds.Height - ((bottomCut < topCut) ? topCut : bottomCut));
 
             // get the height of the source rectangle, as a ratio of total width of the texuture
             float textureHeightRatio = textureHeight / (float)texturePixelBounds.Height;
@@ -331,17 +354,41 @@ namespace Crystalarium.Render
         public void Update()
         {
             // somewhat naive camera movement functionality.
-            _position += new Vector2(Velocity.X/(float)Scale, Velocity.Y/(float)Scale);
-            Scale += Velocity.Z;
+            _position += new Vector2(Velocity.X / (float)Scale, Velocity.Y / (float)Scale);
+            Zoom(_scale + Velocity.Z);
+
 
             _velocity.X = Reduce(Velocity.X, FRICTION);
             _velocity.Y = Reduce(Velocity.Y, FRICTION);
-            _velocity.Z = Reduce(Velocity.Z, FRICTION/4);
+            _velocity.Z = Reduce(Velocity.Z, FRICTION / 4);
 
-            
-            
-          
 
+
+
+
+        }
+
+
+
+        public void Zoom(double newScale )
+        {
+            // functionally a dilation.
+
+            // we need to change the scale to newscale while ensuring that the center remains the same.
+            // first, get the tilespace location of the center currently.
+
+            // this must remain in the same location as the origin before and after the transformation
+            Vector2 originLocation = PixelToTileCoords(_zoomOrigin);
+           
+            _scale = newScale;
+            // ensure we don't bust anything.
+            if (_scale > MaxScale) { _scale = MaxScale; VelZ = 0; }
+            if (_scale < MinScale) { _scale = MinScale; VelZ = 0; }
+
+            // okay, we need to correct the camera position now.
+
+            Vector2 originError = originLocation- PixelToTileCoords(_zoomOrigin);
+            _position += originError;
 
         }
 

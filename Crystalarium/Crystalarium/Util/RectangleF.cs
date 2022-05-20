@@ -145,13 +145,6 @@ namespace Crystalarium.Util
 
         }
 
-        /*private bool IntersectsStrict(RectangleF rect)
-        {
-            return this.Contains(rect.TopLeft)
-                || this.Contains(rect.TopRight)
-                || this.Contains(rect.BottomRight)
-                || this.Contains(rect.BottomLeft);
-        }*/
 
         public bool Intersects(Rectangle rect)
         {
