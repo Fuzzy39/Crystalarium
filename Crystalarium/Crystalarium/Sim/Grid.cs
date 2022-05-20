@@ -18,12 +18,32 @@ namespace Crystalarium.Sim
 
         private List<List<Chunk>> _chunks; // a 2d array where the outer array represents rows and the inner array represents columns. [x][y]
         private Point chunksOrigin; // the chunk coords where the chunk array, chunks, starts.
-        private Point chunksSize;
+        private Point chunksSize; // the size, in chunks, of the grid.
 
         public List<List<Chunk>> Chunks
         {
             get => _chunks;
         }
+
+        public Rectangle Bounds
+        { 
+            get
+            {
+                return new Rectangle
+                  ( chunksOrigin.X * Chunk.SIZE,
+                    chunksOrigin.Y * Chunk.SIZE,
+                    chunksSize.X   * Chunk.SIZE,
+                    chunksSize.Y   * Chunk.SIZE );
+            }
+        
+        }
+
+        public Point gridSize
+        {
+            get => chunksSize;
+        }
+
+
 
         public Grid(SimulationManager sim)
         {
@@ -198,6 +218,9 @@ namespace Crystalarium.Sim
 
             }
         }
+
+
+      
 
 
     }

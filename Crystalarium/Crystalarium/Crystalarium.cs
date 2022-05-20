@@ -23,7 +23,7 @@ namespace Crystalarium
 
 
 
-        private const int BUILD = 255;
+        private const int BUILD = 267;
 
 
         // Content (should maybe move this eventually?)
@@ -33,9 +33,7 @@ namespace Crystalarium
         GridView view;
         GridView minimap;
 
-        Grid g;
-        private MouseState prevMouse;
-       
+        Grid g;    
        
 
         public Crystalarium()
@@ -88,7 +86,28 @@ namespace Crystalarium
             new Keybind(controller, Keystate.Down, "right", Button.Right);
 
 
-         
+            // grow the grid!
+            controller.addAction("grow up", () => g.ExpandGrid(Direction.up));
+            new Keybind(controller, Keystate.OnPress, "grow up", Button.U);
+  
+
+
+            controller.addAction("grow down", () => g.ExpandGrid(Direction.down));
+            new Keybind(controller, Keystate.OnPress, "grow down", Button.J);
+
+
+            // camera left
+            controller.addAction("grow left", () => g.ExpandGrid(Direction.left));
+            new Keybind(controller, Keystate.OnPress, "grow left", Button.H);
+          
+
+            // camera right
+            controller.addAction("grow right", () => g.ExpandGrid(Direction.right));
+
+            new Keybind(controller, Keystate.OnPress, "grow right", Button.K);
+      
+
+
 
             base.Initialize();
 
@@ -114,13 +133,13 @@ namespace Crystalarium
             g = new Grid(sim);
 
             // make it a size or something.
-            g.ExpandGrid(Direction.right);
+           /* g.ExpandGrid(Direction.right);
             g.ExpandGrid(Direction.left);
             g.ExpandGrid(Direction.left);
 
             g.ExpandGrid(Direction.up);
             g.ExpandGrid(Direction.up);
-            g.ExpandGrid(Direction.down);
+            g.ExpandGrid(Direction.down);*/
 
 
 
@@ -221,8 +240,8 @@ namespace Crystalarium
             // some debug text. We'll clear this out sooner or later...
 
             spriteBatch.DrawString(testFont, "Milestone 1, Build " + BUILD, new Vector2(10, height - 25), Color.White);
-            spriteBatch.DrawString(testFont, "WASD to pan. Scroll to zoom.", new Vector2(10, height-45), Color.White);
-            spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + sim.ActualStepsPS, new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(testFont, "WASD to pan. Scroll to zoom. UHJK to E X P A N D", new Vector2(10, height-45), Color.White);
+            spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + sim.ActualStepsPS +" Chunks: "+g.gridSize.X*g.gridSize.Y, new Vector2(10, 10), Color.White);
 
             spriteBatch.End();
 

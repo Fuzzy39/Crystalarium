@@ -266,7 +266,7 @@ namespace Crystalarium.Render
 
         public void Update()
         {
-            _camera.Update();
+            _camera.Update(_grid.Bounds);
         }
     }
 }

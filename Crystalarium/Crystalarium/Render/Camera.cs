@@ -373,12 +373,50 @@ namespace Crystalarium.Render
 
         }
 
-        public void Update()
+        private bool setPosition(Vector2 pos, Rectangle bounds)
+        {
+            float centerX = (float)(((TileBounds().Size.X) / 2f)) + pos.X;
+            float centerY = (float)(((TileBounds().Size.Y) / 2f)) + pos.Y;
+            Vector2 nextCenter = new Vector2(centerX, centerY);
+
+            if (new RectangleF(bounds).Contains(nextCenter))
+            {
+                _position = pos;
+                return true;
+            }
+
+            return false;
+
+
+        }
+
+
+        public void Update( Rectangle bounds)
         {
 
-            // somewhat naive camera movement functionality.
-            _position += new Vector2(Velocity.X / (float)Scale, Velocity.Y / (float)Scale);
-            Zoom(_scale + Velocity.Z);
+
+            Vector2 nextPos = _position + new Vector2(Velocity.X / (float)Scale, Velocity.Y / (float)Scale);
+            
+
+            // prevent camera movement outside the bounds.
+            if (!setPosition(new Vector2(nextPos.X, _position.Y), bounds))
+            {
+                // add a bit of bounce to the camera.
+                VelX = (float)(-VelX/2);
+             
+
+            }
+
+            if (!setPosition(new Vector2(_position.X, nextPos.Y), bounds))
+            {
+                // add a bit of bounce to the camera.
+                VelY = (float)(-VelY / 2);
+
+
+            }
+
+
+            Zoom(_scale + Velocity.Z, bounds);
 
 
             _velocity.X = Reduce(Velocity.X, FRICTION);
@@ -393,7 +431,7 @@ namespace Crystalarium.Render
 
 
 
-        public void Zoom(double newScale )
+        public void Zoom(double newScale, Rectangle bounds )
         {
             // functionally a dilation.
 
@@ -411,7 +449,7 @@ namespace Crystalarium.Render
             // okay, we need to correct the camera position now.
 
             Vector2 originError = originLocation- PixelToTileCoords(_zoomOrigin);
-            _position += originError;
+            setPosition(_position + originError, bounds);
 
         }
 
