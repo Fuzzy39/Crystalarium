@@ -22,7 +22,9 @@ namespace Crystalarium
         private Controller controller;
 
 
+
         private const int BUILD = 255;
+
 
         // Content (should maybe move this eventually?)
         private SpriteFont testFont;
@@ -61,52 +63,32 @@ namespace Crystalarium
             // make an action
 
             // shitty test code.
-            float cameraSpeed = 1f;
-            float maxSpeed = 10f;
+            float camSpeed = 1f;
+            
             // camera up
-            controller.addAction("up", () => 
-            {
-                view.Camera.VelY -= cameraSpeed;
-                if (view.Camera.VelY < -maxSpeed)
-                    view.Camera.VelY = -maxSpeed;
-            });
+            controller.addAction("up", ()=>view.Camera.AddVelocity(camSpeed, Direction.up));
             new Keybind(controller, Keystate.Down, "up", Button.W);
             new Keybind(controller, Keystate.Down, "up", Button.Up);
 
 
             // camera down
-            controller.addAction("down", () =>
-            {
-                view.Camera.VelY += cameraSpeed;
-                if (view.Camera.VelY > maxSpeed)
-                    view.Camera.VelY = maxSpeed;
-            });
+            controller.addAction("down", () => view.Camera.AddVelocity(camSpeed, Direction.down));
             new Keybind(controller, Keystate.Down, "down", Button.S);
             new Keybind(controller, Keystate.Down, "down", Button.Down);
 
             // camera left
-            controller.addAction("left", () =>
-            {
-                view.Camera.VelX -= cameraSpeed;
-                if (view.Camera.VelX < -maxSpeed)
-                    view.Camera.VelX = -maxSpeed;
-            });
+            controller.addAction("left", () => view.Camera.AddVelocity(camSpeed, Direction.left));
             new Keybind(controller, Keystate.Down, "left", Button.A);
             new Keybind(controller, Keystate.Down, "left", Button.Left);
 
             // camera right
-            controller.addAction("right", () =>
-            {
-                view.Camera.VelX += cameraSpeed;
-                if (view.Camera.VelX > maxSpeed)
-                    view.Camera.VelX = maxSpeed;
-            });
+            controller.addAction("right", () => view.Camera.AddVelocity(camSpeed, Direction.right));
+
             new Keybind(controller, Keystate.Down, "right", Button.D);
             new Keybind(controller, Keystate.Down, "right", Button.Right);
 
 
-
-
+         
 
             base.Initialize();
 
@@ -149,8 +131,9 @@ namespace Crystalarium
 
             // create a couple test viewports.
             view = new GridView(viewports, g, 0, 0, width, height);
-            //v.RendererType = Render.ChunkRender.Type.Default;
-            
+            //view.RendererType = Render.ChunkRender.Type.Default;
+         
+
 
             // setup the minimap.
 
@@ -166,8 +149,8 @@ namespace Crystalarium
 
             // Set the camera of the minimap.
             minimap.Camera.MinScale = 1;
-            minimap.Camera.Scale = 3;
-            minimap.Camera.Position = new Vector2(0, 0);
+            
+           
        
 
 

@@ -24,6 +24,7 @@ namespace Crystalarium.Render
         private Vector2 _position; // the position of the top left corner of the viewport, in tiles, in grid space
         private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions. (in pixels/frame)
         private const float FRICTION = .3f;
+        private const float MAX_SPEED = 10f;
 
         private int _minScale; // the minumum and maximum amount of pixels that can represent one tile.
         private int _maxScale;
@@ -38,25 +39,46 @@ namespace Crystalarium.Render
         public Vector3 Velocity
         {
             get => _velocity;
-            set => _velocity = value;
+
+            set
+            {
+                VelX = value.X;
+                VelY = value.Y;
+                VelZ = value.Z;
+            }
+        
 
         }
 
         public float VelX
         {
             get => _velocity.X;
-            set => _velocity.X = value;
+            set 
+            {
+                _velocity.X = value;
+                // limit velocity.
+                if (_velocity.X > MAX_SPEED) _velocity.X = MAX_SPEED;
+                if (_velocity.X < -MAX_SPEED) _velocity.X = -MAX_SPEED;
+            }
         }
 
         public float VelY
         {
             get => _velocity.Y;
-            set => _velocity.Y = value;
+            set
+            {
+                _velocity.Y = value;
+
+                // limit velocity.
+                if (_velocity.Y > MAX_SPEED) _velocity.Y = MAX_SPEED;
+                if (_velocity.Y < -MAX_SPEED) _velocity.Y = -MAX_SPEED;
+            }
         }
 
         public float VelZ
         {
             get => _velocity.Z;
+            // we won't limit z, for now.
             set => _velocity.Z = value;
         }
 
@@ -229,11 +251,11 @@ namespace Crystalarium.Render
 
             //it does! collect some basic information.
             // we add a couple pixels to the size of things
-            Point pixelCoords = TileToPixelCoords(bounds.Location) + new Point(1);
-            Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale)) + new Point(1, 1);
 
+            Point pixelCoords = TileToPixelCoords(bounds.Location)-new Point(1);
+            Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale))+new Point(1,1);
 
-            // partial rendering...
+            // partial renderings
             // render it!
             Rectangle texturePixelBounds = new Rectangle(pixelCoords, pixelSize);
 
@@ -353,6 +375,7 @@ namespace Crystalarium.Render
 
         public void Update()
         {
+
             // somewhat naive camera movement functionality.
             _position += new Vector2(Velocity.X / (float)Scale, Velocity.Y / (float)Scale);
             Zoom(_scale + Velocity.Z);
@@ -389,6 +412,15 @@ namespace Crystalarium.Render
 
             Vector2 originError = originLocation- PixelToTileCoords(_zoomOrigin);
             _position += originError;
+
+        }
+
+        public void AddVelocity(float vel, Direction d)
+        {
+            // get the velocity we need to add.
+            Vector2 toAdd = d.ToPoint().ToVector2()*vel;
+            VelX += toAdd.X;
+            VelY += toAdd.Y;
 
         }
 
