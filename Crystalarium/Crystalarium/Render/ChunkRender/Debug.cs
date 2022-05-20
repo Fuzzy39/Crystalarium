@@ -44,27 +44,48 @@ namespace Crystalarium.Render.ChunkRender
             {
                 return Color.Black;
             }
+            int r;
+            int g;
+            int b;
 
             if(renderData.Coords.Equals(new Point(0)))
             {
-                if (isRenderedByTarget(renderData))
-                {
-                    return Color.Salmon;
-                }
 
-                return Color.Red;
+                r = 150;
+                g = 50;
+                b = 50;
             }
+            else
+            {
+
+                r = 50;
+                g = 50;
+                b = 150;
+
+                Point pos =renderData.Parent.getChunkPos(renderData);
+                if ((pos.X+pos.Y)%2==0)
+                {
+                    r += 30;
+                    g += 30;
+                    b += 30;
+                }
+            }
+
 
 
             // check if the target is rendered
             if (isRenderedByTarget(renderData))
             {
-                return Color.PowderBlue;
+                r += 70;
+                g += 70;
+                b += 70;
             }
+
+            return new Color(r, g, b);
            
             
 
-            return Color.Blue;
+          
             
             
         }

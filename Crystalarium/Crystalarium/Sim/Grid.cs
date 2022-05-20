@@ -220,6 +220,26 @@ namespace Crystalarium.Sim
         }
 
 
+        public Point getChunkPos(Chunk ch)
+        {
+            // get the chunk
+          
+            for(int x = 0; x < Chunks.Count; x++)
+            {
+                List<Chunk> list = Chunks[x];
+                for(int y = 0; y < list.Count; y++)
+                {
+                    if(list[y] == ch)
+                    {
+                        // we found the chunk!
+                        return new Point(x, y);
+                    }
+                }
+            }
+
+            return new Point();
+        }
+
       
 
 
