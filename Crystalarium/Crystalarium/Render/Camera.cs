@@ -23,19 +23,34 @@ namespace Crystalarium.Render
         private double _scale; // the number of pixels that currently represent one tile in gridspace
         private Vector2 _position; // the position of the top left corner of the viewport, in tiles, in grid space
         private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions. (in pixels/frame)
-        private const float FRICTION = .3f;
-        private const float MAX_SPEED = 10f;
+        private const float FRICTION = .3f; // the rate which camera velocity is reduced, in pixels/frame.
+        private const float MAX_SPEED = 10f; // the maximum velocity (in x and y dimensions) of the camera in pixels/frame.
 
         private int _minScale; // the minumum and maximum amount of pixels that can represent one tile.
         private int _maxScale;
 
-        private Point _zoomOrigin;
+        private Point _zoomOrigin; // the point, in pixels relative to the top left corner of our gridview,
+                                   // that serves as the origin for dilation translations/zooming.
 
-
+        private Rectangle _bounds; // the tilespace to where the center coordinate of the camera is confined.
+        private bool _isBound; // whether the camera is bound, or whether it is free.
 
 
 
         // Properties
+
+        public bool IsBound
+        {
+            get => _isBound;
+            set => _isBound = value;
+        }
+
+        public Rectangle Bounds
+        {
+            get => _bounds;
+            set => _bounds = value;
+        }
+
         public Vector3 Velocity
         {
             get => _velocity;
@@ -139,21 +154,21 @@ namespace Crystalarium.Render
         }
 
         // when setting position with the position property, position is the location, in tile space, of the center of the viewport.
+        // this causes... headaches.
         public Vector2 Position
         {
             get
             {
                 Vector2 toReturn = new Vector2();
-                toReturn.X = _position.X + (TileBounds().Size.X / 2.0f) - .5f;
-                toReturn.Y = _position.Y + (TileBounds().Size.Y / 2.0f) - .5f;
+                toReturn.X = _position.X + (TileBounds().Size.X / 2.0f);
+                toReturn.Y = _position.Y + (TileBounds().Size.Y / 2.0f);
                 return toReturn;
             }// too lazy to implement this properly. If we need it, I'll add it later.
             set
             {
-
-                float x = (float)(-1f * ((TileBounds().Size.X) / 2f)) + value.X + .5f;
-                float y = (float)(-1f * ((TileBounds().Size.Y) / 2f)) + value.Y + .5f;
-                _position = new Vector2(x, y);
+                float x = (float)(-1f * ((TileBounds().Size.X) / 2f)) + value.X;
+                float y = (float)(-1f * ((TileBounds().Size.Y) / 2f)) + value.Y;
+                setPosition(new Vector2(x, y));
                 _velocity = new Vector3(0);
 
             }
@@ -180,9 +195,12 @@ namespace Crystalarium.Render
 
             // set the 'camera' to reasonable values
             _scale = (_minScale + _maxScale) / 2.0;
-            Position = new Vector2(0, 0);
+            _position = new Vector2(0, 0);
+
 
             _zoomOrigin = new Point(0);
+            _bounds = new Rectangle(0, 0, 1, 1);
+            _isBound = false;
         }
 
 
@@ -373,33 +391,42 @@ namespace Crystalarium.Render
 
         }
 
-        private bool setPosition(Vector2 pos, Rectangle bounds)
+        // sets the position of the camera if that position would be in bounds.
+        // pos represents the location of the top left corner of the screen.
+     
+        private bool setPosition(Vector2 pos)
         {
             float centerX = (float)(((TileBounds().Size.X) / 2f)) + pos.X;
             float centerY = (float)(((TileBounds().Size.Y) / 2f)) + pos.Y;
             Vector2 nextCenter = new Vector2(centerX, centerY);
 
-            if (new RectangleF(bounds).Contains(nextCenter))
+            if ((!_isBound) || new RectangleF(_bounds).Contains(nextCenter))
             {
+               
                 _position = pos;
                 return true;
             }
+           
+
+
 
             return false;
 
 
         }
 
-
+     
         public void Update( Rectangle bounds)
         {
 
-
+            _bounds = bounds;
+              
+         
             Vector2 nextPos = _position + new Vector2(Velocity.X / (float)Scale, Velocity.Y / (float)Scale);
             
 
             // prevent camera movement outside the bounds.
-            if (!setPosition(new Vector2(nextPos.X, _position.Y), bounds))
+            if (!setPosition(new Vector2(nextPos.X, _position.Y)))
             {
                 // add a bit of bounce to the camera.
                 VelX = (float)(-VelX/2);
@@ -407,7 +434,7 @@ namespace Crystalarium.Render
 
             }
 
-            if (!setPosition(new Vector2(_position.X, nextPos.Y), bounds))
+            if (!setPosition(new Vector2(_position.X, nextPos.Y)))
             {
                 // add a bit of bounce to the camera.
                 VelY = (float)(-VelY / 2);
@@ -416,14 +443,22 @@ namespace Crystalarium.Render
             }
 
 
-            Zoom(_scale + Velocity.Z, bounds);
+         
+             Zoom(_scale + Velocity.Z);
+            
+
+            // check that the camera is in bounds. If bounded, the camera should NEVER be out of bounds.
+            if (_isBound & !new RectangleF(_bounds).Contains(Position))
+            {
+                throw new InvalidOperationException(Position + " is out of bounds " + _bounds + " for this Camera.");
+            }
 
 
             _velocity.X = Reduce(Velocity.X, FRICTION);
             _velocity.Y = Reduce(Velocity.Y, FRICTION);
             _velocity.Z = Reduce(Velocity.Z, FRICTION / 4);
 
-
+            
 
 
 
@@ -431,7 +466,7 @@ namespace Crystalarium.Render
 
 
 
-        public void Zoom(double newScale, Rectangle bounds )
+        public void Zoom(double newScale)
         {
             // functionally a dilation.
 
@@ -440,16 +475,42 @@ namespace Crystalarium.Render
 
             // this must remain in the same location as the origin before and after the transformation
             Vector2 originLocation = PixelToTileCoords(_zoomOrigin);
-           
+
+
+            // if all went well, actually change the zoom.
             _scale = newScale;
+
             // ensure we don't bust anything.
             if (_scale > MaxScale) { _scale = MaxScale; VelZ = 0; }
             if (_scale < MinScale) { _scale = MinScale; VelZ = 0; }
 
             // okay, we need to correct the camera position now.
 
+
+            // get the changes we need to make
             Vector2 originError = originLocation- PixelToTileCoords(_zoomOrigin);
-            setPosition(_position + originError, bounds);
+            Vector2 pos = _position + originError;
+
+            // pos could be invalid. we must forcibly validate it.
+            if (_isBound)
+            {
+                // first, get the center.
+                float centerX = (float)(((TileBounds().Size.X) / 2f)) + pos.X;
+                float centerY = (float)(((TileBounds().Size.Y) / 2f)) + pos.Y;
+                Vector2 center = new Vector2(centerX, centerY);
+
+                // rectify positions.
+                // the .1fs are for some ridiclous floating point nonsense
+                if (center.X > _bounds.Right) { pos.X -= center.X - _bounds.Right; }
+                if (center.X < _bounds.Left) { pos.X -=  center.X - _bounds.Left - .1f; }
+                if (center.Y > _bounds.Bottom) { pos.Y -= center.Y -_bounds.Bottom; }
+                if (center.Y < _bounds.Top) { pos.Y -= center.Y - _bounds.Top -.1f; }
+
+            }
+            
+            
+            setPosition(pos);
+            
 
         }
 

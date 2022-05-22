@@ -23,7 +23,7 @@ namespace Crystalarium
 
 
 
-        private const int BUILD = 267;
+        private const int BUILD = 299;
 
 
         // Content (should maybe move this eventually?)
@@ -151,6 +151,9 @@ namespace Crystalarium
             // create a couple test viewports.
             view = new GridView(viewports, g, 0, 0, width, height);
             //view.RendererType = Render.ChunkRender.Type.Default;
+
+            // prevent the camera from leaving the world.
+            view.Camera.IsBound = true;
          
 
 
