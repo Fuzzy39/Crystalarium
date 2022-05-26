@@ -23,7 +23,7 @@ namespace Crystalarium
 
 
 
-        private const int BUILD = 299;
+        private const int BUILD = 318;
 
 
         // Content (should maybe move this eventually?)
@@ -105,7 +105,21 @@ namespace Crystalarium
             controller.addAction("grow right", () => g.ExpandGrid(Direction.right));
 
             new Keybind(controller, Keystate.OnPress, "grow right", Button.K);
-      
+
+
+
+
+            // test
+
+            controller.addAction("undo", () => Console.WriteLine("undone!"));
+            new Keybind(controller, Keystate.OnRelease, "undo", Button.Z, Button.LeftControl);
+
+
+            // camera left
+
+            controller.addAction("redo", () => Console.WriteLine("redone!"));
+            new Keybind(controller, Keystate.OnRelease, "redo", Button.Z, Button.LeftControl, Button.LeftShift);
+
 
 
 
@@ -154,7 +168,6 @@ namespace Crystalarium
 
             // prevent the camera from leaving the world.
             view.Camera.IsBound = true;
-         
 
 
             // setup the minimap.
@@ -203,12 +216,12 @@ namespace Crystalarium
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
 
-            view.Camera.VelZ += controller.DeltaScroll/200f;
+            view.Camera.VelZ += controller.DeltaScroll/150f;
             view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
 
             // minimap positions
             minimap.Camera.Position = view.Camera.Position;
-            minimap.Camera.Scale = view.Camera.Scale/12;
+            minimap.Camera.Zoom = view.Camera.Zoom/12;
 
 
      

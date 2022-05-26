@@ -39,6 +39,28 @@ namespace Crystalarium.Render
 
         // Properties
 
+        // scale, but linear, and scaled from 0 to 100, where 100 is maxScale, and 0 is minScale.
+        public float Zoom
+        {
+            get 
+            {
+
+                // scale where 0 is min and 1 is max. .5 is average of min and max.
+                float linearScale = ((float)_scale - _minScale) / ((float)_maxScale - _minScale);
+
+                return (MathF.Pow(2, linearScale)-1)* 100f;
+            }
+            set
+            {
+                if (value < 0) { value = 0; VelZ = 0; }
+                if (value > 100) { value = 100; VelZ = 0; }
+
+                Scale = (MathF.Log((value/ 100f)+1, 2) * (_maxScale -_minScale)) + _minScale;
+
+            }
+        }   
+
+
         public bool IsBound
         {
             get => _isBound;
@@ -131,7 +153,7 @@ namespace Crystalarium.Render
             }
         }
 
-        public double Scale
+        private double Scale
         {
             get => _scale;
             set
@@ -140,12 +162,12 @@ namespace Crystalarium.Render
                 if (value > _maxScale)
                 {
                     value = _maxScale;
-                    VelZ = 0;
+              
                 }
                 if (value < _minScale)
                 {
                     value = _minScale;
-                    VelZ = 0;
+              
                 }
 
 
@@ -442,10 +464,12 @@ namespace Crystalarium.Render
 
             }
 
+           
 
-         
-             Zoom(_scale + Velocity.Z);
-            
+            UpdateZoom(Zoom + Velocity.Z);
+
+          
+
 
             // check that the camera is in bounds. If bounded, the camera should NEVER be out of bounds.
             if (_isBound & !new RectangleF(_bounds).Contains(Position))
@@ -456,7 +480,7 @@ namespace Crystalarium.Render
 
             _velocity.X = Reduce(Velocity.X, FRICTION);
             _velocity.Y = Reduce(Velocity.Y, FRICTION);
-            _velocity.Z = Reduce(Velocity.Z, FRICTION / 4);
+            _velocity.Z = Reduce(Velocity.Z, FRICTION);
 
             
 
@@ -466,7 +490,7 @@ namespace Crystalarium.Render
 
 
 
-        public void Zoom(double newScale)
+        public void UpdateZoom(float newScale)
         {
             // functionally a dilation.
 
@@ -478,7 +502,7 @@ namespace Crystalarium.Render
 
 
             // if all went well, actually change the zoom.
-            _scale = newScale;
+            Zoom = newScale;
 
             // ensure we don't bust anything.
             if (_scale > MaxScale) { _scale = MaxScale; VelZ = 0; }

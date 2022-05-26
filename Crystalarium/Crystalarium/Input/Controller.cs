@@ -121,11 +121,24 @@ namespace Crystalarium.Input
         public void addKeybind(Keybind k)
         {
             _keybinds.Add(k);
+            Console.WriteLine("+++++++++++++++++++");
+            foreach (Keybind kb in Keybinds)
+            {
+               
+
+                kb.UpdateSupersets();
+            }
         }
 
         public void removeKeybind(Keybind k)
         {
             _keybinds.Remove(k);
+            Console.WriteLine("+++++++++++++++++++");
+            foreach (Keybind kb in Keybinds)
+            {
+               
+                kb.UpdateSupersets();
+            }
         }
 
 

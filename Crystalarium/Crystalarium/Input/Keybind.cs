@@ -20,6 +20,7 @@ namespace Crystalarium.Input
         private Controller _controller; // the controller that this keybind belongs to.
         private Action _action; // the action that this keybind
         private bool triggeredLastUpdate; // whether this keybind was triggered last update.
+        private List<Keybind> supersets; // list of keybinds that contain all of the keys that we have.
 
 
         // properites
@@ -53,10 +54,8 @@ namespace Crystalarium.Input
 
         public Keybind(Controller c, Keystate state, string action, params Button[] buttons)
         {
-            
-            // set the controller
-            _controller = c;
-            c.addKeybind(this);
+
+
 
             // and the action
             _action = c.getAction(action);
@@ -72,7 +71,58 @@ namespace Crystalarium.Input
             {
                 _buttons.Add(b);
             }
+
+
+            // set up our list of supersets before we update them.
+            supersets = new List<Keybind>();
+
+            // don't forget to set the controller!
+            _controller = c;
+            c.addKeybind(this);
+
         }
+
+
+        
+        public void UpdateSupersets()
+        {
+            supersets.Clear();
+            foreach(Keybind k in _controller.Keybinds)
+            {
+                if(k==this)
+                {
+                    continue;
+                }
+
+                if(isSuperset(k))
+                {
+                    supersets.Add(k);
+                }
+            }
+
+            string ss = "";
+            foreach(Keybind k in supersets)
+            {
+                ss += "\n    " + k;
+            }
+            Console.WriteLine("Keybind: " + this + "\nSupersets: " + ss+"\n");
+        }
+
+
+        // does this keybind have every key that we do?
+        private bool isSuperset(Keybind k)
+        {
+            foreach(Button b in _buttons)
+            {
+                if(!k.buttons.Contains(b))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
 
         public void Destroy()
         {
@@ -82,7 +132,7 @@ namespace Crystalarium.Input
         public void update(InputHandler ih)
         {
             // we need to check if the condition of this keybind is met, and if it is trigger the action
-            if(active(ih))
+            if(Active(ih))
             {
                
                 action.Trigger();
@@ -93,7 +143,32 @@ namespace Crystalarium.Input
         }
 
 
-        public bool active(InputHandler ih)
+        // returns weather the action behind this keybind should be run.
+        public bool Active(InputHandler ih)
+        {
+            if(Triggered(ih))
+            {
+
+                // check that a superset of this keybind is not also triggered.
+                foreach(Keybind k in supersets)
+                {
+                    if(k.Triggered(ih))
+                    {
+                        return false;
+                    }
+                }
+
+                // we are good to go.
+                return true;
+            }
+
+            return false;
+        }
+
+
+
+        // returns whether the keystate is being pressed.
+        private bool Triggered(InputHandler ih)
         {
 
             bool down = ButtonsDown(ih);
@@ -105,12 +180,16 @@ namespace Crystalarium.Input
                     return down;
                 case Keystate.Up:
                     return !down;
+
                 case Keystate.OnPress:
                     return down & !triggeredLastUpdate;
+
                 case Keystate.OnRelease:
                     return !down & triggeredLastUpdate;
 
             }
+
+
             return false;
 
             
@@ -130,13 +209,24 @@ namespace Crystalarium.Input
             }
             return true;
         }
-        
+
         // one must ascend to gremlintopia eventually.
 
         // Huh, that was ominious.
 
+
+
+        public override string ToString()
+        {
+            string buttons = "";
+            foreach( Button b in _buttons)
+            {
+                buttons +="," + b; 
+            }
+            return "Keybind { \"" + action.name + "\" " +  buttons+ "}";
+        }
     }
 }
 
-
+// I don't think I wrote this...
 //bababooey
