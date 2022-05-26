@@ -8,17 +8,24 @@ namespace Crystalarium.Input
     public class Keybind
     {
 
-      
+
         /*
          * A keybind represents a set of keys that trigger an action.
          * 
          */
 
 
-        private List<Button> _buttons; // the buttons reqired to trigger this keybind
-        private Keystate _trigger; // the state the buttons need to be in to trigger this keybind.
+        // relevant objects
         private Controller _controller; // the controller that this keybind belongs to.
         private Action _action; // the action that this keybind
+
+        // triggering condition
+        private List<Button> _buttons; // the buttons reqired to trigger this keybind
+        private Keystate _trigger; // the state the buttons need to be in to trigger this keybind.
+        private string _requiredContext; // the context required for this keybind to trigger. if "", any context.
+       
+
+        // other variables
         private bool triggeredLastUpdate; // whether this keybind was triggered last update.
         private List<Keybind> supersets; // list of keybinds that contain all of the keys that we have.
 
@@ -51,11 +58,8 @@ namespace Crystalarium.Input
 
 
         // probably make a constructor or something.
-
         public Keybind(Controller c, Keystate state, string action, params Button[] buttons)
         {
-
-
 
             // and the action
             _action = c.getAction(action);
@@ -78,12 +82,22 @@ namespace Crystalarium.Input
 
             // don't forget to set the controller!
             _controller = c;
-            c.addKeybind(this);
+            c.addKeybind(this); // also sets our supersets
+
+            // context
+            _requiredContext = "";
+
+        }
+
+        public Keybind(Controller c, Keystate state, string action, string requiredContext, params Button[] buttons)
+            : this(c, state, action, buttons)
+        {
+            _requiredContext = requiredContext;
+
 
         }
 
 
-        
         public void UpdateSupersets()
         {
             supersets.Clear();
@@ -100,18 +114,18 @@ namespace Crystalarium.Input
                 }
             }
 
-            string ss = "";
-            foreach(Keybind k in supersets)
-            {
-                ss += "\n    " + k;
-            }
-            Console.WriteLine("Keybind: " + this + "\nSupersets: " + ss+"\n");
+           
         }
 
 
         // does this keybind have every key that we do?
         private bool isSuperset(Keybind k)
         {
+            if(k._requiredContext!= _requiredContext)
+            {
+                return false;
+            }
+
             foreach(Button b in _buttons)
             {
                 if(!k.buttons.Contains(b))
@@ -146,23 +160,35 @@ namespace Crystalarium.Input
         // returns weather the action behind this keybind should be run.
         public bool Active(InputHandler ih)
         {
-            if(Triggered(ih))
+            // check that this key bind has been activated by the user.
+            if (!Triggered(ih))
             {
-
-                // check that a superset of this keybind is not also triggered.
-                foreach(Keybind k in supersets)
-                {
-                    if(k.Triggered(ih))
-                    {
-                        return false;
-                    }
-                }
-
-                // we are good to go.
-                return true;
+                return false;
             }
 
-            return false;
+            // check that a superset of this keybind is not also triggered.
+            foreach(Keybind k in supersets)
+            {
+
+                if(k.Triggered(ih))
+                {
+                    // we do not need to run, another keybind is taking priority
+                    return false;
+                }
+            }
+
+            // we need to check the context, as well.
+
+            // an empty string is treated as an 'any context' requirement
+            if(_requiredContext!="" & _requiredContext != controller.Context)
+            {
+                return false;
+            }
+
+            //  we are good to go.
+            return true;
+            
+
         }
 
 
@@ -216,6 +242,8 @@ namespace Crystalarium.Input
 
 
 
+        // I only make a toString when I need to debug something, I guess.
+        // definitely not good practice...
         public override string ToString()
         {
             string buttons = "";

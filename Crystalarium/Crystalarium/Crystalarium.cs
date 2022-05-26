@@ -23,7 +23,7 @@ namespace Crystalarium
 
 
 
-        private const int BUILD = 318;
+        private const int BUILD = 333;
 
 
         // Content (should maybe move this eventually?)
@@ -32,8 +32,10 @@ namespace Crystalarium
         // TEST
         GridView view;
         GridView minimap;
-
-        Grid g;    
+        Grid g;
+        string info;
+        Point panOrigin = new Point();
+        Vector2 panPos = new Vector2();
        
 
         public Crystalarium()
@@ -57,6 +59,7 @@ namespace Crystalarium
 
             // test the controller.
             controller = new Controller();
+            controller.Context = "Click for info";
 
             // make an action
 
@@ -89,37 +92,74 @@ namespace Crystalarium
             // grow the grid!
             controller.addAction("grow up", () => g.ExpandGrid(Direction.up));
             new Keybind(controller, Keystate.OnPress, "grow up", Button.U);
-  
-
-
             controller.addAction("grow down", () => g.ExpandGrid(Direction.down));
             new Keybind(controller, Keystate.OnPress, "grow down", Button.J);
-
-
-            // camera left
             controller.addAction("grow left", () => g.ExpandGrid(Direction.left));
             new Keybind(controller, Keystate.OnPress, "grow left", Button.H);
-          
-
-            // camera right
             controller.addAction("grow right", () => g.ExpandGrid(Direction.right));
-
             new Keybind(controller, Keystate.OnPress, "grow right", Button.K);
 
 
+            // click for info.
+            controller.addAction("set info", () => 
+            {
+                Point pixelCoords = view.LocalizeCoords(Mouse.GetState().Position);
+                Point clickCoords = view.Camera.PixelToTileCoords(pixelCoords).ToPoint();
+
+                info = "Clicked on: " + clickCoords.X + ", " + clickCoords.Y;
 
 
-            // test
-
-            controller.addAction("undo", () => Console.WriteLine("undone!"));
-            new Keybind(controller, Keystate.OnRelease, "undo", Button.Z, Button.LeftControl);
+            });
+            new Keybind(controller, Keystate.Down, "set info", "Click for info", Button.MouseLeft);
 
 
-            // camera left
 
-            controller.addAction("redo", () => Console.WriteLine("redone!"));
-            new Keybind(controller, Keystate.OnRelease, "redo", Button.Z, Button.LeftControl, Button.LeftShift);
 
+            controller.addAction("toggle mode", () =>
+            {
+                if(controller.Context == "Click for info")
+                {
+                    info = "";
+                    controller.Context = "Click and drag to pan";
+                }
+                else
+                {
+                    controller.Context = "Click for info";
+                }
+
+
+            });
+            new Keybind(controller, Keystate.OnPress, "toggle mode", Button.Enter);
+
+
+            controller.addAction("start pan", () =>
+            {
+                Point pixelCoords = view.LocalizeCoords(Mouse.GetState().Position);
+
+
+                panOrigin = pixelCoords;
+                panPos = view.Camera.Position;
+
+
+            });
+            new Keybind(controller, Keystate.OnPress, "start pan", "Click and drag to pan", Button.MouseLeft);
+
+
+            controller.addAction("pan", () =>
+            {
+
+                
+                Point pixelCoords = view.LocalizeCoords(Mouse.GetState().Position);
+                Vector2 mousePos = view.Camera.PixelToTileCoords(pixelCoords);
+                Vector2 originPos = view.Camera.PixelToTileCoords(panOrigin);
+
+                view.Camera.Position = panPos+(originPos - mousePos );
+
+           
+
+
+            });
+            new Keybind(controller, Keystate.Down, "pan", "Click and drag to pan", Button.MouseLeft);
 
 
 
@@ -146,14 +186,7 @@ namespace Crystalarium
             // create a test grid, and do some test things to it.
             g = new Grid(sim);
 
-            // make it a size or something.
-           /* g.ExpandGrid(Direction.right);
-            g.ExpandGrid(Direction.left);
-            g.ExpandGrid(Direction.left);
-
-            g.ExpandGrid(Direction.up);
-            g.ExpandGrid(Direction.up);
-            g.ExpandGrid(Direction.down);*/
+           
 
 
 
@@ -255,9 +288,12 @@ namespace Crystalarium
 
             // some debug text. We'll clear this out sooner or later...
 
+            spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + sim.ActualStepsPS + " Chunks: " + g.gridSize.X * g.gridSize.Y, new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(testFont, "Mode: " + controller.Context+"\n"+info, new Vector2(10, 30), Color.White);
+
             spriteBatch.DrawString(testFont, "Milestone 1, Build " + BUILD, new Vector2(10, height - 25), Color.White);
-            spriteBatch.DrawString(testFont, "WASD to pan. Scroll to zoom. UHJK to E X P A N D", new Vector2(10, height-45), Color.White);
-            spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + sim.ActualStepsPS +" Chunks: "+g.gridSize.X*g.gridSize.Y, new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(testFont, "WASD to pan. Scroll to zoom. UHJK to grow the map. Enter to change modes.", new Vector2(10, height-45), Color.White);
+          
 
             spriteBatch.End();
 

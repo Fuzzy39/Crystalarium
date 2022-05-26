@@ -256,7 +256,7 @@ namespace Crystalarium.Render
         }
 
         // assumes pixelPos is localized.
-        private Vector2 PixelToTileCoords(Point pixelPos)
+        public Vector2 PixelToTileCoords(Point pixelPos)
         {
             float x = (float)(_position.X + (pixelPos.X / _scale));
             float y = (float)(_position.Y + (pixelPos.Y / _scale));

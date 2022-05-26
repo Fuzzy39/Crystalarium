@@ -21,6 +21,9 @@ namespace Crystalarium.Input
         private List<Keybind> _keybinds;
         private List<Action> _actions;
 
+        // context system
+        private string _context;
+
 
 
         
@@ -76,6 +79,12 @@ namespace Crystalarium.Input
             get => Mouse.GetState().ScrollWheelValue - _prevMouseState.ScrollWheelValue;
         }
 
+        public string Context
+        {
+            get => _context;
+            set => _context = value;
+        }
+
 
         public Controller()
         {
@@ -85,6 +94,7 @@ namespace Crystalarium.Input
             _keybinds = new List<Keybind>();
             _actions = new List<Action>();
 
+            _context = "";
 
         }
 
@@ -121,7 +131,7 @@ namespace Crystalarium.Input
         public void addKeybind(Keybind k)
         {
             _keybinds.Add(k);
-            Console.WriteLine("+++++++++++++++++++");
+            
             foreach (Keybind kb in Keybinds)
             {
                
@@ -133,7 +143,7 @@ namespace Crystalarium.Input
         public void removeKeybind(Keybind k)
         {
             _keybinds.Remove(k);
-            Console.WriteLine("+++++++++++++++++++");
+           
             foreach (Keybind kb in Keybinds)
             {
                
