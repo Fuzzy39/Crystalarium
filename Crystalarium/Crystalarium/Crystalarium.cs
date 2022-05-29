@@ -23,7 +23,7 @@ namespace Crystalarium
 
 
 
-        private const int BUILD = 333;
+        private const int BUILD = 339;
 
 
         // Content (should maybe move this eventually?)
@@ -227,6 +227,8 @@ namespace Crystalarium
         // mostly ugly hacks
         protected override void Update(GameTime gameTime)
         {
+            
+           
 
             // provided by monogame. Escape closes the program. I suppose it can stay for now.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -283,7 +285,7 @@ namespace Crystalarium
             {
                 v.Draw(spriteBatch);
             }
-
+           
 
 
             // some debug text. We'll clear this out sooner or later...

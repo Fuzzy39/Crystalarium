@@ -32,7 +32,7 @@ namespace Crystalarium.Render
         // elements
         private Grid _grid; // the grid that this GridView is rendering.
         private Border _border; // the border of this Gridview (which exists, whether it is being rendered or not)
-        private Camera _camera; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
+        private PhysicsCamera _camera; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
 
 
         // Graphical Features
@@ -64,7 +64,7 @@ namespace Crystalarium.Render
             get => _border;
         }
 
-        public Camera Camera
+        public PhysicsCamera Camera
         {
             get => _camera;
         }
@@ -112,7 +112,7 @@ namespace Crystalarium.Render
             this.container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
             _renderers = new List<Renderer>();
-            _camera = new Camera(this);
+            _camera = new PhysicsCamera(PixelBounds);
 
             //background
             _background = Textures.viewboxBG;
@@ -192,6 +192,7 @@ namespace Crystalarium.Render
         {
             if (debugRenderTarget != null)
             {
+                
                 _camera.RenderTexture(sb, Textures.pixel,
                     debugRenderTarget.Camera.TileBounds(),
                     new Color(0, 0, 0, .3f));
