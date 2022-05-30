@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Crystalarium.Sim
+namespace CrystalCore.Sim
 {
     public class Chunk : GridObject
     {

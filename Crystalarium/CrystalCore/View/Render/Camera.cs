@@ -1,12 +1,12 @@
 ﻿
-using Crystalarium.Util;
+using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Crystalarium.Render
+namespace CrystalCore.View.Render
 {
     public class Camera 
     {

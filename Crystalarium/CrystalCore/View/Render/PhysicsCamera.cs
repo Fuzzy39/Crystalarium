@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Crystalarium.Sim;
-using Crystalarium.Util;
+using CrystalCore.Sim;
+using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 
 
-namespace Crystalarium.Render
+namespace CrystalCore.View.Render
 {
     public class PhysicsCamera:Camera
     {
@@ -22,7 +22,7 @@ namespace Crystalarium.Render
        
         private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions. (in pixels/frame)
         private const float FRICTION = .3f; // the rate which camera velocity is reduced, in pixels/frame.
-        private const float MAX_SPEED = 10f; // the maximum velocity (in x and y dimensions) of the camera in pixels/frame.
+        private const float MAX_SPEED = 10f; // the maximum velocity per dimension of the camera in pixels/frame.
 
         
 

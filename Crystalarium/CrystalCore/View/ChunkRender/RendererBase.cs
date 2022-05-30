@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Crystalarium.Sim;
+using CrystalCore.Sim;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Crystalarium.Render.ChunkRender
+namespace CrystalCore.View.ChunkRender
 {
-    public abstract class Renderer
+    internal abstract class RendererBase
     {
-        // Chunk.Renderer renders a chunk.
-        // that's the idea, at least.
+        // this class provides for the basic features a chunk render needs to have.
+        // It does not sepcify how chunks are rendered.
 
         protected GridView renderTarget;
         protected Chunk renderData;
@@ -19,15 +19,17 @@ namespace Crystalarium.Render.ChunkRender
             get => renderData;
         }
 
-
-        protected Renderer( GridView v, Chunk ch, List<Renderer> others)
+        protected RendererBase( GridView v, Chunk ch, List<RendererBase> others)
         {
             // check that we don't already exist
             foreach (Renderer r in others)
             {
                 if (r.Chunk == ch)
-                    return;
+                    throw new InvalidOperationException("Attempted to create an already existing Chunk Renderer.");
+                    
             }
+
+               
 
             // add ourselves to the list of renderers.
             v.AddRenderer(this);
@@ -50,12 +52,6 @@ namespace Crystalarium.Render.ChunkRender
             // we might have to kill ourselves, if we aren't rendering anything.
 
             // check that we are visible on screen.
-            if (renderData == null)
-            {
-                this.Destroy();
-                return false;
-            }
-
             if (renderTarget.Camera.TileBounds().Intersects(renderData.Bounds))
             {
               
@@ -93,21 +89,7 @@ namespace Crystalarium.Render.ChunkRender
            
         }
 
-        // I guess that this implements the factory pattern? At least that was the attempt.
-        public static Renderer Create( Type t, GridView v, Chunk ch, List<Renderer> others)
-        {
-            switch(t)
-            {
-                case Type.Default:
-                    return new Default(v, ch, others);
-                case Type.Standard:
-                    return new Standard(v, ch, others);
-                case Type.Debug:
-                    return new Debug(v, ch, others);
-                default:
-                    throw new ArgumentException(t+" is not a valid type of Chunk Renderer.");
-            }
-        }
+      
 
     }
 }

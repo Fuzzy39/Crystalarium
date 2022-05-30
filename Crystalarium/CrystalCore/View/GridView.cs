@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Crystalarium.Sim;
-using Crystalarium.Util;
+using CrystalCore.Sim;
+using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Crystalarium.Render.ChunkRender;
-using Crystalarium.Input;
+using CrystalCore.View.ChunkRender;
+using CrystalCore.Input;
+using CrystalCore.View.Render;
 
-namespace Crystalarium.Render
+namespace CrystalCore.View
 {
     public class GridView
     {
@@ -40,11 +41,10 @@ namespace Crystalarium.Render
         private Color backgroundColor;
 
         // Chunk Renderer related
-        private List<Renderer> _renderers; // list of chunk renderers currently in existence
-        private ChunkRender.Type _rendererType; // how are we rendering chunks?
+        private List<RendererBase> _renderers; // list of chunk renderers currently in existence
+        private RendererTemplate _renderConfig; // how are we rendering chunks?
 
-        private GridView debugRenderTarget; // if using debug renderers, this is the viewbox those renderers target.
-                                            // I'll admit, this is hacky.
+     
         private Controller _controller; // The controller controlling this gridview. Null if the controller is controlling another grid.
 
 
@@ -78,18 +78,18 @@ namespace Crystalarium.Render
 
   
         // Chunk Renderer related
-        public List<Renderer> Renderers
+        internal List<RendererBase> Renderers
         {
             get => _renderers;
         }
 
 
-        public ChunkRender.Type RendererType
+        public RendererTemplate RenderConfig
         {
-            get => _rendererType;
+            get => _renderConfig;
             set
             {
-                _rendererType = value;
+                _renderConfig = value;
                 _renderers.Clear();
             }
         }
@@ -104,32 +104,32 @@ namespace Crystalarium.Render
 
 
         // create the viewport
-        public GridView(List<GridView> container, Grid g, Point pos, Point dimensions)
+        public GridView(List<GridView> container, Grid g, Point pos, Point dimensions, RendererTemplate renderConfig)
         {
             // initialize from parameters
             _grid = g;
             this.container = container;
             this.container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
-            _renderers = new List<Renderer>();
+            _renderers = new List<RendererBase>();
             _camera = new PhysicsCamera(PixelBounds);
 
             //background
-            _background = Textures.viewboxBG;
+            _background = null;
             backgroundColor = Color.White;
 
             // border
             _border = new Border(this);
 
             // renderer type
-            _rendererType = ChunkRender.Type.Standard;
+            _renderConfig = renderConfig;
 
 
         }
 
         // an alternate viewport constructor, without points.
-        public GridView(List<GridView> container, Grid g, int x, int y, int width, int height)
-            : this(container, g, new Point(x, y), new Point(width, height)) { }
+        public GridView(List<GridView> container, Grid g, int x, int y, int width, int height, RendererTemplate renderConfig)
+            : this(container, g, new Point(x, y), new Point(width, height), renderConfig) { }
 
 
         public void Destroy()
@@ -163,7 +163,7 @@ namespace Crystalarium.Render
             for (int i = 0; i < _renderers.Count;)
             {
 
-                Renderer r = _renderers[i];
+                RendererBase r = _renderers[i];
 
 
                 // repeat the previous index if this renderer was destroyed.
@@ -190,13 +190,20 @@ namespace Crystalarium.Render
 
         private void DrawOtherGridView(SpriteBatch sb)
         {
-            if (debugRenderTarget != null)
+            if (RenderConfig.ViewCastTarget == null)
             {
-                
-                _camera.RenderTexture(sb, Textures.pixel,
-                    debugRenderTarget.Camera.TileBounds(),
-                    new Color(0, 0, 0, .3f));
+                return;
             }
+
+            if(RenderConfig.ViewCastOverlay == null)
+            {
+                return;
+            }
+                
+            _camera.RenderTexture(sb, RenderConfig.ViewCastOverlay,
+                RenderConfig.ViewCastTarget.Camera.TileBounds(),
+                new Color(0, 0, 0, .3f));
+            
         }
 
 
@@ -214,44 +221,47 @@ namespace Crystalarium.Render
             {
                 foreach (Chunk ch in list)
                 {
-                    if (_camera.TileBounds().Intersects(ch.Bounds))
+
+                    if (!_camera.TileBounds().Intersects(ch.Bounds))
                     {
+                        continue;
+                    }
 
-                        Renderer.Create(_rendererType, this, ch, _renderers);
-
+                    // ensure this chunk does not already exist
+                    bool existing = false;
+                    foreach (Renderer r in _renderers)
+                    {
+                        if (r.Chunk == ch)
+                        {
+                            existing = true;
+                        }
 
                     }
+
+                    if (existing)
+                    {
+                        continue;
+                    }
+
+                    RenderConfig.CreateRenderer(this, ch, _renderers);
+
+
+                    
                 }
             }
 
-            // for debug renderers, we need to update (or set) their target.
-            if (RendererType == ChunkRender.Type.Debug)
-            {
-                SetDebugRenderTarget(debugRenderTarget);
-            }
-
 
         }
 
 
-        public void SetDebugRenderTarget(GridView v)
-        {
-            debugRenderTarget = v;
-            foreach (Renderer r in _renderers)
-            {
-                ((ChunkRender.Debug)r).Target = v;
-            }
-        }
-
-
-        public void AddRenderer(Renderer renderer)
+        internal void AddRenderer(RendererBase renderer)
         {
 
 
             _renderers.Add(renderer);
         }
 
-        public void RemoveRenderer(Renderer renderer)
+        internal void RemoveRenderer(RendererBase renderer)
         {
             _renderers.Remove(renderer);
         }

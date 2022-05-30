@@ -1,12 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
 using System;
-using Crystalarium.Sim;
-using Crystalarium.Render;
-using Crystalarium.Util;
 using System.Collections.Generic;
-using Crystalarium.Input;
+
+using CrystalCore;
+using CrystalCore.Input;
+using CrystalCore.Util;
+using CrystalCore.Sim;
+using CrystalCore.View;
+using CrystalCore.View.ChunkRender;
 
 namespace Crystalarium
 {
@@ -23,7 +27,7 @@ namespace Crystalarium
 
 
 
-        private const int BUILD = 339;
+        private const int BUILD = 351;
 
 
         // Content (should maybe move this eventually?)
@@ -186,35 +190,58 @@ namespace Crystalarium
             // create a test grid, and do some test things to it.
             g = new Grid(sim);
 
-           
-
-
-
-
 
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
 
+            // create the render modes we are likely to use.
+
+            RendererTemplate Standard = new RendererTemplate()
+            {
+                ChunkBackground = Textures.chunkGrid
+            };
+
+            
             // create a couple test viewports.
-            view = new GridView(viewports, g, 0, 0, width, height);
-            //view.RendererType = Render.ChunkRender.Type.Default;
+            view = new GridView(viewports, g, 0, 0, width, height, Standard);
+
+            // background
+            view.Background = Textures.viewboxBG; 
 
             // prevent the camera from leaving the world.
             view.Camera.IsBound = true;
 
 
-            // setup the minimap.
+            // for the minimap.
+            RendererTemplate Debug = new RendererTemplate()
+            {
 
-            minimap = new GridView(viewports, g, width-250, 0, 250, 250);
+                ChunkBackground = Textures.pixel,
+                DoCheckerBoardColoring = true,
+                BackgroundColor = new Color(50, 50, 150),
+                OriginChunkColor = new Color(150, 50, 50),
+
+                // to make it a minimap!
+                ViewCastOverlay = Textures.pixel,
+                ViewCastTarget = view // note that this must be done after view has been initialized.
+
+            };
+
+
+
+
+
+            // setup the minimap.
+            minimap = new GridView(viewports, g, width-250, 0, 250, 250, Debug);
+
+            // background
+            minimap.Background = Textures.viewboxBG;
 
             // setup borders
             minimap.SetTextures(Textures.pixel, Textures.pixel);
             minimap.Border.Width = 2;
 
-            // Set the render mode to debug.
-            minimap.RendererType = Render.ChunkRender.Type.Debug;
-            minimap.SetDebugRenderTarget(view);
-
+                
             // Set the camera of the minimap.
             minimap.Camera.MinScale = 1;
             
@@ -234,7 +261,7 @@ namespace Crystalarium
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-
+            
           
             sim.Update(gameTime);
 

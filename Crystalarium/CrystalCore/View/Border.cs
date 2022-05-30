@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Crystalarium.Render
+namespace CrystalCore.View
 {
     public class Border
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Crystalarium.Util
+namespace CrystalCore.Util
 {
     struct Util
     {

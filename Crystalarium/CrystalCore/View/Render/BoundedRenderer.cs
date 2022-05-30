@@ -1,11 +1,11 @@
-﻿using Crystalarium.Util;
+﻿using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Crystalarium.Render
+namespace CrystalCore.View.Render
 {
     public class BoundedRenderer
     {
@@ -30,7 +30,7 @@ namespace Crystalarium.Render
 
 
 
-        // bounds in pixels relative to the renderer.
+        // bounds in pixels relative to the renderer's location.
         public virtual bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle pixelBounds, Color c)
         {
             // check if the texture needs to be rendered by this viewport

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Crystalarium.Util;
+using CrystalCore.Util;
 
-namespace Crystalarium.Sim
+namespace CrystalCore.Sim
 {
     public class Grid
     {

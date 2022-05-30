@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Crystalarium.Input
+namespace CrystalCore.Input
 {
 
     public delegate void Act(); // what an action does.

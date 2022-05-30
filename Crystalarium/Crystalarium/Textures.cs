@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace Crystalarium.Render
+namespace Crystalarium
 {
     struct Textures
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace Crystalarium.Util
+namespace CrystalCore.Util
 {
     public enum Direction
     {
@@ -33,25 +33,21 @@ namespace Crystalarium.Util
 
         public static Direction Opposite(this Direction d)
         {
-            switch (d)
+
+            // I didn't know this was a thing in C#. Neat!
+            return d switch
             {
+                Direction.up => Direction.down,
 
-                case Direction.up:
-                    return Direction.down;
+                Direction.down => Direction.up,
 
-                case Direction.down:
-                    return Direction.up;
+                Direction.left => Direction.right,
 
-                case Direction.left:
-                    return Direction.right;
+                Direction.right => Direction.left,
 
-                case Direction.right:
-                    return Direction.left;
-            }
-
-            // this should never happen.
-            return Direction.up;
-
+                // default
+                _ => Direction.up,// shouldn't ever happen.
+            };
         }
 
         public static Point ToPoint(this Direction d)

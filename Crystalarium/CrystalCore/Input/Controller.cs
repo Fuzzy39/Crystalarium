@@ -1,17 +1,13 @@
-﻿using Crystalarium.Render;
-using Crystalarium.Sim;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Crystalarium.Input
+namespace CrystalCore.Input
 {
     public class Controller
     {
 
-        private Grid _grid;
-        private GridView _view;
         private MouseState _prevMouseState;
 
         // actual control related things.
@@ -25,12 +21,7 @@ namespace Crystalarium.Input
         private string _context;
 
 
-
-        
-        public Grid Grid
-        {
-            get => _grid;
-        }
+      
 
         public List<Keybind> Keybinds
         {
@@ -40,37 +31,6 @@ namespace Crystalarium.Input
         public List<Action> Actions
         {
             get => _actions;
-        }
-
-        public GridView View
-        {
-            get => _view;
-            set
-            {
-               
-
-                
-
-                if (value != null)
-                {
-                    // Make it clear to the previous gridview that it is no longer in focus.
-                    _view.Controller = null;
-
-                    
-                    value.Controller = this;
-
-                    // get the grid from our new view.
-                    _grid = value.Grid;
-
-                }
-                else
-                {
-                    _grid = null;
-                }
-
-                // set our view and tell it that we are controlling it.
-                _view = value;
-            }
         }
 
 
@@ -89,7 +49,7 @@ namespace Crystalarium.Input
         public Controller()
         {
             ih = new InputHandler();
-            View = null;
+         
 
             _keybinds = new List<Keybind>();
             _actions = new List<Action>();
