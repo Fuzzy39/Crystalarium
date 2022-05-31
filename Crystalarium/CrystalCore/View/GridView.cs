@@ -104,7 +104,7 @@ namespace CrystalCore.View
 
 
         // create the viewport
-        public GridView(List<GridView> container, Grid g, Point pos, Point dimensions, RendererTemplate renderConfig)
+        internal GridView(List<GridView> container, Grid g, Point pos, Point dimensions, RendererTemplate renderConfig)
         {
             // initialize from parameters
             _grid = g;
@@ -128,7 +128,7 @@ namespace CrystalCore.View
         }
 
         // an alternate viewport constructor, without points.
-        public GridView(List<GridView> container, Grid g, int x, int y, int width, int height, RendererTemplate renderConfig)
+        internal GridView(List<GridView> container, Grid g, int x, int y, int width, int height, RendererTemplate renderConfig)
             : this(container, g, new Point(x, y), new Point(width, height), renderConfig) { }
 
 
@@ -142,13 +142,13 @@ namespace CrystalCore.View
 
         // Methods
 
-        public  Point LocalizeCoords(Point p)
+        public Point LocalizeCoords(Point p)
         {
             return p - _pixelBounds.Location;
         }
 
 
-        public void Draw(SpriteBatch sb)
+        internal void Draw(SpriteBatch sb)
         {
 
             // draw the background.
@@ -202,17 +202,10 @@ namespace CrystalCore.View
                 
             _camera.RenderTexture(sb, RenderConfig.ViewCastOverlay,
                 RenderConfig.ViewCastTarget.Camera.TileBounds(),
-                new Color(0, 0, 0, .3f));
+                new Color(.2f, .2f, .2f, .001f));
             
         }
 
-
-
-        // only sets the textures for the viewport's borders.
-        public void SetTextures(Texture2D sides, Texture2D corners)
-        {
-            SetTextures(Background, sides, corners);
-        }
 
         // adds chunks to be rendered, if needbe.
         private void AddChunks()
@@ -266,16 +259,9 @@ namespace CrystalCore.View
             _renderers.Remove(renderer);
         }
 
-        // sets all textures that are part of a viewport itself.
-        public void SetTextures(Texture2D background, Texture2D sides, Texture2D corners)
-        {
+   
 
-            Background = background;
-            _border.SetTextures(sides, corners);
-
-        }
-
-        public void Update()
+        internal void Update()
         {
             _camera.Update(_grid.Bounds);
         }

@@ -19,7 +19,7 @@ namespace CrystalCore.View.Render
         private BoundedRenderer renderer;
 
 
-        public double _scale; // the number of pixels that currently represent one tile in gridspace
+        protected double _scale; // the number of pixels that currently represent one tile in gridspace
         private Vector2 _position; // the position of the top left corner of the viewport, in tiles, in grid space
 
 
@@ -38,7 +38,7 @@ namespace CrystalCore.View.Render
         public Rectangle Bounds
         {
             get => _bounds;
-            set => _bounds = value;
+            internal set => _bounds = value;
         }
 
         public int MinScale
@@ -99,7 +99,7 @@ namespace CrystalCore.View.Render
 
         // when setting position with the position property, position is the location, in tile space, of the center of the viewport.
         // this causes... headaches.
-        public Vector2 Position
+        public virtual Vector2 Position
         {
             get
             {
@@ -119,7 +119,7 @@ namespace CrystalCore.View.Render
         }
 
         // Origin Position represents the location in tilespace in tiles of the top left corner of this renderer.
-        public Vector2 OriginPosition
+        public virtual Vector2 OriginPosition
         {
             get => _position;
             set => value = _position;
@@ -127,7 +127,7 @@ namespace CrystalCore.View.Render
 
 
 
-        public Camera(Rectangle pixelBoundry)
+        internal Camera(Rectangle pixelBoundry)
         {
 
             renderer = new BoundedRenderer(pixelBoundry);
@@ -146,7 +146,7 @@ namespace CrystalCore.View.Render
             _isBound = false;
         }
 
-        public virtual void Update(Rectangle bounds)
+        internal virtual void Update(Rectangle bounds)
         {
             _bounds = bounds;
 
@@ -183,7 +183,7 @@ namespace CrystalCore.View.Render
 
         // returns  pixel coords relative to start of viewport.
         // this also works outside of the viewport.
-        private Point TileToPixelCoords(Vector2 tilePos)
+        public Point TileToPixelCoords(Vector2 tilePos)
         {
 
             // tile to pixel:
@@ -219,23 +219,23 @@ namespace CrystalCore.View.Render
 
         //Rendering stuff
 
-        public bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds)
+        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds)
         {
             return RenderTexture(sb, texture, new RectangleF(bounds), Color.White);
         }
 
-        public bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c)
+        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c)
         {
             return RenderTexture(sb, texture, new RectangleF(bounds), c);
         }
 
-        public bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds)
+        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds)
         {
             return RenderTexture(sb, texture, bounds, Color.White);
         }
 
         // bounds of object to render in tilespace
-        public bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c)
+        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c)
         {
             // stuff
 

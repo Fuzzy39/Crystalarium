@@ -28,7 +28,7 @@ namespace CrystalCore.Input
             get => _keybinds;
         }
 
-        public List<Action> Actions
+        internal List<Action> Actions
         {
             get => _actions;
         }
@@ -46,7 +46,7 @@ namespace CrystalCore.Input
         }
 
 
-        public Controller()
+        internal Controller()
         {
             ih = new InputHandler();
          
@@ -75,7 +75,7 @@ namespace CrystalCore.Input
         }
 
 
-        public Action getAction(string name)
+        internal Action getAction(string name)
         {
             foreach (Action a in _actions)
             {
@@ -88,7 +88,7 @@ namespace CrystalCore.Input
             return null;
         }
 
-        public void addKeybind(Keybind k)
+        internal void addKeybind(Keybind k)
         {
             _keybinds.Add(k);
             
@@ -100,7 +100,7 @@ namespace CrystalCore.Input
             }
         }
 
-        public void removeKeybind(Keybind k)
+        internal void removeKeybind(Keybind k)
         {
             _keybinds.Remove(k);
            
@@ -113,14 +113,14 @@ namespace CrystalCore.Input
 
 
 
-        public void Update()
+        internal void Update()
         {
            
 
             // run keybindss
             foreach(Keybind k in _keybinds)
             {
-                k.update(ih);
+                k.Update(ih);
             }
 
 

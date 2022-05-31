@@ -8,7 +8,7 @@ namespace CrystalCore.Input
     public delegate void Act(); // what an action does.
 
 
-    public class Action
+    internal class Action
     {
 
         // An action is something triggered by a keybind.
@@ -18,26 +18,26 @@ namespace CrystalCore.Input
         private Act action; // what this action does.
         
 
-        public string name
+        internal string name
         {
             get => _name;
         }
 
-        public Controller controller
+        internal Controller controller
         {
             get => _controller;
         }
 
 
 
-        public Action( string name, Controller c, Act action)
+        internal Action( string name, Controller c, Act action)
         {
             _name = name;
             _controller = c;
             this.action = action;
         }
 
-        public void Trigger()
+        internal void Trigger()
         {
             action();
         }

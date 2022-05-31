@@ -50,7 +50,7 @@ namespace CrystalCore.Input
         }
 
 
-        public Action action
+        internal Action action
         {
             get => _action;
             set => action = value;
@@ -98,7 +98,7 @@ namespace CrystalCore.Input
         }
 
 
-        public void UpdateSupersets()
+        internal void UpdateSupersets()
         {
             supersets.Clear();
             foreach(Keybind k in _controller.Keybinds)
@@ -143,7 +143,7 @@ namespace CrystalCore.Input
             _controller.removeKeybind(this);
         }
 
-        public void update(InputHandler ih)
+        internal void Update(InputHandler ih)
         {
             // we need to check if the condition of this keybind is met, and if it is trigger the action
             if(Active(ih))
@@ -158,7 +158,7 @@ namespace CrystalCore.Input
 
 
         // returns weather the action behind this keybind should be run.
-        public bool Active(InputHandler ih)
+        internal bool Active(InputHandler ih)
         {
             // check that this key bind has been activated by the user.
             if (!Triggered(ih))
@@ -222,7 +222,7 @@ namespace CrystalCore.Input
         }
 
 
-        public bool ButtonsDown(InputHandler ih)
+        internal bool ButtonsDown(InputHandler ih)
         {
             
 

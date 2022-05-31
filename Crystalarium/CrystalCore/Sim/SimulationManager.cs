@@ -52,7 +52,7 @@ namespace CrystalCore.Sim
 
         public List<Grid> Grids => _grids;
 
-        public SimulationManager( double secondsBetweenFrames )
+        internal SimulationManager( double secondsBetweenFrames )
         {
             // I feel like I should comment this, but I don't think anything here needs explaining...
             targetFPS = 1.0 / secondsBetweenFrames;
@@ -86,7 +86,7 @@ namespace CrystalCore.Sim
         }
 
 
-        public void Update( GameTime time)
+        internal void Update( GameTime time)
         {
             // adjust our current steprate, if needbe
 

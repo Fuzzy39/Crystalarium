@@ -21,23 +21,26 @@ namespace Crystalarium
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
-        private SimulationManager sim;
-        private List<GridView> viewports;
-        private Controller controller;
+
+        private CrystalCore.CrystalCore engine; // the 'engine'
+
+        private const int BUILD = 364;
 
 
+        // Temporary variables for testing purposes:
 
-        private const int BUILD = 351;
-
-
-        // Content (should maybe move this eventually?)
+        // Temporary Content 
         private SpriteFont testFont;
 
-        // TEST
-        GridView view;
-        GridView minimap;
-        Grid g;
-        string info;
+        // Other
+        GridView view; // the primary view
+        GridView minimap; // the minimap
+
+        Grid g; // the world seen by the view and minimap
+
+        string info; // used when clicking for info
+
+        // used when panning
         Point panOrigin = new Point();
         Vector2 panPos = new Vector2();
        
@@ -56,56 +59,58 @@ namespace Crystalarium
 
         protected override void Initialize()
         {
-            
-            // create the basics.
-            sim = new SimulationManager(this.TargetElapsedTime.TotalSeconds);
-            viewports = new List<GridView>();
 
-            // test the controller.
-            controller = new Controller();
-            controller.Context = "Click for info";
+            // create the basics.
+            engine = new CrystalCore.CrystalCore(TargetElapsedTime);
+
+            // make a local reference to the input controller, since we use it a lot
+            Controller c = engine.Controller;
+
+            c.Context = "Click for info";
+
+         
 
             // make an action
 
-            // shitty test code.
+            // test code.
             float camSpeed = 1f;
             
             // camera up
-            controller.addAction("up", ()=>view.Camera.AddVelocity(camSpeed, Direction.up));
-            new Keybind(controller, Keystate.Down, "up", Button.W);
-            new Keybind(controller, Keystate.Down, "up", Button.Up);
+            c.addAction("up", ()=>view.Camera.AddVelocity(camSpeed, Direction.up));
+            new Keybind(c, Keystate.Down, "up", Button.W);
+            new Keybind(c, Keystate.Down, "up", Button.Up);
 
 
             // camera down
-            controller.addAction("down", () => view.Camera.AddVelocity(camSpeed, Direction.down));
-            new Keybind(controller, Keystate.Down, "down", Button.S);
-            new Keybind(controller, Keystate.Down, "down", Button.Down);
+            c.addAction("down", () => view.Camera.AddVelocity(camSpeed, Direction.down));
+            new Keybind(c, Keystate.Down, "down", Button.S);
+            new Keybind(c, Keystate.Down, "down", Button.Down);
 
             // camera left
-            controller.addAction("left", () => view.Camera.AddVelocity(camSpeed, Direction.left));
-            new Keybind(controller, Keystate.Down, "left", Button.A);
-            new Keybind(controller, Keystate.Down, "left", Button.Left);
+            c.addAction("left", () => view.Camera.AddVelocity(camSpeed, Direction.left));
+            new Keybind(c, Keystate.Down, "left", Button.A);
+            new Keybind(c, Keystate.Down, "left", Button.Left);
 
             // camera right
-            controller.addAction("right", () => view.Camera.AddVelocity(camSpeed, Direction.right));
+            c.addAction("right", () => view.Camera.AddVelocity(camSpeed, Direction.right));
 
-            new Keybind(controller, Keystate.Down, "right", Button.D);
-            new Keybind(controller, Keystate.Down, "right", Button.Right);
+            new Keybind(c, Keystate.Down, "right", Button.D);
+            new Keybind(c, Keystate.Down, "right", Button.Right);
 
 
             // grow the grid!
-            controller.addAction("grow up", () => g.ExpandGrid(Direction.up));
-            new Keybind(controller, Keystate.OnPress, "grow up", Button.U);
-            controller.addAction("grow down", () => g.ExpandGrid(Direction.down));
-            new Keybind(controller, Keystate.OnPress, "grow down", Button.J);
-            controller.addAction("grow left", () => g.ExpandGrid(Direction.left));
-            new Keybind(controller, Keystate.OnPress, "grow left", Button.H);
-            controller.addAction("grow right", () => g.ExpandGrid(Direction.right));
-            new Keybind(controller, Keystate.OnPress, "grow right", Button.K);
+            c.addAction("grow up", () => g.ExpandGrid(Direction.up));
+            new Keybind(c, Keystate.OnPress, "grow up", Button.U);
+            c.addAction("grow down", () => g.ExpandGrid(Direction.down));
+            new Keybind(c, Keystate.OnPress, "grow down", Button.J);
+            c.addAction("grow left", () => g.ExpandGrid(Direction.left));
+            new Keybind(c, Keystate.OnPress, "grow left", Button.H);
+            c.addAction("grow right", () => g.ExpandGrid(Direction.right));
+            new Keybind(c, Keystate.OnPress, "grow right", Button.K);
 
 
             // click for info.
-            controller.addAction("set info", () => 
+            c.addAction("set info", () => 
             {
                 Point pixelCoords = view.LocalizeCoords(Mouse.GetState().Position);
                 Point clickCoords = view.Camera.PixelToTileCoords(pixelCoords).ToPoint();
@@ -114,29 +119,29 @@ namespace Crystalarium
 
 
             });
-            new Keybind(controller, Keystate.Down, "set info", "Click for info", Button.MouseLeft);
+            new Keybind(c, Keystate.Down, "set info", "Click for info", Button.MouseLeft);
 
 
 
 
-            controller.addAction("toggle mode", () =>
+            c.addAction("toggle mode", () =>
             {
-                if(controller.Context == "Click for info")
+                if(c.Context == "Click for info")
                 {
                     info = "";
-                    controller.Context = "Click and drag to pan";
+                    c.Context = "Click and drag to pan";
                 }
                 else
                 {
-                    controller.Context = "Click for info";
+                    c.Context = "Click for info";
                 }
 
 
             });
-            new Keybind(controller, Keystate.OnPress, "toggle mode", Button.Enter);
+            new Keybind(c, Keystate.OnPress, "toggle mode", Button.Enter);
 
 
-            controller.addAction("start pan", () =>
+            c.addAction("start pan", () =>
             {
                 Point pixelCoords = view.LocalizeCoords(Mouse.GetState().Position);
 
@@ -146,10 +151,10 @@ namespace Crystalarium
 
 
             });
-            new Keybind(controller, Keystate.OnPress, "start pan", "Click and drag to pan", Button.MouseLeft);
+            new Keybind(c, Keystate.OnPress, "start pan", "Click and drag to pan", Button.MouseLeft);
 
 
-            controller.addAction("pan", () =>
+            c.addAction("pan", () =>
             {
 
                 
@@ -163,7 +168,7 @@ namespace Crystalarium
 
 
             });
-            new Keybind(controller, Keystate.Down, "pan", "Click and drag to pan", Button.MouseLeft);
+            new Keybind(c, Keystate.Down, "pan", "Click and drag to pan", Button.MouseLeft);
 
 
 
@@ -188,7 +193,7 @@ namespace Crystalarium
 
 
             // create a test grid, and do some test things to it.
-            g = new Grid(sim);
+            g = new Grid(engine.Sim);
 
 
             int width = GraphicsDevice.Viewport.Width;
@@ -203,7 +208,7 @@ namespace Crystalarium
 
             
             // create a couple test viewports.
-            view = new GridView(viewports, g, 0, 0, width, height, Standard);
+            view = engine.addView( g, 0, 0, width, height, Standard);
 
             // background
             view.Background = Textures.viewboxBG; 
@@ -232,13 +237,13 @@ namespace Crystalarium
 
 
             // setup the minimap.
-            minimap = new GridView(viewports, g, width-250, 0, 250, 250, Debug);
+            minimap = engine.addView( g, width-250, 0, 250, 250, Debug);
 
             // background
             minimap.Background = Textures.viewboxBG;
 
             // setup borders
-            minimap.SetTextures(Textures.pixel, Textures.pixel);
+            minimap.Border.SetTextures(Textures.pixel, Textures.pixel);
             minimap.Border.Width = 2;
 
                 
@@ -254,31 +259,17 @@ namespace Crystalarium
         // mostly ugly hacks
         protected override void Update(GameTime gameTime)
         {
-            
-           
+             
 
             // provided by monogame. Escape closes the program. I suppose it can stay for now.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            
-          
-            sim.Update(gameTime);
-
-            // update viewport.
-
-            // update viewports.
-            foreach (GridView v in viewports)
-            {
-                v.Update();
-            }
-
-
 
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
 
-            view.Camera.VelZ += controller.DeltaScroll/150f;
+            view.Camera.VelZ += engine.Controller.DeltaScroll/150f;
             view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
 
             // minimap positions
@@ -286,8 +277,7 @@ namespace Crystalarium
             minimap.Camera.Zoom = view.Camera.Zoom/12;
 
 
-     
-            controller.Update();
+            engine.Update(gameTime);
             base.Update(gameTime);
 
         }
@@ -307,20 +297,15 @@ namespace Crystalarium
             // make everything a flat color.
             GraphicsDevice.Clear(new Color(70,70,70));
 
-            // draw viewports
-            foreach(GridView v in viewports)
-            {
-                v.Draw(spriteBatch);
-            }
-           
+            engine.Draw(spriteBatch);
 
 
             // some debug text. We'll clear this out sooner or later...
 
-            spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + sim.ActualStepsPS + " Chunks: " + g.gridSize.X * g.gridSize.Y, new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(testFont, "Mode: " + controller.Context+"\n"+info, new Vector2(10, 30), Color.White);
+            spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + engine.Sim.ActualStepsPS + " Chunks: " + g.gridSize.X * g.gridSize.Y, new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(testFont, "Mode: " + engine.Controller.Context+"\n"+info, new Vector2(10, 30), Color.White);
 
-            spriteBatch.DrawString(testFont, "Milestone 1, Build " + BUILD, new Vector2(10, height - 25), Color.White);
+            spriteBatch.DrawString(testFont, "Milestone 2, Build " + BUILD, new Vector2(10, height - 25), Color.White);
             spriteBatch.DrawString(testFont, "WASD to pan. Scroll to zoom. UHJK to grow the map. Enter to change modes.", new Vector2(10, height-45), Color.White);
           
 

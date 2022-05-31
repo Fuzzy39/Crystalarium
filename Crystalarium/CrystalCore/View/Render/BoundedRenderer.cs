@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CrystalCore.View.Render
 {
-    public class BoundedRenderer
+    internal class BoundedRenderer
     {
         /*
          *  Bounded renderer renders things, within a boundry.

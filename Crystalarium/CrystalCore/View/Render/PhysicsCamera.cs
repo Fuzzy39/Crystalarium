@@ -29,6 +29,31 @@ namespace CrystalCore.View.Render
         private Point _zoomOrigin; // the point, in pixels relative to the top left corner of our gridview,
                                    // that serves as the origin for dilation translations/zooming.
 
+        public override Vector2 Position
+        {
+            get => base.Position;
+            set
+            {
+                base.Position = value;
+                VelX = 0;
+                VelY = 0;
+            }
+             
+        }
+
+
+        public override Vector2 OriginPosition
+        {
+            get => base.OriginPosition;
+            set
+            {
+                base.OriginPosition = value;
+                VelX = 0;
+                VelY = 0;
+            }
+
+        }
+
 
         // Properties
 
@@ -118,7 +143,7 @@ namespace CrystalCore.View.Render
 
         // Constructors
 
-        public PhysicsCamera(Rectangle pixelBoundry) : base(pixelBoundry)
+        internal PhysicsCamera(Rectangle pixelBoundry) : base(pixelBoundry)
         {
 
 
@@ -135,7 +160,7 @@ namespace CrystalCore.View.Render
       
 
         // bounds represents the boundries of this 
-        public override void Update(Rectangle bounds)
+        internal override void Update(Rectangle bounds)
         {
 
             base.Update(bounds);
@@ -174,7 +199,7 @@ namespace CrystalCore.View.Render
 
 
 
-        public void UpdateZoom(float newScale)
+        private void UpdateZoom(float newScale)
         {
             // functionally a dilation.
 

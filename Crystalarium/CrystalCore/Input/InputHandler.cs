@@ -16,7 +16,7 @@ namespace CrystalCore.Input
 
     }
 
-    public class InputHandler
+    internal class InputHandler
     {
 
         // Input handler's job is to make it relatively easy to grab user input, in a meaningful way.
@@ -25,13 +25,13 @@ namespace CrystalCore.Input
         private KeyboardState prevKeyState;
         private MouseState prevMouseState;
 
-        public InputHandler()
+        internal InputHandler()
         {
             Update();
         }
 
         // This needs to be called periodically for InputHandler to be useful.
-        public void Update()
+        internal void Update()
         {
             prevKeyState = Keyboard.GetState();
             prevMouseState = Mouse.GetState();
@@ -39,7 +39,7 @@ namespace CrystalCore.Input
 
         // The main job of InputHandler. Is this key/button in this state?\
         // ugly code.
-        public bool KeyIsState(Button b, Keystate state)
+        internal bool KeyIsState(Button b, Keystate state)
         {
             if((int)b>254)
             {

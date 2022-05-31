@@ -14,7 +14,7 @@ namespace CrystalCore.View.ChunkRender
         protected GridView renderTarget;
         protected Chunk renderData;
 
-        public Chunk Chunk
+        internal Chunk Chunk
         {
             get => renderData;
         }
@@ -39,14 +39,14 @@ namespace CrystalCore.View.ChunkRender
         }
 
         // remove external refrences to this object.
-        public void Destroy()
+        internal void Destroy()
         {
             renderTarget.RemoveRenderer(this);
         }
 
 
         // returns whether drawing was successful.
-        public bool Draw(SpriteBatch sb)
+        internal bool Draw(SpriteBatch sb)
         {
             // probably don't kill anybody.
             // we might have to kill ourselves, if we aren't rendering anything.

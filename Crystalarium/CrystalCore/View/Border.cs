@@ -44,7 +44,7 @@ namespace CrystalCore.View
         }
 
 
-        public Border(GridView parent)
+        internal Border(GridView parent)
         {
             // border related variables
             _width = 0;
@@ -57,7 +57,7 @@ namespace CrystalCore.View
             
         }
 
-        public void Draw(SpriteBatch sb)
+        internal void Draw(SpriteBatch sb)
         {
             drawBorders(sb);
             drawCorners(sb);

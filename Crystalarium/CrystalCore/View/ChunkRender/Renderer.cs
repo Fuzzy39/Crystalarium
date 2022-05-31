@@ -115,7 +115,7 @@ namespace CrystalCore.View.ChunkRender
             // check if we are being viewed.
             if(_viewCastTarget!=null && isRenderedByTarget(renderData))
             {
-                brighten(ref toReturn,2);
+                brighten(ref toReturn,2.5);
             }
 
             return toReturn;
@@ -141,12 +141,12 @@ namespace CrystalCore.View.ChunkRender
 
         }
 
-        private void brighten(ref Color c, int amount)
+        private void brighten(ref Color c, double amount)
         {
             c = new Color(
-                brightenAmount*amount + c.R, 
-                brightenAmount*amount + c.G,
-                brightenAmount*amount + c.B);
+                (int)(brightenAmount*amount + c.R), 
+                (int)(brightenAmount*amount + c.G),
+                (int)(brightenAmount*amount + c.B));
           
         }
 

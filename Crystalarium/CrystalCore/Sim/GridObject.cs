@@ -28,6 +28,7 @@ namespace CrystalCore.Sim
         }
 
 
+        // constructors
         public GridObject(Grid g, Rectangle rect)
         {
             _bounds = rect;
@@ -36,7 +37,15 @@ namespace CrystalCore.Sim
             _parent.Add(this);
 
         }
-        
+
+        public GridObject(Grid g, Point pos, Point size)
+          : this(g, new Rectangle(pos, size)) { }
+
+
+        public GridObject(Grid g, int x, int y, int width, int height)
+            : this(g, new Rectangle(x, y, width, height)) { }
+
+
         public void Destroy()
         {
             // remove references to this object.
@@ -46,12 +55,6 @@ namespace CrystalCore.Sim
             
         }
 
-        public GridObject(Grid g, Point pos, Point size)
-            : this(g, new Rectangle(pos, size)) { }
-
-
-        public GridObject(Grid g, int x, int y, int width, int height)
-            : this(g, new Rectangle(x, y, width, height)) { }
-        
+      
     }
 }
