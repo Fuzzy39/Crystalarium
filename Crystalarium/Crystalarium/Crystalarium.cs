@@ -24,7 +24,7 @@ namespace Crystalarium
 
         private CrystalCore.CrystalCore engine; // the 'engine'
 
-        private const int BUILD = 364;
+        private const int BUILD = 371;
 
 
         // Temporary variables for testing purposes:
@@ -49,6 +49,9 @@ namespace Crystalarium
         {
 
             _graphics = new GraphicsDeviceManager(this);
+         
+
+       
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
@@ -59,6 +62,12 @@ namespace Crystalarium
 
         protected override void Initialize()
         {
+            //let's make the window a tiny bit bigger, for testing
+            _graphics.PreferredBackBufferWidth = 1280;  // set this value to the desired width of your window
+            _graphics.PreferredBackBufferHeight = 720;   // set this value to the desired height of your window
+            _graphics.ApplyChanges();
+
+
 
             // create the basics.
             engine = new CrystalCore.CrystalCore(TargetElapsedTime);
@@ -190,6 +199,7 @@ namespace Crystalarium
             Textures.testSquare = Content.Load<Texture2D>("testSquare");
             Textures.viewboxBG = Content.Load<Texture2D>("ViewportBG");
             Textures.chunkGrid = Content.Load<Texture2D>("chunkGrid");
+            Textures.sampleAgent = Content.Load<Texture2D>("SampleAgent");
 
 
             // create a test grid, and do some test things to it.
@@ -198,7 +208,7 @@ namespace Crystalarium
 
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
-
+           
             // create the render modes we are likely to use.
 
             RendererTemplate Standard = new RendererTemplate()
@@ -214,7 +224,7 @@ namespace Crystalarium
             view.Background = Textures.viewboxBG; 
 
             // prevent the camera from leaving the world.
-            view.Camera.IsBound = true;
+            view.bindCamera();
 
 
             // for the minimap.

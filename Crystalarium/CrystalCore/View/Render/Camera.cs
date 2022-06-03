@@ -32,7 +32,7 @@ namespace CrystalCore.View.Render
         public bool IsBound
         {
             get => _isBound;
-            set => _isBound = value;
+            internal set => _isBound = value;
         }
 
         public Rectangle Bounds

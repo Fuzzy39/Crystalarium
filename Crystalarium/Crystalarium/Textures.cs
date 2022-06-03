@@ -15,11 +15,13 @@ namespace Crystalarium
 
 
 
-        //crysim textures
+        //crysm textures
         public static Texture2D tile; // unused
         public static Texture2D chunkGrid;
+        public static Texture2D sampleAgent;
 
         // other textrues
         public static Texture2D viewboxBG;
+
     }
 }

@@ -43,6 +43,17 @@ namespace CrystalCore.Sim
             get => chunksSize;
         }
 
+        public Vector2 center
+        { 
+            get 
+            {
+                // the center tile coords of this grid
+                return chunksSize.ToVector2() * Chunk.SIZE/2f;
+
+            }
+
+
+        }
 
 
         public Grid(SimulationManager sim)
