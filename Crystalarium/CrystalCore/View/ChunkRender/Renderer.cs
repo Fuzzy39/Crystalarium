@@ -52,7 +52,7 @@ namespace CrystalCore.View.ChunkRender
                     throw new InvalidOperationException("A Gridview cannot viewcast itself.");
                 }
 
-                if(value.Grid!=renderData.Parent)
+                if(value.Grid!=renderData.Grid)
                 {
                     // hopefully these error messages make sense.
                     throw new InvalidOperationException("Viewcasting requires GridViews that view the same grid.");
@@ -105,7 +105,7 @@ namespace CrystalCore.View.ChunkRender
             // brighten checkboard tiles, if needbe.
             if(doCheckerBoardColoring)
             {
-                Point pos = renderData.Parent.getChunkPos(renderData);
+                Point pos = renderData.Grid.getChunkPos(renderData);
                 if ((pos.X + pos.Y) % 2 == 0)
                 {
                     brighten(ref toReturn, 1);

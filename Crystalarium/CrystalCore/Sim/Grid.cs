@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using CrystalCore.Util;
+using System.Diagnostics;
+using CrystalCore.Sim.Base;
 
 namespace CrystalCore.Sim
 {
@@ -130,9 +132,8 @@ namespace CrystalCore.Sim
                 return;
             }
 
-            // This girdObject is not of any known instance, so we throw an expection; we aren't prepared to 
-            // handle it
-            throw new ArgumentException("Unknown or Invalid type of GridObject to Add to this grid.");
+            // This girdObject is not of any instance we feel the need to deal with. meh.
+            // throw new ArgumentException("Unknown or Invalid type of GridObject to Add to this grid.");
         }
 
         public void Remove(GridObject o)
@@ -146,7 +147,7 @@ namespace CrystalCore.Sim
                 return; 
             }
 
-            throw new ArgumentException("Unknown or Invalid type of GridObject to remove from this grid.");
+            //throw new ArgumentException("Unknown or Invalid type of GridObject to remove from this grid.");
 
         }
 
@@ -231,6 +232,7 @@ namespace CrystalCore.Sim
         }
 
 
+        // returns the Position in chunkCoords of a particular chunk
         public Point getChunkPos(Chunk ch)
         {
             // get the chunk
@@ -248,7 +250,32 @@ namespace CrystalCore.Sim
                 }
             }
 
-            return new Point();
+            throw new ArgumentException("Chunk '" + ch + "' is not part of Grid '" + this + "'.");
+        }
+
+        public Chunk getChunkAtCoords(Point Coords)
+        {
+            // we could iterate through every chunk, but we could also do math.
+            // math is probably better
+
+            if(!Bounds.Contains(Coords))
+            {
+                // no chunk there.
+                return null;
+            }
+
+            // should be the coord in the grid's array where chunks are stored.
+            Point chunkCoord = (Coords - Bounds.Location) / new Point(Chunk.SIZE);
+
+            // get and return that chunk.
+            Chunk toReturn = _chunks[chunkCoord.X][chunkCoord.Y];
+
+            // it's possible this doesn't work. If that's true, I'd like to know.
+            Debug.Assert(toReturn.Bounds.Contains(Coords));
+
+            return toReturn;
+
+
         }
 
       

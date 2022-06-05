@@ -24,7 +24,7 @@ namespace Crystalarium
 
         private CrystalCore.CrystalCore engine; // the 'engine'
 
-        private const int BUILD = 371;
+        private const int BUILD = 384;
 
 
         // Temporary variables for testing purposes:
@@ -204,7 +204,9 @@ namespace Crystalarium
 
             // create a test grid, and do some test things to it.
             g = new Grid(engine.Sim);
-
+            g.ExpandGrid(Direction.right);
+            Agent a = new Agent(g, new Rectangle(15, 15, 2, 1));
+            Console.WriteLine(a);
 
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;

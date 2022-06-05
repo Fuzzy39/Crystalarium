@@ -13,6 +13,12 @@ namespace CrystalCore.Util
         right
     }
 
+    public enum RotationalDirection
+    {
+        clockwise,
+        counterclockwise
+    }
+
     static class DirectionUtil
     {
         public static bool IsVertical(this Direction d)
@@ -73,6 +79,48 @@ namespace CrystalCore.Util
 
        
             return p;
+        }
+
+        public static Direction Rotate(this Direction d, RotationalDirection r)
+        {
+            // it's big, 'cause I'm lazy
+            if(r == RotationalDirection.clockwise)
+            {
+                return d switch
+                {
+                    Direction.up => Direction.right,
+
+                    Direction.down => Direction.left,
+
+                    Direction.left => Direction.up,
+
+                    Direction.right => Direction.right,
+
+                    // default
+                    _ => Direction.up,
+
+                };
+            }
+            else
+            {
+                return d switch
+                {
+                    Direction.up => Direction.left,
+
+                    Direction.down => Direction.right,
+
+                    Direction.left => Direction.down,
+
+                    Direction.right => Direction.up,
+
+                    // default
+                    _ => Direction.up,
+
+
+                };
+            }
+
+            
         }
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace CrystalCore.Sim
+namespace CrystalCore.Sim.Base
 {
     abstract public class GridObject
     {
@@ -13,7 +13,7 @@ namespace CrystalCore.Sim
          */
 
         protected Rectangle _bounds;// the position and size in tile space where this GridObject is located.
-        protected Grid _parent; // the grid that this object belongs to.
+        protected Grid _grid; // the grid that this object belongs to.
 
 
         public Rectangle Bounds
@@ -22,19 +22,24 @@ namespace CrystalCore.Sim
             // I'm not sure if setting this is a good idea, so, I won't allow it for now.
         }
 
-        public Grid Parent
+        public Grid Grid
         {
-            get => _parent;
+            get => _grid;
         }
 
 
         // constructors
         public GridObject(Grid g, Rectangle rect)
         {
-            _bounds = rect;
-            _parent = g;
+            if(rect.Size.X<1 || rect.Size.Y<1 )
+            {
+                throw new ArgumentException("GridObjects must have size.");
+            }
 
-            _parent.Add(this);
+            _bounds = rect;
+            _grid = g;
+
+            _grid.Add(this);
 
         }
 
@@ -49,12 +54,18 @@ namespace CrystalCore.Sim
         public void Destroy()
         {
             // remove references to this object.
-            _parent.Remove(this);
+            _grid.Remove(this);
             _bounds = new Rectangle(0,0,0,0);
-            _parent = null;
+            _grid = null;
             
         }
 
-      
+
+        public override string ToString()
+        {
+            return "GridObject { Bounds: " + _bounds+"}";
+        }
+
+
     }
 }
