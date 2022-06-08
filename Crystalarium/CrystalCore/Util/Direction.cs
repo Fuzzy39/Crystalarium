@@ -81,6 +81,26 @@ namespace CrystalCore.Util
             return p;
         }
 
+        // What? Radians? really?
+        // Yes, really. We do need this.
+        public static float ToRadians(this Direction d)
+        {
+            return d switch
+            {
+                Direction.up => 0,
+
+                Direction.right => MathF.PI/2f,
+
+                Direction.down => MathF.PI,
+
+                Direction.left => MathF.PI*3f/2f,
+
+                // default
+                _ => 0,
+
+            };
+        }
+
         public static Direction Rotate(this Direction d, RotationalDirection r)
         {
             // it's big, 'cause I'm lazy

@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using CrystalCore.Sim;
+using CrystalCore.Sim.Base;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace CrystalCore.View.ChunkRender
+namespace CrystalCore.View
 {
     internal abstract class RendererBase
     {
@@ -12,22 +13,25 @@ namespace CrystalCore.View.ChunkRender
         // It does not sepcify how chunks are rendered.
 
         protected GridView renderTarget;
-        protected Chunk renderData;
+        protected GridObject _renderData;
+        protected List<RendererBase> _others;
 
-        internal Chunk Chunk
+        internal GridObject RenderData
         {
-            get => renderData;
+            get => _renderData;
         }
 
-        protected RendererBase( GridView v, Chunk ch, List<RendererBase> others)
+        protected RendererBase( GridView v, GridObject o, List<RendererBase> others)
         {
             // check that we don't already exist
-            foreach (Renderer r in others)
+            foreach (RendererBase r in others)
             {
-                if (r.Chunk == ch)
-                    throw new InvalidOperationException("Attempted to create an already existing Chunk Renderer.");
+                if (r.RenderData == o)
+                    throw new InvalidOperationException("Attempted to create an already existing Renderer.");
                     
             }
+            _others = others;
+
 
                
 
@@ -35,7 +39,7 @@ namespace CrystalCore.View.ChunkRender
             v.AddRenderer(this);
 
             renderTarget = v;
-            renderData = ch;
+            _renderData = o;
         }
 
         // remove external refrences to this object.
@@ -50,9 +54,13 @@ namespace CrystalCore.View.ChunkRender
         {
             // probably don't kill anybody.
             // we might have to kill ourselves, if we aren't rendering anything.
+            if(_renderData == null)
+            {
+                this.Destroy();
+            }
 
             // check that we are visible on screen.
-            if (renderTarget.Camera.TileBounds().Intersects(renderData.Bounds))
+            if (renderTarget.Camera.TileBounds().Intersects(_renderData.Bounds))
             {
               
                 Render(sb);
@@ -77,10 +85,10 @@ namespace CrystalCore.View.ChunkRender
         {
             if (obj == null)
                 return false;
-            if(!(obj is Renderer))
+            if(!(obj is RendererBase))
                 return false;
-            Renderer rend = (Renderer)obj;
-            if(rend.renderData==renderData & rend.renderTarget== renderTarget )
+            RendererBase rend = (RendererBase)obj;
+            if(rend._renderData==_renderData & rend.renderTarget== renderTarget )
             {
                 return true;
             }

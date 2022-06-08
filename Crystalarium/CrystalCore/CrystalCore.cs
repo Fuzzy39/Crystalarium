@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Input;
+using CrystalCore.Rulesets;
 using CrystalCore.Sim;
 using CrystalCore.View;
 using CrystalCore.View.ChunkRender;
@@ -16,8 +17,10 @@ namespace CrystalCore
 
         private SimulationManager _sim;
         private Controller _controller;
-
+        private Ruleset _ruleset;
+      
         private List<GridView> _viewports;
+        private List<Grid> _grids;
       
         public SimulationManager Sim
         {
@@ -29,13 +32,34 @@ namespace CrystalCore
             get => _controller;
         }
 
+        public Ruleset Ruleset
+        {
+            get => _ruleset;
+            set
+            {
+                if(value==_ruleset)
+                {
+                    return;
+                }
 
-        public CrystalCore(TimeSpan timeBetweenFrames)
+                foreach(Grid g in _grids)
+                {
+                    g.Reset();
+                }
+
+                _ruleset = value;
+            }
+        }
+
+
+
+        public CrystalCore(TimeSpan timeBetweenFrames, Ruleset initial)
         {
             _sim = new SimulationManager(timeBetweenFrames.TotalSeconds);
             _controller = new Controller();
 
             _viewports = new List<GridView>();
+            _grids = new List<Grid>();
             
         }
 
@@ -51,6 +75,13 @@ namespace CrystalCore
             return new GridView(_viewports, g, location, size, renderConfig);
         }
 
+        public Grid addGrid()
+        {
+            
+            _grids.Add(new Grid(Sim));
+
+            return _grids[_grids.Count - 1];
+        }
 
         public void Update(GameTime gameTime)
         {

@@ -10,7 +10,7 @@ namespace CrystalCore.View.Render
     internal class BoundedRenderer
     {
         /*
-         *  Bounded renderer renders things, within a boundry.
+         *  A Bounded renderer renders things, within a boundry.
          *  
          * 
          */
@@ -31,7 +31,7 @@ namespace CrystalCore.View.Render
 
 
         // bounds in pixels relative to the renderer's location.
-        public virtual bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle pixelBounds, Color c)
+        public virtual bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle pixelBounds, Color c, float rotation)
         {
             // check if the texture needs to be rendered by this viewport
             Rectangle absoluteBounds = new Rectangle(pixelBounds.Location + PixelBoundry.Location, pixelBounds.Size);
@@ -101,14 +101,36 @@ namespace CrystalCore.View.Render
 
             Rectangle sourceRect = GetTextureSourceBounds(topCut, bottomCut, leftCut, rightCut, texturePixelBounds, texture);
 
+       
+            Rectangle destRect = new Rectangle(topLeft, size);
+        
 
-            sb.Draw(
+           Vector2 rotationOrigin = new Vector2(sourceRect.Width / 2f, sourceRect.Height / 2f);
+           //destRect.Location -= rotationOrigin.ToPoint();
+           /*if(rotation == 0f)
+           {
+                sb.Draw(
+                     texture,
+                     destRect,
+                     sourceRect,
+                     c);
+                return true;
+           }*/
+
+           sb.Draw(
                        texture,
-                       new Rectangle(topLeft, size),
+                       new Rectangle(destRect.Location+new Point(destRect.Width/2, destRect.Height/2), destRect.Size),
                        sourceRect,
-                       c // the color of the texture
+                       c, // the color of the texture
+                       rotation,
+                       rotationOrigin,
+                       /*sourceRect.Center.ToVector2(),*/ // the center of rotation
+                       SpriteEffects.None,
+                       0f
 
                    );
+
+          
             return true;
         }
 

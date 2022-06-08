@@ -32,6 +32,8 @@ namespace CrystalCore.View.ChunkRender
         private Texture2D _viewCastOverlay; // if not null, this image (opaque and dark) will be plastered on the Gridview where the _viewCastTarget's
                                             // view lies.
 
+        public bool DoAgentRendering { get; set; }
+
         //properties
    
         public Texture2D ChunkBackground
@@ -88,17 +90,21 @@ namespace CrystalCore.View.ChunkRender
             _doCheckerBoardColoring = false;
             _originChunkColor = null;
             _viewCastTarget = null;
+            DoAgentRendering = true;
         }
 
 
         internal Renderer CreateRenderer(GridView v, Chunk ch, List<RendererBase> others)
         {
             // set up a new renderer
-            Renderer toReturn = new Renderer(v, ch, others, _chunkBG, _BGColor);
-            toReturn.brightenAmount = _brightenAmount;
-            toReturn.doCheckerBoardColoring = _doCheckerBoardColoring;
-            toReturn.OriginChunkColor = _originChunkColor;
-            toReturn.ViewCastTarget = _viewCastTarget;
+            Renderer toReturn = new Renderer(v, ch, others, _chunkBG, _BGColor)
+            {
+                brightenAmount = _brightenAmount,
+                doCheckerBoardColoring = _doCheckerBoardColoring,
+                OriginChunkColor = _originChunkColor,
+                ViewCastTarget = _viewCastTarget,
+                doAgentRendering = DoAgentRendering
+            };
 
             return toReturn;
         }

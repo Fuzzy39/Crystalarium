@@ -218,24 +218,34 @@ namespace CrystalCore.View.Render
 
 
         //Rendering stuff
-
+        // is this too many overloads? idk
         internal bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds)
         {
-            return RenderTexture(sb, texture, new RectangleF(bounds), Color.White);
+            return RenderTexture(sb, texture, new RectangleF(bounds), Color.White,0f);
         }
 
         internal bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c)
         {
-            return RenderTexture(sb, texture, new RectangleF(bounds), c);
+            return RenderTexture(sb, texture, new RectangleF(bounds), c, 0f);
+        }
+
+        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c, float rotation)
+        {
+            return RenderTexture(sb, texture, new RectangleF(bounds), c, rotation);
         }
 
         internal bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds)
         {
-            return RenderTexture(sb, texture, bounds, Color.White);
+            return RenderTexture(sb, texture, bounds, Color.White,0f);
         }
 
-        // bounds of object to render in tilespace
         internal bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c)
+        {
+            return RenderTexture(sb, texture, bounds, c, 0f);
+        }
+
+            // bounds of object to render in tilespace
+        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c, float rotation)
         {
             // stuff
 
@@ -245,7 +255,7 @@ namespace CrystalCore.View.Render
             Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale)) + new Point(1, 1);
         
 
-            return renderer.RenderTexture(sb, texture, new Rectangle(pixelCoords, pixelSize), c);
+            return renderer.RenderTexture(sb, texture, new Rectangle(pixelCoords, pixelSize), c, rotation);
 
         }
 

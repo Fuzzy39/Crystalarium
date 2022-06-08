@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using AgentRenderer = CrystalCore.View.AgentRender.BasicRenderer;
 
 namespace CrystalCore.View.ChunkRender
 {
@@ -28,6 +29,10 @@ namespace CrystalCore.View.ChunkRender
         private GridView _viewCastTarget; // if not null, chunks viewed by this gridview (assuming it has the same grid) will be brightened.
                                           // this gridview should not be the same as the gridview that this renderer is part of.
 
+        internal bool doAgentRendering; // whether agents are rendered in this chunk
+
+
+        private List<AgentRenderer> _children;
 
         internal Color? OriginChunkColor
         {
@@ -40,19 +45,19 @@ namespace CrystalCore.View.ChunkRender
             get => _viewCastTarget;
             set
             {
-                if(value == null )
+                if (value == null)
                 {
                     _viewCastTarget = null;
                     return;
                 }
 
-                if(value==renderTarget)
+                if (value == renderTarget)
                 {
-                   
+
                     throw new InvalidOperationException("A Gridview cannot viewcast itself.");
                 }
 
-                if(value.Grid!=renderData.Grid)
+                if (value.Grid != RenderData.Grid)
                 {
                     // hopefully these error messages make sense.
                     throw new InvalidOperationException("Viewcasting requires GridViews that view the same grid.");
@@ -75,25 +80,78 @@ namespace CrystalCore.View.ChunkRender
             brightenAmount = 30;
             doCheckerBoardColoring = false;
 
-        
+
             _originChunkColor = null;
 
 
             _viewCastTarget = null;
-            
+
+            doAgentRendering = true;
+
+            _children = new List<AgentRenderer>();
+
 
         }
 
         protected override void Render(SpriteBatch sb)
         {
 
-          
-            if (_chunkBG != null)
+
+            if (_chunkBG == null)
             {
-                renderTarget.Camera.RenderTexture(sb, _chunkBG, renderData.Bounds, determineColor());
+                throw new InvalidOperationException("RenderConfig not supplied with required texture.");
             }
+
+            renderTarget.Camera.RenderTexture(sb, _chunkBG, RenderData.Bounds, determineColor());
+            
+
+            if (!doAgentRendering)
+            {
+                return;
+            }
+
+            // find agents that need rendered
+            UpdateChildren();
+
+            // render them. We cannot use a foreach because children can occasionally die/
+            for(int i = 0; i<_children.Count; i++)
+            {
+                AgentRenderer ar = _children[i];
+                ar.Draw(sb);
+
+                if (ar == null)
+                {
+                    i--;
+                }
+            }
+
         }
 
+        private void UpdateChildren()
+        {
+            // for the time being, we're ignoring orphans.
+            // sorry, you have to be invisible.
+
+            Chunk ch = (Chunk)RenderData;
+
+            foreach( Agent a in ch.Children)
+            {
+                bool hasRenderer = false;
+                foreach(AgentRenderer ar in _children)
+                {
+                    if(ar.RenderData == a)
+                    {
+                        hasRenderer = true;
+                    }
+                }
+
+                if (hasRenderer)
+                    continue;
+
+                // add a new renderer.
+                _children.Add(a.Type.CreateRenderer(renderTarget,a, _others));
+            }
+        }
 
         private Color determineColor()
         {
@@ -105,7 +163,7 @@ namespace CrystalCore.View.ChunkRender
             // brighten checkboard tiles, if needbe.
             if(doCheckerBoardColoring)
             {
-                Point pos = renderData.Grid.getChunkPos(renderData);
+                Point pos = RenderData.Grid.getChunkPos((Chunk)RenderData);
                 if ((pos.X + pos.Y) % 2 == 0)
                 {
                     brighten(ref toReturn, 1);
@@ -113,7 +171,7 @@ namespace CrystalCore.View.ChunkRender
             }
 
             // check if we are being viewed.
-            if(_viewCastTarget!=null && isRenderedByTarget(renderData))
+            if(_viewCastTarget!=null && isRenderedByTarget((Chunk)RenderData))
             {
                 brighten(ref toReturn,2.5);
             }
@@ -130,7 +188,7 @@ namespace CrystalCore.View.ChunkRender
 
             if (_originChunkColor != null)
             { 
-                if(renderData.Coords.Equals(new Point(0)))
+                if(((Chunk)RenderData).Coords.Equals(new Point(0)))
                 {
                     return (Color)_originChunkColor;
                 }
@@ -156,7 +214,7 @@ namespace CrystalCore.View.ChunkRender
         {
             foreach (Renderer r in _viewCastTarget.Renderers)
             {
-                if (r.Chunk == ch)
+                if (r.RenderData == ch)
                 {
                     return true;
                 }

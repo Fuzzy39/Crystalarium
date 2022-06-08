@@ -19,6 +19,7 @@ namespace CrystalCore.Sim
         private SimulationManager sim;
 
         private List<List<Chunk>> _chunks; // a 2d array where the outer array represents rows and the inner array represents columns. [x][y]
+ 
         private Point chunksOrigin; // the chunk coords where the chunk array, chunks, starts.
         private Point chunksSize; // the size, in chunks, of the grid.
 
@@ -58,7 +59,7 @@ namespace CrystalCore.Sim
         }
 
 
-        public Grid(SimulationManager sim)
+        internal Grid(SimulationManager sim)
         {
             this.sim = sim;
             sim.addGrid(this);

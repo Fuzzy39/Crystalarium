@@ -224,13 +224,15 @@ namespace CrystalCore.View
                     bool existing = false;
                     foreach (Renderer r in _renderers)
                     {
-                        if (r.Chunk == ch)
+                        if (r.RenderData == ch)
                         {
                             existing = true;
                         }
 
                     }
 
+                    // this is really poetic.
+                    // use this if statement to guide you in life.
                     if (existing)
                     {
                         continue;

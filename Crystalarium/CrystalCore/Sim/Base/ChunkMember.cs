@@ -74,7 +74,7 @@ namespace CrystalCore.Sim.Base
                 for(int y = 0; y < sizeInChunks.Y; y++)
                 {
                     Point i = new Point(x, y) + initial;
-                    Console.WriteLine(i);
+              
                     toReturn.Add( _grid.Chunks[i.X][i.Y]);
 
                 }

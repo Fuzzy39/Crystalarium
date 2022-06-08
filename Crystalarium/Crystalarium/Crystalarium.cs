@@ -11,6 +11,7 @@ using CrystalCore.Util;
 using CrystalCore.Sim;
 using CrystalCore.View;
 using CrystalCore.View.ChunkRender;
+using CrystalCore.Rulesets;
 
 namespace Crystalarium
 {
@@ -24,12 +25,13 @@ namespace Crystalarium
 
         private CrystalCore.CrystalCore engine; // the 'engine'
 
-        private const int BUILD = 384;
+        private const int BUILD = 400;
 
 
         // Temporary variables for testing purposes:
 
         // Temporary Content 
+        private Ruleset testRules;
         private SpriteFont testFont;
 
         // Other
@@ -39,6 +41,8 @@ namespace Crystalarium
         Grid g; // the world seen by the view and minimap
 
         string info; // used when clicking for info
+
+
 
         // used when panning
         Point panOrigin = new Point();
@@ -68,9 +72,12 @@ namespace Crystalarium
             _graphics.ApplyChanges();
 
 
+            // create a ruleset
+            testRules = new Ruleset("test");
+          
 
             // create the basics.
-            engine = new CrystalCore.CrystalCore(TargetElapsedTime);
+            engine = new CrystalCore.CrystalCore(TargetElapsedTime, testRules);
 
             // make a local reference to the input controller, since we use it a lot
             Controller c = engine.Controller;
@@ -202,11 +209,16 @@ namespace Crystalarium
             Textures.sampleAgent = Content.Load<Texture2D>("SampleAgent");
 
 
+            // define ruleset.
+            AgentType box = testRules.CreateType("box", new Point(2, 2));
+            box.RenderConfig.AgentBackground = Textures.sampleAgent;
+
             // create a test grid, and do some test things to it.
-            g = new Grid(engine.Sim);
-            g.ExpandGrid(Direction.right);
-            Agent a = new Agent(g, new Rectangle(15, 15, 2, 1));
-            Console.WriteLine(a);
+            g = engine.addGrid();
+            testRules.GetAgentType("box").createAgent(g, new Point(7, 7), Direction.left);
+
+         
+            
 
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
@@ -240,8 +252,8 @@ namespace Crystalarium
 
                 // to make it a minimap!
                 ViewCastOverlay = Textures.pixel,
-                ViewCastTarget = view // note that this must be done after view has been initialized.
-
+                ViewCastTarget = view, // note that this must be done after view has been initialized.
+                DoAgentRendering = false
             };
 
 

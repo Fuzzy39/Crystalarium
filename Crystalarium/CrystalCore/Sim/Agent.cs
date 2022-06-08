@@ -1,4 +1,5 @@
-﻿using CrystalCore.Sim.Base;
+﻿using CrystalCore.Rulesets;
+using CrystalCore.Sim.Base;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
@@ -14,6 +15,9 @@ namespace CrystalCore.Sim
          * They participate in the simulation, and they can be placed.
          */
         private Direction _facing; // the direction this agent is facing.
+
+        private AgentType _type;
+
         public Direction Facing
         {
             get => _facing;
@@ -35,15 +39,23 @@ namespace CrystalCore.Sim
             }
         }
 
-
-        // SHOULD BE INTERNAL
-        internal Agent(Grid g, Rectangle bounds) : base(g, bounds)
+        public AgentType Type
         {
-            _facing = Direction.up;
+            get => _type;
         }
 
-        internal Agent(Grid g, Rectangle bounds, Direction facing) : this(g, bounds)
+
+
+        // SHOULD BE INTERNAL
+        internal Agent(Grid g, Rectangle bounds, AgentType t) : base(g, bounds)
         {
+            _facing = Direction.up;
+            _type = t;
+        }
+
+        internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : this(g, bounds, t)
+        {
+
             _facing = facing;
         }
 
