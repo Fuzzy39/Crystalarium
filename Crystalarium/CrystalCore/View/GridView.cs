@@ -147,6 +147,8 @@ namespace CrystalCore.View
             return p - _pixelBounds.Location;
         }
 
+     
+
 
         internal void Draw(SpriteBatch sb)
         {
@@ -167,12 +169,18 @@ namespace CrystalCore.View
 
 
                 // repeat the previous index if this renderer was destroyed.
-                if (r.Draw(sb))
+                //if (r.Draw(sb))
                     i++;
             }
 
             // draw the viewport if in debug mode.
             DrawOtherGridView(sb);
+
+            // TEST IMAGE
+
+            _camera.RenderTexture(sb, RenderConfig.ViewCastOverlay,
+                new Rectangle(5, 5, 5, 5),
+                Color.White, Direction.down);   
 
             // finally, draw the border.
             _border.Draw(sb);

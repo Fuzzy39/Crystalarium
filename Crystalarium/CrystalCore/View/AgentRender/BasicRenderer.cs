@@ -64,7 +64,7 @@ namespace CrystalCore.View.AgentRender
                 throw new InvalidOperationException("RenderConfig not supplied with required texture.");
             }
            
-            renderTarget.Camera.RenderTexture(sb, _background, RenderData.Bounds, _BGcolor, ((Agent)RenderData).Facing.ToRadians());
+            renderTarget.Camera.RenderTexture(sb, _background, RenderData.Bounds, _BGcolor, ((Agent)RenderData).Facing);
             
         }
 

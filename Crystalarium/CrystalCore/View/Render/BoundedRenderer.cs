@@ -31,8 +31,14 @@ namespace CrystalCore.View.Render
 
 
         // bounds in pixels relative to the renderer's location.
-        public virtual bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle pixelBounds, Color c, float rotation)
+        public virtual bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle pixelBounds, Color c, Direction d)
         {
+
+            // pray that you never have to edit this again.
+            // if you do, please refactor this mess.
+
+            float rotation = d.ToRadians();
+
             // check if the texture needs to be rendered by this viewport
             Rectangle absoluteBounds = new Rectangle(pixelBounds.Location + PixelBoundry.Location, pixelBounds.Size);
             if (!absoluteBounds.Intersects(this.PixelBoundry))
@@ -64,7 +70,7 @@ namespace CrystalCore.View.Render
             Point size = texturePixelBounds.Size;
 
 
-            if (topLeft.X < 0)
+            if (topLeft.X < 0) 
             {
                 // adjust the size to match what is visible
                 size.X += topLeft.X;
@@ -91,12 +97,19 @@ namespace CrystalCore.View.Render
 
             topLeft = topLeft + _pixelBoundry.Location;
 
+            topCut = (int)MathF.Abs(MathF.Cos(rotation) * topCut + MathF.Sin(rotation) * leftCut);
+        
+            leftCut = (int)MathF.Abs(MathF.Cos(rotation) * leftCut + MathF.Sin(rotation) * topCut);
             // figure out the size of the rectangle we need to draw.
             int rightSide = _pixelBoundry.X + _pixelBoundry.Width;
             size.X = GetRenderSize(rightSide, texturePixelBounds.Size.X, leftCut, topLeft.X, out rightCut);
 
             int bottomSide = _pixelBoundry.Y + _pixelBoundry.Height;
             size.Y = GetRenderSize(bottomSide, texturePixelBounds.Size.Y, topCut, topLeft.Y, out bottomCut);
+
+            bottomCut = (int)MathF.Abs(MathF.Cos(rotation) * bottomCut + MathF.Sin(rotation) * bottomCut);
+
+            rightCut = (int)MathF.Abs(MathF.Cos(rotation) * rightCut + MathF.Sin(rotation) * rightCut);
 
 
             Rectangle sourceRect = GetTextureSourceBounds(topCut, bottomCut, leftCut, rightCut, texturePixelBounds, texture);
@@ -106,21 +119,18 @@ namespace CrystalCore.View.Render
         
 
            Vector2 rotationOrigin = new Vector2(sourceRect.Width / 2f, sourceRect.Height / 2f);
-           //destRect.Location -= rotationOrigin.ToPoint();
-           /*if(rotation == 0f)
-           {
-                sb.Draw(
-                     texture,
-                     destRect,
-                     sourceRect,
-                     c);
-                return true;
-           }*/
+         
+            destRect.Size = AbsRotate(destRect.Size, rotation);
 
-           sb.Draw(
+            Rectangle acutalSourceRect = new Rectangle(AbsRotate(sourceRect.Location, rotation), AbsRotate(sourceRect.Size, rotation));
+
+         
+
+            sb.Draw(
                        texture,
-                       new Rectangle(destRect.Location+new Point(destRect.Width/2, destRect.Height/2), destRect.Size),
-                       sourceRect,
+                       new Rectangle(
+                           destRect.Location + new Point(destRect.Width/2, destRect.Height/2), destRect.Size),
+                       acutalSourceRect,
                        c, // the color of the texture
                        rotation,
                        rotationOrigin,
@@ -132,6 +142,21 @@ namespace CrystalCore.View.Render
 
           
             return true;
+        }
+
+        // rot is in radians
+        private Point rotate(Point p, float rot)
+        {
+            return new Point(
+              (int)(MathF.Cos(rot) * p.X + MathF.Sin(rot) * p.Y),
+              (int)(MathF.Cos(rot) * p.Y + MathF.Sin(rot) * p.X));
+        }
+
+
+        private Point AbsRotate(Point p, float rot)
+        {
+            Point toReturn = rotate(p, rot);
+            return new Point(Math.Abs(toReturn.X), Math.Abs(toReturn.Y));
         }
 
         private int GetRenderSize(int viewportFarPos, int size, int nearCut, int position, out int farCut)
@@ -146,6 +171,7 @@ namespace CrystalCore.View.Render
 
             currentSize = viewportFarPos - position;
             farCut = size - currentSize;
+
 
             return currentSize;
         }

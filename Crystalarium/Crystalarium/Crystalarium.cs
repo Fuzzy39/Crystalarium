@@ -25,7 +25,7 @@ namespace Crystalarium
 
         private CrystalCore.CrystalCore engine; // the 'engine'
 
-        private const int BUILD = 400;
+        private const int BUILD = 412;
 
 
         // Temporary variables for testing purposes:
@@ -210,12 +210,16 @@ namespace Crystalarium
 
 
             // define ruleset.
-            AgentType box = testRules.CreateType("box", new Point(2, 2));
+
+
+             
+            AgentType box = testRules.CreateType("box", new Point(4, 4));
             box.RenderConfig.AgentBackground = Textures.sampleAgent;
 
             // create a test grid, and do some test things to it.
             g = engine.addGrid();
-            testRules.GetAgentType("box").createAgent(g, new Point(7, 7), Direction.left);
+            //g.ExpandGrid(Direction.right);
+           // box.createAgent(g, new Point(13, 7), Direction.up);
 
          
             
@@ -227,7 +231,8 @@ namespace Crystalarium
 
             RendererTemplate Standard = new RendererTemplate()
             {
-                ChunkBackground = Textures.chunkGrid
+                ChunkBackground = Textures.chunkGrid,
+                ViewCastOverlay = Textures.sampleAgent
             };
 
             
@@ -235,11 +240,11 @@ namespace Crystalarium
             view = engine.addView( g, 0, 0, width, height, Standard);
 
             // background
-            view.Background = Textures.viewboxBG; 
+            view.Background = Textures.viewboxBG;
 
             // prevent the camera from leaving the world.
-            view.bindCamera();
-
+            // view.bindCamera();
+            view.Camera.Position = g.center;
 
             // for the minimap.
             RendererTemplate Debug = new RendererTemplate()
@@ -261,7 +266,7 @@ namespace Crystalarium
 
 
             // setup the minimap.
-            minimap = engine.addView( g, width-250, 0, 250, 250, Debug);
+           /* minimap = engine.addView( g, width-250, 0, 250, 250, Debug);
 
             // background
             minimap.Background = Textures.viewboxBG;
@@ -272,7 +277,7 @@ namespace Crystalarium
 
                 
             // Set the camera of the minimap.
-            minimap.Camera.MinScale = 1;
+            minimap.Camera.MinScale = 1;*/
             
            
        
@@ -297,8 +302,8 @@ namespace Crystalarium
             view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
 
             // minimap positions
-            minimap.Camera.Position = view.Camera.Position;
-            minimap.Camera.Zoom = view.Camera.Zoom/12;
+            //minimap.Camera.Position = view.Camera.Position;
+            //minimap.Camera.Zoom = view.Camera.Zoom/12;
 
 
             engine.Update(gameTime);
