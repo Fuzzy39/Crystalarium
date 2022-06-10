@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace CrystalCore.View.Render
@@ -12,11 +13,11 @@ namespace CrystalCore.View.Render
         /*
          *  A Bounded renderer renders things, within a boundry.
          *  
-         * 
+         *  No relation to any other renderers, which are broadly higher level constructs.
          */
 
-        private Rectangle _pixelBoundry;
 
+        private Rectangle _pixelBoundry;
 
         public Rectangle PixelBoundry
         {
@@ -31,188 +32,160 @@ namespace CrystalCore.View.Render
 
 
         // bounds in pixels relative to the renderer's location.
-        public virtual bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle pixelBounds, Color c, Direction d)
+        public void RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle pixelBounds, Color c, Direction d)
         {
 
-            // pray that you never have to edit this again.
-            // if you do, please refactor this mess.
-
-            float rotation = d.ToRadians();
-
-            // check if the texture needs to be rendered by this viewport
-            Rectangle absoluteBounds = new Rectangle(pixelBounds.Location + PixelBoundry.Location, pixelBounds.Size);
-            if (!absoluteBounds.Intersects(this.PixelBoundry))
+            // if the image is outside of our bounds, don't even bother.
+            if (!ToAbsCoords(pixelBounds).Intersects(_pixelBoundry))
             {
-                return false;
+                return;
             }
 
+            // crop the pixel bounds if needbe.
+            Rectangle finalDestBounds = GetFinalDestBounds(ToAbsCoords(pixelBounds));
 
-            //it does! collect some basic information.
-            // we add a couple pixels to the size of things
+            // figure out the source bounds.
+            Rectangle sourceBounds = GetSourceBounds(texture, ToAbsCoords(pixelBounds), finalDestBounds, d);
 
-         
+            // get the correct dest bounds, compensating for rotation
+            Rectangle actualDestBounds = AdjustDestBounds(finalDestBounds, d);
 
-            // partial renderings
-            // render it!
-            Rectangle texturePixelBounds = pixelBounds;
-
-            // figure out the rectangle we need to draw.
-
-            // some flags (this is getting messy)
-            // whether this side had bits cut off from it.
-            int topCut = 0;
-            int bottomCut = 0;
-            int rightCut = 0;
-            int leftCut = 0;
-
-            // get the top left point of the drawing area
-            Point topLeft = texturePixelBounds.Location;
-            Point size = texturePixelBounds.Size;
-
-
-            if (topLeft.X < 0) 
-            {
-                // adjust the size to match what is visible
-                size.X += topLeft.X;
-
-                // keep track of what was removed
-                leftCut = -topLeft.X;
-
-                // set position to what was removed.
-                topLeft.X = 0;
-            }
-
-            if (topLeft.Y < 0)
-            {
-                // adjust the size to match what is visible
-                size.Y += topLeft.Y;
-
-                // keep track of what was removed
-                topCut = -topLeft.Y;
-
-                // set position to inside of the viewport
-                topLeft.Y = 0;
-
-            }
-
-            topLeft = topLeft + _pixelBoundry.Location;
-
-            topCut = (int)MathF.Abs(MathF.Cos(rotation) * topCut + MathF.Sin(rotation) * leftCut);
-        
-            leftCut = (int)MathF.Abs(MathF.Cos(rotation) * leftCut + MathF.Sin(rotation) * topCut);
-            // figure out the size of the rectangle we need to draw.
-            int rightSide = _pixelBoundry.X + _pixelBoundry.Width;
-            size.X = GetRenderSize(rightSide, texturePixelBounds.Size.X, leftCut, topLeft.X, out rightCut);
-
-            int bottomSide = _pixelBoundry.Y + _pixelBoundry.Height;
-            size.Y = GetRenderSize(bottomSide, texturePixelBounds.Size.Y, topCut, topLeft.Y, out bottomCut);
-
-            bottomCut = (int)MathF.Abs(MathF.Cos(rotation) * bottomCut + MathF.Sin(rotation) * bottomCut);
-
-            rightCut = (int)MathF.Abs(MathF.Cos(rotation) * rightCut + MathF.Sin(rotation) * rightCut);
-
-
-            Rectangle sourceRect = GetTextureSourceBounds(topCut, bottomCut, leftCut, rightCut, texturePixelBounds, texture);
-
-       
-            Rectangle destRect = new Rectangle(topLeft, size);
-        
-
-           Vector2 rotationOrigin = new Vector2(sourceRect.Width / 2f, sourceRect.Height / 2f);
-         
-            destRect.Size = AbsRotate(destRect.Size, rotation);
-
-            Rectangle acutalSourceRect = new Rectangle(AbsRotate(sourceRect.Location, rotation), AbsRotate(sourceRect.Size, rotation));
-
-         
-
+            // draw the actual thing
             sb.Draw(
-                       texture,
-                       new Rectangle(
-                           destRect.Location + new Point(destRect.Width/2, destRect.Height/2), destRect.Size),
-                       acutalSourceRect,
-                       c, // the color of the texture
-                       rotation,
-                       rotationOrigin,
-                       /*sourceRect.Center.ToVector2(),*/ // the center of rotation
-                       SpriteEffects.None,
-                       0f
+                    texture,
+                    actualDestBounds,
+                    sourceBounds,
+                    c,
+                    d.ToRadians(),
+                    new Vector2(0),
+                    SpriteEffects.None,
+                    0f
+            );
 
-                   );
-
-          
-            return true;
         }
 
-        // rot is in radians
-        private Point rotate(Point p, float rot)
+        // here, pixelBounds is absolute.
+        private Rectangle GetFinalDestBounds(Rectangle pixelBounds)
         {
-            return new Point(
-              (int)(MathF.Cos(rot) * p.X + MathF.Sin(rot) * p.Y),
-              (int)(MathF.Cos(rot) * p.Y + MathF.Sin(rot) * p.X));
-        }
-
-
-        private Point AbsRotate(Point p, float rot)
-        {
-            Point toReturn = rotate(p, rot);
-            return new Point(Math.Abs(toReturn.X), Math.Abs(toReturn.Y));
-        }
-
-        private int GetRenderSize(int viewportFarPos, int size, int nearCut, int position, out int farCut)
-        {
-            int currentSize = size - nearCut;
-
-            if (!(currentSize + position > viewportFarPos))
+            // if these bounds are fully within our borders, we don't need to do anything to it.
+            if (this.PixelBoundry.Contains(pixelBounds))
             {
-                farCut = 0;
-                return currentSize;
+                return pixelBounds;
             }
 
-            currentSize = viewportFarPos - position;
-            farCut = size - currentSize;
-
-
-            return currentSize;
+            // if not, get what's left.
+            return Rectangle.Intersect(this.PixelBoundry, pixelBounds);
         }
 
-        private Rectangle GetTextureSourceBounds(int topCut, int bottomCut, int leftCut, int rightCut, Rectangle texturePixelBounds, Texture2D texture)
+        private Rectangle AdjustDestBounds(Rectangle destBounds, Direction facing)
         {
-            // now figure out the source rectangle. what part of the image do we need to draw?
+            Point loc = destBounds.Location;
+            Point size = destBounds.Size;
 
-            // get the ratio of the destinations's position, multiply it by the source.
-            int sourceX = (int)((float)leftCut / (float)texturePixelBounds.Width * texture.Width);
-            int sourceY = (int)((float)topCut / (float)texturePixelBounds.Height * texture.Height);
+            switch (facing)
+            {
 
+                case Direction.left:
+                    size = new Point(size.Y, size.X);
+                    loc.Y += size.X;
+                    break;
+                case Direction.right:
+                    size = new Point(size.Y, size.X);
+                    loc.X += size.Y;
+                    break;
+                case Direction.down:
+                    loc = loc + size;
+                    break;
+            }
 
-            // figure out the size of the source rectangle:
+            return new Rectangle(loc, size);
+        }
 
-            // get the width, in pixels, of the destination.
-            float textureWidth = (float)(texturePixelBounds.Width - ((leftCut > rightCut) ? leftCut : rightCut));
+        private Rectangle ToAbsCoords(Rectangle rect)
+        {
 
-            // get the width of the source rectangle, as a ratio of total width of the texuture
-            float textureWidthRatio = textureWidth / (float)texturePixelBounds.Width;
+            rect.Location = ToAbsCoords(rect.Location);
+            return rect;
+        }
 
-            // get the width of the source rectangle in pixels
-            int sourceWidth = (int)(textureWidthRatio * texture.Width);
+        private Point ToAbsCoords(Point p)
+        {
+            // translates pixel coords relative to our borders to coords relative to the window. 'absolute' coords.
+            return p + _pixelBoundry.Location;
+        }
 
+        // get the bounds of the source rectangle.
+        private Rectangle GetSourceBounds(Texture2D texture, Rectangle original, Rectangle modified, Direction facing)
+        {
+            Cut[] destCuts = GetDestCuts(original, modified);
 
-            // get the height, in pixels, of the destination.
-            float textureHeight = (float)(texturePixelBounds.Height - ((bottomCut < topCut) ? topCut : bottomCut));
+            // take the dest cuts and get source cuts.
+            Cut[] cuts = TransferCuts(destCuts, texture.Bounds);
 
-            // get the height of the source rectangle, as a ratio of total width of the texuture
-            float textureHeightRatio = textureHeight / (float)texturePixelBounds.Height;
+            // rotate the cuts based on which way this sprite should be facing.
+            cuts = RotateCuts(cuts, facing);
 
-            // get the height of the source rectangle in pixels
-            int sourceHeight = (int)(textureHeightRatio * texture.Height);
+            // finally, pop out our source bounds.
+            Rectangle toReturn = texture.Bounds;
+            
+            foreach (Cut c in cuts)
+            {
+              
+                toReturn = Rectangle.Intersect(toReturn, c.slice);
+            }
+           
+            return toReturn;
+        }
 
+        private Cut[] GetDestCuts(Rectangle original, Rectangle modified)
+        {
+            // get the cuts used on the final dest rectangle.
+            Cut[] toReturn = new Cut[4];
 
-            return new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
+            toReturn[0] = new Cut(original, Direction.up, modified.Y - original.Y);
+            toReturn[1] = new Cut(original, Direction.left, modified.X - original.X);
+            toReturn[2] = new Cut(original, Direction.down,  original.Bottom - modified.Bottom );
+            toReturn[3] = new Cut(original, Direction.right, original.Right - modified.Right );
 
+            // sanity check.
+            foreach (Cut c in toReturn)
+            {
+                Debug.Assert(c.ratio >= 0);
+            }
+
+            return toReturn;
+        }
+
+        // transfer cuts to another rectangle.
+        private Cut[] TransferCuts(Cut[] toTransform, Rectangle applyTo)
+        {
+            Cut[] toReturn = new Cut[toTransform.Length];
+
+            for (int i = 0; i < toTransform.Length; i++)
+            {
+                float ratio = toTransform[i].ratio;
+                toReturn[i] = new Cut(applyTo, toTransform[i].dir, ratio);
+            }
+
+            return toReturn;
         }
 
 
+        private Cut[] RotateCuts(Cut[] cuts, Direction facing)
+        {
+            
+            for (int i = 0; i < cuts.Length; i++)
+            {
+               
+                for (Direction j = facing; j != Direction.up; j=j.Rotate(RotationalDirection.counterclockwise))
+                {
+                    // I think counterclockwise is right, but I could be wrong.
+                    cuts[i].dir = cuts[i].dir.Rotate(RotationalDirection.counterclockwise);
+                }
+            }
 
+            return cuts;
+        }
     }
 
 }

@@ -219,34 +219,25 @@ namespace CrystalCore.View.Render
 
         //Rendering stuff
         // is this too many overloads? idk
-        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds)
+      
+        internal void RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c)
         {
-            return RenderTexture(sb, texture, new RectangleF(bounds), Color.White, Direction.up);
+            RenderTexture(sb, texture, new RectangleF(bounds), c, Direction.up);
         }
 
-        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c)
+        internal void RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c, Direction d)
         {
-            return RenderTexture(sb, texture, new RectangleF(bounds), c, Direction.up);
+            RenderTexture(sb, texture, new RectangleF(bounds), c, d);
         }
 
-        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c, Direction d)
+        internal void RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c)
         {
-            return RenderTexture(sb, texture, new RectangleF(bounds), c, d);
-        }
-
-        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds)
-        {
-            return RenderTexture(sb, texture, bounds, Color.White, Direction.up);
-        }
-
-        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c)
-        {
-            return RenderTexture(sb, texture, bounds, c, Direction.up);
+            RenderTexture(sb, texture, bounds, c, Direction.up);
         }
 
             // bounds of object to render in tilespace
-        internal bool RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c, Direction d)
-        {
+        internal void RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c, Direction d)
+        { 
             // stuff
 
            
@@ -255,7 +246,7 @@ namespace CrystalCore.View.Render
             Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale)) + new Point(1, 1);
         
 
-            return renderer.RenderTexture(sb, texture, new Rectangle(pixelCoords, pixelSize), c, d);
+            renderer.RenderTexture(sb, texture, new Rectangle(pixelCoords, pixelSize), c, d);
 
         }
 
