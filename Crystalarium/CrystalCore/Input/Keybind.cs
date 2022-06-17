@@ -29,6 +29,8 @@ namespace CrystalCore.Input
         private bool triggeredLastUpdate; // whether this keybind was triggered last update.
         private List<Keybind> supersets; // list of keybinds that contain all of the keys that we have.
 
+        public bool DisableOnSuperset { get; set; }
+
 
         // properites
         public List<Button> buttons
@@ -86,6 +88,8 @@ namespace CrystalCore.Input
 
             // context
             _requiredContext = "";
+
+            DisableOnSuperset = true;
 
         }
 
@@ -166,17 +170,6 @@ namespace CrystalCore.Input
                 return false;
             }
 
-            // check that a superset of this keybind is not also triggered.
-            foreach(Keybind k in supersets)
-            {
-
-                if(k.Triggered(ih))
-                {
-                    // we do not need to run, another keybind is taking priority
-                    return false;
-                }
-            }
-
             // we need to check the context, as well.
 
             // an empty string is treated as an 'any context' requirement
@@ -184,6 +177,24 @@ namespace CrystalCore.Input
             {
                 return false;
             }
+
+            if(!DisableOnSuperset)
+            {
+               
+                return true;
+            }
+
+            // check that a superset of this keybind is not also triggered.
+            foreach (Keybind k in supersets)
+            {
+
+                if (k.Triggered(ih))
+                {
+                    // we do not need to run, another keybind is taking priority
+                    return false;
+                }
+            }
+
 
             //  we are good to go.
             return true;

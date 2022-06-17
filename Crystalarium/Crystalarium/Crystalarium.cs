@@ -25,7 +25,7 @@ namespace Crystalarium
 
         private CrystalCore.CrystalCore engine; // the 'engine'
 
-        private const int BUILD = 458;
+        private const int BUILD = 460;
 
 
         // Temporary variables for testing purposes:
@@ -144,22 +144,22 @@ namespace Crystalarium
             c.addAction("remove agent", () =>
             {
                 Point clickCoords = getMousePos();
-                Agent toRemove= null;
+                Agent toRemove = null;
 
                 // remove all agents on this tile (there should only be one once things are working properly)
-                while(true )
+                while (true)
                 {
 
                     toRemove = g.getAgentAtPos(clickCoords);
-                    if(toRemove==null)
+                    if (toRemove == null)
                     {
                         break;
                     }
 
                     toRemove.Destroy();
                 }
-              
-                
+
+
 
 
             });
@@ -177,11 +177,11 @@ namespace Crystalarium
                     return;
                 }
 
-         
-                a.Rotate(RotationalDirection.clockwise);
-               
 
-         
+                a.Rotate(RotationalDirection.clockwise);
+
+
+
 
 
             });
@@ -196,10 +196,10 @@ namespace Crystalarium
 
                 panOrigin = pixelCoords;
                 panPos = view.Camera.Position;
-
+        
 
             });
-            new Keybind(c, Keystate.OnPress, "start pan", Button.MouseMiddle);
+            new Keybind(c, Keystate.OnPress, "start pan", Button.MouseMiddle) { DisableOnSuperset = false };
 
 
             c.addAction("pan", () =>
@@ -211,12 +211,12 @@ namespace Crystalarium
                 Vector2 originPos = view.Camera.PixelToTileCoords(panOrigin);
 
                 view.Camera.Position = panPos + (originPos - mousePos);
-
+           
 
 
 
             });
-            new Keybind(c, Keystate.Down, "pan", Button.MouseMiddle);
+            new Keybind(c, Keystate.Down, "pan", Button.MouseMiddle) { DisableOnSuperset = false };
 
 
             c.addAction("next agent", () =>
