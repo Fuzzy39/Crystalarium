@@ -25,7 +25,7 @@ namespace Crystalarium
 
         private CrystalCore.CrystalCore engine; // the 'engine'
 
-        private const int BUILD = 460;
+        private const int BUILD = 461;
 
 
         // Temporary variables for testing purposes:
@@ -138,7 +138,7 @@ namespace Crystalarium
 
 
             });
-            new Keybind(c, Keystate.OnPress, "place agent", Button.MouseLeft);
+            new Keybind(c, Keystate.Down, "place agent", Button.MouseLeft);
 
 
             c.addAction("remove agent", () =>
@@ -426,7 +426,7 @@ namespace Crystalarium
             spriteBatch.DrawString(testFont, "Placing: "+currentType.Name+" (facing " + rotation + ") \n" + info, new Vector2(10, 30), Color.White);
 
             spriteBatch.DrawString(testFont, "Milestone 3, Build " + BUILD, new Vector2(10, height - 25), Color.White);
-            spriteBatch.DrawString(testFont, "WASD to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. RMB to delete.\nR to rotate. Q and E to switch agent types.", new Vector2(10, height - 70), Color.White);
+            spriteBatch.DrawString(testFont, "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent.\nRMB to delete. R to rotate. Q and E to switch agent types.", new Vector2(10, height - 70), Color.White);
 
 
             spriteBatch.End();
