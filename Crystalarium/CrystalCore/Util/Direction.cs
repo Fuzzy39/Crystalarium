@@ -19,7 +19,7 @@ namespace CrystalCore.Util
         counterclockwise
     }
 
-    static class DirectionUtil
+    public static class DirectionUtil
     {
         public static bool IsVertical(this Direction d)
         {
@@ -114,7 +114,7 @@ namespace CrystalCore.Util
 
                     Direction.left => Direction.up,
 
-                    Direction.right => Direction.right,
+                    Direction.right => Direction.down,
 
                     // default
                     _ => Direction.up,

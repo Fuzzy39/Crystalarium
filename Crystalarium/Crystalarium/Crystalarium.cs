@@ -25,7 +25,7 @@ namespace Crystalarium
 
         private CrystalCore.CrystalCore engine; // the 'engine'
 
-        private const int BUILD = 420;
+        private const int BUILD = 458;
 
 
         // Temporary variables for testing purposes:
@@ -33,6 +33,7 @@ namespace Crystalarium
         // Temporary Content 
         private Ruleset testRules;
         private SpriteFont testFont;
+        AgentType currentType;
 
         // Other
         GridView view; // the primary view
@@ -42,27 +43,27 @@ namespace Crystalarium
 
         string info; // used when clicking for info
 
-
+        Direction rotation = Direction.up;
 
         // used when panning
         Point panOrigin = new Point();
         Vector2 panPos = new Vector2();
-       
+
 
         public Crystalarium()
         {
 
             _graphics = new GraphicsDeviceManager(this);
-         
 
-       
+
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
         }
 
-       
-       
+
+
 
         protected override void Initialize()
         {
@@ -74,7 +75,7 @@ namespace Crystalarium
 
             // create a ruleset
             testRules = new Ruleset("test");
-          
+
 
             // create the basics.
             engine = new CrystalCore.CrystalCore(TargetElapsedTime, testRules);
@@ -82,17 +83,17 @@ namespace Crystalarium
             // make a local reference to the input controller, since we use it a lot
             Controller c = engine.Controller;
 
-            c.Context = "Click for info";
 
-         
+
+
 
             // make an action
 
             // test code.
-            float camSpeed = 1f;
-            
+            float camSpeed = 1.2f;
+
             // camera up
-            c.addAction("up", ()=>view.Camera.AddVelocity(camSpeed, Direction.up));
+            c.addAction("up", () => view.Camera.AddVelocity(camSpeed, Direction.up));
             new Keybind(c, Keystate.Down, "up", Button.W);
             new Keybind(c, Keystate.Down, "up", Button.Up);
 
@@ -125,36 +126,67 @@ namespace Crystalarium
             new Keybind(c, Keystate.OnPress, "grow right", Button.K);
 
 
-            // click for info.
-            c.addAction("set info", () => 
+
+            c.addAction("place agent", () =>
             {
-                Point pixelCoords = view.LocalizeCoords(Mouse.GetState().Position);
-                Point clickCoords = view.Camera.PixelToTileCoords(pixelCoords).ToPoint();
+                Point clickCoords = getMousePos();
 
-                info = "Clicked on: " + clickCoords.X + ", " + clickCoords.Y;
-
-
-            });
-            new Keybind(c, Keystate.Down, "set info", "Click for info", Button.MouseLeft);
-
-
-
-
-            c.addAction("toggle mode", () =>
-            {
-                if(c.Context == "Click for info")
+                if (currentType.isValidLocation(g, clickCoords, rotation))
                 {
-                    info = "";
-                    c.Context = "Click and drag to pan";
-                }
-                else
-                {
-                    c.Context = "Click for info";
+                    currentType.createAgent(g, clickCoords, rotation);
                 }
 
 
             });
-            new Keybind(c, Keystate.OnPress, "toggle mode", Button.Enter);
+            new Keybind(c, Keystate.OnPress, "place agent", Button.MouseLeft);
+
+
+            c.addAction("remove agent", () =>
+            {
+                Point clickCoords = getMousePos();
+                Agent toRemove= null;
+
+                // remove all agents on this tile (there should only be one once things are working properly)
+                while(true )
+                {
+
+                    toRemove = g.getAgentAtPos(clickCoords);
+                    if(toRemove==null)
+                    {
+                        break;
+                    }
+
+                    toRemove.Destroy();
+                }
+              
+                
+
+
+            });
+            new Keybind(c, Keystate.Down, "remove agent", Button.MouseRight);
+
+
+            c.addAction("rotate", () =>
+            {
+                Point clickCoords = getMousePos();
+
+                Agent a = g.getAgentAtPos(clickCoords);
+                if (a == null)
+                {
+                    rotation = rotation.Rotate(RotationalDirection.clockwise);
+                    return;
+                }
+
+         
+                a.Rotate(RotationalDirection.clockwise);
+               
+
+         
+
+
+            });
+            new Keybind(c, Keystate.OnPress, "rotate", Button.R);
+
 
 
             c.addAction("start pan", () =>
@@ -167,25 +199,59 @@ namespace Crystalarium
 
 
             });
-            new Keybind(c, Keystate.OnPress, "start pan", "Click and drag to pan", Button.MouseLeft);
+            new Keybind(c, Keystate.OnPress, "start pan", Button.MouseMiddle);
 
 
             c.addAction("pan", () =>
             {
 
-                
+
                 Point pixelCoords = view.LocalizeCoords(Mouse.GetState().Position);
                 Vector2 mousePos = view.Camera.PixelToTileCoords(pixelCoords);
                 Vector2 originPos = view.Camera.PixelToTileCoords(panOrigin);
 
-                view.Camera.Position = panPos+(originPos - mousePos );
+                view.Camera.Position = panPos + (originPos - mousePos);
 
-           
+
 
 
             });
-            new Keybind(c, Keystate.Down, "pan", "Click and drag to pan", Button.MouseLeft);
+            new Keybind(c, Keystate.Down, "pan", Button.MouseMiddle);
 
+
+            c.addAction("next agent", () =>
+            {
+                List<AgentType> types = testRules.AgentTypes;
+
+                int i = types.IndexOf(currentType);
+
+                i++;
+                if (i >= types.Count)
+                {
+                    i = 0;
+                }
+                
+                currentType = types[i];
+
+            });
+            new Keybind(c, Keystate.OnPress, "next agent", Button.E);
+
+            c.addAction("prev agent", () =>
+            {
+                List<AgentType> types = testRules.AgentTypes;
+
+                int i = types.IndexOf(currentType);
+
+                i--;
+                if (i < 0)
+                {
+                    i = types.Count-1;
+                }
+
+                currentType = types[i];
+
+            });
+            new Keybind(c, Keystate.OnPress, "prev agent", Button.Q);
 
 
             base.Initialize();
@@ -212,45 +278,63 @@ namespace Crystalarium
             // define ruleset.
 
 
-             
-            AgentType box = testRules.CreateType("box", new Point(2, 2));
-            box.RenderConfig.AgentBackground = Textures.sampleAgent;
+            AgentType t;
+
+            t=testRules.CreateType("big", new Point(2, 2));
+            t.RenderConfig.AgentBackground = Textures.sampleAgent;
+            t.RenderConfig.BackgroundColor = Color.DodgerBlue;
+
+            t = testRules.CreateType("small", new Point(1, 1));
+            t.RenderConfig.AgentBackground = Textures.sampleAgent;
+            t.RenderConfig.BackgroundColor = Color.Crimson;
+
+            currentType = t;
+
+            t = testRules.CreateType("flat", new Point(2, 1));
+            t.RenderConfig.AgentBackground = Textures.sampleAgent;
+            t.RenderConfig.BackgroundColor = Color.Gold;
+
+            t = testRules.CreateType("tall", new Point(1, 2));
+            t.RenderConfig.AgentBackground = Textures.sampleAgent;
+            t.RenderConfig.BackgroundColor = Color.LimeGreen;
+
+
 
             // create a test grid, and do some test things to it.
             g = engine.addGrid();
             //g.ExpandGrid(Direction.right);
-            box.createAgent(g, new Point(7, 7), Direction.right);
 
-         
-            
+            // testing purposes.
+            //box.createAgent(g, new Point(7, 7), Direction.up);
+
+
+
 
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
-           
+
             // create the render modes we are likely to use.
 
-            RendererTemplate Standard = new RendererTemplate()
+            ChunkViewTemplate Standard = new ChunkViewTemplate()
             {
                 ChunkBackground = Textures.chunkGrid,
-     
+
             };
 
-            
+
             // create a couple test viewports.
-            view = engine.addView( g, 50, 50, width-100, height-100, Standard);
+            view = engine.addView(g, 0, 0, width, height, Standard);
 
             // background
             view.Background = Textures.viewboxBG;
 
             // prevent the camera from leaving the world.
-             view.bindCamera();
+            view.bindCamera();
             //view.Camera.Position = g.center;
 
-            view.Border.SetTextures(Textures.pixel, Textures.pixel);
-            view.Border.Width = 2;
 
             // for the minimap.
-            RendererTemplate Debug = new RendererTemplate()
+            ChunkViewTemplate Debug = new ChunkViewTemplate()
             {
 
                 ChunkBackground = Textures.pixel,
@@ -260,8 +344,8 @@ namespace Crystalarium
 
                 // to make it a minimap!
                 ViewCastOverlay = Textures.pixel,
-                ViewCastTarget = view, // note that this must be done after view has been initialized.
-                DoAgentRendering = false
+                ViewCastTarget = view // note that this must be done after view has been initialized.
+            
             };
 
 
@@ -269,7 +353,7 @@ namespace Crystalarium
 
 
             // setup the minimap.
-            minimap = engine.addView( g, width-250, 0, 250, 250, Debug);
+            minimap = engine.addView(g, width - 250, 0, 250, 250, Debug);
 
             // background
             minimap.Background = Textures.viewboxBG;
@@ -278,12 +362,14 @@ namespace Crystalarium
             minimap.Border.SetTextures(Textures.pixel, Textures.pixel);
             minimap.Border.Width = 2;
 
-                
+
             // Set the camera of the minimap.
             minimap.Camera.MinScale = 1;
-            
-           
-       
+
+            minimap.DoAgentRendering = false;
+
+
+
 
 
         }
@@ -291,7 +377,7 @@ namespace Crystalarium
         // mostly ugly hacks
         protected override void Update(GameTime gameTime)
         {
-             
+
 
             // provided by monogame. Escape closes the program. I suppose it can stay for now.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -301,12 +387,12 @@ namespace Crystalarium
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
 
-            view.Camera.VelZ += engine.Controller.DeltaScroll/150f;
+            view.Camera.VelZ += engine.Controller.DeltaScroll / 150f;
             view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
 
             // minimap positions
             minimap.Camera.Position = view.Camera.Position;
-            minimap.Camera.Zoom = view.Camera.Zoom/12;
+            minimap.Camera.Zoom = view.Camera.Zoom / 12;
 
 
             engine.Update(gameTime);
@@ -317,9 +403,9 @@ namespace Crystalarium
         protected override void Draw(GameTime gameTime)
         {
 
-          
+
             // arguably temporary
-            double frameRate = Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds,2);
+            double frameRate = Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds, 2);
 
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
@@ -327,24 +413,37 @@ namespace Crystalarium
             spriteBatch.Begin();
 
             // make everything a flat color.
-            GraphicsDevice.Clear(new Color(70,70,70));
+            GraphicsDevice.Clear(new Color(70, 70, 70));
 
             engine.Draw(spriteBatch);
 
+        
+            info = "Hovering over: " + getMousePos().X + ", " + getMousePos().Y;
 
             // some debug text. We'll clear this out sooner or later...
 
             spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + engine.Sim.ActualStepsPS + " Chunks: " + g.gridSize.X * g.gridSize.Y, new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(testFont, "Mode: " + engine.Controller.Context+"\n"+info, new Vector2(10, 30), Color.White);
+            spriteBatch.DrawString(testFont, "Placing: "+currentType.Name+" (facing " + rotation + ") \n" + info, new Vector2(10, 30), Color.White);
 
-            spriteBatch.DrawString(testFont, "Milestone 2, Build " + BUILD, new Vector2(10, height - 25), Color.White);
-            spriteBatch.DrawString(testFont, "WASD to pan. Scroll to zoom. UHJK to grow the map. Enter to change modes.", new Vector2(10, height-45), Color.White);
-          
+            spriteBatch.DrawString(testFont, "Milestone 3, Build " + BUILD, new Vector2(10, height - 25), Color.White);
+            spriteBatch.DrawString(testFont, "WASD to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. RMB to delete.\nR to rotate. Q and E to switch agent types.", new Vector2(10, height - 70), Color.White);
+
 
             spriteBatch.End();
 
 
             base.Draw(gameTime);
+        }
+
+        private Point getMousePos()
+        {
+            Point pixelCoords = view.LocalizeCoords(Mouse.GetState().Position);
+
+            Vector2 clickCoords = view.Camera.PixelToTileCoords(pixelCoords);
+
+            clickCoords.Floor();
+            return clickCoords.ToPoint();
+
         }
     }
 }

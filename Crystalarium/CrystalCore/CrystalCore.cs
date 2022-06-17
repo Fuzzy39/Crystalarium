@@ -65,12 +65,12 @@ namespace CrystalCore
 
 
         // manual ways to create gridviews
-        public GridView addView(Grid g, int x, int y, int width, int height, RendererTemplate renderConfig )
+        public GridView addView(Grid g, int x, int y, int width, int height, ChunkViewTemplate renderConfig )
         {
             return new GridView(_viewports, g, x, y, width, height, renderConfig);
         }
 
-        public GridView addView(Grid g, Point location, Point size, RendererTemplate renderConfig)
+        public GridView addView(Grid g, Point location, Point size, ChunkViewTemplate renderConfig)
         {
             return new GridView(_viewports, g, location, size, renderConfig);
         }

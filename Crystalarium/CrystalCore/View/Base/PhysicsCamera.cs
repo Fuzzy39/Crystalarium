@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 
 
-namespace CrystalCore.View.Render
+namespace CrystalCore.View.Base
 {
     public class PhysicsCamera:Camera
     {
@@ -21,7 +21,8 @@ namespace CrystalCore.View.Render
         // 'Camera' controls
        
         private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions. (in pixels/frame)
-        private const float FRICTION = .3f; // the rate which camera velocity is reduced, in pixels/frame.
+        private const float FRICTION = .05f; // the rate which camera velocity is reduced, as a ratio of velocity lost per frame.
+        private const float MIN_FRICTION = .3f; // the minimum amount of friction that can be applied, if the camera is in motion, in pixels/frame.
         private const float MAX_SPEED = 10f; // the maximum velocity per dimension of the camera in pixels/frame.
 
         
@@ -180,7 +181,7 @@ namespace CrystalCore.View.Render
             if (!SetPosition(new Vector2(OriginPosition.X, nextPos.Y)))
             {
                 // add a bit of bounce to the camera.
-                VelY = (float)(-VelY / 2);
+                VelY = (float)(-VelY/2);
 
 
             }
@@ -189,15 +190,24 @@ namespace CrystalCore.View.Render
             UpdateZoom(Zoom + Velocity.Z);
 
 
-
-            _velocity.X = Util.Util.Reduce(Velocity.X, FRICTION);
-            _velocity.Y = Util.Util.Reduce(Velocity.Y, FRICTION);
-            _velocity.Z = Util.Util.Reduce(Velocity.Z, FRICTION);
+            
+            _velocity.X = ApplyFriction(Velocity.X);
+            _velocity.Y = ApplyFriction(Velocity.Y);
+            _velocity.Z = ApplyFriction(Velocity.Z);
 
 
         }
 
+        private float ApplyFriction(float before) 
+        { 
+            if(MathF.Abs(FRICTION*before) < MIN_FRICTION)
+            {
+                
+                return Util.Util.Reduce(before, MIN_FRICTION);
+            }
 
+            return Util.Util.Reduce(before, before * FRICTION);
+        }
 
         private void UpdateZoom(float newScale)
         {

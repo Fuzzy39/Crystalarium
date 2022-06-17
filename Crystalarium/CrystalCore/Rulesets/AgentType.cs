@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgentRenderer = CrystalCore.View.AgentRender.BasicRenderer;
+using AgentRenderer = CrystalCore.View.AgentRender.AgentView;
 
 namespace CrystalCore.Rulesets
 {
@@ -22,7 +22,7 @@ namespace CrystalCore.Rulesets
         private Ruleset _ruleset; // the ruleset this agent type belongs to.
 
 
-        private RendererTemplate _renderConfig; // the way this agent is rendered.
+        private AgentViewTemplate _renderConfig; // the way this agent is rendered.
 
         private string _name; // the human readable name of this agent type.
 
@@ -36,7 +36,7 @@ namespace CrystalCore.Rulesets
             get => Ruleset;
         }
 
-        public RendererTemplate RenderConfig
+        public AgentViewTemplate RenderConfig
         {
             get => _renderConfig;
         }
@@ -59,7 +59,7 @@ namespace CrystalCore.Rulesets
             _ruleset = rs;
             _name = name;
             _size = size;
-            _renderConfig = new RendererTemplate();
+            _renderConfig = new AgentViewTemplate();
 
         }
 
@@ -85,17 +85,33 @@ namespace CrystalCore.Rulesets
             }
         }
 
-        internal AgentRenderer CreateRenderer(GridView v, Agent toRender, List<RendererBase> others)
+        internal AgentRenderer CreateRenderer(SubviewManager m, Agent toRender, List<Subview> others)
         {
             if(toRender.Type!=this)
             {
                 throw new ArgumentException(toRender + " is of type " + toRender.Type._name + ", and cannot be rendered as type " + _name);
             }
                 
-            return _renderConfig.CreateRenderer(v, toRender, others);
+            return _renderConfig.CreateRenderer(m, toRender, others);
         }
 
+       
 
+        // returns whether an agent of type at can be placed at a location.
+        public  bool isValidLocation(Grid g, Point location, Direction facing)
+        {
+            Rectangle bounds = new Rectangle(location, getSize(facing));
+            if (g.Bounds.Contains(bounds))
+            {
+                if (g.AgentsWithin(bounds).Count == 0)
+                {
+                    return true;
+                }
+
+            }
+         
+            return false;
+        }
 
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CrystalCore.View.AgentRender
 {
-    public class RendererTemplate
+    public class AgentViewTemplate
     {
         
 
@@ -16,15 +16,15 @@ namespace CrystalCore.View.AgentRender
 
         public Color BackgroundColor { get; set; }
 
-        public RendererTemplate()
+        public AgentViewTemplate()
         {
             AgentBackground = null;
             BackgroundColor = Color.White;
         }
 
-        internal BasicRenderer CreateRenderer(GridView v, Agent a, List<RendererBase> others)
+        internal AgentView CreateRenderer(SubviewManager m, Agent a, List<Subview> others)
         {
-            BasicRenderer toReturn = new BasicRenderer(v, a, others)
+            AgentView toReturn = new AgentView(m, a, others)
             {
                 Background = AgentBackground,
                 BackgroundColor = BackgroundColor

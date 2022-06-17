@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrystalCore.View.Render
+namespace CrystalCore.View.Base
 {
     public class Camera 
     {
@@ -107,7 +107,7 @@ namespace CrystalCore.View.Render
                 toReturn.X = _position.X + (TileBounds().Size.X / 2.0f);
                 toReturn.Y = _position.Y + (TileBounds().Size.Y / 2.0f);
                 return toReturn;
-            }// too lazy to implement this properly. If we need it, I'll add it later.
+            }
             set
             {
                 float x = (float)(-1f * ((TileBounds().Size.X) / 2f)) + value.X;
@@ -175,6 +175,20 @@ namespace CrystalCore.View.Render
                 return true;
             }
 
+            // granularly set X and y, if applicable.
+            if(_bounds.Left<=nextCenter.X &  _bounds.Right>=nextCenter.X)
+            {
+                _position.X = pos.X;
+                return false;
+            }
+
+            if (_bounds.Top <= nextCenter.Y & _bounds.Bottom >= nextCenter.Y)
+            {
+                _position.Y = pos.Y;
+                return false;
+            }
+
+
             return false;
 
 
@@ -205,7 +219,7 @@ namespace CrystalCore.View.Render
             return new Vector2(x, y);
         }
 
-
+        
 
         // returns the bounds in tilespace of the viewport
         public RectangleF TileBounds()

@@ -4,11 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgentRenderer = CrystalCore.View.AgentRender.BasicRenderer;
+
 
 namespace CrystalCore.View.ChunkRender
 {
-    internal class Renderer : RendererBase
+    internal class ChunkView : Subview
     {
         // the basic idea is that a renderer is highly configurable. It can render a chunk in several ways.
         // RendererTemplate is used to configure chunk renderers on mass.
@@ -29,10 +29,10 @@ namespace CrystalCore.View.ChunkRender
         private GridView _viewCastTarget; // if not null, chunks viewed by this gridview (assuming it has the same grid) will be brightened.
                                           // this gridview should not be the same as the gridview that this renderer is part of.
 
-        internal bool doAgentRendering; // whether agents are rendered in this chunk
+       
 
 
-        private List<AgentRenderer> _children;
+  
 
         internal Color? OriginChunkColor
         {
@@ -71,7 +71,7 @@ namespace CrystalCore.View.ChunkRender
 
 
         // Constructor
-        internal Renderer(GridView v, Chunk ch, List<RendererBase> others, Texture2D chunkBG, Color BGColor) : base(v, ch, others)
+        internal ChunkView(SubviewManager m, Chunk ch, List<Subview> others, Texture2D chunkBG, Color BGColor) : base(m, ch, others)
         {
             // reasonable defaults.
             _chunkBG = chunkBG;
@@ -86,9 +86,9 @@ namespace CrystalCore.View.ChunkRender
 
             _viewCastTarget = null;
 
-            doAgentRendering = true;
+         
 
-            _children = new List<AgentRenderer>();
+          
 
 
         }
@@ -103,55 +103,13 @@ namespace CrystalCore.View.ChunkRender
             }
 
             renderTarget.Camera.RenderTexture(sb, _chunkBG, RenderData.Bounds, determineColor());
-            
+           
 
-            if (!doAgentRendering)
-            {
-                return;
-            }
-
-            // find agents that need rendered
-            UpdateChildren();
-
-            // render them. We cannot use a foreach because children can occasionally die/
-            for(int i = 0; i<_children.Count; i++)
-            {
-                AgentRenderer ar = _children[i];
-                ar.Draw(sb);
-
-                if (ar == null)
-                {
-                    i--;
-                }
-            }
+         
+          
 
         }
 
-        private void UpdateChildren()
-        {
-            // for the time being, we're ignoring orphans.
-            // sorry, you have to be invisible.
-
-            Chunk ch = (Chunk)RenderData;
-
-            foreach( Agent a in ch.Children)
-            {
-                bool hasRenderer = false;
-                foreach(AgentRenderer ar in _children)
-                {
-                    if(ar.RenderData == a)
-                    {
-                        hasRenderer = true;
-                    }
-                }
-
-                if (hasRenderer)
-                    continue;
-
-                // add a new renderer.
-                _children.Add(a.Type.CreateRenderer(renderTarget,a, _others));
-            }
-        }
 
         private Color determineColor()
         {
@@ -212,7 +170,7 @@ namespace CrystalCore.View.ChunkRender
         // is our viewcast target rendering our chunk?
         private bool isRenderedByTarget(Chunk ch)
         {
-            foreach (Renderer r in _viewCastTarget.Renderers)
+            foreach (ChunkView r in _viewCastTarget.Manager.ChunkViews)
             {
                 if (r.RenderData == ch)
                 {

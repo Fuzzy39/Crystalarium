@@ -55,33 +55,7 @@ namespace CrystalCore.Sim.Base
 
         private List<Chunk> SetChunksWithin()
         {
-            List<Chunk> toReturn = new List<Chunk>();
-
-            Chunk minimum = _parentChunk;
-
-            // the bottom right Chunk within our borders
-            Chunk extreme = _grid.getChunkAtCoords(Bounds.Location + Bounds.Size - new Point(1));
-
-            // iterate through all chunks between (and including) the minimum and extreme, and add them.
-
-            // how much to iterate?
-            Point initial = _grid.getChunkPos(minimum);
-            Point sizeInChunks = _grid.getChunkPos(extreme) - initial + new Point(1);
-           
-            // this should get all of the chunks.
-            for(int x = 0; x < sizeInChunks.X; x++ )
-            {
-                for(int y = 0; y < sizeInChunks.Y; y++)
-                {
-                    Point i = new Point(x, y) + initial;
-              
-                    toReturn.Add( _grid.Chunks[i.X][i.Y]);
-
-                }
-            }
-
-            return toReturn;
-            
+            return _grid.ChunksInBounds(Bounds);            
         }
             
         new public void Destroy()

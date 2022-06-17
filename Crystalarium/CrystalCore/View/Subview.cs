@@ -7,24 +7,27 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CrystalCore.View
 {
-    internal abstract class RendererBase
+    internal abstract class Subview
     {
-        // this class provides for the basic features a chunk render needs to have.
-        // It does not sepcify how chunks are rendered.
+        /*
+         *  This class supplies the foundational code required to render a gridobject in a gridview.
+         *  It is a subview because it renders a piece of the whole grid.
+         * 
+         */
 
         protected GridView renderTarget;
         protected GridObject _renderData;
-        protected List<RendererBase> _others;
+        protected List<Subview> _others;
 
         internal GridObject RenderData
         {
             get => _renderData;
         }
 
-        protected RendererBase( GridView v, GridObject o, List<RendererBase> others)
+        protected Subview( SubviewManager m, GridObject o, List<Subview> others)
         {
             // check that we don't already exist
-            foreach (RendererBase r in others)
+            foreach (Subview r in others)
             {
                 if (r.RenderData == o)
                     throw new InvalidOperationException("Attempted to create an already existing Renderer.");
@@ -36,16 +39,17 @@ namespace CrystalCore.View
                
 
             // add ourselves to the list of renderers.
-            v.AddRenderer(this);
+            m.AddRenderer(this);
 
-            renderTarget = v;
+      
+            renderTarget = m.Parent;
             _renderData = o;
         }
 
         // remove external refrences to this object.
         internal void Destroy()
         {
-            renderTarget.RemoveRenderer(this);
+            renderTarget.Manager.RemoveRenderer(this);
         }
 
 
@@ -85,9 +89,9 @@ namespace CrystalCore.View
         {
             if (obj == null)
                 return false;
-            if(!(obj is RendererBase))
+            if(!(obj is Subview))
                 return false;
-            RendererBase rend = (RendererBase)obj;
+            Subview rend = (Subview)obj;
             if(rend._renderData==_renderData & rend.renderTarget== renderTarget )
             {
                 return true;

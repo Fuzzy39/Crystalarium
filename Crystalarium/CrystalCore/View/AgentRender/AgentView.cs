@@ -5,11 +5,11 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using ChunkRenderer = CrystalCore.View.ChunkRender.Renderer;
+using ChunkRenderer = CrystalCore.View.ChunkRender.ChunkView;
 
 namespace CrystalCore.View.AgentRender
 {
-    internal class BasicRenderer : RendererBase
+    internal class AgentView : Subview
     {
         /*
          * An agent renderer renders agents. Makes sense.
@@ -42,7 +42,7 @@ namespace CrystalCore.View.AgentRender
 
 
 
-        internal BasicRenderer(GridView v, Agent a, List<RendererBase> others) : base(v, a, others)
+        internal AgentView(SubviewManager m, Agent a, List<Subview> others) : base(m, a, others)
         {
 
             _background = null;

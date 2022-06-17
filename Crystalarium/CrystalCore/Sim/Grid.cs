@@ -279,8 +279,95 @@ namespace CrystalCore.Sim
 
         }
 
-      
 
+        public Agent getAgentAtPos(Point coords)
+        {
+            Chunk ch = getChunkAtCoords(coords);
+
+            if (ch == null)
+            {
+                return null;
+            }
+
+            List<ChunkMember> agents = ch.MembersWithin;
+            foreach (ChunkMember cm in agents)
+            {
+                if (!(cm is Agent))
+                {
+                    continue;
+                }
+
+                Agent a = (Agent)cm;
+
+                if (a.Bounds.Contains(coords))
+                {
+                    return a;
+                }
+
+            }
+
+            return null;
+        }
+
+        public List<Chunk> ChunksInBounds(Rectangle rect)
+        {
+            List<Chunk> toReturn = new List<Chunk>();
+
+            Chunk minimum = getChunkAtCoords(rect.Location);
+
+            // the bottom right Chunk within our borders
+            Chunk extreme = getChunkAtCoords(Bounds.Location + Bounds.Size - new Point(1));
+
+            // iterate through all chunks between (and including) the minimum and extreme, and add them.
+
+            // how much to iterate?
+            Point initial = getChunkPos(minimum);
+            Point sizeInChunks = getChunkPos(extreme) - initial + new Point(1);
+
+            // this should get all of the chunks.
+            for (int x = 0; x < sizeInChunks.X; x++)
+            {
+                for (int y = 0; y < sizeInChunks.Y; y++)
+                {
+                    Point i = new Point(x, y) + initial;
+
+                    toReturn.Add(Chunks[i.X][i.Y]);
+
+                }
+            }
+
+            return toReturn;
+        }
+
+
+        // returns whether an agent is within these bounds
+        public List<Agent> AgentsWithin(Rectangle bounds)
+        {
+            List<Agent> toReturn = new List<Agent>();
+
+            foreach(Chunk ch in ChunksInBounds(bounds))
+            {
+                foreach(ChunkMember chm in ch.Children)
+                {
+
+                    if (!(chm is Agent)) // only agents take up space.
+                    {
+                        continue;
+                    }
+
+                    Agent a = (Agent)chm;
+
+                    if (a.Bounds.Intersects(bounds))
+                    {
+                        toReturn.Add(a);
+                    }
+               
+                    
+                }
+            }
+
+            return toReturn;
+        }
 
     }
 }

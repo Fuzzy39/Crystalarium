@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CrystalCore.Util
 {
-    struct Util
+    static class Util
     {
 
         // pull 'a' closer to zero by 'b' amount. don't let 'a' overshoot zero.

@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace CrystalCore.View.Render
+namespace CrystalCore.View.Base
 {
     internal class BoundedRenderer
     {
         /*
          *  A Bounded renderer renders things, within a boundry.
+         *  Images which are partly outside of this boundry are cropped to fit.
          *  
          *  No relation to any other renderers, which are broadly higher level constructs.
          */
@@ -41,10 +42,10 @@ namespace CrystalCore.View.Render
                 return;
             }
 
-            // crop the pixel bounds if needbe.
+            // crop the pixel bounds if needbe. (Where do we expect this image to end up at?)
             Rectangle finalDestBounds = GetFinalDestBounds(ToAbsCoords(pixelBounds));
 
-            // figure out the source bounds.
+            // figure out the source bounds. ( What part of the texture are we using?)
             Rectangle sourceBounds = GetSourceBounds(texture, ToAbsCoords(pixelBounds), finalDestBounds, d);
 
             // get the correct dest bounds, compensating for rotation

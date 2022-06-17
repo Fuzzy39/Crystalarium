@@ -25,15 +25,15 @@ namespace CrystalCore.Sim
             {
                 if (value == _facing) { return; }
 
-                if (isRectangle())
+                if (IsRectangle())
                 {
-                    if(value!=value.Opposite())
+                    if (_facing != value.Opposite())
                     {
                         throw new ArgumentException("Rectangular Agents may not be rotated freely. " +
                             "\nThey are limited to the direction they were placed with and their opposite.");
                     }
-                    
-                    }
+
+                }
 
                 _facing = value;
             }
@@ -51,6 +51,11 @@ namespace CrystalCore.Sim
         {
             _facing = Direction.up;
             _type = t;
+
+            if(g.AgentsWithin(bounds).Count>1) // it will always be at least 1, because we are in our bounds.
+            {
+                throw new InvalidOperationException("This Agent: "+this+" overlaps another agent.");
+            }
         }
 
         internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : this(g, bounds, t)
@@ -60,21 +65,23 @@ namespace CrystalCore.Sim
         }
 
 
-        private bool isRectangle()
+        private bool IsRectangle()
         {
             return _bounds.Width != _bounds.Height;
         }
 
-        public void rotate(RotationalDirection d)
+        public void Rotate(RotationalDirection d)
         {
-            if(isRectangle())
+            if (IsRectangle())
             {
                 Facing = Facing.Opposite();
                 return;
             }
 
             Facing = Facing.Rotate(d);
-            
+
         }
+
+       
     }
 }

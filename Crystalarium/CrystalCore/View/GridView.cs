@@ -6,7 +6,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CrystalCore.View.ChunkRender;
 using CrystalCore.Input;
-using CrystalCore.View.Render;
+using CrystalCore.View.Base;
+
+using AgentRenderer = CrystalCore.View.AgentRender.AgentView;
+using ChunkRenderer = CrystalCore.View.ChunkRender.ChunkView;
 
 namespace CrystalCore.View
 {
@@ -34,18 +37,17 @@ namespace CrystalCore.View
         private Grid _grid; // the grid that this GridView is rendering.
         private Border _border; // the border of this Gridview (which exists, whether it is being rendered or not)
         private PhysicsCamera _camera; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
-
+        private SubviewManager _subviewManager; // our subview manager, who kindly takes after our subviews.
 
         // Graphical Features
         private Texture2D _background;
         private Color backgroundColor;
 
         // Chunk Renderer related
-        private List<RendererBase> _renderers; // list of chunk renderers currently in existence
-        private RendererTemplate _renderConfig; // how are we rendering chunks?
+        private ChunkViewTemplate _renderConfig; // how are we rendering chunks?
+        private bool _doAgentRendering;
+       
 
-     
-        private Controller _controller; // The controller controlling this gridview. Null if the controller is controlling another grid.
 
 
         // Properties
@@ -69,6 +71,11 @@ namespace CrystalCore.View
             get => _camera;
         }
 
+        internal SubviewManager Manager
+        {
+            get => _subviewManager;
+        }
+
 
         public Texture2D Background
         {
@@ -77,42 +84,40 @@ namespace CrystalCore.View
         }
 
   
-        // Chunk Renderer related
-        internal List<RendererBase> Renderers
+       
+        public bool DoAgentRendering // whether agents are rendered in this gridview
         {
-            get => _renderers;
-        }
-
-
-        public RendererTemplate RenderConfig
-        {
-            get => _renderConfig;
+            get => _doAgentRendering;
             set
             {
-                _renderConfig = value;
-                _renderers.Clear();
+                _doAgentRendering = value;
+                _subviewManager.AgentViews.Clear();
             }
+
+        } 
+
+        public ChunkViewTemplate RenderConfig
+        {
+            get => _renderConfig;
+          
         }
 
-        public Controller Controller
-        {
-            get => _controller;
-            set => _controller = value;
-        }
 
         // Contstructors
 
 
         // create the viewport
-        internal GridView(List<GridView> container, Grid g, Point pos, Point dimensions, RendererTemplate renderConfig)
+        internal GridView(List<GridView> container, Grid g, Point pos, Point dimensions, ChunkViewTemplate renderConfig)
         {
             // initialize from parameters
             _grid = g;
             this.container = container;
             this.container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
-            _renderers = new List<RendererBase>();
+            
             _camera = new PhysicsCamera(PixelBounds);
+
+            _subviewManager = new SubviewManager(this);
 
             //background
             _background = null;
@@ -123,12 +128,13 @@ namespace CrystalCore.View
 
             // renderer type
             _renderConfig = renderConfig;
+            DoAgentRendering = true;
 
 
         }
 
         // an alternate viewport constructor, without points.
-        internal GridView(List<GridView> container, Grid g, int x, int y, int width, int height, RendererTemplate renderConfig)
+        internal GridView(List<GridView> container, Grid g, int x, int y, int width, int height, ChunkViewTemplate renderConfig)
             : this(container, g, new Point(x, y), new Point(width, height), renderConfig) { }
 
 
@@ -156,27 +162,14 @@ namespace CrystalCore.View
             // draw the background.
             DrawBackground(sb);
 
-            // Render Textures in the viewport.
 
-            // update chunks to render.
-            AddChunks();
-
-            // render them
-            for (int i = 0; i < _renderers.Count;)
-            {
-
-                RendererBase r = _renderers[i];
-
-
-                // repeat the previous index if this renderer was destroyed.
-                if (r.Draw(sb))
-                    i++;
-            }
+            // Update our subview manager and have it render its subviews.
+            _subviewManager.Draw(sb);
+           
 
             // draw the viewport if in debug mode.
             DrawOtherGridView(sb);
 
-        
 
             // finally, draw the border.
             _border.Draw(sb);
@@ -211,61 +204,9 @@ namespace CrystalCore.View
         }
 
 
-        // adds chunks to be rendered, if needbe.
-        private void AddChunks()
-        {
-            foreach (List<Chunk> list in _grid.Chunks)
-            {
-                foreach (Chunk ch in list)
-                {
-
-                    if (!_camera.TileBounds().Intersects(ch.Bounds))
-                    {
-                        continue;
-                    }
-
-                    // ensure this chunk does not already exist
-                    bool existing = false;
-                    foreach (Renderer r in _renderers)
-                    {
-                        if (r.RenderData == ch)
-                        {
-                            existing = true;
-                        }
-
-                    }
-
-                    // this is really poetic.
-                    // use this if statement to guide you in life.
-                    if (existing)
-                    {
-                        continue;
-                    }
-
-                    RenderConfig.CreateRenderer(this, ch, _renderers);
+      
 
 
-                    
-                }
-            }
-
-
-        }
-
-
-        internal void AddRenderer(RendererBase renderer)
-        {
-
-
-            _renderers.Add(renderer);
-        }
-
-        internal void RemoveRenderer(RendererBase renderer)
-        {
-            _renderers.Remove(renderer);
-        }
-
-   
 
         internal void Update()
         {
