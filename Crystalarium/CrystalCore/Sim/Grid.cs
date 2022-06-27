@@ -315,8 +315,9 @@ namespace CrystalCore.Sim
 
             Chunk minimum = getChunkAtCoords(rect.Location);
 
-            // the bottom right Chunk within our borders
-            Chunk extreme = getChunkAtCoords(Bounds.Location + Bounds.Size - new Point(1));
+            // the bottom right Chunk within rect's borders
+            Point extremePoint = rect.Location + rect.Size - new Point(1);
+            Chunk extreme = getChunkAtCoords(extremePoint);
 
             // iterate through all chunks between (and including) the minimum and extreme, and add them.
 
@@ -335,7 +336,7 @@ namespace CrystalCore.Sim
 
                 }
             }
-
+            
             return toReturn;
         }
 
@@ -347,7 +348,7 @@ namespace CrystalCore.Sim
 
             foreach(Chunk ch in ChunksInBounds(bounds))
             {
-                foreach(ChunkMember chm in ch.Children)
+                foreach(ChunkMember chm in ch.MembersWithin)
                 {
 
                     if (!(chm is Agent)) // only agents take up space.
@@ -359,6 +360,12 @@ namespace CrystalCore.Sim
 
                     if (a.Bounds.Intersects(bounds))
                     {
+                        // only add a if it isn't already in the list
+                        if( toReturn.Exists((Agent obj) => { return obj == a; }))
+                        {
+                            continue;
+                        }
+
                         toReturn.Add(a);
                     }
                
