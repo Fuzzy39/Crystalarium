@@ -56,6 +56,8 @@ namespace CrystalCore.Sim
             {
                 throw new InvalidOperationException("This Agent: "+this+" overlaps another agent.");
             }
+
+            g.AddAgent(this);
         }
 
         internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : this(g, bounds, t)

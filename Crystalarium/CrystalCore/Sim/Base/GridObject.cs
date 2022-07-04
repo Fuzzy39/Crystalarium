@@ -39,7 +39,6 @@ namespace CrystalCore.Sim.Base
             _bounds = rect;
             _grid = g;
 
-            _grid.Add(this);
 
         }
 

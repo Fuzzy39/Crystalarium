@@ -30,7 +30,7 @@ namespace Crystalarium
 
         private CrystalCore.CrystalCore engine; // the 'engine'
 
-        private const int BUILD = 467; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 489; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
@@ -101,24 +101,29 @@ namespace Crystalarium
 
             // define ruleset.
             AgentType t;
+            float shrinkage = .05f;
 
             t=ruleset.CreateType("big", new Point(2, 2));
             t.RenderConfig.AgentBackground = Textures.sampleAgent;
             t.RenderConfig.BackgroundColor = Color.DodgerBlue;
+            t.RenderConfig.BackgroundShrinkage = shrinkage;
 
             t = ruleset.CreateType("small", new Point(1, 1));
             t.RenderConfig.AgentBackground = Textures.sampleAgent;
             t.RenderConfig.BackgroundColor = Color.Crimson;
+            t.RenderConfig.BackgroundShrinkage = shrinkage;
 
             actions.CurrentType = t;
 
             t = ruleset.CreateType("flat", new Point(2, 1));
             t.RenderConfig.AgentBackground = Textures.sampleAgent;
             t.RenderConfig.BackgroundColor = Color.Gold;
+            t.RenderConfig.BackgroundShrinkage = shrinkage;
 
             t = ruleset.CreateType("tall", new Point(1, 2));
             t.RenderConfig.AgentBackground = Textures.sampleAgent;
             t.RenderConfig.BackgroundColor = Color.LimeGreen;
+            t.RenderConfig.BackgroundShrinkage = shrinkage;
 
 
 
@@ -192,7 +197,7 @@ namespace Crystalarium
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-
+            
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
 

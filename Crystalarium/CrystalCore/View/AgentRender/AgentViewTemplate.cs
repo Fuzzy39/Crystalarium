@@ -16,6 +16,8 @@ namespace CrystalCore.View.AgentRender
 
         public Color BackgroundColor { get; set; }
 
+        public float BackgroundShrinkage { get; set; }
+
         public AgentViewTemplate()
         {
             AgentBackground = null;
@@ -27,7 +29,8 @@ namespace CrystalCore.View.AgentRender
             AgentView toReturn = new AgentView(m, a, others)
             {
                 Background = AgentBackground,
-                BackgroundColor = BackgroundColor
+                BackgroundColor = BackgroundColor,
+                BGShrinkage = BackgroundShrinkage
             };
             return toReturn;
         }

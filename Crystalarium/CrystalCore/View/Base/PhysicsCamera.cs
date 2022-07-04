@@ -167,8 +167,8 @@ namespace CrystalCore.View.Base
             base.Update(bounds);
 
             Vector2 nextPos = OriginPosition + new Vector2(Velocity.X / (float)Scale, Velocity.Y / (float)Scale);
-            
 
+            //Console.WriteLine(Scale);
             // prevent camera movement outside the bounds.
             if (!SetPosition(new Vector2(nextPos.X, OriginPosition.Y)))
             {

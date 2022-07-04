@@ -13,13 +13,18 @@ namespace CrystalCore.Sim
         /* the grid class represents a grid.
         * In Crystalarium, a grid is a 2d plane where devices can be built using a number of systems,
         * with the primary system called Crysm.
+        * 
+        * A grid manages a number of chunks, and any chunkmembers of those chunks.
+        * 
         */
 
 
         private SimulationManager sim;
 
         private List<List<Chunk>> _chunks; // a 2d array where the outer array represents rows and the inner array represents columns. [x][y]
- 
+        private List<Agent> _agents; // the amount of agents in this grid.
+
+
         private Point chunksOrigin; // the chunk coords where the chunk array, chunks, starts.
         private Point chunksSize; // the size, in chunks, of the grid.
 
@@ -29,16 +34,16 @@ namespace CrystalCore.Sim
         }
 
         public Rectangle Bounds
-        { 
+        {
             get
             {
                 return new Rectangle
-                  ( chunksOrigin.X * Chunk.SIZE,
+                  (chunksOrigin.X * Chunk.SIZE,
                     chunksOrigin.Y * Chunk.SIZE,
-                    chunksSize.X   * Chunk.SIZE,
-                    chunksSize.Y   * Chunk.SIZE );
+                    chunksSize.X * Chunk.SIZE,
+                    chunksSize.Y * Chunk.SIZE);
             }
-        
+
         }
 
         public Point gridSize
@@ -46,12 +51,14 @@ namespace CrystalCore.Sim
             get => chunksSize;
         }
 
+        public List<Agent> Agents { get => _agents; }
+
         public Vector2 center
-        { 
-            get 
+        {
+            get
             {
                 // the center tile coords of this grid
-                return chunksSize.ToVector2() * Chunk.SIZE/2f;
+                return chunksSize.ToVector2() * Chunk.SIZE / 2f;
 
             }
 
@@ -63,6 +70,8 @@ namespace CrystalCore.Sim
         {
             this.sim = sim;
             sim.addGrid(this);
+            _agents = new List<Agent>();
+          
 
             // perform first time setup.
             Reset();
@@ -73,18 +82,18 @@ namespace CrystalCore.Sim
         // Probably temporary.
         public void DebugReport()
         {
-            Console.WriteLine("Size: " + chunksSize + "\nOrigin:" + chunksOrigin+"\n"); 
+            Console.WriteLine("Size: " + chunksSize + "\nOrigin:" + chunksOrigin + "\n");
 
             foreach (List<Chunk> list in _chunks)
             {
                 String s = "{";
-                foreach(Chunk ch in list)
+                foreach (Chunk ch in list)
                 {
                     // this is silly! why do I have to write all of this?
-                    s += ((ch!=null)?ch.ToString():"null")+", ";
+                    s += ((ch != null) ? ch.ToString() : "null") + ", ";
                 }
 
-                s= s.Substring(0, s.Length - 2)+"},";
+                s = s.Substring(0, s.Length - 2) + "},";
                 Console.WriteLine(s);
             }
         }
@@ -97,17 +106,19 @@ namespace CrystalCore.Sim
         public void Reset()
         {
             // remove any existing chunks.
-            if(_chunks!=null)
+            if (_chunks != null)
             {
-                foreach(List<Chunk> list in _chunks)
+                foreach (List<Chunk> list in _chunks)
                 {
-                    foreach(Chunk ch in list)
+                    foreach (Chunk ch in list)
                     {
                         ch.Destroy();
                     }
                 }
 
             }
+
+            _agents.Clear();
 
             // initialize the chunk array.
             _chunks = new List<List<Chunk>>();
@@ -121,42 +132,43 @@ namespace CrystalCore.Sim
             chunksSize = new Point(1, 1);
         }
 
-        public void Add( GridObject o)
-        {
-            // what we do with the gridobject depends on what kind of object it is.
-
-            // note that you are not meant to add chunks to the grid using the add method.
-            // use expandChunkGrid instead.
-            if(o is Chunk)
-            {
-           
-                return;
-            }
-
-            // This girdObject is not of any instance we feel the need to deal with. meh.
-            // throw new ArgumentException("Unknown or Invalid type of GridObject to Add to this grid.");
-        }
-
         public void Remove(GridObject o)
         {
 
             // Remove a grid object from it's appropriate containers
 
-            if( o is Chunk) // chunks can't be removed once added.
+            if (o is Chunk) // chunks can't be removed once added.
             {
                 o = null; // Doesn't change the size of the grid. This should be used sparingly.
-                return; 
+                return;
             }
 
-            //throw new ArgumentException("Unknown or Invalid type of GridObject to remove from this grid.");
+            if (o is Agent)
+            {
+                _agents.Remove((Agent)o);
+                o = null;
+                return;
+            }
+
+            throw new ArgumentException("Unknown or Invalid type of GridObject to remove from this grid.");
 
         }
 
-        public void ExpandGrid( Direction d)
+        public void AddAgent(Agent a)
+        {
+            if(a.Grid!= this)
+            {
+                throw new ArgumentException("Agent " + a + "Does not belong to this grid.");
+            }
+
+            _agents.Add(a); 
+        }
+
+        public void ExpandGrid(Direction d)
         {
             if (d.IsHorizontal())
             {
-                ExpandHorizontal(d); 
+                ExpandHorizontal(d);
             }
             else
             {
@@ -176,7 +188,7 @@ namespace CrystalCore.Sim
             {
                 x = 0;
                 _chunks.Insert(x, new List<Chunk>());
-                chunksOrigin.X--; 
+                chunksOrigin.X--;
             }
             else
             {
@@ -186,7 +198,7 @@ namespace CrystalCore.Sim
 
 
             // generate the new chunks
-            for(int y = 0; y<chunksSize.Y; y++)
+            for (int y = 0; y < chunksSize.Y; y++)
             {
                 Point gridLoc = new Point(x, y) + chunksOrigin;
                 Chunk ch = new Chunk(this, gridLoc);
@@ -200,11 +212,11 @@ namespace CrystalCore.Sim
         {
             // we are adding a new Chunk to every list<Chunk> in _chunk.
             chunksSize.Y++;
-           
+
 
             if (d == Direction.up)
                 chunksOrigin.Y--;
-          
+
             // create the new chunks.
 
             for (int x = 0; x < _chunks.Count; x++)
@@ -221,11 +233,11 @@ namespace CrystalCore.Sim
                 {
                     y = _chunks[x].Count;
                     _chunks[x].Add(null);
-                    
+
                 }
 
                 // including chunk origins is important to get the correct coords for this chunk.
-                Chunk ch = new Chunk(this, new Point(x + chunksOrigin.X, y+ chunksOrigin.Y));
+                Chunk ch = new Chunk(this, new Point(x + chunksOrigin.X, y + chunksOrigin.Y));
 
                 _chunks[x][y] = ch;
 
@@ -237,13 +249,13 @@ namespace CrystalCore.Sim
         public Point getChunkPos(Chunk ch)
         {
             // get the chunk
-          
-            for(int x = 0; x < Chunks.Count; x++)
+
+            for (int x = 0; x < Chunks.Count; x++)
             {
                 List<Chunk> list = Chunks[x];
-                for(int y = 0; y < list.Count; y++)
+                for (int y = 0; y < list.Count; y++)
                 {
-                    if(list[y] == ch)
+                    if (list[y] == ch)
                     {
                         // we found the chunk!
                         return new Point(x, y);
@@ -253,128 +265,5 @@ namespace CrystalCore.Sim
 
             throw new ArgumentException("Chunk '" + ch + "' is not part of Grid '" + this + "'.");
         }
-
-        public Chunk getChunkAtCoords(Point Coords)
-        {
-            // we could iterate through every chunk, but we could also do math.
-            // math is probably better
-
-            if(!Bounds.Contains(Coords))
-            {
-                // no chunk there.
-                return null;
-            }
-
-            // should be the coord in the grid's array where chunks are stored.
-            Point chunkCoord = (Coords - Bounds.Location) / new Point(Chunk.SIZE);
-
-            // get and return that chunk.
-            Chunk toReturn = _chunks[chunkCoord.X][chunkCoord.Y];
-
-            // it's possible this doesn't work. If that's true, I'd like to know.
-            Debug.Assert(toReturn.Bounds.Contains(Coords));
-
-            return toReturn;
-
-
-        }
-
-
-        public Agent getAgentAtPos(Point coords)
-        {
-            Chunk ch = getChunkAtCoords(coords);
-
-            if (ch == null)
-            {
-                return null;
-            }
-
-            List<ChunkMember> agents = ch.MembersWithin;
-            foreach (ChunkMember cm in agents)
-            {
-                if (!(cm is Agent))
-                {
-                    continue;
-                }
-
-                Agent a = (Agent)cm;
-
-                if (a.Bounds.Contains(coords))
-                {
-                    return a;
-                }
-
-            }
-
-            return null;
-        }
-
-        public List<Chunk> ChunksInBounds(Rectangle rect)
-        {
-            List<Chunk> toReturn = new List<Chunk>();
-
-            Chunk minimum = getChunkAtCoords(rect.Location);
-
-            // the bottom right Chunk within rect's borders
-            Point extremePoint = rect.Location + rect.Size - new Point(1);
-            Chunk extreme = getChunkAtCoords(extremePoint);
-
-            // iterate through all chunks between (and including) the minimum and extreme, and add them.
-
-            // how much to iterate?
-            Point initial = getChunkPos(minimum);
-            Point sizeInChunks = getChunkPos(extreme) - initial + new Point(1);
-
-            // this should get all of the chunks.
-            for (int x = 0; x < sizeInChunks.X; x++)
-            {
-                for (int y = 0; y < sizeInChunks.Y; y++)
-                {
-                    Point i = new Point(x, y) + initial;
-
-                    toReturn.Add(Chunks[i.X][i.Y]);
-
-                }
-            }
-            
-            return toReturn;
-        }
-
-
-        // returns whether an agent is within these bounds
-        public List<Agent> AgentsWithin(Rectangle bounds)
-        {
-            List<Agent> toReturn = new List<Agent>();
-
-            foreach(Chunk ch in ChunksInBounds(bounds))
-            {
-                foreach(ChunkMember chm in ch.MembersWithin)
-                {
-
-                    if (!(chm is Agent)) // only agents take up space.
-                    {
-                        continue;
-                    }
-
-                    Agent a = (Agent)chm;
-
-                    if (a.Bounds.Intersects(bounds))
-                    {
-                        // only add a if it isn't already in the list
-                        if( toReturn.Exists((Agent obj) => { return obj == a; }))
-                        {
-                            continue;
-                        }
-
-                        toReturn.Add(a);
-                    }
-               
-                    
-                }
-            }
-
-            return toReturn;
-        }
-
     }
 }

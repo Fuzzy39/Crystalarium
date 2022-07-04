@@ -73,8 +73,12 @@ namespace CrystalCore.View
             {
                 AddAgents();
                 DrawAgents(sb);
+
+               
             }
 
+
+        
 
         }
 
@@ -135,9 +139,7 @@ namespace CrystalCore.View
         // adds all visible agents in chunk ch
         private void AddAgents(Chunk ch)
         {
-            // for the time being, we're ignoring orphans.
-            // sorry, you have to be invisible.
-
+            
 
             foreach (Agent a in ch.Children)
             {
@@ -147,14 +149,19 @@ namespace CrystalCore.View
                     if (ar.RenderData == a)
                     {
                         hasRenderer = true;
+                        break;
                     }
                 }
 
                 if (hasRenderer)
                     continue;
 
-                // add a new renderer.
-                AddRenderer(a.Type.CreateRenderer(this, a, _agentRenderers));
+                // does this agent need rendered?
+                if (_parent.Camera.TileBounds().Intersects(a.Bounds))
+                {
+                    // add a new renderer.
+                    a.Type.CreateRenderer(this, a, _agentRenderers);
+                }
             }
         }
 
@@ -183,7 +190,7 @@ namespace CrystalCore.View
                 AgentView ar = (AgentView)_agentRenderers[i];
                 ar.Draw(sb);
 
-                if (ar == null)
+                if (_agentRenderers.IndexOf(ar)==-1)
                 {
                     i--;
                 }
@@ -220,7 +227,7 @@ namespace CrystalCore.View
 
             if (renderer is AgentView)
             {
-                //TODO
+                _agentRenderers.Remove((AgentView)renderer);
                 return;
             }
 

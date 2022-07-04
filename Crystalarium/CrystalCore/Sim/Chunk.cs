@@ -42,7 +42,7 @@ namespace CrystalCore.Sim
         }
 
 
-        public Chunk(Grid g, Point pos) : base(g, pos*new Point(SIZE), new Point(SIZE))
+        internal Chunk(Grid g, Point pos) : base(g, pos*new Point(SIZE), new Point(SIZE))
         {
            // check that this chunk does not exist over another chunk.
            foreach(List<Chunk> chunks in Grid.Chunks)

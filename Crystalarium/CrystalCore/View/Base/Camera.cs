@@ -229,8 +229,7 @@ namespace CrystalCore.View.Base
                 (float)(renderer.PixelBoundry.Height / Scale));
         }
 
-
-
+       
         //Rendering stuff
         // is this too many overloads? idk
       
@@ -253,8 +252,6 @@ namespace CrystalCore.View.Base
         internal void RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c, Direction d)
         { 
             // stuff
-
-           
 
             Point pixelCoords = TileToPixelCoords(bounds.Location) - new Point(1);
             Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale)) + new Point(1, 1);

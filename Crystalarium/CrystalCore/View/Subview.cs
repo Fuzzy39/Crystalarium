@@ -58,9 +58,10 @@ namespace CrystalCore.View
         {
             // probably don't kill anybody.
             // we might have to kill ourselves, if we aren't rendering anything.
-            if(_renderData == null)
+            if(_renderData == null || RenderData.Bounds.IsEmpty)
             {
                 this.Destroy();
+                return false;
             }
 
             // check that we are visible on screen.
@@ -73,6 +74,7 @@ namespace CrystalCore.View
             else
             {
 
+               
                 
                 
                 this.Destroy();

@@ -151,6 +151,17 @@ namespace CrystalCore.Util
             return Intersects(new RectangleF(rect));
         }
 
+        public RectangleF Inflate(float horizontalAmount, float verticalAmount)
+        {
+            X -= horizontalAmount;
+            Y -= verticalAmount;
+
+            Width += 2 * horizontalAmount;
+            Height += 2 * verticalAmount;
+
+            return this;
+        }
+
         public override string ToString() => "{ Location: { "+X + ", "+Y+" }, Size: { "+Width+", " + Height+" } }";
     }
 }
