@@ -31,7 +31,7 @@ namespace Crystalarium
 
         private CrystalCore.CrystalCore engine; // the 'engine'
 
-        private const int BUILD = 498; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 500; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
@@ -191,7 +191,7 @@ namespace Crystalarium
             // Set the camera of the minimap.
             minimap.Camera.MinScale = 1;
 
-            minimap.DoAgentRendering = false;
+            //minimap.DoAgentRendering = false;
 
         }
 

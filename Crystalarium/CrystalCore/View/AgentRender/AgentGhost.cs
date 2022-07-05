@@ -55,7 +55,7 @@ namespace CrystalCore.View.AgentRender
             if (type.isValidLocation(renderTarget.Grid, Bounds.Location, Facing))
             {
                 // these ought to be exposed better.
-                c = type.RenderConfig.Color;
+                c = /*type.RenderConfig.Color;*/ Color.Gray;
             }
             else
             {
@@ -63,7 +63,7 @@ namespace CrystalCore.View.AgentRender
             }
 
             // make the color whiteish and transparent.
-            return new Color(Color.Lerp(Color.White, c, .5f), .1f);
+            return new Color(Color.Lerp(Color.White, c, .5f), .05f);
         }
 
         public override bool Equals(object obj)
