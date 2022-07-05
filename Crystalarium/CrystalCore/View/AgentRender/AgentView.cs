@@ -21,10 +21,14 @@ namespace CrystalCore.View.AgentRender
 
         private Texture2D _background; // Our background texture
         private Color _BGcolor; // our background color.
-        private float _BGShrinkage; // the amount of the tile, in pixels per edge (at camera scale of 100) that is left blank when this agent is rendered.
+
+        private Texture2D _defaultTexture;
+        private Color _color;
+        private float _shrinkage; // the amount of the tile, in pixels per edge (at camera scale of 100) that is left blank when this agent is rendered.
                                   // did that make any sense? it is valid between 0 and 49. 
 
-
+        public bool DoBackgroundShrinkage;
+        public bool DoBackgroundRotation;
 
         public Texture2D Background
         {
@@ -38,10 +42,22 @@ namespace CrystalCore.View.AgentRender
             set => _BGcolor = value;
         }
 
-        public float BGShrinkage
+        public Texture2D DefaultTexture
+        {
+            get => _defaultTexture;
+            set => _defaultTexture = value;
+        }
+
+        public Color Color
+        {
+            get => _color;
+            set => _color = value;  
+        }
+
+        public float Shrinkage
         {
 
-            get => _BGShrinkage;
+            get => _shrinkage;
             set
             {
 
@@ -51,7 +67,7 @@ namespace CrystalCore.View.AgentRender
                 }
 
               
-                _BGShrinkage = value;
+                _shrinkage = value;
 
             }
 
@@ -64,9 +80,13 @@ namespace CrystalCore.View.AgentRender
                 
             _background = null;
             _BGcolor = Color.White;
+
+            _defaultTexture = null;
+            _color = Color.White;
             // get our parent
 
-
+            DoBackgroundRotation = false;
+            DoBackgroundShrinkage = false;
           
         }
 
@@ -74,28 +94,54 @@ namespace CrystalCore.View.AgentRender
         {
          
             // render the thing if we have been set to.
-            if (_background == null)
+            if (_defaultTexture == null)
             {
                 throw new InvalidOperationException("RenderConfig not supplied with required texture.");
             }
            
-            renderTarget.Camera.RenderTexture(sb, _background, GetBGBorders(), _BGcolor, ((Agent)RenderData).Facing);
+            // render the background.
+            if(_background != null)
+            {
+                RenderBackground(sb);
+            }
+
+            // render the Agent.
+            renderTarget.Camera.RenderTexture(sb, _defaultTexture, ShrinkBorders(), _color, ((Agent)RenderData).Facing);
             
         }
 
 
+        private void RenderBackground(SpriteBatch sb)
+        {
+            RectangleF bounds = new RectangleF(RenderData.Bounds);
+            Direction facing = Direction.up;
+
+            if(DoBackgroundShrinkage)
+            {
+                bounds = ShrinkBorders();
+            }
+
+            if(DoBackgroundRotation)
+            {
+                facing = ((Agent)RenderData).Facing;
+            }
+
+
+            renderTarget.Camera.RenderTexture(sb, _background, bounds, _BGcolor, facing);
+        }
+
         // get the borders of the background in tiles. fair enough.
-        private RectangleF GetBGBorders()
+        private RectangleF ShrinkBorders()
         {
            
 
             RectangleF toReturn = new RectangleF(RenderData.Bounds);
 
             // Perform shrinkage.
-            toReturn.Width -= _BGShrinkage * 2;
-            toReturn.Height -= _BGShrinkage * 2;
-            toReturn.X += _BGShrinkage;
-            toReturn.Y += _BGShrinkage;
+            toReturn.Width -= _shrinkage * 2;
+            toReturn.Height -= _shrinkage * 2;
+            toReturn.X += _shrinkage;
+            toReturn.Y += _shrinkage;
             
      
             return toReturn;

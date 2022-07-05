@@ -16,12 +16,38 @@ namespace CrystalCore.View.AgentRender
 
         public Color BackgroundColor { get; set; }
 
-        public float BackgroundShrinkage { get; set; }
+        public float Shrinkage { get; set; }
+
+        public Texture2D DefaultTexture { get; set; }
+
+        public Color Color { get; set; }
+
+        public bool DoBackgroundShrinkage{ get; set; }
+
+        public bool DoBackgroundRotation { get; set; }  
 
         public AgentViewTemplate()
         {
+            // defaults for stuff.
             AgentBackground = null;
             BackgroundColor = Color.White;
+            Shrinkage = 0;
+            Color = Color.White;
+            DefaultTexture = null;
+            DoBackgroundShrinkage = false;
+            DoBackgroundRotation = false;   
+        }
+
+        public AgentViewTemplate(AgentViewTemplate from)
+        {
+            AgentBackground = from.AgentBackground;
+            BackgroundColor = from.BackgroundColor;
+            Shrinkage = from.Shrinkage;
+            Color = from.Color;
+            DefaultTexture = from.DefaultTexture;
+            DoBackgroundShrinkage = from.DoBackgroundShrinkage;
+            DoBackgroundRotation = from.DoBackgroundRotation;
+
         }
 
         internal AgentView CreateRenderer(SubviewManager m, Agent a, List<Subview> others)
@@ -30,7 +56,11 @@ namespace CrystalCore.View.AgentRender
             {
                 Background = AgentBackground,
                 BackgroundColor = BackgroundColor,
-                BGShrinkage = BackgroundShrinkage
+                Shrinkage = Shrinkage,
+                DefaultTexture = DefaultTexture,
+                Color = Color,
+                DoBackgroundShrinkage = DoBackgroundShrinkage,
+                DoBackgroundRotation = DoBackgroundRotation
             };
             return toReturn;
         }

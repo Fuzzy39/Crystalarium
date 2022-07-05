@@ -39,6 +39,7 @@ namespace CrystalCore.Rulesets
         public AgentViewTemplate RenderConfig
         {
             get => _renderConfig;
+            set => _renderConfig = new AgentViewTemplate(value);   
         }
 
         public string Name
