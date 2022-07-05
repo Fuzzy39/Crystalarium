@@ -71,7 +71,7 @@ namespace CrystalCore.View.ChunkRender
 
 
         // Constructor
-        internal ChunkView(SubviewManager m, Chunk ch, List<Subview> others, Texture2D chunkBG, Color BGColor) : base(m, ch, others)
+        internal ChunkView(GridView v, Chunk ch, List<Subview> others, Texture2D chunkBG, Color BGColor) : base(v, ch, others)
         {
             // reasonable defaults.
             _chunkBG = chunkBG;

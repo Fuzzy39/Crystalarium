@@ -50,9 +50,9 @@ namespace CrystalCore.View.AgentRender
 
         }
 
-        internal AgentView CreateRenderer(SubviewManager m, Agent a, List<Subview> others)
+        internal AgentView CreateRenderer(GridView v, Agent a, List<Subview> others)
         {
-            AgentView toReturn = new AgentView(m, a, others)
+            AgentView toReturn = new AgentView(v, a, others)
             {
                 Background = AgentBackground,
                 BackgroundColor = BackgroundColor,

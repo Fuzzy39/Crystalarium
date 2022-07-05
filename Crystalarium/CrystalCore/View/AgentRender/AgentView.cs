@@ -74,7 +74,7 @@ namespace CrystalCore.View.AgentRender
         }
 
 
-        internal AgentView(SubviewManager m, Agent a, List<Subview> others) : base(m, a, others)
+        internal AgentView(GridView v, Agent a, List<Subview> others) : base(v, a, others)
         {
 
                 
@@ -138,13 +138,7 @@ namespace CrystalCore.View.AgentRender
             RectangleF toReturn = new RectangleF(RenderData.Bounds);
 
             // Perform shrinkage.
-            toReturn.Width -= _shrinkage * 2;
-            toReturn.Height -= _shrinkage * 2;
-            toReturn.X += _shrinkage;
-            toReturn.Y += _shrinkage;
-            
-     
-            return toReturn;
+            return toReturn.Inflate(-_shrinkage, -_shrinkage);
 
         }
 

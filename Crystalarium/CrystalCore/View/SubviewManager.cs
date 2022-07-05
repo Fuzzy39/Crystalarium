@@ -26,8 +26,9 @@ namespace CrystalCore.View
 
         private List<Subview> _agentRenderers; // the list of agent renderers currently in existance.
 
+        private List<AgentGhost> _ghosts; // the ghosts currently in existance. usually only one.
 
-       
+
         // properties
 
         internal List<Subview> ChunkViews
@@ -57,10 +58,21 @@ namespace CrystalCore.View
             _chunkRenderers = new List<Subview>();
             _agentRenderers = new List<Subview>();
 
-
+            _ghosts = new List<AgentGhost>();
         }
 
         // methods
+        internal void AddGhost(AgentGhost gh)
+        {
+            if(!_parent.AllowMultipleGhosts)
+            {
+                _ghosts.Clear();
+            }
+
+            _ghosts.Add(gh);
+            
+        }
+
 
         internal void Draw( SpriteBatch sb)
         {
@@ -77,9 +89,7 @@ namespace CrystalCore.View
                
             }
 
-
-        
-
+            DrawGhosts(sb);
         }
 
         // adds chunks to be rendered, if needbe.
@@ -113,7 +123,7 @@ namespace CrystalCore.View
                         continue;
                     }
 
-                    Parent.RenderConfig.CreateRenderer(this, ch, _chunkRenderers);
+                    Parent.RenderConfig.CreateRenderer(_parent, ch, _chunkRenderers);
 
 
 
@@ -160,7 +170,7 @@ namespace CrystalCore.View
                 if (_parent.Camera.TileBounds().Intersects(a.Bounds))
                 {
                     // add a new renderer.
-                    a.Type.CreateRenderer(this, a, _agentRenderers);
+                    a.Type.CreateRenderer(_parent, a, _agentRenderers);
                 }
             }
         }
@@ -234,5 +244,15 @@ namespace CrystalCore.View
             throw new ArgumentException("Could not add renderer of unkown type: " + renderer);
 
         }
+
+
+        private void DrawGhosts( SpriteBatch sb)
+        {
+            foreach(AgentGhost gh in _ghosts)
+            {
+                gh.Draw(sb);
+            }
+        }
+
     }
 }

@@ -10,6 +10,7 @@ using CrystalCore.View.Base;
 
 using AgentRenderer = CrystalCore.View.AgentRender.AgentView;
 using ChunkRenderer = CrystalCore.View.ChunkRender.ChunkView;
+using CrystalCore.View.AgentRender;
 
 namespace CrystalCore.View
 {
@@ -45,9 +46,12 @@ namespace CrystalCore.View
 
         // Chunk Renderer related
         private ChunkViewTemplate _renderConfig; // how are we rendering chunks?
-        private bool _doAgentRendering;
-       
+        private bool _doAgentRendering; // whether we render agents.
 
+
+   
+
+        public bool AllowMultipleGhosts { get; set; }
 
 
         // Properties
@@ -130,6 +134,11 @@ namespace CrystalCore.View
             _renderConfig = renderConfig;
             DoAgentRendering = true;
 
+            // ghost related
+           
+
+            AllowMultipleGhosts = false;
+
 
         }
 
@@ -143,11 +152,7 @@ namespace CrystalCore.View
             container.Remove(this);
         }
 
-
-
-
-        // Methods
-
+        
         public Point LocalizeCoords(Point p)
         {
             return p - _pixelBounds.Location;

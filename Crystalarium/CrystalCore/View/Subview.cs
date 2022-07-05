@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CrystalCore.View
 {
-    internal abstract class Subview
+    internal abstract class Subview : ViewObject
     {
         /*
          *  This class supplies the foundational code required to render a gridobject in a gridview.
@@ -15,7 +15,7 @@ namespace CrystalCore.View
          * 
          */
 
-        protected GridView renderTarget;
+      
         protected GridObject _renderData;
         protected List<Subview> _others;
 
@@ -24,7 +24,7 @@ namespace CrystalCore.View
             get => _renderData;
         }
 
-        protected Subview( SubviewManager m, GridObject o, List<Subview> others)
+        protected Subview( GridView v, GridObject o, List<Subview> others) : base(v)
         {
             // check that we don't already exist
             foreach (Subview r in others)
@@ -39,22 +39,22 @@ namespace CrystalCore.View
                
 
             // add ourselves to the list of renderers.
-            m.AddRenderer(this);
+            renderTarget.Manager.AddRenderer(this);
 
       
-            renderTarget = m.Parent;
+     
             _renderData = o;
         }
 
         // remove external refrences to this object.
-        internal void Destroy()
+        internal override void Destroy()
         {
             renderTarget.Manager.RemoveRenderer(this);
         }
 
 
         // returns whether drawing was successful.
-        internal bool Draw(SpriteBatch sb)
+        internal override bool Draw(SpriteBatch sb)
         {
             // probably don't kill anybody.
             // we might have to kill ourselves, if we aren't rendering anything.

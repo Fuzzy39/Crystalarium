@@ -94,10 +94,10 @@ namespace CrystalCore.View.ChunkRender
         }
 
 
-        internal ChunkView CreateRenderer(SubviewManager m, Chunk ch, List<Subview> others)
+        internal ChunkView CreateRenderer(GridView v, Chunk ch, List<Subview> others)
         {
             // set up a new renderer
-            ChunkView toReturn = new ChunkView(m, ch, others, _chunkBG, _BGColor)
+            ChunkView toReturn = new ChunkView(v, ch, others, _chunkBG, _BGColor)
             {
                 brightenAmount = _brightenAmount,
                 doCheckerBoardColoring = _doCheckerBoardColoring,
