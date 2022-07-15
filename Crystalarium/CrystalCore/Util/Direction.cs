@@ -19,11 +19,23 @@ namespace CrystalCore.Util
         counterclockwise
     }
 
+    public enum CompassPoint
+    {
+        north,
+        northeast,
+        east,
+        southeast,
+        south,
+        southwest,
+        west,
+        northwest
+    }
+
     public static class DirectionUtil
     {
         public static bool IsVertical(this Direction d)
         {
-            if(d == Direction.up || d== Direction.down)
+            if (d == Direction.up || d == Direction.down)
             {
                 return true;
             }
@@ -77,7 +89,7 @@ namespace CrystalCore.Util
                     break;
             }
 
-       
+
             return p;
         }
 
@@ -89,11 +101,11 @@ namespace CrystalCore.Util
             {
                 Direction.up => 0,
 
-                Direction.right => MathF.PI/2f,
+                Direction.right => MathF.PI / 2f,
 
                 Direction.down => MathF.PI,
 
-                Direction.left => MathF.PI*3f/2f,
+                Direction.left => MathF.PI * 3f / 2f,
 
                 // default
                 _ => 0,
@@ -104,7 +116,7 @@ namespace CrystalCore.Util
         public static Direction Rotate(this Direction d, RotationalDirection r)
         {
             // it's big, 'cause I'm lazy
-            if(r == RotationalDirection.clockwise)
+            if (r == RotationalDirection.clockwise)
             {
                 return d switch
                 {
@@ -140,7 +152,55 @@ namespace CrystalCore.Util
                 };
             }
 
-            
+
+
+        }
+
+        public static CompassPoint Rotate(this CompassPoint cp, RotationalDirection r)
+        {
+            int toReturn = (int)cp;
+            if(r == RotationalDirection.clockwise)
+            {
+                toReturn++;
+                if (toReturn >= Enum.GetNames(typeof(CompassPoint)).Length)
+                { 
+                    toReturn = 0; 
+                }
+
+                return (CompassPoint)toReturn;
+
+               
+            }
+
+            toReturn--;
+            if (toReturn < 0)
+            {
+                toReturn = Enum.GetNames(typeof(CompassPoint)).Length-1;
+            }
+
+            return (CompassPoint)toReturn;
+
+        }
+
+
+        public static Direction? ToDirection(this CompassPoint p)
+        {
+
+            return p switch
+            {
+                CompassPoint.west => Direction.left,
+
+                CompassPoint.east => Direction.right,
+
+                CompassPoint.south => Direction.down,
+
+                CompassPoint.north => Direction.up,
+
+                // default
+                _ => null
+
+
+            };
         }
     }
 

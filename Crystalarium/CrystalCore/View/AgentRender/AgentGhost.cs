@@ -55,7 +55,8 @@ namespace CrystalCore.View.AgentRender
             if (type.isValidLocation(renderTarget.Grid, Bounds.Location, Facing))
             {
                 // these ought to be exposed better.
-                c = /*type.RenderConfig.Color;*/ Color.Gray;
+                c = type.RenderConfig.Color; //Color.Green;
+
             }
             else
             {
