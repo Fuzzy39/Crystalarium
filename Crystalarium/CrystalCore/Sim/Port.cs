@@ -84,7 +84,7 @@ namespace CrystalCore.Sim
                     return false;
                 }
 
-                return _boundTo.value >= _threshold;
+                return _boundTo.Value >= _threshold;
             }
         }
 
@@ -97,7 +97,7 @@ namespace CrystalCore.Sim
                     return 0;
                 }
 
-                return _boundTo.value;
+                return _boundTo.Value;
             }
         }
 
@@ -189,7 +189,7 @@ namespace CrystalCore.Sim
             if (Status == PortStatus.transmitting)
             {
                 // we may, however, overpower our own transmissions.
-                if (value <= _boundTo.value)
+                if (value <= _boundTo.Value)
                 {
                     return false;
                 }
@@ -198,12 +198,10 @@ namespace CrystalCore.Sim
             }
 
             // something like this:
-            // Signal s = new Signal (params);
-            // _boundTo = s;
-            // Status = Portstatus.transmitting;
-            // return true;
-
-            throw new NotImplementedException();
+            Signal s = new Signal();
+            _boundTo = s;
+            _status = PortStatus.transmitting;
+            return true;
 
         }
 

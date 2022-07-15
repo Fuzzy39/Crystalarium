@@ -77,10 +77,12 @@ namespace CrystalCore.Sim
             if (IsRectangle())
             {
                 Facing = Facing.Opposite();
+                Grid.UpdateSignals(ChunksWithin);
                 return;
             }
 
             Facing = Facing.Rotate(d);
+            Grid.UpdateSignals(ChunksWithin);
 
         }
 

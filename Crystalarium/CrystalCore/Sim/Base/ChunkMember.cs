@@ -59,7 +59,7 @@ namespace CrystalCore.Sim.Base
             return _grid.ChunksInBounds(Bounds);            
         }
             
-        new public void Destroy()
+        public override void Destroy()
         {
             // remove all external references to ourselves.
             _parentChunk.Children.Remove(this);

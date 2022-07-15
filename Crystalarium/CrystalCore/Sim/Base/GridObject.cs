@@ -50,7 +50,7 @@ namespace CrystalCore.Sim.Base
             : this(g, new Rectangle(x, y, width, height)) { }
 
 
-        public void Destroy()
+        public virtual void Destroy()
         {
             // remove references to this object.
             _grid.Remove(this);

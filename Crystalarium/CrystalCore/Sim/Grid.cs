@@ -23,6 +23,7 @@ namespace CrystalCore.Sim
 
         private List<List<Chunk>> _chunks; // a 2d array where the outer array represents rows and the inner array represents columns. [x][y]
         private List<Agent> _agents; // the amount of agents in this grid.
+        private List<Signal> _signals;
 
 
         private Point chunksOrigin; // the chunk coords where the chunk array, chunks, starts.
@@ -119,6 +120,7 @@ namespace CrystalCore.Sim
             }
 
             _agents.Clear();
+            _signals.Clear();
 
             // initialize the chunk array.
             _chunks = new List<List<Chunk>>();
@@ -146,7 +148,17 @@ namespace CrystalCore.Sim
             if (o is Agent)
             {
                 _agents.Remove((Agent)o);
+                UpdateSignals( ((Agent)o).ChunksWithin);
                 o = null;
+                return;
+            }
+
+            if (o is Signal)
+            {
+                _signals.Remove((Signal)o);
+               
+                o = null;
+                
                 return;
             }
 
@@ -161,7 +173,8 @@ namespace CrystalCore.Sim
                 throw new ArgumentException("Agent " + a + "Does not belong to this grid.");
             }
 
-            _agents.Add(a); 
+            _agents.Add(a);
+            UpdateSignals(a.ChunksWithin);
         }
 
         public void ExpandGrid(Direction d)
@@ -174,6 +187,15 @@ namespace CrystalCore.Sim
             {
                 ExpandVertical(d);
             }
+
+            // update all chunks, 'cause I'm lazy.
+            List<Chunk> chunks = new List<Chunk>();
+            foreach( List<Chunk> list in _chunks)
+            {
+                chunks.AddRange(list);
+            }
+            UpdateSignals(chunks);
+
         }
 
         private void ExpandHorizontal(Direction d)
@@ -264,6 +286,26 @@ namespace CrystalCore.Sim
             }
 
             throw new ArgumentException("Chunk '" + ch + "' is not part of Grid '" + this + "'.");
+        }
+
+
+        internal void UpdateSignals( List<Chunk> where)
+        {
+            // this will update some signals multiple times, but eh...
+            foreach (Chunk ch in where)
+            {
+                foreach(ChunkMember member in ch.MembersWithin)
+                {
+                    if (!(member is Signal))
+                    {
+                        continue;
+                    }
+
+                    Signal s = (Signal)member;
+                    s.Update();
+                }
+            }
+           
         }
     }
 }
