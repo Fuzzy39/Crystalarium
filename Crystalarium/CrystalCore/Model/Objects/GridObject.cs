@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace CrystalCore.Sim.Base
+namespace CrystalCore.Model.Objects
 {
     abstract public class GridObject
     {

@@ -202,6 +202,47 @@ namespace CrystalCore.Util
 
             };
         }
+
+
+        public static Point ToPoint(this CompassPoint d)
+        {
+            Point p = new Point(0);
+            switch (d)
+            {
+
+                case CompassPoint.north:
+                    p.Y = -1;
+                    break;
+                case CompassPoint.northeast:
+                    p.Y = -1;
+                    p.X = 1;
+                    break;
+                case CompassPoint.northwest:
+                    p.Y = -1;
+                    p.X = -1;
+                    break;
+                case CompassPoint.south:
+                    p.Y = 1;
+                    break;
+                case CompassPoint.southeast:
+                    p.Y = 1;
+                    p.X = -1;
+                    break;
+                case CompassPoint.southwest:
+                    p.Y = 1;
+                    p.X = 1;
+                    break;
+                case CompassPoint.west:
+                    p.X = -1;
+                    break;
+                case CompassPoint.east:
+                    p.X = 1;
+                    break;
+            }
+
+
+            return p;
+        }
     }
 
 }

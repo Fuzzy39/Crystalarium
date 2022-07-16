@@ -1,5 +1,5 @@
-﻿using CrystalCore.Sim;
-using CrystalCore.Sim.Base;
+﻿using CrystalCore.Model;
+using CrystalCore.Model.Objects;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;

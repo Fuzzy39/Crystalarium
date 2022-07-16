@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 
 
-namespace CrystalCore.Sim
+namespace CrystalCore.Model
 {
     public class SimulationManager
     {

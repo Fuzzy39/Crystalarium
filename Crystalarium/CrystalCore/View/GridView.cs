@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using CrystalCore.Sim;
+using CrystalCore.Model;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

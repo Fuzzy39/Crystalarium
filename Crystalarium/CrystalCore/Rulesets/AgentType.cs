@@ -1,4 +1,5 @@
-﻿using CrystalCore.Sim;
+﻿using CrystalCore.Model;
+using CrystalCore.Model.Objects;
 using CrystalCore.Util;
 using CrystalCore.View;
 using CrystalCore.View.AgentRender;

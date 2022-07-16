@@ -1,16 +1,16 @@
-﻿using CrystalCore.Sim.Base;
+﻿using CrystalCore.Model.Objects;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrystalCore.Sim
+namespace CrystalCore.Model.Communication
 {
     internal abstract class Signal : ChunkMember
     {
 
-        private Port _start;
-        private Port _end;
+        protected Port _start;
+        protected Port _end;
 
         private int _value;
 
@@ -23,7 +23,7 @@ namespace CrystalCore.Sim
         {
 
             _start = transmitter;
-            _value = value; 
+            _value = value;
         }
 
         public override void Destroy()
@@ -36,7 +36,7 @@ namespace CrystalCore.Sim
 
         public abstract void Update();
 
-       
+
 
 
     }

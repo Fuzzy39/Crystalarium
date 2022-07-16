@@ -1,6 +1,6 @@
 ﻿using CrystalCore.Input;
 using CrystalCore.Rulesets;
-using CrystalCore.Sim;
+using CrystalCore.Model;
 using CrystalCore.View;
 using CrystalCore.View.ChunkRender;
 using Microsoft.Xna.Framework;
@@ -12,7 +12,7 @@ using System.Text;
 namespace CrystalCore
 {
     // A central access point for setting up, drawing, and updating.
-    public class CrystalCore
+    public class Engine
     {
 
         private SimulationManager _sim;
@@ -53,7 +53,7 @@ namespace CrystalCore
 
 
 
-        public CrystalCore(TimeSpan timeBetweenFrames, Ruleset initial)
+        public Engine(TimeSpan timeBetweenFrames, Ruleset initial)
         {
             _sim = new SimulationManager(timeBetweenFrames.TotalSeconds);
             _controller = new Controller();

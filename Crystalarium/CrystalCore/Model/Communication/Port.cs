@@ -1,10 +1,11 @@
-﻿using CrystalCore.Util;
+﻿using CrystalCore.Model.Objects;
+using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrystalCore.Sim
+namespace CrystalCore.Model.Communication
 {
     internal enum PortStatus
     {
@@ -92,7 +93,7 @@ namespace CrystalCore.Sim
         {
             get
             {
-                if(!IsBinded)
+                if (!IsBinded)
                 {
                     return 0;
                 }
@@ -109,9 +110,9 @@ namespace CrystalCore.Sim
                 for (Direction i = _parent.Facing; i != Direction.up; i = i.Rotate(RotationalDirection.clockwise))
                 {
                     toReturn = toReturn.Rotate(RotationalDirection.clockwise);
-                    toReturn= toReturn.Rotate(RotationalDirection.clockwise);
+                    toReturn = toReturn.Rotate(RotationalDirection.clockwise);
                 }
-                return toReturn; 
+                return toReturn;
             }
         }
 
@@ -132,7 +133,7 @@ namespace CrystalCore.Sim
 
                 int x = anchor.X;
                 int y = anchor.Y;
-                switch(facing)
+                switch (facing)
                 {
                     case Direction.up:
                         x += ID;
@@ -151,7 +152,7 @@ namespace CrystalCore.Sim
                 }
 
                 return new Point(x, y);
-               
+
 
                 // now we are facing our actual facing direction, instead of relative.
                 // now for position
@@ -159,19 +160,19 @@ namespace CrystalCore.Sim
 
             }
         }
-    
+
 
         internal Port(CompassPoint facing, int ID, Agent parent)
         {
             _facing = facing;
             this.ID = ID;
-            this._parent = parent;
+            _parent = parent;
 
             // defaults
             _threshold = 1;
             _boundTo = null;
             _status = PortStatus.inactive;
- 
+
 
         }
 
@@ -194,7 +195,7 @@ namespace CrystalCore.Sim
                     return false;
                 }
 
-                this.Stop();
+                Stop();
             }
 
             // something like this:
@@ -227,14 +228,14 @@ namespace CrystalCore.Sim
         // stop transmitting or receiving.
         public void Stop()
         {
-            if(Status == PortStatus.receiving)
+            if (Status == PortStatus.receiving)
             {
                 _boundTo = null;
                 _status = PortStatus.inactive;
                 return;
             }
 
-            if(Status == PortStatus.transmitting)
+            if (Status == PortStatus.transmitting)
             {
                 // this is the only time a port commands a signal. signals require a transmitter to exist.
                 _boundTo.Destroy();
@@ -245,7 +246,7 @@ namespace CrystalCore.Sim
 
         }
 
-          
+
 
 
     }

@@ -1,4 +1,4 @@
-﻿using CrystalCore.Sim;
+﻿using CrystalCore.Model.Objects;
 using CrystalCore.View.AgentRender;
 using CrystalCore.View.ChunkRender;
 using Microsoft.Xna.Framework.Graphics;

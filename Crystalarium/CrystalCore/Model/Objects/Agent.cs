@@ -1,12 +1,11 @@
 ﻿using CrystalCore.Rulesets;
-using CrystalCore.Sim.Base;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrystalCore.Sim
+namespace CrystalCore.Model.Objects
 {
     public class Agent : ChunkMember
     {
@@ -52,9 +51,9 @@ namespace CrystalCore.Sim
             _facing = Direction.up;
             _type = t;
 
-            if(g.AgentsWithin(bounds).Count>1) // it will always be at least 1, because we are in our bounds.
+            if (g.AgentsWithin(bounds).Count > 1) // it will always be at least 1, because we are in our bounds.
             {
-                throw new InvalidOperationException("This Agent: "+this+" overlaps another agent.");
+                throw new InvalidOperationException("This Agent: " + this + " overlaps another agent.");
             }
 
             g.AddAgent(this);
@@ -86,6 +85,6 @@ namespace CrystalCore.Sim
 
         }
 
-       
+
     }
 }

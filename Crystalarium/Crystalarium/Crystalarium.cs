@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using CrystalCore;
 using CrystalCore.Input;
 using CrystalCore.Util;
-using CrystalCore.Sim;
+using CrystalCore.Model;
 using CrystalCore.View;
 using CrystalCore.View.ChunkRender;
 using CrystalCore.Rulesets;
@@ -29,7 +29,7 @@ namespace Crystalarium
         private GraphicsDeviceManager _graphics; 
         private SpriteBatch spriteBatch;
 
-        private CrystalCore.CrystalCore engine; // the 'engine'
+        private CrystalCore.Engine engine; // the 'engine'
 
         private const int BUILD = 501; // I like to increment this number every time I run the code after changing it. I don't always though.
 
@@ -74,7 +74,7 @@ namespace Crystalarium
 
 
             // create the basics.
-            engine = new CrystalCore.CrystalCore(TargetElapsedTime, ruleset);
+            engine = new CrystalCore.Engine(TargetElapsedTime, ruleset);
 
             // setup our interaction related code and register it with the engine.
             actions = new Actions(engine.Controller, this);

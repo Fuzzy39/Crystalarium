@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using CrystalCore.Util;
 
-namespace CrystalCore.Sim.Base
+namespace CrystalCore.Model.Objects
 {
     // does this need to be public? not sure.
     public abstract class ChunkMember : GridObject

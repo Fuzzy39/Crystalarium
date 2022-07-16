@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CrystalCore.Sim;
-using CrystalCore.Sim.Base;
+using CrystalCore.Model;
+using CrystalCore.Model.Objects;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace CrystalCore.View

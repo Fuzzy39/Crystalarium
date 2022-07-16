@@ -4,9 +4,10 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using CrystalCore.Util;
 using System.Diagnostics;
-using CrystalCore.Sim.Base;
+using CrystalCore.Model.Objects;
+using CrystalCore.Model.Communication;
 
-namespace CrystalCore.Sim
+namespace CrystalCore.Model
 {
     public class Grid
     {

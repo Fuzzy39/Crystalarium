@@ -1,10 +1,9 @@
-﻿using CrystalCore.Sim.Base;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrystalCore.Sim
+namespace CrystalCore.Model.Objects
 {
     public class Chunk : GridObject
     {
@@ -31,8 +30,8 @@ namespace CrystalCore.Sim
 
         public List<ChunkMember> Children
         {
-            get =>  _children;
-       
+            get => _children;
+
         }
 
         public List<ChunkMember> MembersWithin
@@ -42,34 +41,34 @@ namespace CrystalCore.Sim
         }
 
 
-        internal Chunk(Grid g, Point pos) : base(g, pos*new Point(SIZE), new Point(SIZE))
+        internal Chunk(Grid g, Point pos) : base(g, pos * new Point(SIZE), new Point(SIZE))
         {
-           // check that this chunk does not exist over another chunk.
-           foreach(List<Chunk> chunks in Grid.Chunks)
-           {
+            // check that this chunk does not exist over another chunk.
+            foreach (List<Chunk> chunks in Grid.Chunks)
+            {
                 foreach (Chunk ch in chunks)
                 {
-                    if(ch == null)
+                    if (ch == null)
                     {
                         continue;
                     }
 
 
-                    if (!ch.Bounds.Intersects(this.Bounds))
+                    if (!ch.Bounds.Intersects(Bounds))
                     {
                         continue;
                     }
 
-                    if(ch==this)
+                    if (ch == this)
                     {
                         continue;
                     }
 
                     // uh oh, this chunk intersects another chunk! bail!
                     Console.WriteLine("Chunk intersected another chunk at " + Bounds);
-                    this.Destroy();
-                }   
-           }
+                    Destroy();
+                }
+            }
 
             _coords = pos;
 
