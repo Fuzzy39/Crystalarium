@@ -9,7 +9,7 @@ namespace CrystalCore.Model.Communication
 {
     internal class CASignal : Signal
     {
-        public CASignal(Grid g, Point location, Port transmitter, int value) : base(g, location, transmitter, value)
+        public CASignal(Grid g, Port transmitter, int value) : base(g, transmitter, value)
         {
         }
 

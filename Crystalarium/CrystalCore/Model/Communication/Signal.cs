@@ -19,7 +19,7 @@ namespace CrystalCore.Model.Communication
         public Port End { get { return _end; } }
 
 
-        public Signal(Grid g, Point location, Port transmitter, int value) : base(g, new Rectangle(location, new Point(1)))
+        public Signal(Grid g, Port transmitter, int value) : base(g, new Rectangle(transmitter.Location, new Point(1)))
         {
 
             _start = transmitter;

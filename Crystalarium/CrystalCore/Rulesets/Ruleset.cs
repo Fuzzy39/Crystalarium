@@ -62,6 +62,6 @@ namespace CrystalCore.Rulesets
             }
             return null;
        }
-
+  
     }
 }

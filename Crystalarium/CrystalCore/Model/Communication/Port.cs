@@ -11,11 +11,12 @@ namespace CrystalCore.Model.Communication
     {
         inactive,
         receiving,
-        transmitting
+        transmitting,
+        transceiving
     }
 
 
-    internal class Port
+    internal abstract class Port
     {
         // if only, if only...
         // if only I could spell.
@@ -41,8 +42,8 @@ namespace CrystalCore.Model.Communication
         private int _threshold; // the value required for this port to be activated.
 
         // current state.
-        private PortStatus _status; // the status this port is in.
-        private Signal _boundTo; // the signal this port is bound to.
+        protected PortStatus _status; // the status this port is in.
+        //private Signal _boundTo; // the signal this port is bound to.
 
 
         public CompassPoint Facing
@@ -66,41 +67,13 @@ namespace CrystalCore.Model.Communication
             get => _status;
         }
 
-        public Signal Binder
+        // returns true if this port is receiving a signal and its value is above the port's threshold.
+        public abstract bool IsActive
         {
-            get => _boundTo;
+            get;
         }
 
-        public bool IsBinded
-        {
-            get => _boundTo != null;
-        }
 
-        public bool IsActive
-        {
-            get
-            {
-                if (!IsBinded)
-                {
-                    return false;
-                }
-
-                return _boundTo.Value >= _threshold;
-            }
-        }
-
-        public int Value
-        {
-            get
-            {
-                if (!IsBinded)
-                {
-                    return 0;
-                }
-
-                return _boundTo.Value;
-            }
-        }
 
         public CompassPoint AbsoluteFacing
         {
@@ -170,84 +143,22 @@ namespace CrystalCore.Model.Communication
 
             // defaults
             _threshold = 1;
-            _boundTo = null;
             _status = PortStatus.inactive;
 
 
         }
 
         // create and transmit a signal. Returns weather it successfully has done so.
+        public abstract bool Transmit(int value);
 
-        public bool Transmit(int value)
-        {
-            if (Status == PortStatus.receiving)
-            {
-                // it is not possible to transmit if we are reveiving.
-                return false;
+        // receive a signal. Returns weather it successfully has done so.
+        public abstract bool Receive(Signal s);
 
-            }
-
-            if (Status == PortStatus.transmitting)
-            {
-                // we may, however, overpower our own transmissions.
-                if (value <= _boundTo.Value)
-                {
-                    return false;
-                }
-
-                Stop();
-            }
-
-            // something like this:
-            Signal s = new Signal();
-            _boundTo = s;
-            _status = PortStatus.transmitting;
-            return true;
-
-        }
-
-        public bool Transmit()
-        {
-            return Transmit(_threshold);
-        }
-
-
-        public bool Receive(Signal s)
-        {
-            // if nothing else, by the end of this, I'll be able to spell receive.
-            if (Status != PortStatus.inactive)
-            {
-                return false;
-            }
-
-            _boundTo = s;
-            _status = PortStatus.receiving;
-            return true;
-        }
 
         // stop transmitting or receiving.
-        public void Stop()
-        {
-            if (Status == PortStatus.receiving)
-            {
-                _boundTo = null;
-                _status = PortStatus.inactive;
-                return;
-            }
-
-            if (Status == PortStatus.transmitting)
-            {
-                // this is the only time a port commands a signal. signals require a transmitter to exist.
-                _boundTo.Destroy();
-                _boundTo = null;
-                _status = PortStatus.inactive;
-                return;
-            }
-
-        }
-
-
-
+        public abstract void StopTransmitting();
+        public abstract void StopReceiving();
+       
 
     }
 }
