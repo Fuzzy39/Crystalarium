@@ -243,6 +243,20 @@ namespace CrystalCore.Util
 
             return p;
         }
+
+        public static bool IsDiagonal(this CompassPoint cp)
+        {
+            // by golly, this is wizardry, ain't it?
+            // even CompassPoints are Orthagonal, odds are diagonal.
+            if (((int)cp) % 2 == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
+
+ 
 
 }

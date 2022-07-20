@@ -7,14 +7,7 @@ using System.Text;
 
 namespace CrystalCore.Model.Communication
 {
-    internal enum PortStatus
-    {
-        inactive,
-        receiving,
-        transmitting,
-        transceiving
-    }
-
+   
 
     internal abstract class Port
     {
@@ -113,14 +106,14 @@ namespace CrystalCore.Model.Communication
                         break;
                     case Direction.down:
                         x += ID;
-                        y += _parent.Bounds.Height;
+                        y += _parent.Bounds.Height-1;
                         break;
                     case Direction.left:
                         y += ID;
                         break;
                     case Direction.right:
                         y += ID;
-                        y += _parent.Bounds.Width;
+                        y += _parent.Bounds.Width-1;
                         break;
                 }
 

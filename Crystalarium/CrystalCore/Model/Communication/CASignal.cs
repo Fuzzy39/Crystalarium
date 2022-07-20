@@ -11,10 +11,16 @@ namespace CrystalCore.Model.Communication
     {
         public CASignal(Grid g, Port transmitter, int value) : base(g, transmitter, value)
         {
+
+            //Console.WriteLine("New Signal made, comming from Agent " + transmitter.Parent);
         }
 
         public override void Update()
         {
+            if(_end!=null)
+            {
+                return;
+            }
 
             Point portLoc = _start.Location + _start.AbsoluteFacing.ToPoint();
 
@@ -33,6 +39,21 @@ namespace CrystalCore.Model.Communication
             }
 
             // however we get ports...
+            List<Port> potentialMatches = a.Ports[(int)portFacing];
+
+            foreach(Port p in potentialMatches)
+            {
+                if(p.Location.Equals(portLoc))
+                {
+                    // hooray! We've succeeded!
+                   
+                    _end = p;
+                    Console.WriteLine("Signal Connected from Agent " + _start.Parent + " to " + _end.Parent);
+                    return;
+                }
+            }
+
+            throw new InvalidOperationException("No port to do anything! It's Borked, fool!");
 
         }
     }

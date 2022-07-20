@@ -6,6 +6,12 @@ using System.Text;
 
 namespace CrystalCore.Model.Communication
 {
+
+    public enum SignalType
+    {
+        CASignal
+    }
+
     internal abstract class Signal : ChunkMember
     {
 
@@ -24,12 +30,13 @@ namespace CrystalCore.Model.Communication
 
             _start = transmitter;
             _value = value;
+            Update();
         }
 
         public override void Destroy()
         {
-            _start.Stop();
-            _end.Stop();
+            _start.StopTransmitting();
+            _end.StopReceiving();
             base.Destroy();
 
         }

@@ -78,7 +78,7 @@ namespace CrystalCore.View.AgentRender
                 return false;
             if (this.Facing != objGhost.Facing)
                 return false;
-            //if (this.type != objGhost.type)
+            if (this.type != objGhost.type)
                 return false;
             return true;
         }

@@ -151,8 +151,15 @@ namespace CrystalCore.View
         {
             
 
-            foreach (Agent a in ch.Children)
+            foreach (ChunkMember cm in ch.Children)
             {
+                if(!(cm is Agent))
+                {
+                    continue;
+                }
+
+                Agent a = (Agent)cm;
+
                 bool hasRenderer = false;
                 foreach (AgentView ar in _agentRenderers)
                 {

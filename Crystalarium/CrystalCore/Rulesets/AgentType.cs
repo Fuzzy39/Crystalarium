@@ -34,7 +34,7 @@ namespace CrystalCore.Rulesets
         // Properties
         public Ruleset Ruleset
         {
-            get => Ruleset;
+            get => _ruleset;
         }
 
         public AgentViewTemplate RenderConfig

@@ -73,7 +73,7 @@ namespace CrystalCore.Model
             this.sim = sim;
             sim.addGrid(this);
             _agents = new List<Agent>();
-          
+            _signals = new List<Signal>();
 
             // perform first time setup.
             Reset();

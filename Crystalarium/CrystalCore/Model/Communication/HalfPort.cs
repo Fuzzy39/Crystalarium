@@ -95,7 +95,7 @@ namespace CrystalCore.Model.Communication
             }
 
             // something like this:
-            Signal s = new Signal(Parent.Grid, this, value);
+            Signal s = Parent.Type.Ruleset.CreateSignal(Parent.Grid, this, value);
             _boundTo = s;
             _status = PortStatus.transmitting;
             return true;

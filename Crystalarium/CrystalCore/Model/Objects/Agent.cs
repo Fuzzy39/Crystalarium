@@ -1,4 +1,5 @@
-﻿using CrystalCore.Rulesets;
+﻿using CrystalCore.Model.Communication;
+using CrystalCore.Rulesets;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
@@ -16,6 +17,8 @@ namespace CrystalCore.Model.Objects
         private Direction _facing; // the direction this agent is facing.
 
         private AgentType _type;
+
+        private List<List<Port>> _ports; // this agent's ports.
 
         public Direction Facing
         {
@@ -43,7 +46,7 @@ namespace CrystalCore.Model.Objects
             get => _type;
         }
 
-
+        internal List<List<Port>> Ports { get { return _ports; }  }
 
         // SHOULD BE INTERNAL
         internal Agent(Grid g, Rectangle bounds, AgentType t) : base(g, bounds)
@@ -56,14 +59,94 @@ namespace CrystalCore.Model.Objects
                 throw new InvalidOperationException("This Agent: " + this + " overlaps another agent.");
             }
 
+            // if diagonal signals are allowed, then agents should not be bigger than 1 by 1
+            if(Type.Ruleset.DiagonalSignalsAllowed && bounds.Size.X*bounds.Size.Y >1)
+            {
+                throw new InvalidOperationException("The Ruleset '"+Type.Ruleset.Name+"' has specified that diagonal signals are allowed, which requires that no agents are greater than 1 by 1 in size.");
+            }
+
+
+            // create ports (what a helpful comment)
+            CreatePorts();
+
             g.AddAgent(this);
+
+          
+
+            // test code
+            Ports[(int)CompassPoint.north][0].Transmit(1);
+
         }
 
         internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : this(g, bounds, t)
         {
-
-            _facing = facing;
+            if (!Type.Ruleset.RotateLock)
+            {
+                _facing = facing;
+                return;
+            }
+            Console.WriteLine("Warning: Ruleset '" + Type.Ruleset.Name + "' has Rotation Lock enabled, and Agents cannot be set facing any other direction than up. " +
+                "\n    Agent " + this.ToString() + " has attempted to face: " + facing);
         }
+
+
+        private void CreatePorts()
+        {
+            _ports = new List<List<Port>>();
+
+            // should always be 8, but who knows, maybe they'll invent more directions on a compass.
+            int length = Enum.GetNames(typeof(CompassPoint)).Length;
+            for (int i=0; i<length; i++)
+            {
+                List<Port> portList = new List<Port>();
+                
+
+                // add relevant ports to this list.
+                CompassPoint facing = (CompassPoint)i;
+
+                if(facing.IsDiagonal())
+                {
+                    _ports.Add(portList);
+
+                    if (!Type.Ruleset.DiagonalSignalsAllowed)
+                    {
+                        continue;
+                    }
+
+                    // create a diagonal port.
+                    portList.Add(Type.Ruleset.CreatePort(facing, 0, this));
+                  ;
+                    continue;
+                }
+
+                portList = CreateOrthagonalPorts(facing, portList);
+                _ports.Add(portList);
+            }
+        }
+
+
+        private List<Port> CreateOrthagonalPorts(CompassPoint facing, List<Port> ports)
+        {
+            // create orthagonal ports. Vertical first, diagonal after.
+
+            if (((Direction)facing.ToDirection()).IsVertical())
+            {
+                for (int j = 0; j < Bounds.Size.X; j++)
+                {
+                    ports.Add(Type.Ruleset.CreatePort(facing, j, this));
+                }
+                return ports;
+            }
+
+            for (int j = 0; j < Bounds.Size.Y; j++)
+            {
+                ports.Add(Type.Ruleset.CreatePort(facing, j, this));
+            }
+
+            return ports;
+
+        }
+
 
 
         private bool IsRectangle()
@@ -73,6 +156,12 @@ namespace CrystalCore.Model.Objects
 
         public void Rotate(RotationalDirection d)
         {
+            if(Type.Ruleset.RotateLock)
+            {
+                Console.WriteLine("Warning: Ruleset '" + Type.Ruleset.Name + "' has Rotation Lock enabled, and Agents cannot be set facing any other direction than up. " +
+               "\n    Agent '" + this.ToString() + "' has attempted to rotate " + d+".");
+                return;
+            }
             if (IsRectangle())
             {
                 Facing = Facing.Opposite();

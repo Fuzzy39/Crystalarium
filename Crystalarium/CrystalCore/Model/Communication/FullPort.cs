@@ -83,7 +83,7 @@ namespace CrystalCore.Model.Communication
             }
 
             // otherwise, start to transmit.
-            Signal s = new Signal(Parent.Grid, this, value);
+            Signal s = Parent.Type.Ruleset.CreateSignal(Parent.Grid, this, value);
             _sending = s;
 
 
