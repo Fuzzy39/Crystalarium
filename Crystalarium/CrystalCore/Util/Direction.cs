@@ -182,6 +182,15 @@ namespace CrystalCore.Util
 
         }
 
+        public static CompassPoint Opposite(this CompassPoint cp)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                cp = cp.Rotate(RotationalDirection.clockwise);
+            }
+            return cp;
+        }
+
 
         public static Direction? ToDirection(this CompassPoint p)
         {

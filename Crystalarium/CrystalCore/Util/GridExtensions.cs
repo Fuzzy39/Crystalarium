@@ -134,6 +134,31 @@ namespace CrystalCore.Util
             return toReturn;
         }
 
+        public static void ExpandToFit(this Grid g, Rectangle rect)
+        {
+            // First: which way to expand?
+            while(rect.Y < g.Bounds.Y)
+            {
+                g.ExpandGrid(Direction.up);
+            }
+
+            while (rect.X < g.Bounds.X)
+            {
+                g.ExpandGrid(Direction.left);
+            }
+
+            while (rect.Right > g.Bounds.Right)
+            {
+                g.ExpandGrid(Direction.right);
+            }
+
+            while (rect.Bottom > g.Bounds.Bottom)
+            {
+                g.ExpandGrid(Direction.down);
+            }
+
+        }
+
 
     }
 

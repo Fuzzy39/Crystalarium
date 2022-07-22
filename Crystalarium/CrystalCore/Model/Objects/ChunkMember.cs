@@ -29,6 +29,20 @@ namespace CrystalCore.Model.Objects
             get => _chunksWithin;
         }
 
+
+        public override Rectangle Bounds
+        {
+            get => base.Bounds;
+            protected set 
+            {
+
+
+                base.Bounds = value;
+                ResetChunksWithin();
+            }
+        }
+
+
         public ChunkMember(Grid g, Rectangle bounds) : base(g, bounds)
         {
             // since this ChunkMember exists purely on the chunk grid, it cannot exist outside of it.
@@ -74,6 +88,30 @@ namespace CrystalCore.Model.Objects
             base.Destroy();
         }
 
+        private void ResetChunksWithin()
+        {
+            // this method rectifies chunk memberships.
+            // good if a chunkmember gets resized or moved.
+            // kinda hacky.
+
+            //_parentChunk.Children.Remove(this);
+            //_parentChunk = _grid.getChunkAtCoords(Bounds.Location);
+            //_parentChunk.Children.Add(this);
+
+            foreach (Chunk ch in _chunksWithin)
+            {
+                ch.MembersWithin.Remove(this);
+            }
+
+            _chunksWithin.Clear();
+            _chunksWithin = SetChunksWithin();
+
+            foreach (Chunk ch in _chunksWithin)
+            {
+                ch.MembersWithin.Add(this);
+            }
+        }
+
 
         public override string ToString()
         {
@@ -85,7 +123,7 @@ namespace CrystalCore.Model.Objects
             // prune off the last comma, if required.
             within = within.Length>1 ? within.Substring(0, within.Length - 2): "";
 
-            return "ChunkMember: { Bounds: " + _bounds + ", Parent: "+_parentChunk+", Intersecting Chunks: {"+within+"} }";
+            return "ChunkMember: { Bounds: " + Bounds + ", Parent: "+_parentChunk+", Intersecting Chunks: {"+within+"} }";
         }
     }
 }

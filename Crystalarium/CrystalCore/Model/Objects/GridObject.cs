@@ -12,14 +12,14 @@ namespace CrystalCore.Model.Objects
          * A GridObject represents an object on the grid. This could include many things, like chunks and agents.
          */
 
-        protected Rectangle _bounds;// the position and size in tile space where this GridObject is located.
+        private Rectangle _bounds;// the position and size in tile space where this GridObject is located.
         protected Grid _grid; // the grid that this object belongs to.
 
 
-        public Rectangle Bounds
+        public virtual Rectangle Bounds
         {
             get => _bounds;
-            // I'm not sure if setting this is a good idea, so, I won't allow it for now.
+            protected set => _bounds = value;
         }
 
         public Grid Grid

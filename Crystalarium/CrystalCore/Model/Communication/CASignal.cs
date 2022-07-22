@@ -13,6 +13,50 @@ namespace CrystalCore.Model.Communication
         {
 
             //Console.WriteLine("New Signal made, comming from Agent " + transmitter.Parent);
+
+            // this will result in a rectangle with negative size?
+            // let's see how well that will go.
+            Point loc = Bounds.Location;
+
+            switch(_start.AbsoluteFacing)
+            {
+                case CompassPoint.north:
+                case CompassPoint.northeast:
+                    loc.Y -= 1;
+                    break;
+                case CompassPoint.northwest:
+                    loc.X -= 1;
+                    loc.Y -= 1;
+                    break;
+                case CompassPoint.west:
+                case CompassPoint.southwest:
+                    loc.X -= 1;
+                    break;
+            }
+
+            Point size = Bounds.Size;
+
+            if(_start.AbsoluteFacing.IsDiagonal())
+            {
+                size = new Point(2);
+            }
+            else if( ((Direction)_start.AbsoluteFacing.ToDirection()).IsVertical())
+            {
+                size.Y = 2;
+            }
+            else
+            {
+                size.X = 2;
+            }
+
+            Rectangle bounds = new Rectangle(loc, size);
+            if(!Grid.Bounds.Contains(bounds))
+            {
+                Grid.ExpandToFit(bounds);
+            }
+            Bounds = bounds;
+
+            
         }
 
         public override void Update()
@@ -32,29 +76,23 @@ namespace CrystalCore.Model.Communication
                 return;
             }
 
-            CompassPoint portFacing = _start.Facing;
-            for (int i = 0; i < 4; i++)
-            {
-                portFacing = portFacing.Rotate(RotationalDirection.clockwise);
-            }
+            CompassPoint portFacing = _start.AbsoluteFacing.Opposite();
+
+            Port p = FindPort(a, portLoc, portFacing);
 
             // however we get ports...
-            List<Port> potentialMatches = a.Ports[(int)portFacing];
+           
+            _end = p;
+            p.Receive(this);
 
-            foreach(Port p in potentialMatches)
-            {
-                if(p.Location.Equals(portLoc))
-                {
-                    // hooray! We've succeeded!
-                   
-                    _end = p;
-                    Console.WriteLine("Signal Connected from Agent " + _start.Parent + " to " + _end.Parent);
-                    return;
-                }
-            }
-
-            throw new InvalidOperationException("No port to do anything! It's Borked, fool!");
+            Console.WriteLine("Signal Connected!");
+            Console.WriteLine("From: "+_start);
+            Console.WriteLine("To: "+ _end);
+         
+            return;
 
         }
+
+       
     }
 }

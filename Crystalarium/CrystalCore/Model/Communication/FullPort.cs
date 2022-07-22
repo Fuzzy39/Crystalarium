@@ -32,6 +32,14 @@ namespace CrystalCore.Model.Communication
             }
         }
 
+        public override int TransmittingValue
+        {
+            get
+            {
+                return _sending==null?0:_sending.Value;
+            }
+        }
+
         public override bool Receive(Signal s)
         {
 
@@ -60,7 +68,7 @@ namespace CrystalCore.Model.Communication
             {
                 return;
             }
-
+            _receiving.Reset();
             _receiving = null;
 
 

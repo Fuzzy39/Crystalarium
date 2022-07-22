@@ -53,6 +53,13 @@ namespace CrystalCore.Model.Communication
         }
 
 
+        public override int TransmittingValue
+        {
+            get
+            {
+                return Status==PortStatus.transmitting ? _boundTo.Value : 0;
+            }
+        }
 
         public HalfPort(CompassPoint facing, int ID, Agent parent) : base(facing, ID, parent)
         {
@@ -111,6 +118,7 @@ namespace CrystalCore.Model.Communication
             {
                 return;
             }
+            _boundTo.Reset();
             _boundTo = null;
             _status = PortStatus.inactive;
             

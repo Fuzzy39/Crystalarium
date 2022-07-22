@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Objects;
+using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -32,19 +33,58 @@ namespace CrystalCore.Model.Communication
             _value = value;
             Update();
         }
-
+        
+        // this should only be called by Port.StopTransmitting()
         public override void Destroy()
         {
-            _start.StopTransmitting();
-            _end.StopReceiving();
+            if (_end != null)
+            {
+                Console.WriteLine("Signal disconnected by transmitter.");
+                _end.StopReceiving();
+            }
+            
             base.Destroy();
 
         }
 
         public abstract void Update();
 
+        protected Port FindPort(Agent a, Point loc, CompassPoint AbsFacing)
+        {
+            // we need to find a port with the absolute facing matching ours.
+            List<Port> potentialMatches = null;
+            foreach (List<Port> ports in a.Ports)
+            {
+                if (ports.Count > 0)
+                {
+                    if (ports[0].AbsoluteFacing == AbsFacing)
+                    {
+                        potentialMatches = ports;
+                        break;
+                    }
+                }
+            }
+
+            foreach (Port p in potentialMatches)
+            {
+                if (p.Location.Equals(loc))
+                {
+                    // hooray! We've succeeded!
+
+                    return p;
+                }
+            }
+
+            throw new InvalidOperationException("Could not find port facing (Absolute): " + AbsFacing + " on tile " + loc + " in agent " + a + "\nSomething went wrong...");
+        }
 
 
+        public void Reset()
+        {
+            Console.WriteLine("Signal disconnected by receiver.");
+
+            _end = null;
+        }
 
     }
 }

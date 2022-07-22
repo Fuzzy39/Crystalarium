@@ -18,7 +18,7 @@ namespace CrystalCore.Model.Objects
 
         private AgentType _type;
 
-        private List<List<Port>> _ports; // this agent's ports.
+        private List<List<Port>> _ports; // this agent's ports, stored by direction relative to the agent.
 
         public Direction Facing
         {
@@ -73,9 +73,7 @@ namespace CrystalCore.Model.Objects
 
           
 
-            // test code
-            Ports[(int)CompassPoint.north][0].Transmit(1);
-
+           
         }
 
         internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : this(g, bounds, t)
@@ -83,6 +81,9 @@ namespace CrystalCore.Model.Objects
             if (!Type.Ruleset.RotateLock)
             {
                 _facing = facing;
+                // test code
+                Ports[(int)CompassPoint.north][0].Transmit(1);
+
                 return;
             }
             Console.WriteLine("Warning: Ruleset '" + Type.Ruleset.Name + "' has Rotation Lock enabled, and Agents cannot be set facing any other direction than up. " +
@@ -115,7 +116,7 @@ namespace CrystalCore.Model.Objects
 
                     // create a diagonal port.
                     portList.Add(Type.Ruleset.CreatePort(facing, 0, this));
-                  ;
+                  
                     continue;
                 }
 
@@ -125,20 +126,36 @@ namespace CrystalCore.Model.Objects
         }
 
 
+        public override void Destroy()
+        {
+            foreach(List<Port> ports in _ports)
+            {
+                foreach(Port port in ports)
+                {
+                    port.StopTransmitting();
+                    port.StopReceiving();
+                   
+                }
+            }
+
+            base.Destroy();
+        }
+
+        // facing is direction of ports to be made relative to upwards face of agent
         private List<Port> CreateOrthagonalPorts(CompassPoint facing, List<Port> ports)
         {
             // create orthagonal ports. Vertical first, diagonal after.
 
             if (((Direction)facing.ToDirection()).IsVertical())
             {
-                for (int j = 0; j < Bounds.Size.X; j++)
+                for (int j = 0; j < Type.Size.X; j++)
                 {
                     ports.Add(Type.Ruleset.CreatePort(facing, j, this));
                 }
                 return ports;
             }
 
-            for (int j = 0; j < Bounds.Size.Y; j++)
+            for (int j = 0; j < Type.Size.Y; j++)
             {
                 ports.Add(Type.Ruleset.CreatePort(facing, j, this));
             }
@@ -151,7 +168,7 @@ namespace CrystalCore.Model.Objects
 
         private bool IsRectangle()
         {
-            return _bounds.Width != _bounds.Height;
+            return Bounds.Width != Bounds.Height;
         }
 
         public void Rotate(RotationalDirection d)
@@ -162,6 +179,9 @@ namespace CrystalCore.Model.Objects
                "\n    Agent '" + this.ToString() + "' has attempted to rotate " + d+".");
                 return;
             }
+
+
+
             if (IsRectangle())
             {
                 Facing = Facing.Opposite();
@@ -170,8 +190,46 @@ namespace CrystalCore.Model.Objects
             }
 
             Facing = Facing.Rotate(d);
-            Grid.UpdateSignals(ChunksWithin);
+            RecombobulateSignals();
 
+
+        }
+
+        // how often do you get to type recombobulate? not often!
+        private void RecombobulateSignals()
+        {
+            // stop transmitting and receiving signals, then 'reboot'
+            foreach( List<Port> ports in _ports)
+            {
+                foreach(Port p in ports)
+                {
+                    if (p.Status == PortStatus.transmitting || p.Status == PortStatus.transceiving)
+                    {
+                        int v = p.TransmittingValue;
+                        p.StopTransmitting();
+                        p.Transmit(v);
+                    }
+
+                    p.StopReceiving();
+                    
+                }
+            }
+
+            Grid.UpdateSignals(ChunksWithin);
+        }
+
+        public override string ToString()
+        {
+            return "Agent { Type:\"" + Type.Name + "\", Location:" + Bounds.Location + ", Facing:" + Facing + " }";
+        }
+
+        public void PortReport()
+        {
+            Console.WriteLine(ToString());
+            for (int i = 0; i<_ports.Count; i++)
+            {
+                Console.WriteLine(((CompassPoint)i) + ": " + _ports[i].Count);
+            }
         }
 
 

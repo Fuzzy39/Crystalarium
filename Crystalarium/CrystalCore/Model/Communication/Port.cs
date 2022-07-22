@@ -66,6 +66,10 @@ namespace CrystalCore.Model.Communication
             get;
         }
 
+        public abstract int TransmittingValue
+        {
+            get;
+        }
 
 
         public CompassPoint AbsoluteFacing
@@ -75,8 +79,8 @@ namespace CrystalCore.Model.Communication
                 CompassPoint toReturn = _facing;
                 for (Direction i = _parent.Facing; i != Direction.up; i = i.Rotate(RotationalDirection.clockwise))
                 {
-                    toReturn = toReturn.Rotate(RotationalDirection.clockwise);
-                    toReturn = toReturn.Rotate(RotationalDirection.clockwise);
+                    toReturn = toReturn.Rotate(RotationalDirection.counterclockwise);
+                    toReturn = toReturn.Rotate(RotationalDirection.counterclockwise);
                 }
                 return toReturn;
             }
@@ -97,26 +101,10 @@ namespace CrystalCore.Model.Communication
 
                 Direction facing = (Direction)d;
 
-                int x = anchor.X;
-                int y = anchor.Y;
-                switch (facing)
-                {
-                    case Direction.up:
-                        x += ID;
-                        break;
-                    case Direction.down:
-                        x += ID;
-                        y += _parent.Bounds.Height-1;
-                        break;
-                    case Direction.left:
-                        y += ID;
-                        break;
-                    case Direction.right:
-                        y += ID;
-                        y += _parent.Bounds.Width-1;
-                        break;
-                }
 
+
+                int x = anchor.X+DetermineRelX(facing);
+                int y = anchor.Y+DetermineRelY(facing);
                 return new Point(x, y);
 
 
@@ -125,6 +113,55 @@ namespace CrystalCore.Model.Communication
 
 
             }
+        }
+
+        private int DetermineRelX(Direction facing)
+        {
+            // facing is absolute here.
+            int x = 0;
+            if (facing.IsVertical())
+            {
+                if (_parent.Facing == Direction.up || _parent.Facing == Direction.left)
+                {
+                    x += ID;
+                }
+                else
+                {
+                    x += _parent.Bounds.Width - 1 - ID;
+                }
+            }
+
+            if(facing == Direction.right)
+            {
+               
+               x += _parent.Bounds.Width - 1;
+            }
+
+            return x;
+        }
+
+
+        private int DetermineRelY(Direction facing)
+        {
+            int y = 0;
+            if (facing.IsHorizontal())
+            {
+                if (_parent.Facing == Direction.up || _parent.Facing == Direction.right)
+                {
+                    y += ID;
+                }
+                else
+                {
+                    y += _parent.Bounds.Height - 1 - ID;
+                }
+            }
+
+            if(facing == Direction.down)
+            {
+                y += _parent.Bounds.Height - 1;
+            }
+
+            return y;
         }
 
 
@@ -151,7 +188,14 @@ namespace CrystalCore.Model.Communication
         // stop transmitting or receiving.
         public abstract void StopTransmitting();
         public abstract void StopReceiving();
-       
+
+
+        // tostring
+        public override string ToString()
+        {
+            return "Port: { Location:"+Location+" ID: " + ID + ", Facing: " + Facing + " (ABS):" + AbsoluteFacing + "}";
+        }
+
 
     }
 }
