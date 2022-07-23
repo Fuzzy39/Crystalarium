@@ -31,7 +31,7 @@ namespace Crystalarium
 
         private CrystalCore.Engine engine; // the 'engine'
 
-        private const int BUILD = 540; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 541; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
@@ -132,12 +132,12 @@ namespace Crystalarium
             t.RenderConfig = baseConfig;
             t.RenderConfig.Color = Color.LimeGreen;
 
-            //ruleset.DiagonalSignalsAllowed = true;
+            ruleset.PortChannelMode = CrystalCore.Model.Communication.PortChannelMode.halfDuplex;
 
             // create a test grid, and do some test things to it.
             Grid = engine.addGrid();
             //g.ExpandGrid(Direction.right);
-
+           
 
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;

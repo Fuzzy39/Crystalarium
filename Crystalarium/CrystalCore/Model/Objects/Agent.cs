@@ -183,7 +183,7 @@ namespace CrystalCore.Model.Objects
             if (IsRectangle())
             {
                 Facing = Facing.Opposite();
-                Grid.UpdateSignals(ChunksWithin);
+                RecombobulateSignals();
                 return;
             }
 
