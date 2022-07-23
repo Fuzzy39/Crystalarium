@@ -47,11 +47,12 @@ namespace CrystalCore.View
         // Chunk Renderer related
         private ChunkViewTemplate _renderConfig; // how are we rendering chunks?
         private bool _doAgentRendering; // whether we render agents.
-
+      
 
    
 
         public bool AllowMultipleGhosts { get; set; }
+        public bool DoDebugPortRendering{ get; set; }
 
 
         // Properties
@@ -138,6 +139,7 @@ namespace CrystalCore.View
            
 
             AllowMultipleGhosts = false;
+            DoDebugPortRendering = false;
 
 
         }

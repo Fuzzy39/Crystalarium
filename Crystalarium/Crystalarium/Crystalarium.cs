@@ -31,7 +31,7 @@ namespace Crystalarium
 
         private CrystalCore.Engine engine; // the 'engine'
 
-        private const int BUILD = 532; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 540; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
@@ -132,7 +132,7 @@ namespace Crystalarium
             t.RenderConfig = baseConfig;
             t.RenderConfig.Color = Color.LimeGreen;
 
-
+            //ruleset.DiagonalSignalsAllowed = true;
 
             // create a test grid, and do some test things to it.
             Grid = engine.addGrid();
@@ -159,6 +159,7 @@ namespace Crystalarium
 
             // prevent the camera from leaving the world.
             view.bindCamera();
+            view.DoDebugPortRendering = true;
             //view.Camera.Position = g.center;
 
 

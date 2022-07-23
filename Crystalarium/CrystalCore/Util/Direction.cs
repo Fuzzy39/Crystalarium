@@ -235,11 +235,11 @@ namespace CrystalCore.Util
                     break;
                 case CompassPoint.southeast:
                     p.Y = 1;
-                    p.X = -1;
+                    p.X = 1;
                     break;
                 case CompassPoint.southwest:
                     p.Y = 1;
-                    p.X = 1;
+                    p.X = -1;
                     break;
                 case CompassPoint.west:
                     p.X = -1;

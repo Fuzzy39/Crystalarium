@@ -96,7 +96,21 @@ namespace CrystalCore.Model.Communication
                 Direction? d = AbsoluteFacing.ToDirection();
                 if (d == null)
                 {
-                    return anchor; // diagonal ports means that the agent is 1x1.
+                    //return anchor; // diagonal ports means that the agent is 1x1.
+                    switch (AbsoluteFacing)
+                    {
+                        case CompassPoint.northwest:
+                            return anchor;
+                        case CompassPoint.southwest:
+                            return anchor + new Point(0, _parent.Bounds.Height - 1);
+                        case CompassPoint.northeast:
+                            return anchor + new Point( _parent.Bounds.Width - 1, 0);
+                        case CompassPoint.southeast:
+                            return anchor - new Point(1) + _parent.Bounds.Size;
+                    
+                    
+                    }
+
                 }
 
                 Direction facing = (Direction)d;

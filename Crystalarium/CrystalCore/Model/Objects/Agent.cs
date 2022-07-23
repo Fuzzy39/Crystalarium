@@ -49,10 +49,21 @@ namespace CrystalCore.Model.Objects
         internal List<List<Port>> Ports { get { return _ports; }  }
 
         // SHOULD BE INTERNAL
-        internal Agent(Grid g, Rectangle bounds, AgentType t) : base(g, bounds)
+        internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : base(g, bounds)
         {
-            _facing = Direction.up;
+
+
             _type = t;
+
+            if (Type.Ruleset.RotateLock)
+            {
+                _facing = Direction.up;
+            }
+            else
+            {
+                _facing = facing;
+            }
+
 
             if (g.AgentsWithin(bounds).Count > 1) // it will always be at least 1, because we are in our bounds.
             {
@@ -71,23 +82,10 @@ namespace CrystalCore.Model.Objects
 
             g.AddAgent(this);
 
-          
+            // test code
+            Ports[(int)CompassPoint.north][0].Transmit(1);
 
-           
-        }
 
-        internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : this(g, bounds, t)
-        {
-            if (!Type.Ruleset.RotateLock)
-            {
-                _facing = facing;
-                // test code
-                Ports[(int)CompassPoint.north][0].Transmit(1);
-
-                return;
-            }
-            Console.WriteLine("Warning: Ruleset '" + Type.Ruleset.Name + "' has Rotation Lock enabled, and Agents cannot be set facing any other direction than up. " +
-                "\n    Agent " + this.ToString() + " has attempted to face: " + facing);
         }
 
 

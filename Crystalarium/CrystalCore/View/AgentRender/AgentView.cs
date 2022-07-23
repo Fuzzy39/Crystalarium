@@ -1,4 +1,5 @@
-﻿using CrystalCore.Model.Objects;
+﻿using CrystalCore.Model.Communication;
+using CrystalCore.Model.Objects;
 using CrystalCore.Util;
 using CrystalCore.View.ChunkRender;
 using Microsoft.Xna.Framework;
@@ -107,6 +108,11 @@ namespace CrystalCore.View.AgentRender
 
             // render the Agent.
             renderTarget.Camera.RenderTexture(sb, _defaultTexture, ShrinkBorders(), _color, ((Agent)RenderData).Facing);
+
+            if(renderTarget.DoDebugPortRendering)
+            {
+                RenderDebugPorts(sb);
+            }
             
         }
 
@@ -128,6 +134,73 @@ namespace CrystalCore.View.AgentRender
 
 
             renderTarget.Camera.RenderTexture(sb, _background, bounds, _BGcolor, facing);
+        }
+
+        private void RenderDebugPorts(SpriteBatch sb)
+        {
+            foreach (List < Port > ports in ((Agent)RenderData).Ports)
+            {
+                foreach(Port port in ports)
+                {
+
+                    RectangleF bounds= new RectangleF();
+
+                    float width = .7f; // the amount of tile across
+                    float thickness = .15f; // the amount of tile through
+                    switch (port.AbsoluteFacing)
+                    {
+                        case CompassPoint.north:
+                            bounds = new RectangleF((1-width)/2f, 0, width, thickness);
+                            break;
+                        case CompassPoint.northeast:
+                            bounds = new RectangleF( 1-thickness, 0, thickness, thickness);
+                            break;
+                        case CompassPoint.east:
+                            bounds = new RectangleF(1-thickness, (1 - width) / 2f, thickness, width);
+                            break;
+                        case CompassPoint.southeast:
+                            bounds = new RectangleF(1 - thickness, 1 - thickness, thickness, thickness);
+                            break;
+                        case CompassPoint.south:
+                            bounds = new RectangleF((1 - width) / 2f, 1-thickness, width, thickness);
+                            break;  
+                        case CompassPoint.southwest:
+                            bounds = new RectangleF(0, 1 - thickness, thickness, thickness);
+                            break;
+                        case CompassPoint.west:
+                            bounds = new RectangleF(0, (1 - width) / 2f, thickness, width);
+                            break;
+                        case CompassPoint.northwest:
+                            bounds = new RectangleF(0, 0, thickness, thickness);
+                            break;
+
+
+                    }
+
+                    
+                    bounds = new RectangleF(bounds.Location + port.Location.ToVector2(), bounds.Size);
+
+                    Color c = new Color();
+                    switch(port.Status)
+                    {
+                        case PortStatus.inactive:
+                            c = Color.DimGray;
+                            break;
+                        case PortStatus.receiving:
+                            c = Color.Blue;
+                            break;
+                        case PortStatus.transmitting:
+                            c = Color.Red;
+                            break;
+                        case PortStatus.transceiving:
+                            c = Color.Purple;
+                            break;
+                    }
+
+                    renderTarget.Camera.RenderTexture(sb, _background, bounds, c);
+                }
+            }
+
         }
 
         // get the borders of the background in tiles. fair enough.

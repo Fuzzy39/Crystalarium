@@ -12,10 +12,7 @@ namespace CrystalCore.Model.Communication
         public CASignal(Grid g, Port transmitter, int value) : base(g, transmitter, value)
         {
 
-            //Console.WriteLine("New Signal made, comming from Agent " + transmitter.Parent);
-
-            // this will result in a rectangle with negative size?
-            // let's see how well that will go.
+           // We need to adjust our size to be accurate.
             Point loc = Bounds.Location;
 
             switch(_start.AbsoluteFacing)
