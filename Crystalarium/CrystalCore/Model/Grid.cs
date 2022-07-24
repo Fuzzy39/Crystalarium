@@ -295,7 +295,8 @@ namespace CrystalCore.Model
             // this will update some signals multiple times, but eh...
             foreach (Chunk ch in where)
             {
-                foreach(ChunkMember member in ch.MembersWithin)
+                List<ChunkMember> toUpdate = new List<ChunkMember>(ch.MembersWithin);
+                foreach(ChunkMember member in toUpdate)
                 {
                     if (!(member is Signal))
                     {

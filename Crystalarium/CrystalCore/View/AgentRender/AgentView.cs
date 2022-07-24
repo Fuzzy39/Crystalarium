@@ -111,6 +111,10 @@ namespace CrystalCore.View.AgentRender
 
             if(renderTarget.DoDebugPortRendering)
             {
+                if( _background == null)
+                {
+                    throw new InvalidOperationException("Agent Type " + ((Agent)RenderData).Type.Name + "'s RenderConfig requires a background texture to render debug ports.");
+                }
                 RenderDebugPorts(sb);
             }
             

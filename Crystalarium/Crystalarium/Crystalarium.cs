@@ -13,6 +13,7 @@ using CrystalCore.View;
 using CrystalCore.View.ChunkRender;
 using CrystalCore.Rulesets;
 using CrystalCore.View.AgentRender;
+using CrystalCore.Model.Communication;
 
 namespace Crystalarium
 {
@@ -31,7 +32,7 @@ namespace Crystalarium
 
         private CrystalCore.Engine engine; // the 'engine'
 
-        private const int BUILD = 541; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 551; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
@@ -71,7 +72,8 @@ namespace Crystalarium
 
             // create a ruleset
             ruleset = new Ruleset("test");
-
+            //ruleset.PortChannelMode = PortChannelMode.halfDuplex;
+            ruleset.SignalType = SignalType.Beam;
 
             // create the basics.
             engine = new CrystalCore.Engine(TargetElapsedTime, ruleset);
@@ -132,7 +134,7 @@ namespace Crystalarium
             t.RenderConfig = baseConfig;
             t.RenderConfig.Color = Color.LimeGreen;
 
-            ruleset.PortChannelMode = CrystalCore.Model.Communication.PortChannelMode.halfDuplex;
+         
 
             // create a test grid, and do some test things to it.
             Grid = engine.addGrid();

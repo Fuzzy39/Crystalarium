@@ -101,6 +101,8 @@ namespace CrystalCore.Rulesets
             {
                 case SignalType.CASignal:
                     return new CASignal(g, transmitter, value);
+                case SignalType.Beam:
+                    return new Beam(g, transmitter, value);
             }
 
             throw new InvalidOperationException("Invalid Signal Type: No case to create Signal of type: "+SignalType.ToString());

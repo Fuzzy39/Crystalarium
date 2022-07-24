@@ -82,9 +82,7 @@ namespace CrystalCore.Model.Communication
             _end = p;
             p.Receive(this);
 
-            Console.WriteLine("Signal Connected!");
-            Console.WriteLine("From: "+_start);
-            Console.WriteLine("To: "+ _end);
+         
          
             return;
 

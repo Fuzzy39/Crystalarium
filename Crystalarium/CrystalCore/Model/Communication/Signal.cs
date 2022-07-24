@@ -10,7 +10,8 @@ namespace CrystalCore.Model.Communication
 
     public enum SignalType
     {
-        CASignal
+        CASignal,
+        Beam
     }
 
     internal abstract class Signal : ChunkMember
