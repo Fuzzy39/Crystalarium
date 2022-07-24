@@ -27,6 +27,10 @@ namespace CrystalCore.Rulesets
 
         public SignalType SignalType { get; set; }
 
+        // mildly hacky.
+        public int BeamMinLength { get; set; }
+        public int BeamMaxLength { get; set; }
+
 
         public string Name // the human readable name of this ruleset.
         {
@@ -48,7 +52,11 @@ namespace CrystalCore.Rulesets
             RotateLock = false;
             DiagonalSignalsAllowed = false;
             PortChannelMode = PortChannelMode.fullDuplex;
-            SignalType = SignalType.CASignal;
+            SignalType = SignalType.Beam;
+
+            
+            BeamMinLength = 1; // defaults, infinite, unbounded beams.
+            BeamMaxLength = 0;
 
         }
 
@@ -99,10 +107,10 @@ namespace CrystalCore.Rulesets
         {
             switch(SignalType)
             {
-                case SignalType.CASignal:
-                    return new CASignal(g, transmitter, value);
+               
                 case SignalType.Beam:
-                    return new Beam(g, transmitter, value);
+                    return new Beam(g, transmitter, value, BeamMinLength, BeamMaxLength);
+                   
             }
 
             throw new InvalidOperationException("Invalid Signal Type: No case to create Signal of type: "+SignalType.ToString());

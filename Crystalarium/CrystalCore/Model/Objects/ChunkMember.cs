@@ -37,6 +37,10 @@ namespace CrystalCore.Model.Objects
             {
 
 
+                if(!Grid.Bounds.Contains(value))
+                {
+                    throw new ArgumentException("Bounds: " + value + " Are outside of Grid with bounds: " + Grid.Bounds);
+                }
                 base.Bounds = value;
                 ResetChunksWithin();
             }

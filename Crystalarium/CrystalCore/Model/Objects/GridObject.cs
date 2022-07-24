@@ -19,7 +19,14 @@ namespace CrystalCore.Model.Objects
         public virtual Rectangle Bounds
         {
             get => _bounds;
-            protected set => _bounds = value;
+            protected set
+            {
+                if(value.Width*value.Height==0)
+                {
+                    throw new ArgumentException("GridObjects must have size.");
+                }
+                _bounds = value;
+            }
         }
 
         public Grid Grid

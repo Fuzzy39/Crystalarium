@@ -68,11 +68,13 @@ namespace CrystalCore.Model.Communication
         public int Length { get => _length; }
 
 
-        public Beam(Grid g, Port transmitter, int value) : base(g, transmitter, value)
+        public Beam(Grid g, Port transmitter, int value, int min, int max) : base(g, transmitter, value)
         {
-            //MaxLength = 0;
-            //MinLength = 1;
-            _length = 0;
+             MaxLength =  max;
+             MinLength = min;
+             _length = 0;
+             Update(); // update again, to be safe.
+          
         }
 
         public override void Update()
@@ -80,14 +82,20 @@ namespace CrystalCore.Model.Communication
             // we start looking for targets by getting the point where our min
 
             Point start = _start.Location;
-            Point end = Travel(start, MinLength);
+            Point? p = Travel(start, MinLength);
+            if (p==null)
+            {
+                _length = 0;
+                return;
+            }
+            Point end = (Point)p;
             int length = MinLength;
 
             // start looking for targets, one tile at a time.
-            Point nextEnd = end;
-            while(Grid.Bounds.Contains(nextEnd))
+            Point? nextEnd = end;
+            while(nextEnd!=null)
             {
-                end = nextEnd;
+                end = (Point)nextEnd;
                 List<Agent> targets = Grid.AgentsWithin(new Rectangle(end, new Point(1)));
 
                 // We found a target!
@@ -100,8 +108,7 @@ namespace CrystalCore.Model.Communication
                     _length = length;
 
                     // we need to adjust our bounds now.
-                    Bounds = Util.Util.RectFromPoints(start, end);
-
+                    SetBounds(start, end);
                     return;
 
                 }
@@ -121,10 +128,18 @@ namespace CrystalCore.Model.Communication
             if (length != _length)
             {
                 _length = length;
-                Bounds = Util.Util.RectFromPoints(start, end);
+                SetBounds(start, end);
             }
 
 
+        }
+
+        private void SetBounds(Point start, Point end)
+        {
+            Rectangle r = Util.Util.RectFromPoints(start, end);
+            if (r.Width == 0) { r.Width = 1; }
+            if (r.Height == 0) { r.Height = 1; }
+            Bounds = r;
         }
 
         private void TransmitToTarget(Agent target, Point loc)
@@ -156,7 +171,7 @@ namespace CrystalCore.Model.Communication
         }
 
         
-        private Point Travel(Point start, int distance)
+        private Point? Travel(Point start, int distance)
         {
 
             Point toReturn = start;
@@ -166,7 +181,7 @@ namespace CrystalCore.Model.Communication
                 if (!Grid.Bounds.Contains(p))
                 {
                     // this is the end of the road for us.
-                    return p;
+                    return null;
                 }
                 toReturn= p;
             }

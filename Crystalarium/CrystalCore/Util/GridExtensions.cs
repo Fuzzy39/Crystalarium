@@ -105,6 +105,12 @@ namespace CrystalCore.Util
 
         public static List<Chunk> ChunksInBounds(this Grid g, Rectangle rect)
         {
+            if(!g.Bounds.Contains(rect))
+            {
+                throw new ArgumentException("Grid " + g + " does not contain bounds: " + rect);
+            }
+
+
             List<Chunk> toReturn = new List<Chunk>();
 
             Chunk minimum = g.getChunkAtCoords(rect.Location);

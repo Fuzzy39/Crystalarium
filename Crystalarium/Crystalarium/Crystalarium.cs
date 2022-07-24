@@ -32,7 +32,7 @@ namespace Crystalarium
 
         private CrystalCore.Engine engine; // the 'engine'
 
-        private const int BUILD = 551; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 561; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
@@ -72,7 +72,7 @@ namespace Crystalarium
 
             // create a ruleset
             ruleset = new Ruleset("test");
-            //ruleset.PortChannelMode = PortChannelMode.halfDuplex;
+            ruleset.PortChannelMode = PortChannelMode.halfDuplex;
             ruleset.SignalType = SignalType.Beam;
 
             // create the basics.

@@ -10,7 +10,7 @@ namespace CrystalCore.Model.Communication
 
     public enum SignalType
     {
-        CASignal,
+        
         Beam
     }
 
