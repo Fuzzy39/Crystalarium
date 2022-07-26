@@ -197,6 +197,9 @@ namespace CrystalCore.Model.Objects
         private void RecombobulateSignals()
         {
             // stop transmitting and receiving signals, then 'reboot'
+            List<Chunk> toUpdate = new List<Chunk>();
+            toUpdate.AddRange(ChunksWithin);
+
             foreach( List<Port> ports in _ports)
             {
                 foreach(Port p in ports)
@@ -208,12 +211,16 @@ namespace CrystalCore.Model.Objects
                         p.Transmit(v);
                     }
 
+                    if(p.Status == PortStatus.receiving)
+                    {
+                        toUpdate.AddRange(p.ReceivingSignal.ChunksWithin);
+                    }
                     p.StopReceiving();
                     
                 }
             }
 
-            Grid.UpdateSignals(ChunksWithin);
+            Grid.UpdateSignals(toUpdate);
         }
 
         public override string ToString()

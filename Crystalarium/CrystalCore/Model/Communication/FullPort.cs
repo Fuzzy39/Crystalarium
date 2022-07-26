@@ -12,6 +12,18 @@ namespace CrystalCore.Model.Communication
         private Signal _sending;
         private Signal _receiving;
 
+        public override Signal ReceivingSignal
+        {
+            get
+            {
+                if (Status != PortStatus.receiving & Status !=PortStatus.transceiving)
+                {
+                    throw new InvalidOperationException("This Port is not receiving.");
+                }
+                return _receiving;
+            }
+        }
+
         public FullPort(CompassPoint facing, int ID, Agent parent) : base(facing, ID, parent)
         {
             _sending = null;

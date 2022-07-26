@@ -14,6 +14,8 @@ namespace CrystalCore.Model.Communication
          */
 
         private Signal _boundTo;
+        private int toTransportValue;
+        private bool transportWaiting;
 
 
         public override bool IsActive
@@ -61,6 +63,18 @@ namespace CrystalCore.Model.Communication
             }
         }
 
+        public override Signal ReceivingSignal
+        {
+            get
+            {
+                if(Status!=PortStatus.receiving)
+                {
+                    throw new InvalidOperationException("This Port is not receiving.");
+                }
+                return _boundTo;
+            }
+        }
+
         public HalfPort(CompassPoint facing, int ID, Agent parent) : base(facing, ID, parent)
         {
             _boundTo = null;
@@ -90,6 +104,8 @@ namespace CrystalCore.Model.Communication
             if (Status == PortStatus.receiving)
             {
                 // it is not possible to transmit if we are reveiving.
+                transportWaiting = true;
+                toTransportValue = value;
                 return false;
 
             }
@@ -121,6 +137,11 @@ namespace CrystalCore.Model.Communication
             _boundTo.Reset();
             _boundTo = null;
             _status = PortStatus.inactive;
+            if(transportWaiting)
+            {
+                Transmit(toTransportValue);
+                transportWaiting = false;
+            }
             
         }
 
