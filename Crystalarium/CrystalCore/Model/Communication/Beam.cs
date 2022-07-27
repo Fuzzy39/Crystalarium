@@ -13,6 +13,8 @@ namespace CrystalCore.Model.Communication
         private int _minLength=1;
         private int _length=0;
 
+       
+
         // how long can this beam get? 0 or lower means limitless.
         public int MaxLength 
         {

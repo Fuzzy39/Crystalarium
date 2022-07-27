@@ -32,7 +32,7 @@ namespace Crystalarium
 
         private CrystalCore.Engine engine; // the 'engine'
 
-        private const int BUILD = 564; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 580; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
@@ -107,7 +107,7 @@ namespace Crystalarium
           
             // set the default settings for agent rendering.
             AgentViewTemplate baseConfig = new AgentViewTemplate();
-            baseConfig.AgentBackground = Textures.pixel;
+            //baseConfig.AgentBackground = Textures.pixel;
             baseConfig.BackgroundColor = new Color(50, 50, 50);
             baseConfig.DefaultTexture = Textures.sampleAgent;
             baseConfig.Color = Color.Magenta;
@@ -133,6 +133,10 @@ namespace Crystalarium
             t = ruleset.CreateType("tall", new Point(1, 2));
             t.RenderConfig = baseConfig;
             t.RenderConfig.Color = Color.LimeGreen;
+
+
+            ruleset.BeamRenderConfig.BeamTexture = Textures.pixel;
+            ruleset.BeamRenderConfig.Color = new Color(230, 230, 150);
 
          
 
@@ -161,7 +165,7 @@ namespace Crystalarium
 
             // prevent the camera from leaving the world.
             view.bindCamera();
-            view.DoDebugPortRendering = true;
+            //view.DoDebugPortRendering = true;
             //view.Camera.Position = g.center;
 
 

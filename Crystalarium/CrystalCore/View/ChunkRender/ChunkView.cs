@@ -108,7 +108,7 @@ namespace CrystalCore.View.ChunkRender
          
           
 
-        }
+        }  
 
 
         private Color determineColor()
