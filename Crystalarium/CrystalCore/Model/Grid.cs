@@ -6,6 +6,7 @@ using CrystalCore.Util;
 using System.Diagnostics;
 using CrystalCore.Model.Objects;
 using CrystalCore.Model.Communication;
+using CrystalCore.Rulesets;
 
 namespace CrystalCore.Model
 {
@@ -29,6 +30,8 @@ namespace CrystalCore.Model
 
         private Point chunksOrigin; // the chunk coords where the chunk array, chunks, starts.
         private Point chunksSize; // the size, in chunks, of the grid.
+
+        private Ruleset _ruleset; // the ruleset this grid is following.
 
         public List<List<Chunk>> Chunks
         {
@@ -68,8 +71,31 @@ namespace CrystalCore.Model
         }
 
 
-        internal Grid(SimulationManager sim)
+        public Ruleset Ruleset
         {
+            get => _ruleset;
+            set
+            {
+                if (value == _ruleset)
+                {
+                    return;
+                }
+
+                Reset();
+                
+
+                _ruleset = value;
+            }
+        }
+
+
+        internal Grid(SimulationManager sim, Ruleset r)
+        {
+            if(r == null)
+            {
+                throw new ArgumentNullException("Null Ruleset not viable.");
+            }    
+            _ruleset = r;
             this.sim = sim;
             sim.addGrid(this);
             _agents = new List<Agent>();
@@ -107,6 +133,24 @@ namespace CrystalCore.Model
 
         public void Reset()
         {
+        
+            // Destroy all members of this grid, starting from the most dependent objects to the least.
+            if (_signals != null)
+            {
+                while (_signals.Count > 0)
+                {
+                    _signals[0].Destroy();
+                }
+            }
+
+            if (_agents != null)
+            {
+                while(_agents.Count>0)
+                {
+                    _agents[0].Destroy();
+                }
+            }
+
             // remove any existing chunks.
             if (_chunks != null)
             {
@@ -120,8 +164,9 @@ namespace CrystalCore.Model
 
             }
 
-            _agents.Clear();
-            _signals.Clear();
+
+            //_agents.Clear();
+            //_signals.Clear();
 
             // initialize the chunk array.
             _chunks = new List<List<Chunk>>();

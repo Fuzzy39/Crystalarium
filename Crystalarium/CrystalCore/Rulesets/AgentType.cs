@@ -68,7 +68,13 @@ namespace CrystalCore.Rulesets
         public Agent createAgent(Grid g, Point pos, Direction d)
         {
 
+            if(g.Ruleset!=this.Ruleset)
+            {
+                throw new InvalidOperationException("Cannot add " + Name + " type agent of ruleset " + Ruleset.Name + " to grid of ruleset " + g.Ruleset.Name+".");
+            }
+
             Rectangle bounds =  new Rectangle(pos, GetSize(d));
+
 
             return new Agent(g, bounds,this,d);
         }

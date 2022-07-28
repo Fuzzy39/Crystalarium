@@ -84,7 +84,10 @@ namespace CrystalCore.Model.Objects
 
             // test code
             Ports[(int)CompassPoint.north][0].Transmit(1);
-
+            if(Type.Ruleset.DiagonalSignalsAllowed)
+            {
+                Ports[(int)CompassPoint.southeast][0].Transmit(1);
+            }
 
         }
 

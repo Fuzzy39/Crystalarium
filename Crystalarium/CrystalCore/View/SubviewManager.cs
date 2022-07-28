@@ -94,15 +94,27 @@ namespace CrystalCore.View
             // do the same with agents.
             if (Parent.DoAgentRendering)
             {
+             
+                AddAgents();
+                foreach(AgentView av in _agentRenderers)
+                {
+                    av.RenderBackground(sb);
+                }
+
+
 
                 AddBeams();
                 DrawObjects(sb, _beamRenderers);
 
 
-                AddAgents();
                 DrawObjects(sb, _agentRenderers);
 
-               
+
+             
+
+
+
+
             }
 
             DrawGhosts(sb);
@@ -206,7 +218,7 @@ namespace CrystalCore.View
             foreach (ChunkView chr in _chunkRenderers)
             {
 
-                foreach( ChunkMember cm in ((Chunk)chr.RenderData).Children)
+                foreach( ChunkMember cm in ((Chunk)chr.RenderData).MembersWithin)
                 {
                     if(cm is Beam)
                     {

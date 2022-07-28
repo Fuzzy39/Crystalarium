@@ -17,7 +17,7 @@ namespace CrystalCore
 
         private SimulationManager _sim;
         private Controller _controller;
-        private Ruleset _ruleset;
+       
       
         private List<GridView> _viewports;
         private List<Grid> _grids;
@@ -32,28 +32,10 @@ namespace CrystalCore
             get => _controller;
         }
 
-        public Ruleset Ruleset
-        {
-            get => _ruleset;
-            set
-            {
-                if(value==_ruleset)
-                {
-                    return;
-                }
-
-                foreach(Grid g in _grids)
-                {
-                    g.Reset();
-                }
-
-                _ruleset = value;
-            }
-        }
 
 
 
-        public Engine(TimeSpan timeBetweenFrames, Ruleset initial)
+        public Engine(TimeSpan timeBetweenFrames)
         {
             _sim = new SimulationManager(timeBetweenFrames.TotalSeconds);
             _controller = new Controller();
@@ -75,10 +57,10 @@ namespace CrystalCore
             return new GridView(_viewports, g, location, size, renderConfig);
         }
 
-        public Grid addGrid()
+        public Grid addGrid( Ruleset r)
         {
             
-            _grids.Add(new Grid(Sim));
+            _grids.Add(new Grid(Sim, r));
 
             return _grids[_grids.Count - 1];
         }

@@ -91,6 +91,9 @@ namespace CrystalCore.View.AgentRender
           
         }
 
+
+       
+
         protected override void Render(SpriteBatch sb)
         {
          
@@ -101,10 +104,7 @@ namespace CrystalCore.View.AgentRender
             }
            
             // render the background.
-            if(_background != null)
-            {
-                RenderBackground(sb);
-            }
+            
 
             // render the Agent.
             renderTarget.Camera.RenderTexture(sb, _defaultTexture, ShrinkBorders(), _color, ((Agent)RenderData).Facing);
@@ -121,8 +121,13 @@ namespace CrystalCore.View.AgentRender
         }
 
 
-        private void RenderBackground(SpriteBatch sb)
+        internal void RenderBackground(SpriteBatch sb)
         {
+            if (_background == null)
+            {
+                return;
+            }
+
             RectangleF bounds = new RectangleF(RenderData.Bounds);
             Direction facing = Direction.up;
 

@@ -75,7 +75,8 @@ namespace CrystalCore.Model.Communication
              MaxLength =  max;
              MinLength = min;
              _length = 0;
-             Update(); // update again, to be safe.
+          
+             Update(); // update, to be safe.
           
         }
 
@@ -87,7 +88,7 @@ namespace CrystalCore.Model.Communication
             Point? p = Travel(start, MinLength);
             if (p==null)
             {
-                _length = 0;
+                _length = 1;
                 return;
             }
             Point end = (Point)p;
@@ -139,8 +140,8 @@ namespace CrystalCore.Model.Communication
         private void SetBounds(Point start, Point end)
         {
             Rectangle r = Util.Util.RectFromPoints(start, end);
-            if (r.Width == 0) { r.Width = 1; }
-            if (r.Height == 0) { r.Height = 1; }
+            r.Width++; 
+            r.Height++; 
             Bounds = r;
         }
 
@@ -166,9 +167,9 @@ namespace CrystalCore.Model.Communication
             _end = p;
             p.Receive(this);
 
-            Console.WriteLine("Signal Connected!");
-            Console.WriteLine("From: " + _start);
-            Console.WriteLine("To: " + _end);
+            //Console.WriteLine("Signal Connected!");
+            //Console.WriteLine("From: " + _start);
+            //Console.WriteLine("To: " + _end);
 
         }
 

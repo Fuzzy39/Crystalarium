@@ -65,22 +65,29 @@ namespace CrystalCore.View.SignalRender
         {
             if (_beamTexture == null)
             {
-                throw new InvalidOperationException("Must supply beamview with texture.");
-
-            }
-
-
-            if (((Beam)_renderData).Start is HalfPort)
-            {
-                RenderHalf(sb);
                 return;
+
             }
 
-            throw new NotImplementedException("What a sad fool");
+            RectangleF renderBounds = RenderHalf();
+
+            // which way does this beam flow?
+            CompassPoint absFacing = ((Beam)RenderData).Start.AbsoluteFacing;
+            Direction facing = (Direction)absFacing.ToDirection();
+
+
+            if (((Beam)_renderData).Start is FullPort)
+            {
+                renderBounds = RenderFull(renderBounds, facing);
+              
+            }
+
+            renderTarget.Camera.RenderTexture(sb, _beamTexture, renderBounds, _color, facing);
+            
         }
 
 
-        private void RenderHalf(SpriteBatch sb)
+        private RectangleF RenderHalf()
         {
             Beam beam = (Beam)_renderData;
             CompassPoint cp = beam.Start.AbsoluteFacing;
@@ -97,21 +104,22 @@ namespace CrystalCore.View.SignalRender
             {
                 renderBounds.Width = _beamWidth;
                 renderBounds.X += (1 - _beamWidth) / 2f;
-               
+
                 //renderBounds.Height += .5f;
+               
+                renderBounds.Height -= .5f;
 
-                if(beam.End==null)
+                if (beam.End == null & d == Direction.down)
                 {
-                    renderBounds.Height += .5f;
 
-                    if (d == Direction.down)
-                    {  
-                        renderBounds.Y += .5f;
-                    }
+                    renderBounds.Y += .5f;
+
                 }
-                else
+
+                if (beam.End!=null)
                 {
                     renderBounds.Y += .5f;
+                    renderBounds.Height -= .5f;
                 }
             }
             else
@@ -119,24 +127,47 @@ namespace CrystalCore.View.SignalRender
                 renderBounds.Height = _beamWidth;
                 renderBounds.Y += (1 - _beamWidth) / 2f;
 
-                if (beam.End == null)
-                {
-                    renderBounds.Width += .5f;
 
-                    if (d == Direction.right)
-                    {
-                        renderBounds.X += .5f;
-                    }
+                renderBounds.Width -= .5f;
+
+                if (beam.End == null & d == Direction.right)
+                {
+
+                    renderBounds.X += .5f;
+
                 }
-                else
+
+                if (beam.End != null)
                 {
                     renderBounds.X += .5f;
+                    renderBounds.Width -= .5f;
                 }
-               
+
             }
 
-            renderTarget.Camera.RenderTexture(sb, _beamTexture, renderBounds, _color);
+            return renderBounds;
 
+        }
+
+        private RectangleF RenderFull(RectangleF start, Direction facing)
+        {
+            float f = .25f;
+            switch(facing)
+            {
+                case Direction.up:
+                    start.X += f;
+                    break;
+                case Direction.down:
+                    start.X -= f;
+                    break;
+                case Direction.left:
+                    start.Y -= f;
+                    break;
+                case Direction.right:
+                    start.Y += f;
+                    break;
+            }
+            return start;
         }
 
 

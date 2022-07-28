@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CrystalCore.View.AgentRender;
+using CrystalCore.Model.Communication;
 
 namespace Crystalarium
 {
@@ -34,6 +36,10 @@ namespace Crystalarium
       
 
         internal AgentType CurrentType { get; set; } // the agent type selected to place.
+       
+        internal Ruleset CurrentRuleset { get; private set; }
+        internal Ruleset BeamRules { get; private set; }
+        internal Ruleset TouchRules { get; private set; }
 
         // used when panning
         private Point panOrigin = new Point();
@@ -48,7 +54,80 @@ namespace Crystalarium
 
             Rotation = Direction.up;
 
+            SetupRulesets();
             SetupController();
+        }
+
+        private void SetupRulesets()
+        {
+
+            // create a ruleset
+            BeamRules = new Ruleset("Beams");
+            BeamRules.PortChannelMode = PortChannelMode.fullDuplex;
+            BeamRules.SignalType = SignalType.Beam;
+
+            // define BeamRules
+            AgentType t;
+
+            // set the default settings for agent rendering.
+            AgentViewTemplate baseConfig = new AgentViewTemplate();
+            baseConfig.AgentBackground = Textures.pixel;
+            baseConfig.BackgroundColor = new Color(50, 50, 50);
+            baseConfig.DefaultTexture = Textures.sampleAgent;
+            baseConfig.Color = Color.Magenta;
+            baseConfig.Shrinkage = .05f;
+
+            // setup agent types.
+           
+
+
+            t = BeamRules.CreateType("small", new Point(1, 1));
+            t.RenderConfig = baseConfig;
+            t.RenderConfig.Color = Color.Crimson;
+
+            CurrentType = t;
+
+            t = BeamRules.CreateType("flat", new Point(2, 1));
+            t.RenderConfig = baseConfig;
+            t.RenderConfig.Color = Color.Gold;
+
+
+            t = BeamRules.CreateType("tall", new Point(1, 2));
+            t.RenderConfig = baseConfig;
+            t.RenderConfig.Color = Color.LimeGreen;
+
+            t = BeamRules.CreateType("big", new Point(2, 2));
+            t.RenderConfig = baseConfig;
+            t.RenderConfig.Color = Color.DodgerBlue;
+
+            BeamRules.BeamRenderConfig.BeamTexture = Textures.pixel;
+            BeamRules.BeamRenderConfig.Color = new Color(230, 230, 150);
+
+            CurrentRuleset = BeamRules;
+
+
+            // setup TouchRules
+
+            TouchRules = new Ruleset("Touch");
+
+            TouchRules.PortChannelMode = PortChannelMode.fullDuplex;
+            TouchRules.SignalType = SignalType.Beam;
+            TouchRules.BeamMaxLength = 1;
+            TouchRules.DiagonalSignalsAllowed = true;
+
+
+            t = TouchRules.CreateType("bright", new Point(1, 1));
+            t.RenderConfig = baseConfig;
+            t.RenderConfig.Color = Color.White;
+
+
+            t = TouchRules.CreateType("dark", new Point(1, 1));
+            t.RenderConfig = baseConfig;
+            t.RenderConfig.Color = Color.DimGray;
+
+           ;
+
+
         }
 
 
@@ -90,6 +169,8 @@ namespace Crystalarium
             c.addAction("grow right", () => game.Grid.ExpandGrid(Direction.right));
             new Keybind(c, Keystate.OnPress, "grow right", Button.K);
 
+            c.addAction("toggle debug ports", () => game.view.DoDebugPortRendering = !game.view.DoDebugPortRendering);
+            new Keybind(c, Keystate.OnPress, "toggle debug ports", Button.O);
 
 
             c.addAction("place agent", () =>
@@ -144,6 +225,7 @@ namespace Crystalarium
 
 
                 a.Rotate(RotationalDirection.clockwise);
+                Rotation = a.Facing;
 
 
             });
@@ -183,7 +265,7 @@ namespace Crystalarium
 
             c.addAction("next agent", () =>
             {
-                List<AgentType> types = game.ruleset.AgentTypes;
+                List<AgentType> types = CurrentRuleset.AgentTypes;
 
                 int i = types.IndexOf(CurrentType);
 
@@ -200,8 +282,7 @@ namespace Crystalarium
 
             c.addAction("prev agent", () =>
             {
-                List<AgentType> types = game.ruleset.AgentTypes;
-
+                List<AgentType> types = CurrentRuleset.AgentTypes;
                 int i = types.IndexOf(CurrentType);
 
                 i--;
@@ -214,6 +295,26 @@ namespace Crystalarium
 
             });
             new Keybind(c, Keystate.OnPress, "prev agent", Button.Q);
+
+
+            c.addAction("swap ruleset", () =>
+            { 
+                if(CurrentRuleset == BeamRules)
+                {
+                    CurrentRuleset = TouchRules;
+                }
+                else
+                {
+                    CurrentRuleset = BeamRules;
+                }
+
+                // triggers a reset.
+                game.Grid.Ruleset = CurrentRuleset;
+                CurrentType = CurrentRuleset.AgentTypes[0];
+                
+            });
+            new Keybind(c, Keystate.OnPress, "swap ruleset", Button.P);
+
         }
 
 

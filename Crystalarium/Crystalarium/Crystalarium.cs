@@ -32,13 +32,12 @@ namespace Crystalarium
 
         private CrystalCore.Engine engine; // the 'engine'
 
-        private const int BUILD = 580; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 613; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
 
 
-        internal Ruleset ruleset { get; private set; } // this ruleset defines the types of agents that can be placed.
 
         private SpriteFont testFont; // arial I think
         
@@ -70,16 +69,12 @@ namespace Crystalarium
             _graphics.ApplyChanges();
 
 
-            // create a ruleset
-            ruleset = new Ruleset("test");
-            ruleset.PortChannelMode = PortChannelMode.halfDuplex;
-            ruleset.SignalType = SignalType.Beam;
+
 
             // create the basics.
-            engine = new CrystalCore.Engine(TargetElapsedTime, ruleset);
+            engine = new Engine(TargetElapsedTime);
 
-            // setup our interaction related code and register it with the engine.
-            actions = new Actions(engine.Controller, this);
+          
 
             base.Initialize();
 
@@ -102,46 +97,12 @@ namespace Crystalarium
             Textures.sampleAgent = Content.Load<Texture2D>("SampleAgent");
 
 
-            // define ruleset.
-            AgentType t;
-          
-            // set the default settings for agent rendering.
-            AgentViewTemplate baseConfig = new AgentViewTemplate();
-            //baseConfig.AgentBackground = Textures.pixel;
-            baseConfig.BackgroundColor = new Color(50, 50, 50);
-            baseConfig.DefaultTexture = Textures.sampleAgent;
-            baseConfig.Color = Color.Magenta;
-            baseConfig.Shrinkage = .05f;
+            // setup our interaction related code and register it with the engine.
+            actions = new Actions(engine.Controller, this);
 
-            // setup agent types.
-            t =ruleset.CreateType("big", new Point(2, 2));
-            t.RenderConfig = baseConfig;
-            t.RenderConfig.Color = Color.DodgerBlue;
-
-
-            t = ruleset.CreateType("small", new Point(1, 1));
-            t.RenderConfig = baseConfig;
-            t.RenderConfig.Color = Color.Crimson;
-
-            actions.CurrentType = t;
-
-            t = ruleset.CreateType("flat", new Point(2, 1));
-            t.RenderConfig = baseConfig;
-            t.RenderConfig.Color = Color.Gold;
-           
-
-            t = ruleset.CreateType("tall", new Point(1, 2));
-            t.RenderConfig = baseConfig;
-            t.RenderConfig.Color = Color.LimeGreen;
-
-
-            ruleset.BeamRenderConfig.BeamTexture = Textures.pixel;
-            ruleset.BeamRenderConfig.Color = new Color(230, 230, 150);
-
-         
 
             // create a test grid, and do some test things to it.
-            Grid = engine.addGrid();
+            Grid = engine.addGrid(actions.CurrentRuleset);
             //g.ExpandGrid(Direction.right);
            
 
@@ -250,14 +211,15 @@ namespace Crystalarium
 
         
             string info = "Hovering over: " + actions.GetMousePos().X + ", " + actions.GetMousePos().Y;
+            string rules = "Ruleset: " + actions.CurrentRuleset.Name;
 
             // some debug text. We'll clear this out sooner or later...
 
             spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + engine.Sim.ActualStepsPS + " Chunks: " + Grid.gridSize.X * Grid.gridSize.Y, new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(testFont, "Placing: "+actions.CurrentType.Name+" (facing " + actions.Rotation + ") \n" + info, new Vector2(10, 30), Color.White);
+            spriteBatch.DrawString(testFont, "Placing: "+actions.CurrentType.Name+" (facing " + actions.Rotation + ") \n" + info+"\n"+rules, new Vector2(10, 30), Color.White);
 
-            spriteBatch.DrawString(testFont, "Milestone 3, Build " + BUILD, new Vector2(10, height - 25), Color.White);
-            spriteBatch.DrawString(testFont, "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent.\nRMB to delete. R to rotate. Q and E to switch agent types.", new Vector2(10, height - 70), Color.White);
+            spriteBatch.DrawString(testFont, "Milestone 4, Build " + BUILD, new Vector2(10, height - 25), Color.White);
+            spriteBatch.DrawString(testFont, "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. P to switch rulesets (resets grid).\nRMB to delete. R to rotate. Q and E to switch agent types. O to toggle port rendering.", new Vector2(10, height - 70), Color.White);
 
 
             spriteBatch.End();

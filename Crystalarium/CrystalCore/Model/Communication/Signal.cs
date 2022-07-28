@@ -32,7 +32,7 @@ namespace CrystalCore.Model.Communication
 
             _start = transmitter;
             _value = value;
-            Update();
+            //Update(); // subclasses need to call this method after their constructor has ran.
         }
         
         // this should only be called by Port.StopTransmitting()
@@ -40,7 +40,7 @@ namespace CrystalCore.Model.Communication
         {
             if (_end != null)
             {
-                Console.WriteLine("Signal disconnected by transmitter.");
+               // Console.WriteLine("Signal disconnected by transmitter.");
                 _end.StopReceiving();
             }
             
@@ -82,7 +82,7 @@ namespace CrystalCore.Model.Communication
 
         public void Reset()
         {
-            Console.WriteLine("Signal disconnected by receiver.");
+            //Console.WriteLine("Signal disconnected by receiver.");
 
             _end = null;
         }
