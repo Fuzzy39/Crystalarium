@@ -47,12 +47,12 @@ namespace CrystalCore.View
         // Chunk Renderer related
         private ChunkViewTemplate _renderConfig; // how are we rendering chunks?
         private bool _doAgentRendering; // whether we render agents.
-      
 
-   
+
+
 
         public bool AllowMultipleGhosts { get; set; }
-        public bool DoDebugPortRendering{ get; set; }
+        public bool DoDebugPortRendering { get; set; }
 
 
         // Properties
@@ -88,8 +88,8 @@ namespace CrystalCore.View
             set => _background = value;
         }
 
-  
-       
+
+
         public bool DoAgentRendering // whether agents are rendered in this gridview
         {
             get => _doAgentRendering;
@@ -99,12 +99,12 @@ namespace CrystalCore.View
                 _subviewManager.AgentViews.Clear();
             }
 
-        } 
+        }
 
         public ChunkViewTemplate RenderConfig
         {
             get => _renderConfig;
-          
+
         }
 
 
@@ -119,7 +119,7 @@ namespace CrystalCore.View
             this.container = container;
             this.container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
-            
+
             _camera = new PhysicsCamera(PixelBounds);
 
             _subviewManager = new SubviewManager(this);
@@ -136,7 +136,7 @@ namespace CrystalCore.View
             DoAgentRendering = true;
 
             // ghost related
-           
+
 
             AllowMultipleGhosts = false;
             DoDebugPortRendering = false;
@@ -154,13 +154,13 @@ namespace CrystalCore.View
             container.Remove(this);
         }
 
-        
+
         public Point LocalizeCoords(Point p)
         {
             return p - _pixelBounds.Location;
         }
 
-     
+
 
 
         internal void Draw(SpriteBatch sb)
@@ -172,7 +172,7 @@ namespace CrystalCore.View
 
             // Update our subview manager and have it render its subviews.
             _subviewManager.Draw(sb);
-           
+
 
             // draw the viewport if in debug mode.
             DrawOtherGridView(sb);
@@ -199,25 +199,33 @@ namespace CrystalCore.View
                 return;
             }
 
-            if(RenderConfig.ViewCastOverlay == null)
+            if (RenderConfig.ViewCastOverlay == null)
             {
                 return;
             }
-                
+
             _camera.RenderTexture(sb, RenderConfig.ViewCastOverlay,
                 RenderConfig.ViewCastTarget.Camera.TileBounds(),
                 new Color(.2f, .2f, .2f, .001f));
-            
+
         }
 
 
-      
+
 
 
 
         internal void Update()
-        {
-            _camera.Update(_grid.Bounds);
+        { 
+            try
+            {
+                _camera.Update(_grid.Bounds);
+            }
+            catch
+            {
+                Console.WriteLine("Camera is out of bounds. Resetting position.");
+                _camera.Position = new Vector2(Grid.Bounds.Width/2f, Grid.Bounds.Height/2f);
+            }
         }
 
 
