@@ -8,31 +8,44 @@ using System.Text;
 
 namespace CrystalCore.View.Base
 {
+    /// <summary>
+    /// A Bounded renderer renders things within a boundry.
+    /// Images which are partly outside of this boundry are cropped to fit. 
+    /// </summary>
     internal class BoundedRenderer
     {
-        /*
-         *  A Bounded renderer renders things, within a boundry.
-         *  Images which are partly outside of this boundry are cropped to fit.
-         *  
-         *  No relation to any other renderers, which are broadly higher level constructs.
-         */
-
-
+        /// <summary>
+        ///   The pixel coordinates of the window that this BoundedRenderer will render within.
+        /// </summary>
         private Rectangle _pixelBoundry;
-
+        
+        /// <summary>
+        ///   The pixel coordinates of the window that this BoundedRenderer will render within.
+        /// </summary>
         public Rectangle PixelBoundry
         {
             get => _pixelBoundry;
         }
 
+        /// <summary>
+        ///  Create a new BoundedRender with the specified pixel bounds.
+        /// </summary>
+        /// <param name="pixelBoundry"> The pixel coordinates of the window that this BoundedRenderer will render within. </param>
         public BoundedRenderer(Rectangle pixelBoundry)
         {
             _pixelBoundry = pixelBoundry;
         }
 
-
-
-        // bounds in pixels relative to the renderer's location.
+    
+        /// <summary>
+        ///  Render a texture within the bounds of this renderer.
+        ///  Any images rendered partially outside of this renderer's bounds will be cropped to fit.
+        /// </summary>
+        /// <param name="sb">The SpriteBatch object used to render the image.</param>
+        /// <param name="texture">The texture we are to render.</param>
+        /// <param name="pixelBounds">The area in pixels that the image is to be rendered, relative to the location of this renderer's bounds.</param>
+        /// <param name="c">The color the texture will be rendered with.</param>
+        /// <param name="d">The direction this texture will be facing, with up being the default orientation.</param>
         public void RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle pixelBounds, Color c, Direction d)
         {
 
@@ -66,6 +79,12 @@ namespace CrystalCore.View.Base
         }
 
         // here, pixelBounds is absolute.
+
+        /// <summary>
+        ///  Returns the Rectangle of pixels relative to the window that a rendered texture would have.
+        /// </summary>
+        /// <param name="pixelBounds"></param>
+        /// <returns>the Rectangle of pixels, relative to the window, that fits inside our bounds</returns>
         private Rectangle GetFinalDestBounds(Rectangle pixelBounds)
         {
             // if these bounds are fully within our borders, we don't need to do anything to it.
@@ -125,7 +144,7 @@ namespace CrystalCore.View.Base
 
             // rotate the cuts based on which way this sprite should be facing.
             cuts = RotateCuts(cuts, facing);
-
+                
             // finally, pop out our source bounds.
             Rectangle toReturn = texture.Bounds;
             
