@@ -8,6 +8,10 @@ using System.Text;
 
 namespace CrystalCore.View.Base
 {
+    /// <summary>
+    /// The Camera Class renders images in a coordinate space.
+    /// the camera's position in this coordinate space as well as the scale the space is rendered at can be freely changed.
+    /// </summary>
     public class Camera 
     {
 

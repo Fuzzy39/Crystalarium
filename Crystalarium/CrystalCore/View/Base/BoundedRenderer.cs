@@ -83,8 +83,8 @@ namespace CrystalCore.View.Base
         /// <summary>
         ///  Returns the Rectangle of pixels relative to the window that a rendered texture would have.
         /// </summary>
-        /// <param name="pixelBounds"></param>
-        /// <returns>the Rectangle of pixels, relative to the window, that fits inside our bounds</returns>
+        /// <param name="pixelBounds">A Rectangle of pixels, in coordinates relative to the window.</param>
+        /// <returns>The Rectangle of pixels, relative to the window, that fits inside our bounds</returns>
         private Rectangle GetFinalDestBounds(Rectangle pixelBounds)
         {
             // if these bounds are fully within our borders, we don't need to do anything to it.
@@ -97,6 +97,12 @@ namespace CrystalCore.View.Base
             return Rectangle.Intersect(this.PixelBoundry, pixelBounds);
         }
 
+        /// <summary>
+        ///  Takes the final location of the texture on the screen and adjusts it to the correct value to input into spritebatch.draw, based on which way this image will face.
+        /// </summary>
+        /// <param name="destBounds">The rectangle on the window in pixels where this texture will appear</param>
+        /// <param name="facing">the direction this image</param>
+        /// <returns>A rectangle that will correspond to these bounds when drawn with this facing.</returns>
         private Rectangle AdjustDestBounds(Rectangle destBounds, Direction facing)
         {
             Point loc = destBounds.Location;
@@ -121,6 +127,11 @@ namespace CrystalCore.View.Base
             return new Rectangle(loc, size);
         }
 
+        /// <summary>
+        ///  Transforms a rectangle of pixel coords relative to our location into one relative to the window's.
+        /// </summary>
+        /// <param name="rect">A rectangle with coords relative to our location.</param>
+        /// <returns>A rectangle with coords relative to the top left of the game window.</returns>
         private Rectangle ToAbsCoords(Rectangle rect)
         {
 
@@ -128,6 +139,11 @@ namespace CrystalCore.View.Base
             return rect;
         }
 
+        /// <summary>
+        ///  Transforms a point in pixel coords relative to our location into one relative to the window's.
+        /// </summary>
+        /// <param name="p">A point with coords relative to our location.</param>
+        /// <returns>A point with coords relative to the top left corner of the game window.</returns>
         private Point ToAbsCoords(Point p)
         {
             // translates pixel coords relative to our borders to coords relative to the window. 'absolute' coords.
@@ -135,6 +151,14 @@ namespace CrystalCore.View.Base
         }
 
         // get the bounds of the source rectangle.
+        /// <summary>
+        ///  Gets the part of the texture that should be rendered, according to what parts of the destination are being cropped off.
+        /// </summary>
+        /// <param name="texture">The texture to be rendered.</param>
+        /// <param name="original">The intended bounds of the location to render this texture, relative to the game window.</param>
+        /// <param name="modified">The actual (cropped) bounds of the location to render this texture, relative to the game window.</param>
+        /// <param name="facing">The direction this texture will be rendered facing, with up being default.</param>
+        /// <returns>The bounds in pixels of the texture that will be rendered.</returns>
         private Rectangle GetSourceBounds(Texture2D texture, Rectangle original, Rectangle modified, Direction facing)
         {
             Cut[] destCuts = GetDestCuts(original, modified);
@@ -157,6 +181,12 @@ namespace CrystalCore.View.Base
             return toReturn;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="modified"></param>
+        /// <returns></returns>
         private Cut[] GetDestCuts(Rectangle original, Rectangle modified)
         {
             // get the cuts used on the final dest rectangle.
