@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CrystalCore.View.ChunkRender;
 using CrystalCore.Input;
-using CrystalCore.View.Base;
+using CrystalCore.View.Rendering;
 
 using AgentRenderer = CrystalCore.View.AgentRender.AgentView;
 using ChunkRenderer = CrystalCore.View.ChunkRender.ChunkView;

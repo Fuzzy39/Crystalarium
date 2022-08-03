@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace CrystalCore.View.Base
+namespace CrystalCore.View.Rendering
 {
     /// <summary>
     /// A Bounded renderer renders things within a boundry.
@@ -182,11 +182,11 @@ namespace CrystalCore.View.Base
         }
 
         /// <summary>
-        /// 
+        ///  Returns the Cuts of a rectangle based on it's intial state and modified state.
         /// </summary>
-        /// <param name="original"></param>
-        /// <param name="modified"></param>
-        /// <returns></returns>
+        /// <param name="original">The rectangle before it was cut.</param>
+        /// <param name="modified">The rectangle after it was cut.</param>
+        /// <returns>The Cuts that occured to orginal to get modified.</returns>
         private Cut[] GetDestCuts(Rectangle original, Rectangle modified)
         {
             // get the cuts used on the final dest rectangle.
@@ -207,6 +207,13 @@ namespace CrystalCore.View.Base
         }
 
         // transfer cuts to another rectangle.
+
+        /// <summary>
+        /// Take a series of cuts of one rectangle and apply the ratio of those cuts to another.
+        /// </summary>
+        /// <param name="toTransform">an array of cuts of one rectangle.</param>
+        /// <param name="applyTo">The rectangle to scale these cuts to.</param>
+        /// <returns>The Array of cuts that is the same as toTransform, but proportional to applyTo.</returns>
         private Cut[] TransferCuts(Cut[] toTransform, Rectangle applyTo)
         {
             Cut[] toReturn = new Cut[toTransform.Length];
@@ -221,6 +228,12 @@ namespace CrystalCore.View.Base
         }
 
 
+        /// <summary>
+        /// Rotates every cut in an array of cuts.
+        /// </summary>
+        /// <param name="cuts">an array of cuts.</param>
+        /// <param name="facing">The way cuts should be rotated, with the default being up.</param>
+        /// <returns>an array of cuts, rotated.</returns>
         private Cut[] RotateCuts(Cut[] cuts, Direction facing)
         {
             

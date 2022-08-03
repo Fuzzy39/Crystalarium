@@ -7,15 +7,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 
 
-namespace CrystalCore.View.Base
+namespace CrystalCore.View.Rendering
 {
+    /// <summary>
+    /// A physics camera creates a more linear zoom on top of a camera's scaling abilities and adds velocity to panning and zooming.
+    /// </summary>
     public class PhysicsCamera:Camera
     {
-        /*
-         * A physics camera creates a more linear zoom on top of a camera's scaling abilities and adds velocity to panning and zooming.
-         * 
-         */
-
+        
         
        
         // 'Camera' controls
@@ -30,6 +29,7 @@ namespace CrystalCore.View.Base
         private Point _zoomOrigin; // the point, in pixels relative to the top left corner of our gridview,
                                    // that serves as the origin for dilation translations/zooming.
 
+       
         public override Vector2 Position
         {
             get => base.Position;
@@ -58,7 +58,9 @@ namespace CrystalCore.View.Base
 
         // Properties
 
-        // scale, but linear, and scaled from 0 to 100, where 100 is maxScale, and 0 is minScale.
+        /// <summary>
+        /// scale, but linear, and scaled from 0 to 100, where 100 is maxScale, and 0 is minScale.
+        /// </summary>
         public float Zoom
         {
             get 
@@ -133,7 +135,9 @@ namespace CrystalCore.View.Base
 
         }
 
-
+        /// <summary>
+        /// The Center from which zooming will happen, in pixels relative to this camera's bounds
+        /// </summary>
         public Point ZoomOrigin
         {
             get => _zoomOrigin;
@@ -166,6 +170,21 @@ namespace CrystalCore.View.Base
 
             base.Update(bounds);
 
+
+            UpdatePosition();
+            UpdateZoom(Zoom + Velocity.Z);
+
+            // Apply friction.
+            _velocity.X = ApplyFriction(Velocity.X);
+            _velocity.Y = ApplyFriction(Velocity.Y);
+            _velocity.Z = ApplyFriction(Velocity.Z);
+
+
+        }
+
+
+        private void UpdatePosition()
+        {
             Vector2 nextPos = OriginPosition + new Vector2(Velocity.X / (float)Scale, Velocity.Y / (float)Scale);
 
             //Console.WriteLine(Scale);
@@ -173,30 +192,21 @@ namespace CrystalCore.View.Base
             if (!SetPosition(new Vector2(nextPos.X, OriginPosition.Y)))
             {
                 // add a bit of bounce to the camera.
-                VelX = (float)(-VelX/2);
-             
+                VelX = (float)(-VelX / 2);
+
 
             }
 
             if (!SetPosition(new Vector2(OriginPosition.X, nextPos.Y)))
             {
                 // add a bit of bounce to the camera.
-                VelY = (float)(-VelY/2);
+                VelY = (float)(-VelY / 2);
 
 
             }
 
-
-            UpdateZoom(Zoom + Velocity.Z);
-
-
-            
-            _velocity.X = ApplyFriction(Velocity.X);
-            _velocity.Y = ApplyFriction(Velocity.Y);
-            _velocity.Z = ApplyFriction(Velocity.Z);
-
-
         }
+
 
         private float ApplyFriction(float before) 
         { 
@@ -208,6 +218,7 @@ namespace CrystalCore.View.Base
 
             return Util.Util.Reduce(before, before * FRICTION);
         }
+
 
         private void UpdateZoom(float newScale)
         {

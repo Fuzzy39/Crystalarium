@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrystalCore.View.Base
+namespace CrystalCore.View.Rendering
 {
     /// <summary>
     /// The Camera Class renders images in a coordinate space.
@@ -15,36 +15,64 @@ namespace CrystalCore.View.Base
     public class Camera 
     {
 
-        /*
-         * A Camera Uses a BoundedRenderer and maps pixels to a tile space that can be scrolled and scaled.
-         * 
-         */
 
+
+        /// <summary>
+        /// The  <see cref="BoundedRenderer">BoundedRenderer</see> this Camera uses to render textures. It also contains this Camera's pixel bounds.
+        /// </summary>
         private BoundedRenderer renderer;
 
+        /// <summary>
+        /// the number of pixels that currently represent one tile in gridspace.
+        /// </summary>
+        protected double _scale;
 
-        protected double _scale; // the number of pixels that currently represent one tile in gridspace
-        private Vector2 _position; // the position of the top left corner of the viewport, in tiles, in grid space
+        /// <summary>
+        /// the position of the top left corner of the Camera, in tiles, in grid space.
+        /// </summary>
+        private Vector2 _position;
 
+        /// <summary>
+        /// The minumum amount of pixels that can represent one tile.
+        /// </summary>
+        private int _minScale;
 
-        private int _minScale; // the minumum and maximum amount of pixels that can represent one tile.
+        /// <summary>
+        /// The maximum amount of pixels that can represent one tile.
+        /// </summary>
         private int _maxScale;
 
-        protected Rectangle _bounds; // the tilespace to where the center of the view is confined.
-        protected bool _isBound; // whether the position of this renderer is bound or whether it is free.
+        /// <summary>
+        /// The tilespace to where the center of the view is confined, if <see cref="_isBound">_isBound</see> is true.
+        /// </summary>
+        protected Rectangle _bounds;
 
+        /// <summary>
+        /// Whether the position of this camera is bound to <see cref="_bounds">_bounds</see> or whether it is free.
+        /// </summary>
+        protected bool _isBound; 
+
+        /// <summary>
+        ///  Whether this Camera is bound to <see cref="Bounds">Bounds</see> or whether it is free.
+        /// </summary>
         public bool IsBound
         {
             get => _isBound;
             internal set => _isBound = value;
         }
 
+        /// <summary>
+        /// The Rectangle in tile cooridinates where the center of this Camera's view is bound, if <see cref="IsBound">IsBound</see> is true.
+        /// </summary>
         public Rectangle Bounds
         {
             get => _bounds;
             internal set => _bounds = value;
         }
 
+        /// <summary>
+        /// The minumum amount of pixels that can represent one tile.
+        /// </summary>
         public int MinScale
         {
             get => _minScale;
@@ -63,6 +91,9 @@ namespace CrystalCore.View.Base
             }
         }
 
+        /// <summary>
+        /// The maximum amount of pixels that can represent one tile.
+        /// </summary>
         public int MaxScale
         {
             get => _maxScale;
@@ -79,6 +110,9 @@ namespace CrystalCore.View.Base
             }
         }
 
+        /// <summary>
+        /// the number of pixels that currently represent one tile in gridspace.
+        /// </summary>
         public double Scale
         {
             get => _scale;
@@ -103,6 +137,9 @@ namespace CrystalCore.View.Base
 
         // when setting position with the position property, position is the location, in tile space, of the center of the viewport.
         // this causes... headaches.
+        /// <summary>
+        /// The position of the center of this Camera's view, in tile coordinates.
+        /// </summary>
         public virtual Vector2 Position
         {
             get
@@ -122,7 +159,10 @@ namespace CrystalCore.View.Base
             }
         }
 
-        // Origin Position represents the location in tilespace in tiles of the top left corner of this renderer.
+        
+        /// <summary>
+        /// The Position of the top left corner of the Camera's view, in tile coordinates.
+        /// </summary>
         public virtual Vector2 OriginPosition
         {
             get => _position;
@@ -130,7 +170,10 @@ namespace CrystalCore.View.Base
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pixelBoundry">The Bounds in pixels relative to the top left corner of the game window.</param>
         internal Camera(Rectangle pixelBoundry)
         {
 
@@ -150,6 +193,10 @@ namespace CrystalCore.View.Base
             _isBound = false;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="bounds">The new value of <see cref="Bounds">Bounds</see>. </param>
+        /// <exception cref="InvalidOperationException">Thrown if the Camera is bound and is outside of it's bounds.</exception>
         internal virtual void Update(Rectangle bounds)
         {
             _bounds = bounds;
@@ -166,7 +213,13 @@ namespace CrystalCore.View.Base
 
         // sets the position of the camera if that position would be in bounds.
         // pos represents the location of the top left corner of the screen.
-        public bool SetPosition(Vector2 pos)
+        /// <summary>
+        /// Sets the position of this camera, if it is inside of bounds.
+        /// If not, this method will attempt to set the X and the Y independently.
+        /// </summary>
+        /// <param name="pos">The Position that the camera's top left corner will be set to.</param>
+        /// <returns>whether the requested position was set.</returns>
+        protected bool SetPosition(Vector2 pos)
         {
             float centerX = (float)(((TileBounds().Size.X) / 2f)) + pos.X;
             float centerY = (float)(((TileBounds().Size.Y) / 2f)) + pos.Y;
@@ -201,6 +254,11 @@ namespace CrystalCore.View.Base
 
         // returns  pixel coords relative to start of viewport.
         // this also works outside of the viewport.
+        /// <summary>
+        ///  Translates Tile coordinates to pixel coordinates, regardless to whether the camera is viewing this coordinate.
+        /// </summary>
+        /// <param name="tilePos"></param>
+        /// <returns>the pixel coords where tilePos is located, relative to the top left corner of this camera's bounds.</returns>
         public Point TileToPixelCoords(Vector2 tilePos)
         {
 
@@ -215,7 +273,12 @@ namespace CrystalCore.View.Base
 
         }
 
-        // assumes pixelPos is localized.
+       
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pixelPos">Relative to the top left corner of this camera's pixel bounds.</param>
+        /// <returns></returns>
         public Vector2 PixelToTileCoords(Point pixelPos)
         {
             float x = (float)(_position.X + (pixelPos.X / _scale));
@@ -226,6 +289,10 @@ namespace CrystalCore.View.Base
         
 
         // returns the bounds in tilespace of the viewport
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>The tile coordinates this camera can currently see.</returns>
         public RectangleF TileBounds()
         {
             return new RectangleF(_position.X, _position.Y,
