@@ -10,12 +10,29 @@ namespace CrystalCore.View.SignalRender
     public class BeamViewTemplate
     {
 
+        // See the BeamView class for descriptions of these fields.
 
-        public Texture2D BeamTexture { get; set; } // the texture for use as the chunk's background.
+        private Texture2D beamTexture;
+        private Color color;
+        private float beamWidth;
 
-        public Color Color { get; set; } // the default color for a chunk. default is white.
+        public Texture2D BeamTexture // the texture for use as the chunk's background.
+        { 
+            get => beamTexture;
+            set => beamTexture = value; 
+        } 
 
-        public float BeamWidth { get; set; }
+        public Color Color // the default color for a chunk. default is white.
+        { 
+            get => color;
+            set => color = value;
+        } 
+
+        public float BeamWidth 
+        { 
+            get => beamWidth; 
+            set => beamWidth = value; 
+        }
 
         public BeamViewTemplate()
         {
@@ -37,6 +54,6 @@ namespace CrystalCore.View.SignalRender
         }
 
 
-        
+
     }
 }

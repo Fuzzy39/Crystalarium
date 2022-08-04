@@ -9,22 +9,58 @@ namespace CrystalCore.View.AgentRender
 {
     public class AgentViewTemplate
     {
-        
 
+        // See the AgentView class for descriptions of these fields.
 
-        public Texture2D AgentBackground { get; set; }
+        private Texture2D _agentBackground;
+        private Color _backgroundColor;
+        private bool _doBackgroundRotation;
 
-        public Color BackgroundColor { get; set; }
+        private Texture2D _defaultTexture;
+        private Color _color;
 
-        public float Shrinkage { get; set; }
+        private float _shrinkage;
+        private bool _doBackgroundShrinkage;
 
-        public Texture2D DefaultTexture { get; set; }
+       
 
-        public Color Color { get; set; }
+        public Texture2D AgentBackground { get => _agentBackground; set => _agentBackground = value; }
 
-        public bool DoBackgroundShrinkage{ get; set; }
+        public Color BackgroundColor 
+        { 
+            get => _backgroundColor;
+            set => _backgroundColor = value; 
+        }
 
-        public bool DoBackgroundRotation { get; set; }  
+        public float Shrinkage 
+        {
+            get => _shrinkage; 
+            set => _shrinkage = value;
+        }
+
+        public Texture2D DefaultTexture 
+        {
+            get => _defaultTexture; 
+            set => _defaultTexture = value; 
+        }
+
+        public Color Color
+        { 
+            get => _color; 
+            set => _color = value; 
+        }
+
+        public bool DoBackgroundShrinkage 
+        { 
+            get => _doBackgroundShrinkage; 
+            set => _doBackgroundShrinkage = value;
+        }
+
+        public bool DoBackgroundRotation 
+        { 
+            get => _doBackgroundRotation; 
+            set => _doBackgroundRotation = value; 
+        }
 
         public AgentViewTemplate()
         {
@@ -35,7 +71,7 @@ namespace CrystalCore.View.AgentRender
             Color = Color.White;
             DefaultTexture = null;
             DoBackgroundShrinkage = false;
-            DoBackgroundRotation = false;   
+            DoBackgroundRotation = false;
         }
 
         public AgentViewTemplate(AgentViewTemplate from)
