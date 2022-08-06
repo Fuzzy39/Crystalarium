@@ -78,7 +78,6 @@ namespace Crystalarium
             baseConfig.Shrinkage = .05f;
 
             // setup agent types.
-           
 
 
             t = BeamRules.CreateType("small", new Point(1, 1));

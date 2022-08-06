@@ -69,7 +69,7 @@ namespace CrystalCore.Util
             parent = rect;
             dir = d;
             this.amount = amount;
-        }
+        } 
 
         public Cut(Rectangle rect, Direction d, float ratio) : this(rect, d, 0)
         {

@@ -11,13 +11,12 @@ using ChunkRenderer = CrystalCore.View.ChunkRender.ChunkView;
 
 namespace CrystalCore.View.AgentRender
 {
+    /// <summary>
+    ///  An AgentView is a Subview that renders an agent and its ports.
+    /// </summary>
     internal class AgentView : Subview
     {
-        /*
-         * An agent renderer renders agents. Makes sense.
-         * AgentView.Renderer and ChunkView.RendererBase should have one superclass, shouldn't they...
-         * 
-         */
+    
 
 
         private Texture2D _background; // Our background texture
@@ -25,12 +24,15 @@ namespace CrystalCore.View.AgentRender
 
         private Texture2D _defaultTexture;
         private Color _color;
+
+
         private float _shrinkage; // the amount of the tile, in pixels per edge (at camera scale of 100) that is left blank when this agent is rendered.
                                   // did that make any sense? it is valid between 0 and 49. 
+        public bool DoBackgroundShrinkage; // whether the background is shrunken along with the primary texture.
+        public bool DoBackgroundRotation; // whether the backroung is rotated along with the primary texture.
 
-        public bool DoBackgroundShrinkage;
-        public bool DoBackgroundRotation;
 
+        private List<DebugPort> _ports;
         public Texture2D Background
         {
             get => _background;
@@ -77,18 +79,8 @@ namespace CrystalCore.View.AgentRender
 
         internal AgentView(GridView v, Agent a, List<Subview> others) : base(v, a, others)
         {
-
-                
-            _background = null;
-            _BGcolor = Color.White;
-
-            _defaultTexture = null;
-            _color = Color.White;
-            // get our parent
-
-            DoBackgroundRotation = false;
-            DoBackgroundShrinkage = false;
-          
+            // defaults need to be set, but there is no need here, since our template does the job.
+            _ports = null;
         }
 
 
@@ -111,11 +103,16 @@ namespace CrystalCore.View.AgentRender
 
             if(renderTarget.DoDebugPortRendering)
             {
-                if( _background == null)
+                if (_ports == null)
                 {
-                    throw new InvalidOperationException("Agent Type " + ((Agent)RenderData).Type.Name + "'s RenderConfig requires a background texture to render debug ports.");
+                    DebugPortSetup();
                 }
-                RenderDebugPorts(sb);
+
+                foreach (DebugPort dp in _ports)
+                {
+                    dp.Draw(sb);
+
+                }
             }
             
         }
@@ -144,73 +141,22 @@ namespace CrystalCore.View.AgentRender
 
             renderTarget.Camera.RenderTexture(sb, _background, bounds, _BGcolor, facing);
         }
-
-        private void RenderDebugPorts(SpriteBatch sb)
+        private void DebugPortSetup()
         {
-            foreach (List < Port > ports in ((Agent)RenderData).Ports)
+            _ports = new List<DebugPort>();
+
+            if (_background == null)
             {
-                foreach(Port port in ports)
-                {
+                throw new InvalidOperationException("Agent Type " + ((Agent)RenderData).Type.Name + "'s RenderConfig requires a background texture to render debug ports.");
+            }
 
-                    RectangleF bounds= new RectangleF();
-
-                    float width = .7f; // the amount of tile across
-                    float thickness = .15f; // the amount of tile through
-                    switch (port.AbsoluteFacing)
-                    {
-                        case CompassPoint.north:
-                            bounds = new RectangleF((1-width)/2f, 0, width, thickness);
-                            break;
-                        case CompassPoint.northeast:
-                            bounds = new RectangleF( 1-thickness, 0, thickness, thickness);
-                            break;
-                        case CompassPoint.east:
-                            bounds = new RectangleF(1-thickness, (1 - width) / 2f, thickness, width);
-                            break;
-                        case CompassPoint.southeast:
-                            bounds = new RectangleF(1 - thickness, 1 - thickness, thickness, thickness);
-                            break;
-                        case CompassPoint.south:
-                            bounds = new RectangleF((1 - width) / 2f, 1-thickness, width, thickness);
-                            break;  
-                        case CompassPoint.southwest:
-                            bounds = new RectangleF(0, 1 - thickness, thickness, thickness);
-                            break;
-                        case CompassPoint.west:
-                            bounds = new RectangleF(0, (1 - width) / 2f, thickness, width);
-                            break;
-                        case CompassPoint.northwest:
-                            bounds = new RectangleF(0, 0, thickness, thickness);
-                            break;
-
-
-                    }
-
-                    
-                    bounds = new RectangleF(bounds.Location + port.Location.ToVector2(), bounds.Size);
-
-                    Color c = new Color();
-                    switch(port.Status)
-                    {
-                        case PortStatus.inactive:
-                            c = Color.DimGray;
-                            break;
-                        case PortStatus.receiving:
-                            c = Color.Blue;
-                            break;
-                        case PortStatus.transmitting:
-                            c = Color.Red;
-                            break;
-                        case PortStatus.transceiving:
-                            c = Color.Purple;
-                            break;
-                    }
-
-                    renderTarget.Camera.RenderTexture(sb, _background, bounds, c);
-                }
+            foreach (Port p in ((Agent)RenderData).PortList)
+            {
+                _ports.Add(new DebugPort(_background, p, this, renderTarget));
             }
 
         }
+    
 
         // get the borders of the background in tiles. fair enough.
         private RectangleF ShrinkBorders()

@@ -47,6 +47,20 @@ namespace CrystalCore.Model.Objects
         }
 
         internal List<List<Port>> Ports { get { return _ports; }  }
+        internal List<Port> PortList 
+        { 
+            get
+            {
+                List<Port> toReturn = new List<Port>();
+                foreach(List<Port> ports in Ports)
+                {
+                    toReturn.AddRange(ports);
+                }
+
+                return toReturn;
+            }
+                
+        }
 
         // SHOULD BE INTERNAL
         internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : base(g, bounds)

@@ -11,10 +11,10 @@ namespace CrystalCore.View.AgentRender
 {
     internal class AgentGhost : ViewObject
     {
-        public Rectangle Bounds { get; set; }
-        public Direction Facing { get; set; }
+        public Rectangle Bounds { get; set; } // the tile bounds of this ghost
+        public Direction Facing { get; set; } // the direction this ghost is facing
 
-        private AgentType type;
+        private AgentType type; // the type of agent this ghost descends from.
 
         
 
@@ -23,13 +23,12 @@ namespace CrystalCore.View.AgentRender
             this.type = type; // we use this template to figure out how to render ourselves.
             Bounds = new Rectangle(location, type.GetSize(facing));
             Facing = facing;
-           
-
-
+            
         }
 
         internal override void Destroy()
         {
+            // huh.
             throw new NotImplementedException();
         }
 

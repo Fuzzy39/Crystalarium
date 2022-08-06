@@ -32,7 +32,7 @@ namespace Crystalarium
 
         private CrystalCore.Engine engine; // the 'engine'
 
-        private const int BUILD = 616; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 618; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
