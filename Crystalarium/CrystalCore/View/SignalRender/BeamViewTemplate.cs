@@ -11,7 +11,7 @@ namespace CrystalCore.View.SignalRender
     {
 
         // See the BeamView class for descriptions of these fields.
-
+        
         private Texture2D beamTexture;
         private Color color;
         private float beamWidth;

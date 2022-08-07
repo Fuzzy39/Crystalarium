@@ -13,12 +13,16 @@ namespace CrystalCore.View
 
         protected GridView renderTarget;
 
+        public GridView RenderTarget
+        {
+            get { return renderTarget; }
+        }
+
         protected ViewObject(GridView v)
         {
             renderTarget = v;
         }
 
-        internal abstract void Destroy();
         internal abstract bool Draw( SpriteBatch sb);
     }
 }

@@ -105,6 +105,7 @@ namespace CrystalCore.View.ChunkRender
                 ViewCastTarget = _viewCastTarget,
                
             };
+          
 
             return toReturn;
         }

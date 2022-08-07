@@ -7,58 +7,60 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CrystalCore.View
 {
+    /// <summary>
+    ///   A Subview renders a piece of the whole grid. 
+    /// </summary>
     internal abstract class Subview : ViewObject
     {
-        /*
-         *  This class supplies the foundational code required to render a gridobject in a gridview.
-         *  It is a subview because it renders a piece of the whole grid.
-         * 
-         */
 
-      
-        protected GridObject _renderData;
-        protected List<Subview> _others;
+        protected GridObject _renderData; // the thing we view
+        private List<Subview> others; // I forget what this is for...
 
         internal GridObject RenderData
         {
             get => _renderData;
         }
 
-        protected Subview( GridView v, GridObject o, List<Subview> others) : base(v)
+
+        protected Subview(GridView v, GridObject o, List<Subview> others) : base(v)
         {
             // check that we don't already exist
             foreach (Subview r in others)
             {
                 if (r.RenderData == o)
+                    //return;
                     throw new InvalidOperationException("Attempted to create an already existing Renderer.");
-                    
+
             }
-            _others = others;
-
-
-               
+            this.others = others;
+            _renderData = o;
 
             // add ourselves to the list of renderers.
-            renderTarget.Manager.AddRenderer(this);
+            others.Add(this);
 
-      
-     
-            _renderData = o;
         }
 
-        // remove external refrences to this object.
-        internal override void Destroy()
+
+        /// <summary>
+        /// remove external refrences to this object.
+        /// </summary>
+        internal void Destroy()
         {
-            renderTarget.Manager.RemoveRenderer(this);
+            others.Remove(this);
         }
 
 
-        // returns whether drawing was successful.
+        /// <summary>
+        /// Draw this GridObject.
+        /// </summary>
+        /// <param name="sb"></param>
+        /// <returns>whether drawing was successful. Subview is destroyed if false. </returns>
+
         internal override bool Draw(SpriteBatch sb)
         {
             // probably don't kill anybody.
             // we might have to kill ourselves, if we aren't rendering anything.
-            if(_renderData == null || RenderData.Bounds.IsEmpty)
+            if (_renderData == null || RenderData.Bounds.IsEmpty)
             {
                 this.Destroy();
                 return false;
@@ -67,43 +69,49 @@ namespace CrystalCore.View
             // check that we are visible on screen.
             if (renderTarget.Camera.TileBounds().Intersects(_renderData.Bounds))
             {
-              
+
                 Render(sb);
                 return true;
             }
             else
             {
 
-               
-                
-                
                 this.Destroy();
                 return false;
-                
-            }
 
+            }
 
         }
 
+        /// <summary>
+        /// Subclasses of Subview use this method to do the actual drawing.
+        /// </summary>
+        /// <param name="sb"></param>
         protected abstract void Render(SpriteBatch sb);
 
-        public override bool Equals(object obj)
+
+    }
+
+    //shh... it's a secret class, we don't talk about this one
+    internal static class SubviewListExtensions
+    {
+        /// <summary>
+        ///  Whether this list of subviews has a subview that renders this gridobject.
+        /// </summary>
+        /// <param name="views"></param>
+        /// <param name="gobj"></param>
+        /// <returns></returns>
+        public static bool ViewExistsFor(this List<Subview> views, GridObject gobj)
         {
-            if (obj == null)
-                return false;
-            if(!(obj is Subview))
-                return false;
-            Subview rend = (Subview)obj;
-            if(rend._renderData==_renderData & rend.renderTarget== renderTarget )
+            foreach (Subview view in views)
             {
-                return true;
+                if (view.RenderData == gobj)
+                {
+                    return true;
+                }
             }
 
             return false;
-           
         }
-
-      
-
-    }
+    } 
 }

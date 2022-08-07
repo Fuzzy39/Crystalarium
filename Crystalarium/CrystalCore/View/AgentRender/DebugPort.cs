@@ -30,17 +30,11 @@ namespace CrystalCore.View.AgentRender
             get => _parent;
         }
 
-        public DebugPort(Texture2D background, Port port, AgentView parent, GridView v) : base(v)
+        public DebugPort(Texture2D background, Port port, AgentView parent) : base(parent.RenderTarget)
         {
             this.background = background;       
             _port = port;
             _parent = parent;
-        }
-
-
-        internal override void Destroy()
-        {
-            throw new NotImplementedException();
         }
 
 

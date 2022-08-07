@@ -57,6 +57,7 @@ namespace CrystalCore.View.ChunkRender
                     throw new InvalidOperationException("A Gridview cannot viewcast itself.");
                 }
 
+       
                 if (value.Grid != RenderData.Grid)
                 {
                     // hopefully these error messages make sense.
@@ -96,17 +97,13 @@ namespace CrystalCore.View.ChunkRender
         protected override void Render(SpriteBatch sb)
         {
 
-
             if (_chunkBG == null)
             {
                 throw new InvalidOperationException("RenderConfig not supplied with required texture.");
             }
 
             renderTarget.Camera.RenderTexture(sb, _chunkBG, RenderData.Bounds, determineColor());
-           
 
-         
-          
 
         }  
 

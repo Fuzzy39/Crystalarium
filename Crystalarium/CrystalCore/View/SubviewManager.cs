@@ -98,10 +98,8 @@ namespace CrystalCore.View
                 AddAgents();
                 foreach(AgentView av in _agentRenderers)
                 {
-                    av.RenderBackground(sb);
+                    av.DrawBackground(sb);
                 }
-
-
 
                 AddBeams();
                 DrawObjects(sb, _beamRenderers);
@@ -110,17 +108,12 @@ namespace CrystalCore.View
                 DrawObjects(sb, _agentRenderers);
 
 
-             
-
-
-
-
             }
 
             DrawGhosts(sb);
         }
 
-     
+
 
         // adds chunks to be rendered, if needbe.
         private void AddChunks()
@@ -135,32 +128,15 @@ namespace CrystalCore.View
                         continue;
                     }
 
-                    // ensure this chunk does not already exist
-                    bool existing = false;
-                    foreach (ChunkView r in _chunkRenderers)
+                    if(!_chunkRenderers.ViewExistsFor(ch))
                     {
-                        if (r.RenderData == ch)
-                        {
-                            existing = true;
-                        }
-
+                        Parent.RenderConfig.CreateRenderer(_parent, ch, _chunkRenderers);
                     }
 
-                    // this is really poetic.
-                    // use this if statement to guide you in life.
-                    if (existing)
-                    {
-                        continue;
-                    }
-
-                    Parent.RenderConfig.CreateRenderer(_parent, ch, _chunkRenderers);
-
-
+                 
 
                 }
             }
-
-
         }
 
 
@@ -190,21 +166,13 @@ namespace CrystalCore.View
 
                 Agent a = (Agent)cm;
 
-                bool hasRenderer = false;
-                foreach (AgentView ar in _agentRenderers)
+                // does this agent need rendered?
+                if (!_parent.Camera.TileBounds().Intersects(a.Bounds))
                 {
-                    if (ar.RenderData == a)
-                    {
-                        hasRenderer = true;
-                        break;
-                    }
+                    continue;
                 }
 
-                if (hasRenderer)
-                    continue;
-
-                // does this agent need rendered?
-                if (_parent.Camera.TileBounds().Intersects(a.Bounds))
+                if(!_agentRenderers.ViewExistsFor(a))
                 {
                     // add a new renderer.
                     a.Type.CreateRenderer(_parent, a, _agentRenderers);
@@ -220,29 +188,22 @@ namespace CrystalCore.View
 
                 foreach( ChunkMember cm in ((Chunk)chr.RenderData).MembersWithin)
                 {
-                    if(cm is Beam)
+
+                    if (!(cm is Beam))
                     {
-                        Beam beam = (Beam)cm;
+                        continue;
+                       
+                    }
 
-                        bool hasRenderer = false;
-                        foreach (BeamView bv in _beamRenderers)
-                        {
-                            if (bv.RenderData == beam)
-                            {
-                                hasRenderer = true;
-                                break;
-                            }
-                        }
+                    Beam beam = (Beam)cm;
 
-                        if (hasRenderer)
-                            continue;
-
-
-
+         
+                    if (!_beamRenderers.ViewExistsFor(beam))
+                    {
                         // uhhhhhh....
                         // that's a lot of stuff...
                         beam.Start.Parent.Type.Ruleset.BeamRenderConfig.CreateRenderer(_parent, beam, _beamRenderers);
-                    }
+                    }  
                 }
             }
         }
@@ -262,56 +223,6 @@ namespace CrystalCore.View
                     i++;
             }
         }
-
-
-        internal void AddRenderer(Subview renderer)
-        {
-
-            if (renderer is ChunkView)
-            {
-                _chunkRenderers.Add(renderer);
-                return;
-            }
-
-            if (renderer is AgentView)
-            {
-                _agentRenderers.Add(renderer);
-                return;
-            }
-
-            if (renderer is BeamView)
-            {
-                _beamRenderers.Add(renderer);
-                return;
-            }
-
-            throw new ArgumentException("Could not add renderer of unkown type: " + renderer);
-        }
-
-        internal void RemoveRenderer(Subview renderer)
-        {
-            if (renderer is ChunkView)
-            {
-                _chunkRenderers.Remove(renderer);
-                return;
-            }
-
-            if (renderer is AgentView)
-            {
-                _agentRenderers.Remove(renderer);
-                return;
-            }
-
-            if (renderer is BeamView)
-            {
-                _beamRenderers.Remove(renderer);
-                return;
-            }
-
-            throw new ArgumentException("Could not add renderer of unkown type: " + renderer);
-
-        }
-
 
         private void DrawGhosts( SpriteBatch sb)
         {

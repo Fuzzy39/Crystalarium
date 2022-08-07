@@ -26,12 +26,6 @@ namespace CrystalCore.View.AgentRender
             
         }
 
-        internal override void Destroy()
-        {
-            // huh.
-            throw new NotImplementedException();
-        }
-
         internal override bool Draw(SpriteBatch sb)
         {
 
@@ -64,22 +58,6 @@ namespace CrystalCore.View.AgentRender
 
             // make the color whiteish and transparent.
             return new Color(Color.Lerp(Color.White, c, .5f), .05f);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if(! (obj is AgentGhost))
-                return false;
-            AgentGhost objGhost = (AgentGhost)obj;
-            if(objGhost == null)
-                return false;
-            if (this.Bounds != objGhost.Bounds)
-                return false;
-            if (this.Facing != objGhost.Facing)
-                return false;
-            if (this.type != objGhost.type)
-                return false;
-            return true;
         }
     }
 }

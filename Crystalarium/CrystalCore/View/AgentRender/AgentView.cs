@@ -95,12 +95,13 @@ namespace CrystalCore.View.AgentRender
                 throw new InvalidOperationException("RenderConfig not supplied with required texture.");
             }
            
-            // render the background.
+            
             
 
             // render the Agent.
             renderTarget.Camera.RenderTexture(sb, _defaultTexture, ShrinkBorders(), _color, ((Agent)RenderData).Facing);
 
+            // debug port rendering/
             if(renderTarget.DoDebugPortRendering)
             {
                 if (_ports == null)
@@ -117,9 +118,13 @@ namespace CrystalCore.View.AgentRender
             
         }
 
-
-        internal void RenderBackground(SpriteBatch sb)
+        /// <summary?
+        /// This method, made especially for agents, is weird, and maybe should be generalized...
+        /// </summary>
+        /// <param name="sb"></param>
+        internal void DrawBackground(SpriteBatch sb)
         {
+            // render the background.
             if (_background == null)
             {
                 return;
@@ -141,6 +146,8 @@ namespace CrystalCore.View.AgentRender
 
             renderTarget.Camera.RenderTexture(sb, _background, bounds, _BGcolor, facing);
         }
+
+
         private void DebugPortSetup()
         {
             _ports = new List<DebugPort>();
@@ -152,7 +159,7 @@ namespace CrystalCore.View.AgentRender
 
             foreach (Port p in ((Agent)RenderData).PortList)
             {
-                _ports.Add(new DebugPort(_background, p, this, renderTarget));
+                _ports.Add(new DebugPort(_background, p, this));
             }
 
         }
