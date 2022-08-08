@@ -13,10 +13,7 @@ namespace CrystalCore.View
     internal class SubviewManager
     {
         /*
-         *  An integral part of a gridview, the Subview manager is responsible for updating the list of subviews and rendering them when commanded.
-         *  
-         * 
-         * 
+         *  An integral part of a gridview, the Subview manager is responsible for updating the list of subviews and rendering them when commanded. 
          */
 
         // fields
@@ -100,12 +97,12 @@ namespace CrystalCore.View
                 {
                     av.DrawBackground(sb);
                 }
-
+                DrawObjects(sb, _agentRenderers);
                 AddBeams();
                 DrawObjects(sb, _beamRenderers);
 
 
-                DrawObjects(sb, _agentRenderers);
+                
 
 
             }

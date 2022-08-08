@@ -9,13 +9,13 @@ using System.Text;
 
 namespace CrystalCore.View.SignalRender
 {
+    /// <summary>
+    /// A BeamView Renders Beams.
+    /// Not any signal, just beams.
+    /// </summary>
     internal class BeamView : Subview
     {
-        /*
-         * A BeamView Renders Beams.
-         * Not any signal, just beams.
-         */
-
+       
         private Texture2D _beamTexture; // the texture for use as the chunk's background.
 
         private Color _color; // the default color for a chunk. default is white.
@@ -40,14 +40,16 @@ namespace CrystalCore.View.SignalRender
             }
         }
 
-      
 
         public BeamView(GridView v, Beam b, List<Subview> others, Texture2D beamTexture, Color color) : base(v, b, others)
         {
             _beamTexture = beamTexture;
             _color = color;
 
-            BeamWidth = .4f;
+            if (b.Start.AbsoluteFacing.IsDiagonal())
+            {
+                throw new NotImplementedException("Diagonal Beam Rendering is not yet supported");
+            }
         }
 
 
@@ -86,15 +88,48 @@ namespace CrystalCore.View.SignalRender
             
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>The size, in tiles, of the beam as it will be rendered.</returns>
+        private Vector2 CalcSize()
+        {
+            // get helpful variables.
+            Beam beam = (Beam)_renderData;
+            Direction facing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
+
+
+            Vector2 size = new Vector2(_beamWidth, beam.Length);
+
+            if (beam.End == null) 
+            {
+               // we do not want to go out of the grid if we have no target.
+                size.Y -= .5f;
+            }
+            
+            if (facing.IsHorizontal())
+            {
+                size = new Vector2(size.Y, size.X);
+            }
+
+            return size;
+        }
+    
+        private Vector2 CalcLoc()
+        {
+            Beam beam = (Beam)_renderData;
+            Direction facing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
+
+            Vector2 loc = new Vector2();
+
+
+        }
 
         private RectangleF RenderHalf()
         {
             Beam beam = (Beam)_renderData;
             CompassPoint cp = beam.Start.AbsoluteFacing;
-            if (cp.IsDiagonal())
-            {
-                throw new NotImplementedException("Diagonal Beam Rendering is not yet supported");
-            }
+           
 
             Direction d = (Direction)cp.ToDirection();
 
@@ -145,7 +180,7 @@ namespace CrystalCore.View.SignalRender
 
             }
 
-            return renderBounds;
+            return new RectangleF(renderBounds.Location, CalcSize());
 
         }
 
