@@ -71,7 +71,7 @@ namespace CrystalCore.View.SignalRender
 
             }
 
-            RectangleF renderBounds = RenderHalf();
+            RectangleF renderBounds = new RectangleF(CalcLoc(),CalcSize());
 
             // which way does this beam flow?
             CompassPoint absFacing = ((Beam)RenderData).Start.AbsoluteFacing;
@@ -115,74 +115,39 @@ namespace CrystalCore.View.SignalRender
             return size;
         }
     
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>the location that our rendered bounds will start.</returns>
         private Vector2 CalcLoc()
         {
             Beam beam = (Beam)_renderData;
             Direction facing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
 
-            Vector2 loc = new Vector2();
+            Vector2 loc = new Vector2(0);
+            loc.X = (1 - _beamWidth) / 2f; // adjust for the width of the beam.
 
-
-        }
-
-        private RectangleF RenderHalf()
-        {
-            Beam beam = (Beam)_renderData;
-            CompassPoint cp = beam.Start.AbsoluteFacing;
-           
-
-            Direction d = (Direction)cp.ToDirection();
-
-            RectangleF renderBounds = new RectangleF(beam.Bounds);
-
-            if (d.IsVertical())
+            // if the beam is facing in a positive direction, we always increase the position so that the beam starts in the middle of the tile.
+            // otherwise, we only do this if it has an end, so that the starting position is in the middle of a tile.
+            // that made no sense, just trust me, it works with this, and doesn't without.
+            if (beam.End != null || (facing == Direction.down || facing == Direction.right))
             {
-                renderBounds.Width = _beamWidth;
-                renderBounds.X += (1 - _beamWidth) / 2f;
 
-                //renderBounds.Height += .5f;
+                loc.Y += .5f;
                
-                renderBounds.Height -= .5f;
-
-                if (beam.End == null & d == Direction.down)
-                {
-
-                    renderBounds.Y += .5f;
-
-                }
-
-                if (beam.End!=null)
-                {
-                    renderBounds.Y += .5f;
-                    renderBounds.Height -= .5f;
-                }
+              
             }
-            else
+
+
+            if(facing.IsHorizontal())
             {
-                renderBounds.Height = _beamWidth;
-                renderBounds.Y += (1 - _beamWidth) / 2f;
-
-
-                renderBounds.Width -= .5f;
-
-                if (beam.End == null & d == Direction.right)
-                {
-
-                    renderBounds.X += .5f;
-
-                }
-
-                if (beam.End != null)
-                {
-                    renderBounds.X += .5f;
-                    renderBounds.Width -= .5f;
-                }
-
+                loc = new Vector2(loc.Y, loc.X);
             }
 
-            return new RectangleF(renderBounds.Location, CalcSize());
-
+            return beam.Bounds.Location.ToVector2() + loc;
+           
         }
+
 
         private RectangleF RenderFull(RectangleF start, Direction facing)
         {
@@ -207,5 +172,5 @@ namespace CrystalCore.View.SignalRender
 
 
         // the bean beam? I'm confused...
-    }
+    } //HELICOPTER
 }

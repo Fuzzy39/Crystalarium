@@ -97,12 +97,12 @@ namespace CrystalCore.View
                 {
                     av.DrawBackground(sb);
                 }
-                DrawObjects(sb, _agentRenderers);
+              
                 AddBeams();
                 DrawObjects(sb, _beamRenderers);
 
 
-                
+                DrawObjects(sb, _agentRenderers);
 
 
             }
