@@ -2,7 +2,7 @@
 using CrystalCore.Model.Communication;
 using CrystalCore.Model.Objects;
 using CrystalCore.Util;
-using CrystalCore.View.SignalRender;
+using CrystalCore.View.Configs;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -45,13 +45,13 @@ namespace CrystalCore.Rulesets
             
         }
 
-        public BeamViewTemplate BeamRenderConfig { get; set; }
+        public BeamViewConfig BeamRenderConfig { get; set; }
 
         public Ruleset(string name)
         {
             Name = name;
             _agentTypes = new List<AgentType>();
-            BeamRenderConfig = new BeamViewTemplate();
+            BeamRenderConfig = new BeamViewConfig();
 
             RotateLock = false;
             DiagonalSignalsAllowed = false;

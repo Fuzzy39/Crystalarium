@@ -2,12 +2,14 @@
 using CrystalCore.Model.Objects;
 using CrystalCore.Util;
 using CrystalCore.View;
-using CrystalCore.View.AgentRender;
+using CrystalCore.View.Configs;
+using CrystalCore.View.Subviews;
+using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgentRenderer = CrystalCore.View.AgentRender.AgentView;
+using AgentRenderer = CrystalCore.View.Subviews.Agents.AgentView;
 
 namespace CrystalCore.Rulesets
 {
@@ -23,7 +25,7 @@ namespace CrystalCore.Rulesets
         private Ruleset _ruleset; // the ruleset this agent type belongs to.
 
 
-        private AgentViewTemplate _renderConfig; // the way this agent is rendered.
+        private AgentViewConfig _renderConfig; // the way this agent is rendered.
 
         private string _name; // the human readable name of this agent type.
 
@@ -37,10 +39,10 @@ namespace CrystalCore.Rulesets
             get => _ruleset;
         }
 
-        public AgentViewTemplate RenderConfig
+        public AgentViewConfig RenderConfig
         {
             get => _renderConfig;
-            set => _renderConfig = new AgentViewTemplate(value);   
+            set => _renderConfig = new AgentViewConfig(value);   
         }
 
         public string Name
@@ -61,7 +63,7 @@ namespace CrystalCore.Rulesets
             _ruleset = rs;
             _name = name;
             _size = size;
-            _renderConfig = new AgentViewTemplate();
+            _renderConfig = new AgentViewConfig();
 
         }
 

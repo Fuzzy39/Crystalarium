@@ -4,13 +4,12 @@ using CrystalCore.Model;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using CrystalCore.View.ChunkRender;
 using CrystalCore.Input;
 using CrystalCore.View.Rendering;
 
-using AgentRenderer = CrystalCore.View.AgentRender.AgentView;
-using ChunkRenderer = CrystalCore.View.ChunkRender.ChunkView;
-using CrystalCore.View.AgentRender;
+using AgentRenderer = CrystalCore.View.Subviews.Agents.AgentView;
+using ChunkRenderer = CrystalCore.View.Subviews.ChunkView;
+using CrystalCore.View.Configs;
 
 namespace CrystalCore.View
 {
@@ -45,7 +44,7 @@ namespace CrystalCore.View
         private Color backgroundColor;
 
         // Chunk Renderer related
-        private ChunkViewTemplate _renderConfig; // how are we rendering chunks?
+        private ChunkViewConfig _renderConfig; // how are we rendering chunks?
         private bool _doAgentRendering; // whether we render agents.
 
 
@@ -101,7 +100,7 @@ namespace CrystalCore.View
 
         }
 
-        public ChunkViewTemplate RenderConfig
+        public ChunkViewConfig RenderConfig
         {
             get => _renderConfig;
 
@@ -112,7 +111,7 @@ namespace CrystalCore.View
 
 
         // create the viewport
-        internal GridView(List<GridView> container, Grid g, Point pos, Point dimensions, ChunkViewTemplate renderConfig)
+        internal GridView(List<GridView> container, Grid g, Point pos, Point dimensions, ChunkViewConfig renderConfig)
         {
             // initialize from parameters
             _grid = g;
@@ -145,7 +144,7 @@ namespace CrystalCore.View
         }
 
         // an alternate viewport constructor, without points.
-        internal GridView(List<GridView> container, Grid g, int x, int y, int width, int height, ChunkViewTemplate renderConfig)
+        internal GridView(List<GridView> container, Grid g, int x, int y, int width, int height, ChunkViewConfig renderConfig)
             : this(container, g, new Point(x, y), new Point(width, height), renderConfig) { }
 
 

@@ -2,12 +2,12 @@
 using CrystalCore.Rulesets;
 using CrystalCore.Model;
 using CrystalCore.View;
-using CrystalCore.View.ChunkRender;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CrystalCore.View.Configs;
 
 namespace CrystalCore
 {
@@ -47,12 +47,12 @@ namespace CrystalCore
 
 
         // manual ways to create gridviews
-        public GridView addView(Grid g, int x, int y, int width, int height, ChunkViewTemplate renderConfig )
+        public GridView addView(Grid g, int x, int y, int width, int height, ChunkViewConfig renderConfig )
         {
             return new GridView(_viewports, g, x, y, width, height, renderConfig);
         }
 
-        public GridView addView(Grid g, Point location, Point size, ChunkViewTemplate renderConfig)
+        public GridView addView(Grid g, Point location, Point size, ChunkViewConfig renderConfig)
         {
             return new GridView(_viewports, g, location, size, renderConfig);
         }

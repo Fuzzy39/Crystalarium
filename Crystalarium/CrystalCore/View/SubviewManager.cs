@@ -1,8 +1,8 @@
 ﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Objects;
-using CrystalCore.View.AgentRender;
-using CrystalCore.View.ChunkRender;
-using CrystalCore.View.SignalRender;
+using CrystalCore.View.Configs;
+using CrystalCore.View.Subviews;
+using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;

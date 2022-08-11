@@ -8,8 +8,8 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CrystalCore.View.AgentRender;
 using CrystalCore.Model.Communication;
+using CrystalCore.View.Configs;
 
 namespace Crystalarium
 {
@@ -70,7 +70,7 @@ namespace Crystalarium
             AgentType t;
 
             // set the default settings for agent rendering.
-            AgentViewTemplate baseConfig = new AgentViewTemplate();
+            AgentViewConfig baseConfig = new AgentViewConfig();
             baseConfig.AgentBackground = Textures.pixel;
             baseConfig.BackgroundColor = new Color(50, 50, 50);
             baseConfig.DefaultTexture = Textures.sampleAgent;

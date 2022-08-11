@@ -10,10 +10,10 @@ using CrystalCore.Input;
 using CrystalCore.Util;
 using CrystalCore.Model;
 using CrystalCore.View;
-using CrystalCore.View.ChunkRender;
 using CrystalCore.Rulesets;
-using CrystalCore.View.AgentRender;
+using CrystalCore.View.Subviews.Agents;
 using CrystalCore.Model.Communication;
+using CrystalCore.View.Configs;
 
 namespace Crystalarium
 {
@@ -32,7 +32,7 @@ namespace Crystalarium
 
         private CrystalCore.Engine engine; // the 'engine'
 
-        private const int BUILD = 623; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 625; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
@@ -111,7 +111,7 @@ namespace Crystalarium
 
             // create the render modes we are likely to use.
 
-            ChunkViewTemplate Standard = new ChunkViewTemplate()
+            ChunkViewConfig Standard = new ChunkViewConfig()
             {
                 ChunkBackground = Textures.chunkGrid
                
@@ -131,7 +131,7 @@ namespace Crystalarium
 
 
             // for the minimap.
-            ChunkViewTemplate Debug = new ChunkViewTemplate()
+            ChunkViewConfig Debug = new ChunkViewConfig()
             {
 
                 ChunkBackground = Textures.pixel,
