@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgentRenderer = CrystalCore.View.Subviews.Agents.AgentView;
+
 
 namespace CrystalCore.Rulesets
 {
@@ -95,14 +95,14 @@ namespace CrystalCore.Rulesets
             }
         }
 
-        internal AgentRenderer CreateRenderer(GridView v, Agent toRender, List<Subview> others)
+        internal AgentView CreateRenderer(GridView v, Agent toRender, List<Subview> others)
         {
             if(toRender.Type!=this)
             {
                 throw new ArgumentException(toRender + " is of type " + toRender.Type._name + ", and cannot be rendered as type " + _name);
             }
                 
-            return _renderConfig.CreateRenderer(v, toRender, others);
+            return new AgentView(v, toRender, others, _renderConfig);
         }
 
        

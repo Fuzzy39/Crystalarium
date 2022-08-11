@@ -127,7 +127,7 @@ namespace CrystalCore.View
 
                     if(!_chunkRenderers.ViewExistsFor(ch))
                     {
-                        Parent.RenderConfig.CreateRenderer(_parent, ch, _chunkRenderers);
+                        new ChunkView(_parent, ch, _chunkRenderers, Parent.RenderConfig);
                     }
 
                  
@@ -199,8 +199,10 @@ namespace CrystalCore.View
                     {
                         // uhhhhhh....
                         // that's a lot of stuff...
-                        beam.Start.Parent.Type.Ruleset.BeamRenderConfig.CreateRenderer(_parent, beam, _beamRenderers);
-                    }  
+                        // it's temporary, don't worry.
+                        new BeamView (_parent, beam, _beamRenderers, beam.Start.Parent.Type.Ruleset.BeamRenderConfig);
+
+                    }
                 }
             }
         }

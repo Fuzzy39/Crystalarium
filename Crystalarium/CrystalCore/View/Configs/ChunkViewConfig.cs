@@ -70,17 +70,7 @@ namespace CrystalCore.View.Configs
             set { _originChunkColor = value; }
         }
 
-        public GridView ViewCastTarget
-        {
-            get { return _viewCastTarget; }
-            set { _viewCastTarget = value; }
-        }
 
-        public Texture2D ViewCastOverlay
-        {
-            get { return _viewCastOverlay; }
-            set { _viewCastOverlay = value; }
-        }
 
 
         public ChunkViewConfig()
@@ -95,21 +85,6 @@ namespace CrystalCore.View.Configs
         }
 
 
-        internal ChunkView CreateRenderer(GridView v, Chunk ch, List<Subview> others)
-        {
-            // set up a new renderer
-            ChunkView toReturn = new ChunkView(v, ch, others, _chunkBG, _BGColor)
-            {
-                brightenAmount = _brightenAmount,
-                doCheckerBoardColoring = _doCheckerBoardColoring,
-                OriginChunkColor = _originChunkColor,
-                ViewCastTarget = _viewCastTarget,
-
-            };
-
-
-            return toReturn;
-        }
 
     }
 }

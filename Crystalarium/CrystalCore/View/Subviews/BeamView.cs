@@ -1,6 +1,7 @@
 ﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Objects;
 using CrystalCore.Util;
+using CrystalCore.View.Configs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,39 +13,17 @@ namespace CrystalCore.View.Subviews
     /// <summary>
     /// A BeamView Renders Beams.
     /// Not any signal, just beams.
+    /// Note that the renderer in its current state stretches its texture considerably.
     /// </summary>
     internal class BeamView : Subview
     {
 
-        private Texture2D _beamTexture; // the texture for use as the chunk's background.
-
-        private Color _color; // the default color for a chunk. default is white.
-
-        private float _beamWidth;
+        private BeamViewConfig config;
 
 
-        internal float BeamWidth
+        public BeamView(GridView v, Beam b, List<Subview> others, BeamViewConfig config) : base(v, b, others)
         {
-            get => _beamWidth;
-
-            set
-            {
-
-                if (value >= .01f & value <= MaxBeamWidth())
-                {
-                    _beamWidth = value;
-                    return;
-                }
-
-                throw new ArgumentOutOfRangeException(nameof(value));
-            }
-        }
-
-
-        public BeamView(GridView v, Beam b, List<Subview> others, Texture2D beamTexture, Color color) : base(v, b, others)
-        {
-            _beamTexture = beamTexture;
-            _color = color;
+            this.config = config;
 
             if (b.Start.AbsoluteFacing.IsDiagonal())
             {
@@ -53,19 +32,11 @@ namespace CrystalCore.View.Subviews
         }
 
 
-        private float MaxBeamWidth()
-        {
-            if (((Beam)_renderData).Start is HalfPort)
-            {
-                return .5f;
-            }
-
-            return 1f;
-        }
+       
 
         protected override void Render(SpriteBatch sb)
         {
-            if (_beamTexture == null)
+            if (config.BeamTexture == null)
             {
                 return;
 
@@ -84,7 +55,7 @@ namespace CrystalCore.View.Subviews
 
             }
 
-            renderTarget.Camera.RenderTexture(sb, _beamTexture, renderBounds, _color, facing);
+            renderTarget.Camera.RenderTexture(sb, config.BeamTexture, renderBounds, config.Color, facing);
 
         }
 
@@ -99,7 +70,7 @@ namespace CrystalCore.View.Subviews
             Direction facing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
 
 
-            Vector2 size = new Vector2(_beamWidth, beam.Length);
+            Vector2 size = new Vector2(config.BeamWidth, beam.Length);
 
             if (beam.End == null)
             {
@@ -125,7 +96,7 @@ namespace CrystalCore.View.Subviews
             Direction facing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
 
             Vector2 loc = new Vector2(0);
-            loc.X = (1 - _beamWidth) / 2f; // adjust for the width of the beam.
+            loc.X = (1 - config.BeamWidth) / 2f; // adjust for the width of the beam.
 
             // if the beam is facing in a positive direction, we always increase the position so that the beam starts in the middle of the tile.
             // otherwise, we only do this if it has an end, so that the starting position is in the middle of a tile.

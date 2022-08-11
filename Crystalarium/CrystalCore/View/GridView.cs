@@ -47,6 +47,10 @@ namespace CrystalCore.View
         private ChunkViewConfig _renderConfig; // how are we rendering chunks?
         private bool _doAgentRendering; // whether we render agents.
 
+        private GridView _viewCastTarget; // if not null, chunks viewed by this gridview (assuming it has the same grid) will be brightened.
+        private Texture2D _viewCastOverlay;
+
+        // this gridview should not be the same as the gridview that this renderer is part of.
 
 
 
@@ -88,6 +92,43 @@ namespace CrystalCore.View
         }
 
 
+
+        public GridView ViewCastTarget
+        {
+            get => _viewCastTarget;
+            set
+            {
+                if (value == null)
+                {
+                    _viewCastTarget = null;
+                    return;
+                }
+
+                if (value == this)
+                {
+
+                    throw new InvalidOperationException("A Gridview cannot viewcast itself.");
+                }
+
+
+                if (value.Grid != this.Grid)
+                {
+                    // hopefully these error messages make sense.
+                    throw new InvalidOperationException("Viewcasting requires GridViews that view the same grid.");
+                }
+
+                _viewCastTarget = value;
+
+
+            }
+        }
+
+
+        public Texture2D ViewCastOverlay
+        {
+            get { return _viewCastOverlay; }
+            set { _viewCastOverlay = value; }
+        }
 
         public bool DoAgentRendering // whether agents are rendered in this gridview
         {
@@ -139,6 +180,9 @@ namespace CrystalCore.View
 
             AllowMultipleGhosts = false;
             DoDebugPortRendering = false;
+
+            _viewCastTarget = null;
+            _viewCastOverlay = null;
 
 
         }
@@ -193,18 +237,18 @@ namespace CrystalCore.View
 
         private void DrawOtherGridView(SpriteBatch sb)
         {
-            if (RenderConfig.ViewCastTarget == null)
+            if (ViewCastTarget == null)
             {
                 return;
             }
 
-            if (RenderConfig.ViewCastOverlay == null)
+            if (ViewCastOverlay == null)
             {
                 return;
             }
 
-            _camera.RenderTexture(sb, RenderConfig.ViewCastOverlay,
-                RenderConfig.ViewCastTarget.Camera.TileBounds(),
+            _camera.RenderTexture(sb, ViewCastOverlay,
+                ViewCastTarget.Camera.TileBounds(),
                 new Color(.2f, .2f, .2f, .001f));
 
         }

@@ -14,19 +14,20 @@ namespace CrystalCore.View.Configs
 
         // See the AgentView class for descriptions of these fields.
 
-        private Texture2D _agentBackground;
-        private Color _backgroundColor;
-        private bool _doBackgroundRotation;
+        private Texture2D _background;  // Our background texture
+        private Color _backgroundColor; // our background color.
+        private bool _doBackgroundRotation; // whether the backroung is rotated along with the primary texture.
 
         private Texture2D _defaultTexture;
         private Color _color;
 
-        private float _shrinkage;
-        private bool _doBackgroundShrinkage;
+        private float _shrinkage;// the amount of the tile, in pixels per edge (at camera scale of 100) that is left blank when this agent is rendered.
+                                  // did that make any sense? it is valid between 0 and 49. 
+        private bool _doBackgroundShrinkage;  // whether the background is shrunken along with the primary texture.
 
 
 
-        public Texture2D AgentBackground { get => _agentBackground; set => _agentBackground = value; }
+        public Texture2D Background { get => _background; set => _background = value; }
 
         public Color BackgroundColor
         {
@@ -37,7 +38,18 @@ namespace CrystalCore.View.Configs
         public float Shrinkage
         {
             get => _shrinkage;
-            set => _shrinkage = value;
+            set
+            {
+
+                if (value < 0 || value > .49)
+                {
+                    throw new ArgumentException("The appropriate values for Background Shrinkage for agents are between 0 and .49 (inclusive). " + value + " is not valid.");
+                }
+
+
+                _shrinkage = value;
+
+            }
         }
 
         public Texture2D DefaultTexture
@@ -67,7 +79,7 @@ namespace CrystalCore.View.Configs
         public AgentViewConfig()
         {
             // defaults for stuff.
-            AgentBackground = null;
+            Background = null;
             BackgroundColor = Color.White;
             Shrinkage = 0;
             Color = Color.White;
@@ -78,7 +90,7 @@ namespace CrystalCore.View.Configs
 
         public AgentViewConfig(AgentViewConfig from)
         {
-            AgentBackground = from.AgentBackground;
+            Background = from.Background;
             BackgroundColor = from.BackgroundColor;
             Shrinkage = from.Shrinkage;
             Color = from.Color;
@@ -88,20 +100,7 @@ namespace CrystalCore.View.Configs
 
         }
 
-        internal AgentView CreateRenderer(GridView v, Agent a, List<Subview> others)
-        {
-            AgentView toReturn = new AgentView(v, a, others)
-            {
-                Background = AgentBackground,
-                BackgroundColor = BackgroundColor,
-                Shrinkage = Shrinkage,
-                DefaultTexture = DefaultTexture,
-                Color = Color,
-                DoBackgroundShrinkage = DoBackgroundShrinkage,
-                DoBackgroundRotation = DoBackgroundRotation
-            };
-            return toReturn;
-        }
+       
 
     }
 }

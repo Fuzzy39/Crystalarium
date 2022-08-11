@@ -71,7 +71,7 @@ namespace Crystalarium
 
             // set the default settings for agent rendering.
             AgentViewConfig baseConfig = new AgentViewConfig();
-            baseConfig.AgentBackground = Textures.pixel;
+            baseConfig.Background = Textures.pixel;
             baseConfig.BackgroundColor = new Color(50, 50, 50);
             baseConfig.DefaultTexture = Textures.sampleAgent;
             baseConfig.Color = Color.Magenta;

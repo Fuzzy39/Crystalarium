@@ -32,7 +32,17 @@ namespace CrystalCore.View.Configs
         public float BeamWidth
         {
             get => beamWidth;
-            set => beamWidth = value;
+            set
+            {
+
+                if (value >= .01f & value <= .5f)
+                {
+                    beamWidth = value;
+                    return;
+                }
+
+                throw new ArgumentOutOfRangeException(nameof(value));
+            }
         }
 
         public BeamViewConfig()
@@ -41,19 +51,6 @@ namespace CrystalCore.View.Configs
             Color = Color.White;
             BeamWidth = .25f;
         }
-
-        internal BeamView CreateRenderer(GridView v, Beam b, List<Subview> others)
-        {
-            // set up a new renderer
-            BeamView toReturn = new BeamView(v, b, others, BeamTexture, Color)
-            {
-                BeamWidth = BeamWidth
-
-            };
-
-            return toReturn;
-        }
-
 
 
     }

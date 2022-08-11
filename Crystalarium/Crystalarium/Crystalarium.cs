@@ -32,7 +32,7 @@ namespace Crystalarium
 
         private CrystalCore.Engine engine; // the 'engine'
 
-        private const int BUILD = 625; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 629; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
@@ -139,9 +139,6 @@ namespace Crystalarium
                 BackgroundColor = new Color(50, 50, 150),
                 OriginChunkColor = new Color(150, 50, 50),
 
-                // to make it a minimap!
-                ViewCastOverlay = Textures.pixel,
-                ViewCastTarget = view // note that this must be done after view has been initialized.
             
             };
 
@@ -159,6 +156,11 @@ namespace Crystalarium
             // Set the camera of the minimap.
             minimap.Camera.MinScale = 1;
 
+
+            // to make it a minimap!
+
+            minimap.ViewCastOverlay = Textures.pixel;
+            minimap.ViewCastTarget = view; // note that this must be done after view has been initialized.
             //minimap.DoAgentRendering = false;
 
         }
