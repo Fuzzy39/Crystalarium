@@ -30,7 +30,7 @@ namespace CrystalCore.Model.Objects
 
         public List<ChunkMember> Children
         {
-            get => _children;
+            get => _children; //BIG CHONK
 
         }
 

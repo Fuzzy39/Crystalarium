@@ -8,14 +8,20 @@ namespace CrystalCore
     /// Classes that implement this are part of the engine that requires initialization checks in order to be used.
     /// These checks are run by calling Engine.Initialize().
     /// </summary>
-    internal interface IInitializable
+    public abstract class InitializableObject
     {
-        bool Initialized { get; set; }
+        public bool Initialized { get; private set; }
+
+        internal InitializableObject()
+        {
+            Initialized = false;
+        }
 
         internal virtual void Initialize()
-        {   
+        {
             Initialized = true;
         }
+        
     }
 
     public class InitializationFailedException : Exception

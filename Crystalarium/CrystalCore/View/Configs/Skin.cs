@@ -10,7 +10,7 @@ namespace CrystalCore.View.Configs
     /// <summary>
     /// A skin describes all of a gridview's graphical settings when rendering a specific ruleset.
     /// </summary>
-    public class Skin : IInitializable
+    public class Skin : InitializableObject
     {
         private Ruleset ruleset; // the ruleset we render.
         private SkinSet parent; // the skinset we are part of.
@@ -26,7 +26,7 @@ namespace CrystalCore.View.Configs
         private Color _gridViewBGColor;
     
         private bool _doAgentRendering; // whether a gridview with this skin renders agents and signals.
-
+            
         // NOTE TO SELF: THIS BELONGS IN THE SKINSET!!
         private Texture2D _viewCastOverlay; // if this is non-null, any gridview with this skin must have a non-null ViewCastTarget.
 
@@ -106,19 +106,19 @@ namespace CrystalCore.View.Configs
 
         }
 
-        private bool Initialized { get; set; }
 
-        internal Skin(Ruleset rs, SkinSet parent)
+        internal Skin(Ruleset rs, SkinSet parent) : base()
         {
             this.ruleset = rs;
             this.parent = parent;
 
-            Initialized = false;
+           
             _agentConfigs = new List<AgentViewConfig>();
+
 
         }
 
-        void IInitializable.Initialize()
+        internal override void Initialize()
         {
 
 
@@ -146,7 +146,7 @@ namespace CrystalCore.View.Configs
                 throw new InitializationFailedException("The skin rendering ruleset '" + ruleset.Name + "' Failed to initialize:\n    " + e.Message);
             }
           
-            Initialized = true;
+            base.Initialize();
         }
 
 

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace CrystalCore.View.Configs
 {
-    public class ChunkViewConfig
+    public class ChunkViewConfig:InitializableObject
     {
 
         // A renderer template is created by the user and given to gridviews to use so that they can create chunk renderers.
@@ -40,40 +40,59 @@ namespace CrystalCore.View.Configs
         public Texture2D ChunkBackground
         {
             get { return _chunkBG; }
-            set { _chunkBG = value; }
+            set
+            {
+                if (!Initialized) { _chunkBG = value; return; }
+                throw new InvalidOperationException("Cannot modify skin config after engine initialization.");
+            }
         }
 
 
         public Color BackgroundColor
         {
             get { return _BGColor; }
-            set { _BGColor = value; }
+            set
+            {
+                if (!Initialized) { _BGColor = value; return; }
+                throw new InvalidOperationException("Cannot modify skin config after engine initialization.");
+            }
         }
 
 
         public int BrightenAmmount
         {
             get { return _brightenAmount; }
-            set { _brightenAmount = value; }
+            set
+            {
+                if (!Initialized) { _brightenAmount = value; return; }
+                throw new InvalidOperationException("Cannot modify skin config after engine initialization.");
+            }
         }
 
 
         public bool DoCheckerBoardColoring
         {
             get { return _doCheckerBoardColoring; }
-            set { _doCheckerBoardColoring = value; }
+            set 
+            { 
+                if (!Initialized) {  _doCheckerBoardColoring = value; return; }
+                throw new InvalidOperationException("Cannot modify skin config after engine initialization.");
+            }
         }
 
         public Color? OriginChunkColor
         {
             get { return _originChunkColor; }
-            set { _originChunkColor = value; }
+            set 
+            {
+                if (!Initialized) { _originChunkColor = value; return; }
+                throw new InvalidOperationException("Cannot modify skin config after engine initialization.");
+            }
         }
 
+       
 
-
-
-        public ChunkViewConfig()
+        public ChunkViewConfig(): base()
         {
             _chunkBG = null;
             _BGColor = Color.White;
@@ -81,7 +100,16 @@ namespace CrystalCore.View.Configs
             _doCheckerBoardColoring = false;
             _originChunkColor = null;
             _viewCastTarget = null;
+            
+        }
 
+        internal override void Initialize()
+        { 
+            if(ChunkBackground==null)
+            {
+                throw new InitializationFailedException("ChunkViewConfig requires a background texture.");
+            }
+            base.Initialize();
         }
 
 

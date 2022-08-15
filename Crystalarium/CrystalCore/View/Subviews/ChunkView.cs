@@ -61,7 +61,7 @@ namespace CrystalCore.View.Subviews
             {
                 brighten(ref toReturn, 2.5);
             }
-
+                
             return toReturn;
 
         }
