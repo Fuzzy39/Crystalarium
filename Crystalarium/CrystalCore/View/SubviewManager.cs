@@ -20,12 +20,12 @@ namespace CrystalCore.View
 
         private GridView _parent; // the gridview that we help manage.
 
-        private List<Subview> _chunkRenderers; // list of chunk renderers currently in existence
+        private List<Subview> _chunkViews; // list of chunk renderers currently in existence
 
 
-        private List<Subview> _agentRenderers; // the list of agent renderers currently in existance.
+        private List<Subview> _agentViews; // the list of agent renderers currently in existance.
 
-        private List<Subview> _beamRenderers; // the list of beam renderers currently rendering;
+        private List<Subview> _beamViews; // the list of beam renderers currently rendering;
 
         private List<AgentGhost> _ghosts; // the ghosts currently in existance. usually only one.
 
@@ -34,18 +34,18 @@ namespace CrystalCore.View
 
         internal List<Subview> ChunkViews
         {
-            get => _chunkRenderers;
+            get => _chunkViews;
         }
 
         internal List<Subview> AgentViews
         {
-            get => _agentRenderers;
+            get => _agentViews;
         }
 
 
         internal List<Subview> BeamViews
         {
-            get => _beamRenderers;
+            get => _beamViews;
         }
 
 
@@ -62,9 +62,9 @@ namespace CrystalCore.View
             _parent = parent;
 
             // initialize our lists
-            _chunkRenderers = new List<Subview>();
-            _agentRenderers = new List<Subview>();
-            _beamRenderers = new List<Subview>();
+            _chunkViews = new List<Subview>();
+            _agentViews = new List<Subview>();
+            _beamViews = new List<Subview>();
 
             _ghosts = new List<AgentGhost>();
         }
@@ -86,23 +86,23 @@ namespace CrystalCore.View
         {
             // first update the chunk list and draw chunks.
             AddChunks();
-            DrawObjects(sb, _chunkRenderers);
+            DrawObjects(sb, _chunkViews);
 
             // do the same with agents.
             if (Parent.DoAgentRendering)
             {
              
                 AddAgents();
-                foreach(AgentView av in _agentRenderers)
+                foreach(AgentView av in _agentViews)
                 {
                     av.DrawBackground(sb);
                 }
               
                 AddBeams();
-                DrawObjects(sb, _beamRenderers);
+                DrawObjects(sb, _beamViews);
 
 
-                DrawObjects(sb, _agentRenderers);
+                DrawObjects(sb, _agentViews);
 
 
             }
@@ -125,9 +125,9 @@ namespace CrystalCore.View
                         continue;
                     }
 
-                    if(!_chunkRenderers.ViewExistsFor(ch))
+                    if(!_chunkViews.ViewExistsFor(ch))
                     {
-                        new ChunkView(_parent, ch, _chunkRenderers, Parent.RenderConfig);
+                        new ChunkView(_parent, ch, _chunkViews, Parent.RenderConfig);
                     }
 
                  
@@ -141,7 +141,7 @@ namespace CrystalCore.View
         private void AddAgents()
         {
             // find agents that need rendered
-            foreach (ChunkView chr in _chunkRenderers)
+            foreach (ChunkView chr in _chunkViews)
             {
 
                 AddAgents((Chunk)chr.RenderData);
@@ -169,10 +169,10 @@ namespace CrystalCore.View
                     continue;
                 }
 
-                if(!_agentRenderers.ViewExistsFor(a))
+                if(!_agentViews.ViewExistsFor(a))
                 {
                     // add a new renderer.
-                    a.Type.CreateRenderer(_parent, a, _agentRenderers);
+                    a.Type.CreateRenderer(_parent, a, _agentViews);
                 }
             }
         }
@@ -180,7 +180,7 @@ namespace CrystalCore.View
         private void AddBeams()
         {
             // find agents that need rendered
-            foreach (ChunkView chr in _chunkRenderers)
+            foreach (ChunkView chr in _chunkViews)
             {
 
                 foreach( ChunkMember cm in ((Chunk)chr.RenderData).MembersWithin)
@@ -195,12 +195,12 @@ namespace CrystalCore.View
                     Beam beam = (Beam)cm;
 
          
-                    if (!_beamRenderers.ViewExistsFor(beam))
+                    if (!_beamViews.ViewExistsFor(beam))
                     {
                         // uhhhhhh....
                         // that's a lot of stuff...
                         // it's temporary, don't worry.
-                        new BeamView (_parent, beam, _beamRenderers, beam.Start.Parent.Type.Ruleset.BeamRenderConfig);
+                        new BeamView (_parent, beam, _beamViews, beam.Start.Parent.Type.Ruleset.BeamRenderConfig);
 
                     }
                 }

@@ -39,24 +39,11 @@ namespace CrystalCore.View
         private PhysicsCamera _camera; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
         private SubviewManager _subviewManager; // our subview manager, who kindly takes after our subviews.
 
-        // Graphical Features
-        private Texture2D _background;
-        private Color backgroundColor;
-
-        // Chunk Renderer related
-        private ChunkViewConfig _renderConfig; // how are we rendering chunks?
-        private bool _doAgentRendering; // whether we render agents.
-
         private GridView _viewCastTarget; // if not null, chunks viewed by this gridview (assuming it has the same grid) will be brightened.
-        private Texture2D _viewCastOverlay;
-
-        // this gridview should not be the same as the gridview that this renderer is part of.
 
 
-
-        public bool AllowMultipleGhosts { get; set; }
-        public bool DoDebugPortRendering { get; set; }
-
+        public bool AllowMultipleGhosts { get; set; } // can this gridview contain multiple ghosts, or just one?
+        public bool DoDebugPortRendering { get; set; } // should agents render their debug ports?
 
         // Properties
         public Rectangle PixelBounds
@@ -85,11 +72,7 @@ namespace CrystalCore.View
         }
 
 
-        public Texture2D Background
-        {
-            get => _background;
-            set => _background = value;
-        }
+     
 
 
 
@@ -98,6 +81,10 @@ namespace CrystalCore.View
             get => _viewCastTarget;
             set
             {
+                if(skinset.ViewCastOverlay == null)
+                {
+                    throw new InvalidOperationException("the current skinset does not support grid view casting.");
+                }
                 if (value == null)
                 {
                     _viewCastTarget = null;
@@ -124,28 +111,7 @@ namespace CrystalCore.View
         }
 
 
-        public Texture2D ViewCastOverlay
-        {
-            get { return _viewCastOverlay; }
-            set { _viewCastOverlay = value; }
-        }
-
-        public bool DoAgentRendering // whether agents are rendered in this gridview
-        {
-            get => _doAgentRendering;
-            set
-            {
-                _doAgentRendering = value;
-                _subviewManager.AgentViews.Clear();
-            }
-
-        }
-
-        public ChunkViewConfig RenderConfig
-        {
-            get => _renderConfig;
-
-        }
+      
 
 
         // Contstructors
