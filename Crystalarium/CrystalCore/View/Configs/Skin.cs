@@ -12,8 +12,8 @@ namespace CrystalCore.View.Configs
     /// </summary>
     public class Skin : InitializableObject
     {
-        private Ruleset ruleset; // the ruleset we render.
-        private SkinSet parent; // the skinset we are part of.
+        private Ruleset _ruleset; // the ruleset we render.
+        private SkinSet _parent; // the skinset we are part of.
 
         // the configs which make up most of this skin's settings.
         private ChunkViewConfig _chunkConfig;
@@ -25,13 +25,16 @@ namespace CrystalCore.View.Configs
         private Texture2D _gridViewBG;
         private Color _gridViewBGColor;
     
-        private bool _doAgentRendering; // whether a gridview with this skin renders agents and signals.
+       
             
         // NOTE TO SELF: THIS BELONGS IN THE SKINSET!!
         private Texture2D _viewCastOverlay; // if this is non-null, any gridview with this skin must have a non-null ViewCastTarget.
 
 
-        
+        public Ruleset Ruleset
+        {
+            get { return _ruleset; }
+        }
 
         public ChunkViewConfig ChunkConfig
         {
@@ -91,27 +94,14 @@ namespace CrystalCore.View.Configs
         }
 
 
-        public bool DoAgentRendering // whether agents are rendered in this gridview
-        {
-            get => _doAgentRendering;
-            set
-            {
-                if (!Initialized)
-                {
-                    _doAgentRendering = value; 
-                    return;
-                }
-                throw new InvalidOperationException("Cannot access skin configs after initialization.");
-            }
-
-        }
+     
 
 
         internal Skin(Ruleset rs, SkinSet parent) : base()
         {
-            this.ruleset = rs;
-            this.parent = parent;
-
+            this._ruleset = rs;
+            this._parent = parent;
+            
            
             _agentConfigs = new List<AgentViewConfig>();
 
@@ -143,7 +133,7 @@ namespace CrystalCore.View.Configs
             }
             catch (InitializationFailedException e)
             {
-                throw new InitializationFailedException("The skin rendering ruleset '" + ruleset.Name + "' Failed to initialize:\n    " + e.Message);
+                throw new InitializationFailedException("The skin rendering ruleset '" + _ruleset.Name + "' Failed to initialize:\n    " + e.Message);
             }
           
             base.Initialize();
@@ -160,7 +150,7 @@ namespace CrystalCore.View.Configs
                     throw new InitializationFailedException("There are multiple AgentViewConfigs for AgentType '" + config.AgentType.Name+"'.");
                 }
 
-                if(ruleset != config.AgentType.Ruleset)
+                if(_ruleset != config.AgentType.Ruleset)
                 {
                     throw new InitializationFailedException("A config exists for an incorrect ruleset '"+ config.AgentType.Ruleset.Name + "', attempting to configure AgentType '" +
                          config.AgentType.Name+ "'.");
@@ -171,7 +161,7 @@ namespace CrystalCore.View.Configs
             }
 
             // check that all agent types have been configured.
-            foreach(AgentType type in ruleset.AgentTypes)
+            foreach(AgentType type in _ruleset.AgentTypes)
             {
                 if(!typesConfigured.Contains(type))
                 {

@@ -71,6 +71,13 @@ namespace CrystalCore.View.Configs
             BeamWidth = .25f;
         }
 
+        public BeamViewConfig(BeamViewConfig from) : base()
+        {
+            BeamTexture = from.beamTexture;
+            Color = from.Color;
+            BeamWidth = from.beamWidth;
+        }
+
         internal override void Initialize()
         {
 

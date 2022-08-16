@@ -100,7 +100,21 @@ namespace CrystalCore.View.Configs
             _doCheckerBoardColoring = false;
             _originChunkColor = null;
             _viewCastTarget = null;
+
+    
             
+        }
+
+        public ChunkViewConfig(ChunkViewConfig from) : base()
+        {
+            _chunkBG = from.ChunkBackground;
+            _BGColor = from.BackgroundColor;
+            _brightenAmount = from._brightenAmount;
+            _doCheckerBoardColoring = from.DoCheckerBoardColoring;
+            _originChunkColor = from.OriginChunkColor;
+            _viewCastTarget = from._viewCastTarget;
+
+           
         }
 
         internal override void Initialize()

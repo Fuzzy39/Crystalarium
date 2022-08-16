@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Objects;
+using CrystalCore.Rulesets;
 using CrystalCore.View.Subviews;
 using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework;
@@ -9,10 +10,11 @@ using System.Text;
 
 namespace CrystalCore.View.Configs
 {
-    public class AgentViewConfig
+    public class AgentViewConfig:InitializableObject
     {
 
-        // See the AgentView class for descriptions of these fields.
+
+        private AgentType _type; // what type of agent is this config for?
 
         private Texture2D _background;  // Our background texture
         private Color _backgroundColor; // our background color.
@@ -76,7 +78,12 @@ namespace CrystalCore.View.Configs
             set => _doBackgroundRotation = value;
         }
 
-        public AgentViewConfig()
+        public AgentType AgentType
+        {
+            get => _type;
+        }
+
+        public AgentViewConfig(AgentType type) : base()
         {
             // defaults for stuff.
             Background = null;
@@ -86,9 +93,10 @@ namespace CrystalCore.View.Configs
             DefaultTexture = null;
             DoBackgroundShrinkage = false;
             DoBackgroundRotation = false;
+            _type = type;
         }
 
-        public AgentViewConfig(AgentViewConfig from)
+        public AgentViewConfig(AgentViewConfig from, AgentType type) : base()
         {
             Background = from.Background;
             BackgroundColor = from.BackgroundColor;
@@ -97,9 +105,19 @@ namespace CrystalCore.View.Configs
             DefaultTexture = from.DefaultTexture;
             DoBackgroundShrinkage = from.DoBackgroundShrinkage;
             DoBackgroundRotation = from.DoBackgroundRotation;
-
+            _type = type;
         }
 
+
+        internal override void Initialize()
+        {
+            if (DefaultTexture == null)
+            {
+                throw new InitializationFailedException("AgentView missing Default Texture.");
+            }
+
+            base.Initialize();
+        }
        
 
     }
