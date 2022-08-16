@@ -1,10 +1,6 @@
 ﻿using CrystalCore.Model;
 using CrystalCore.Model.Objects;
 using CrystalCore.Util;
-using CrystalCore.View;
-using CrystalCore.View.Configs;
-using CrystalCore.View.Subviews;
-using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -13,7 +9,7 @@ using System.Text;
 
 namespace CrystalCore.Rulesets
 {
-    public class AgentType
+    public class AgentType:InitializableObject
     {
         /*
          * An AgentType is responsible for creating agents, and defines how a particular agent will behave.
@@ -23,9 +19,6 @@ namespace CrystalCore.Rulesets
 
 
         private Ruleset _ruleset; // the ruleset this agent type belongs to.
-
-
-        private AgentViewConfig _renderConfig; // the way this agent is rendered.
 
         private string _name; // the human readable name of this agent type.
 
@@ -39,12 +32,7 @@ namespace CrystalCore.Rulesets
             get => _ruleset;
         }
 
-        public AgentViewConfig RenderConfig
-        {
-            get => _renderConfig;
-            set => _renderConfig = new AgentViewConfig(value);   
-        }
-
+    
         public string Name
         {
             get => _name;
@@ -63,14 +51,18 @@ namespace CrystalCore.Rulesets
             _ruleset = rs;
             _name = name;
             _size = size;
-            _renderConfig = new AgentViewConfig();
 
         }
 
         public Agent createAgent(Grid g, Point pos, Direction d)
         {
 
-            if(g.Ruleset!=this.Ruleset)
+            if (!Initialized)
+            {
+                throw new InvalidOperationException("This AgentType cannot be used before it is initialized. Call Engine.Initialize().");
+            }
+
+            if (g.Ruleset!=this.Ruleset)
             {
                 throw new InvalidOperationException("Cannot add " + Name + " type agent of ruleset " + Ruleset.Name + " to grid of ruleset " + g.Ruleset.Name+".");
             }
@@ -95,21 +87,16 @@ namespace CrystalCore.Rulesets
             }
         }
 
-        internal AgentView CreateRenderer(GridView v, Agent toRender, List<Subview> others)
-        {
-            if(toRender.Type!=this)
-            {
-                throw new ArgumentException(toRender + " is of type " + toRender.Type._name + ", and cannot be rendered as type " + _name);
-            }
-                
-            return new AgentView(v, toRender, others, _renderConfig);
-        }
-
        
 
         // returns whether an agent of type at can be placed at a location.
         public  bool isValidLocation(Grid g, Point location, Direction facing)
         {
+            if (!Initialized)
+            {
+                throw new InvalidOperationException("This AgentType cannot be used before it is initialized. Call Engine.Initialize().");
+            }
+
             Rectangle bounds = new Rectangle(location, GetSize(facing));
             if (g.Bounds.Contains(bounds))
             {
@@ -124,10 +111,6 @@ namespace CrystalCore.Rulesets
         }
 
 
-        public void createGhost(GridView v, Point location, Direction facing)
-        {
-            v.Manager.AddGhost(new AgentGhost(v, this, location, facing));
-        }
 
     }
 }

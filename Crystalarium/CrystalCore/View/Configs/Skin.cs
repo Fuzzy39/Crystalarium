@@ -21,14 +21,12 @@ namespace CrystalCore.View.Configs
         private List<AgentViewConfig> _agentConfigs;
 
         // Settings specific to the gridview itself belong here, such as border and background textures.
-
         private Texture2D _gridViewBG;
         private Color _gridViewBGColor;
     
        
             
-        // NOTE TO SELF: THIS BELONGS IN THE SKINSET!!
-        private Texture2D _viewCastOverlay; // if this is non-null, any gridview with this skin must have a non-null ViewCastTarget.
+
 
 
         public Ruleset Ruleset
@@ -71,7 +69,7 @@ namespace CrystalCore.View.Configs
     
            
         }
-
+        
 
         public Texture2D GridViewBG
         {
@@ -83,12 +81,12 @@ namespace CrystalCore.View.Configs
             }
         }
 
-        public Texture2D ViewCastOverlay
+        public Color GridViewBGColor
         {
-            get { return _viewCastOverlay; }
+            get => _gridViewBGColor;
             set
             {
-                if (!Initialized) { _viewCastOverlay = value; return; }
+                if (!Initialized) { _gridViewBGColor = value; return; }
                 throw new InvalidOperationException("Cannot access skin configs after initialization.");
             }
         }
@@ -101,13 +99,39 @@ namespace CrystalCore.View.Configs
         {
             this._ruleset = rs;
             this._parent = parent;
-            
+
+            if(parent.GetSkin(rs)!= null)
+            {
+                throw new InvalidOperationException("Skinset '"+parent.Name+"' already contains a skin for ruleset '"+rs.Name+"'. It cannot contain multiple.");
+            }
+            parent.Skins.Add(this);
            
             _agentConfigs = new List<AgentViewConfig>();
+
+            //background
+            _gridViewBG= null;
+            _gridViewBGColor = Color.White;
 
 
         }
 
+        internal AgentViewConfig GetAgentViewConfig(AgentType type)
+        {
+            if(!Initialized)
+            {
+                throw new InvalidOperationException("This method of Skin cannot be used until the skin has been initialized. Call Engine.Initialize().");
+            }
+
+            foreach(AgentViewConfig agentViewConfig in _agentConfigs)
+            {
+                if(agentViewConfig.AgentType==type)
+                {
+                    return agentViewConfig;
+                }
+            }
+
+            return null; // what could possibly go wrong because of this?
+        }
         internal override void Initialize()
         {
 
@@ -133,7 +157,7 @@ namespace CrystalCore.View.Configs
             }
             catch (InitializationFailedException e)
             {
-                throw new InitializationFailedException("The skin rendering ruleset '" + _ruleset.Name + "' Failed to initialize:\n    " + e.Message);
+                throw new InitializationFailedException("The skin rendering ruleset '" + _ruleset.Name + "' Failed to initialize:\n    " + Util.Util.Indent(e.Message));
             }
           
             base.Initialize();

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CrystalCore.View.Configs;
 
 namespace CrystalCore.View.Subviews.Agents
 {
@@ -14,14 +15,14 @@ namespace CrystalCore.View.Subviews.Agents
         public Rectangle Bounds { get; set; } // the tile bounds of this ghost
         public Direction Facing { get; set; } // the direction this ghost is facing
 
-        private AgentType type; // the type of agent this ghost descends from.
+        private AgentViewConfig config; // the type of agent this ghost descends from.
 
 
 
-        public AgentGhost(GridView v, AgentType type, Point location, Direction facing) : base(v)
+        public AgentGhost(GridView v, AgentViewConfig conf, Point location, Direction facing) : base(v)
         {
-            this.type = type; // we use this template to figure out how to render ourselves.
-            Bounds = new Rectangle(location, type.GetSize(facing));
+            this.config = conf; // we use this template to figure out how to render ourselves.
+            Bounds = new Rectangle(location, config.AgentType.GetSize(facing));
             Facing = facing;
 
         }
@@ -30,11 +31,11 @@ namespace CrystalCore.View.Subviews.Agents
         {
 
             // preform shrinkage in this slightly nasty one liner.
-            float shrink = type.RenderConfig.Shrinkage;
+            float shrink = config.Shrinkage;
             RectangleF realBounds = new RectangleF(Bounds).Inflate(-shrink, -shrink);
 
             // render the ghost.
-            renderTarget.Camera.RenderTexture(sb, type.RenderConfig.DefaultTexture, realBounds, DetermineColor(), Facing);
+            renderTarget.Camera.RenderTexture(sb, config.DefaultTexture, realBounds, DetermineColor(), Facing);
 
             return true;
         }
@@ -45,10 +46,10 @@ namespace CrystalCore.View.Subviews.Agents
             Color c;
 
             // get the color of the agent. if the agent cannot be placed, make it red, instead.
-            if (type.isValidLocation(renderTarget.Grid, Bounds.Location, Facing))
+            if (config.AgentType.isValidLocation(renderTarget.Grid, Bounds.Location, Facing))
             {
                 // these ought to be exposed better.
-                c = type.RenderConfig.Color; //Color.Green;
+                c = config.Color; //Color.Green;
 
             }
             else

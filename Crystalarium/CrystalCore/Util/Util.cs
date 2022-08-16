@@ -56,5 +56,16 @@ namespace CrystalCore.Util
             return new Rectangle(lowX, lowY, highX - lowX, highY - lowY);
 
         }
+
+        public static string Indent(string s)
+        {
+            string toReturn = "";
+            foreach (string sub in s.Split('\n'))
+            {
+                s += "\n\t" + sub;
+            }
+            return toReturn;
+        }
+
     }
 }

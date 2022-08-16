@@ -13,7 +13,7 @@ using CrystalCore.View.Configs;
 
 namespace CrystalCore.View
 {
-    public class GridView
+    public class GridView:Observer
     {
         /* A GridView represents an area that renders a grid.   
          * 
@@ -38,6 +38,7 @@ namespace CrystalCore.View
         private Border _border; // the border of this Gridview (which exists, whether it is being rendered or not)
         private PhysicsCamera _camera; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
         private SubviewManager _subviewManager; // our subview manager, who kindly takes after our subviews.
+        private SkinSet _skinSet; // Our Current Skinset, which defines any graphical settings for anything we could possibly render.
 
         private GridView _viewCastTarget; // if not null, chunks viewed by this gridview (assuming it has the same grid) will be brightened.
 
@@ -71,19 +72,26 @@ namespace CrystalCore.View
             get => _subviewManager;
         }
 
+        public SkinSet SkinSet
+        {
+            get => _skinSet;
+            set { _skinSet = value; Reset(); }
+        }
 
+        public Skin CurrentSkin
+        {
+            get
+            {
+                return _skinSet.GetSkin(Grid.Ruleset);
+            }
+        }
 
         public bool DoAgentRendering // whether agents are rendered in this gridview
         {
             get => _doAgentRendering;
             set
             {
-                if (!Initialized)
-                {
                     _doAgentRendering = value;
-                    return;
-                }
-                throw new InvalidOperationException("Cannot access skin configs after initialization.");
             }
 
         }
@@ -94,10 +102,7 @@ namespace CrystalCore.View
             get => _viewCastTarget;
             set
             {
-                if(skinset.ViewCastOverlay == null)
-                {
-                    throw new InvalidOperationException("the current skinset does not support grid view casting.");
-                }
+               
                 if (value == null)
                 {
                     _viewCastTarget = null;
@@ -131,10 +136,12 @@ namespace CrystalCore.View
 
 
         // create the viewport
-        internal GridView(List<GridView> container, Grid g, Point pos, Point dimensions, ChunkViewConfig renderConfig)
+        internal GridView(List<GridView> container, Grid g, Point pos, Point dimensions, SkinSet skinSet)
         {
             // initialize from parameters
             _grid = g;
+            g.Subscribe(this);
+
             this.container = container;
             this.container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
@@ -143,32 +150,27 @@ namespace CrystalCore.View
 
             _subviewManager = new SubviewManager(this);
 
-            //background
-            _background = null;
-            backgroundColor = Color.White;
+            _skinSet = skinSet;
+
+          
 
             // border
             _border = new Border(this);
 
-            // renderer type
-            _renderConfig = renderConfig;
+            // Rendering options.
             DoAgentRendering = true;
-
-            // ghost related
-
-
             AllowMultipleGhosts = false;
             DoDebugPortRendering = false;
 
             _viewCastTarget = null;
-            _viewCastOverlay = null;
+            
 
 
         }
 
         // an alternate viewport constructor, without points.
-        internal GridView(List<GridView> container, Grid g, int x, int y, int width, int height, ChunkViewConfig renderConfig)
-            : this(container, g, new Point(x, y), new Point(width, height), renderConfig) { }
+        internal GridView(List<GridView> container, Grid g, int x, int y, int width, int height, SkinSet skinSet)
+            : this(container, g, new Point(x, y), new Point(width, height), skinSet) { }
 
 
         public void Destroy()
@@ -208,10 +210,10 @@ namespace CrystalCore.View
         private void DrawBackground(SpriteBatch sb)
         {
             // do not draw the background if no background is set.
-            if (Background == null)
+            if (CurrentSkin.GridViewBG == null)
                 return;
 
-            sb.Draw(Background, _pixelBounds, backgroundColor);
+            sb.Draw(CurrentSkin.GridViewBG, _pixelBounds, CurrentSkin.GridViewBGColor);
         }
 
         private void DrawOtherGridView(SpriteBatch sb)
@@ -221,21 +223,11 @@ namespace CrystalCore.View
                 return;
             }
 
-            if (ViewCastOverlay == null)
-            {
-                return;
-            }
-
-            _camera.RenderTexture(sb, ViewCastOverlay,
+            _camera.RenderTexture(sb, SkinSet.ViewCastOverlay,
                 ViewCastTarget.Camera.TileBounds(),
                 new Color(.2f, .2f, .2f, .001f));
 
         }
-
-
-
-
-
 
         internal void Update()
         { 
@@ -262,6 +254,17 @@ namespace CrystalCore.View
         public void unbindCamera()
         {
             Camera.IsBound = false;
+        }
+        
+        public void Notify(EventGenerator eg)
+        {
+            Reset();
+        }
+
+        // this should be called whenever our skin changes.
+        public void Reset()
+        {
+            Manager.Reset();
         }
     }
 }

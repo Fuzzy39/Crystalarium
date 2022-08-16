@@ -60,6 +60,16 @@ namespace CrystalCore.View
         {
 
             _parent = parent;
+            Reset();
+
+        }
+
+
+        // methods
+
+        internal void Reset()
+        {
+            // remove all curent views and ghosts: they are now outdated.
 
             // initialize our lists
             _chunkViews = new List<Subview>();
@@ -69,7 +79,7 @@ namespace CrystalCore.View
             _ghosts = new List<AgentGhost>();
         }
 
-        // methods
+
         internal void AddGhost(AgentGhost gh)
         {
             if(!_parent.AllowMultipleGhosts)
@@ -127,7 +137,7 @@ namespace CrystalCore.View
 
                     if(!_chunkViews.ViewExistsFor(ch))
                     {
-                        new ChunkView(_parent, ch, _chunkViews, Parent.RenderConfig);
+                        new ChunkView(_parent, ch, _chunkViews, Parent.CurrentSkin.ChunkConfig);
                     }
 
                  
@@ -172,7 +182,7 @@ namespace CrystalCore.View
                 if(!_agentViews.ViewExistsFor(a))
                 {
                     // add a new renderer.
-                    a.Type.CreateRenderer(_parent, a, _agentViews);
+                    new AgentView(_parent, a, _agentViews, Parent.CurrentSkin.GetAgentViewConfig(a.Type));
                 }
             }
         }
@@ -197,10 +207,8 @@ namespace CrystalCore.View
          
                     if (!_beamViews.ViewExistsFor(beam))
                     {
-                        // uhhhhhh....
-                        // that's a lot of stuff...
-                        // it's temporary, don't worry.
-                        new BeamView (_parent, beam, _beamViews, beam.Start.Parent.Type.Ruleset.BeamRenderConfig);
+                        
+                        new BeamView (_parent, beam, _beamViews, Parent.CurrentSkin.BeamConfig);
 
                     }
                 }

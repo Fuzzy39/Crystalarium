@@ -10,7 +10,7 @@ using CrystalCore.Rulesets;
 
 namespace CrystalCore.Model
 {
-    public class Grid
+    public class Grid:EventGenerator
     {
         /* the grid class represents a grid.
         * In Crystalarium, a grid is a 2d plane where devices can be built using a number of systems,
@@ -165,8 +165,6 @@ namespace CrystalCore.Model
             }
 
 
-            //_agents.Clear();
-            //_signals.Clear();
 
             // initialize the chunk array.
             _chunks = new List<List<Chunk>>();
@@ -178,6 +176,8 @@ namespace CrystalCore.Model
             // set the chunk origin.
             chunksOrigin = new Point(0, 0);
             chunksSize = new Point(1, 1);
+
+            Alert(); // Anything that might want to know we've been reset will.
         }
 
         public void Remove(GridObject o)
