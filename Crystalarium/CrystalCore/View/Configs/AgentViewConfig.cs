@@ -47,7 +47,7 @@ namespace CrystalCore.View.Configs
                 }
 
 
-                _shrinkage = value;
+                _shrinkage = value; 
 
             }
         }

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace CrystalCore.View.Configs
 {
-    public class BeamViewConfig
+    public class BeamViewConfig : InitializableObject
     {
 
         // See the BeamView class for descriptions of these fields.
@@ -20,20 +20,39 @@ namespace CrystalCore.View.Configs
         public Texture2D BeamTexture // the texture for use as the chunk's background.
         {
             get => beamTexture;
-            set => beamTexture = value;
+            set
+            {
+                if (!Initialized) { beamTexture = value; return; }
+                throw new InvalidOperationException("Cannot modify skin config after engine initialization.");
+            }
+
         }
 
         public Color Color // the default color for a chunk. default is white.
         {
             get => color;
-            set => color = value;
+            set
+            {
+                if (!Initialized)
+                {
+                    color = value;
+                    return;
+                }
+                throw new InvalidOperationException("Cannot modify skin config after engine initialization.");
+            }
+
         }
+
 
         public float BeamWidth
         {
             get => beamWidth;
             set
             {
+                if (Initialized)
+                {
+                    throw new InvalidOperationException("Cannot modify skin config after engine initialization.");
+                }
 
                 if (value >= .01f & value <= .5f)
                 {
@@ -45,11 +64,17 @@ namespace CrystalCore.View.Configs
             }
         }
 
-        public BeamViewConfig()
+        public BeamViewConfig() : base()
         {
             BeamTexture = null;
             Color = Color.White;
             BeamWidth = .25f;
+        }
+
+        internal override void Initialize()
+        {
+
+            base.Initialize();
         }
 
 

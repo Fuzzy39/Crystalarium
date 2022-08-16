@@ -155,7 +155,7 @@ namespace Crystalarium
 
             // Set the camera of the minimap.
             minimap.Camera.MinScale = 1;
-
+                
 
             // to make it a minimap!
 
