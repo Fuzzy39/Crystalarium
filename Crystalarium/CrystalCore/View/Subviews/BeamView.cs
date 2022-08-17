@@ -25,7 +25,7 @@ namespace CrystalCore.View.Subviews
         {
             this.config = config;
 
-            if (b.Start.AbsoluteFacing.IsDiagonal())
+            if (b.Start.AbsoluteFacing.IsDiagonal() & config.BeamTexture!=null)
             {
                 throw new NotImplementedException("Diagonal Beam Rendering is not yet supported");
             }

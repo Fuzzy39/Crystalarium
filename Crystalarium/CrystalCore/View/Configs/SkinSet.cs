@@ -1,4 +1,4 @@
-﻿using CrystalCore.Rulesets;
+﻿using CrystalCore.Model.Rulesets;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -86,6 +86,11 @@ namespace CrystalCore.View.Configs
                     {
                         throw new InitializationFailedException("The skinset is missing a skin for ruleset '" + rs.Name + "'.");
                     }
+                }
+
+                foreach(Skin skin in _skins)
+                {
+                    skin.Initialize();
                 }
 
             }

@@ -10,6 +10,8 @@ using CrystalCore.View.Rendering;
 using AgentRenderer = CrystalCore.View.Subviews.Agents.AgentView;
 using ChunkRenderer = CrystalCore.View.Subviews.ChunkView;
 using CrystalCore.View.Configs;
+using CrystalCore.View.Subviews.Agents;
+using CrystalCore.Model.Rulesets;
 
 namespace CrystalCore.View
 {
@@ -184,6 +186,11 @@ namespace CrystalCore.View
             return p - _pixelBounds.Location;
         }
 
+        public void CreateGhost( AgentType t, Point loc, Direction facing)
+        {
+            AgentViewConfig conf =CurrentSkin.GetAgentViewConfig(t);
+            Manager.AddGhost(new AgentGhost(this, conf, loc, facing));
+        }
 
 
 

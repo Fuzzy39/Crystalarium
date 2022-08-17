@@ -60,9 +60,12 @@ namespace CrystalCore.Util
         public static string Indent(string s)
         {
             string toReturn = "";
-            foreach (string sub in s.Split('\n'))
+            string[] lines = s.Split('\n');
+            
+            foreach (string sub in lines)
             {
-                s += "\n\t" + sub;
+              
+                toReturn += "\n    " + sub;
             }
             return toReturn;
         }

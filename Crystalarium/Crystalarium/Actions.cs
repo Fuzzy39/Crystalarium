@@ -1,5 +1,5 @@
 ﻿using CrystalCore.Input;
-using CrystalCore.Rulesets;
+using CrystalCore.Model.Rulesets;
 using CrystalCore.Model.Objects;
 using CrystalCore.Util;
 using CrystalCore.View;
@@ -41,6 +41,9 @@ namespace Crystalarium
         internal Ruleset BeamRules { get; private set; }
         internal Ruleset TouchRules { get; private set; }
 
+        internal SkinSet DefaultSkin { get; private set; }
+        internal SkinSet MiniMapSkin { get; private set; }
+
         // used when panning
         private Point panOrigin = new Point();
         private Vector2 panPos = new Vector2();
@@ -55,6 +58,8 @@ namespace Crystalarium
             Rotation = Direction.up;
 
             SetupRulesets();
+            SetupSkin();
+            setupMiniMapSkin();
             SetupController();
         }
 
@@ -62,52 +67,27 @@ namespace Crystalarium
         {
 
             // create a ruleset
-            BeamRules = new Ruleset("Beams");
+            BeamRules = game.Engine.addRuleset("Beams");
             BeamRules.PortChannelMode = PortChannelMode.fullDuplex;
             BeamRules.SignalType = SignalType.Beam;
 
             // define BeamRules
             AgentType t;
 
-            // set the default settings for agent rendering.
-            AgentViewConfig baseConfig = new AgentViewConfig();
-            baseConfig.Background = Textures.pixel;
-            baseConfig.BackgroundColor = new Color(50, 50, 50);
-            baseConfig.DefaultTexture = Textures.sampleAgent;
-            baseConfig.Color = Color.Magenta;
-            baseConfig.Shrinkage = .05f;
-
             // setup agent types.
 
-
-            t = BeamRules.CreateType("small", new Point(1, 1));
-            t.RenderConfig = baseConfig;
-            t.RenderConfig.Color = Color.Crimson;
-
-            CurrentType = t;
-
-            t = BeamRules.CreateType("flat", new Point(2, 1));
-            t.RenderConfig = baseConfig;
-            t.RenderConfig.Color = Color.Gold;
-
-
-            t = BeamRules.CreateType("tall", new Point(1, 2));
-            t.RenderConfig = baseConfig;
-            t.RenderConfig.Color = Color.LimeGreen;
-
-            t = BeamRules.CreateType("big", new Point(2, 2));
-            t.RenderConfig = baseConfig;
-            t.RenderConfig.Color = Color.DodgerBlue;
-
-            BeamRules.BeamRenderConfig.BeamTexture = Textures.pixel;
-            BeamRules.BeamRenderConfig.Color = new Color(230, 230, 150);
+            CurrentType = BeamRules.CreateType("small", new Point(1, 1));
+            BeamRules.CreateType("flat", new Point(2, 1));
+            BeamRules.CreateType("tall", new Point(1, 2));
+            BeamRules.CreateType("big", new Point(2, 2));
+        
 
             CurrentRuleset = BeamRules;
 
 
             // setup TouchRules
 
-            TouchRules = new Ruleset("Touch");
+            TouchRules = game.Engine.addRuleset("Touch");
 
             TouchRules.PortChannelMode = PortChannelMode.fullDuplex;
             TouchRules.SignalType = SignalType.Beam;
@@ -115,17 +95,151 @@ namespace Crystalarium
             TouchRules.DiagonalSignalsAllowed = true;
 
 
-            t = TouchRules.CreateType("bright", new Point(1, 1));
-            t.RenderConfig = baseConfig;
-            t.RenderConfig.Color = Color.White;
+            TouchRules.CreateType("bright", new Point(1, 1));
+            TouchRules.CreateType("dark", new Point(1, 1));
+          
+
+           
 
 
-            t = TouchRules.CreateType("dark", new Point(1, 1));
-            t.RenderConfig = baseConfig;
-            t.RenderConfig.Color = Color.DimGray;
+        }
 
-           ;
+        private void SetupSkin()
+        {
+            // setup SkinSet.
+            DefaultSkin = game.Engine.addSkinSet("Default");
+            DefaultSkin.ViewCastOverlay = Textures.pixel;
 
+
+            // set the default settings for agent rendering.
+            AgentViewConfig baseConfig = new AgentViewConfig(null);
+            baseConfig.Background = Textures.pixel;
+            baseConfig.BackgroundColor = new Color(50, 50, 50);
+            baseConfig.DefaultTexture = Textures.sampleAgent;
+            baseConfig.Color = Color.Magenta;
+            baseConfig.Shrinkage = .05f;
+
+
+            // Beams skin
+            Skin beams = new Skin(BeamRules, DefaultSkin);
+            beams.GridViewBG = Textures.viewboxBG;
+
+            // small
+            AgentViewConfig conf = new AgentViewConfig( baseConfig, BeamRules.GetAgentType("small"));
+            conf.Color = Color.Crimson;
+            beams.AgentConfigs.Add(conf);
+
+            // flat
+            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("flat"));
+            conf.Color = Color.Gold;
+            beams.AgentConfigs.Add(conf);
+
+            // tall
+            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("tall"));
+            conf.Color = Color.LimeGreen;
+            beams.AgentConfigs.Add(conf);
+
+            // big 
+            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("big"));
+            conf.Color = Color.DodgerBlue;
+            beams.AgentConfigs.Add(conf);
+
+            // beams
+            beams.BeamConfig.BeamTexture = Textures.pixel;
+            beams.BeamConfig.Color = new Color(230, 230, 150);
+
+            // chunks
+            beams.ChunkConfig.ChunkBackground = Textures.chunkGrid;
+
+
+            // touch skin
+            Skin touch = new Skin(TouchRules, DefaultSkin);
+            touch.GridViewBG = Textures.viewboxBG;
+
+            // bright
+            conf = new AgentViewConfig(baseConfig, TouchRules.GetAgentType("bright"));
+            conf.Color = Color.White;
+            touch.AgentConfigs.Add(conf);
+
+            // dark 
+            conf = new AgentViewConfig(baseConfig, TouchRules.GetAgentType("dark"));
+            conf.Color = Color.DimGray;
+            touch.AgentConfigs.Add(conf);
+
+
+            // chunks
+            touch.ChunkConfig.ChunkBackground = Textures.chunkGrid;
+
+
+          
+       
+
+
+        }
+
+        private void setupMiniMapSkin()
+        {
+            // #### Minimap Skin ###
+            MiniMapSkin = game.Engine.addSkinSet("Minimap");
+            MiniMapSkin.ViewCastOverlay = Textures.pixel;
+
+            // defaults for agents under this skin.
+            AgentViewConfig baseConfig = new AgentViewConfig(null);
+            baseConfig.DefaultTexture = Textures.pixel;
+            baseConfig.Color = Color.Magenta;
+
+            // Beams skin
+            Skin beams = new Skin(BeamRules, MiniMapSkin);
+            beams.GridViewBG = Textures.viewboxBG;
+
+            AgentViewConfig conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("small"));
+            conf.Color = Color.Crimson;
+            beams.AgentConfigs.Add(conf);
+
+            // flat
+            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("flat"));
+            conf.Color = Color.Gold;
+            beams.AgentConfigs.Add(conf);
+
+            // tall
+            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("tall"));
+            conf.Color = Color.LimeGreen;
+            beams.AgentConfigs.Add(conf);
+
+            // big 
+            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("big"));
+            conf.Color = Color.DodgerBlue;
+            beams.AgentConfigs.Add(conf);
+
+            // beams
+            beams.BeamConfig.BeamTexture = Textures.pixel;
+            beams.BeamConfig.Color = new Color(230, 230, 150);
+
+            // chunks
+            beams.ChunkConfig.ChunkBackground = Textures.pixel;
+            beams.ChunkConfig.DoCheckerBoardColoring = true;
+            beams.ChunkConfig.BackgroundColor = new Color(50, 50, 150);
+            beams.ChunkConfig.OriginChunkColor = new Color(150, 50, 50);
+
+
+            // touch skin
+            Skin touch = new Skin(TouchRules, MiniMapSkin);
+            touch.GridViewBG = Textures.viewboxBG;
+
+            // bright
+            conf = new AgentViewConfig(baseConfig, TouchRules.GetAgentType("bright"));
+            conf.Color = Color.White;
+            touch.AgentConfigs.Add(conf);
+
+            // dark 
+            conf = new AgentViewConfig(baseConfig, TouchRules.GetAgentType("dark"));
+            conf.Color = Color.DimGray;
+            touch.AgentConfigs.Add(conf);
+
+
+            // chunks
+            touch.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
+        
 
         }
 

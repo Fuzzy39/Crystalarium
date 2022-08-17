@@ -1,5 +1,5 @@
 ﻿using CrystalCore.Model.Objects;
-using CrystalCore.Rulesets;
+using CrystalCore.Model.Rulesets;
 using CrystalCore.View.Subviews;
 using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework;

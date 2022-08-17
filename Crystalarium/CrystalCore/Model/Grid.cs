@@ -6,7 +6,7 @@ using CrystalCore.Util;
 using System.Diagnostics;
 using CrystalCore.Model.Objects;
 using CrystalCore.Model.Communication;
-using CrystalCore.Rulesets;
+using CrystalCore.Model.Rulesets;
 
 namespace CrystalCore.Model
 {

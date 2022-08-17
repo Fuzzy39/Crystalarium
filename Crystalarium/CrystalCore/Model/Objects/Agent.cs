@@ -1,5 +1,5 @@
 ﻿using CrystalCore.Model.Communication;
-using CrystalCore.Rulesets;
+using CrystalCore.Model.Rulesets;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;

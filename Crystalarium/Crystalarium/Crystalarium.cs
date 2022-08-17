@@ -10,7 +10,7 @@ using CrystalCore.Input;
 using CrystalCore.Util;
 using CrystalCore.Model;
 using CrystalCore.View;
-using CrystalCore.Rulesets;
+using CrystalCore.Model.Rulesets;
 using CrystalCore.View.Subviews.Agents;
 using CrystalCore.Model.Communication;
 using CrystalCore.View.Configs;
@@ -30,16 +30,15 @@ namespace Crystalarium
         private GraphicsDeviceManager _graphics; 
         private SpriteBatch spriteBatch;
 
-        private CrystalCore.Engine engine; // the 'engine'
+        internal  Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 629; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 640; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         // Temporary variables for testing purposes:
 
 
 
-        private SpriteFont testFont; // arial I think
         
 
         // Other
@@ -50,6 +49,7 @@ namespace Crystalarium
 
         private Actions actions; // this sets up our user interaction.
 
+        private ErrorSplash errorSplash = null;
 
         public Crystalarium()
         {
@@ -72,7 +72,7 @@ namespace Crystalarium
 
 
             // create the basics.
-            engine = new Engine(TargetElapsedTime);
+            Engine = new Engine(TargetElapsedTime);
 
           
 
@@ -86,7 +86,7 @@ namespace Crystalarium
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // initialize fonts
-            testFont = Content.Load<SpriteFont>("testFont");
+            Textures.testFont = Content.Load<SpriteFont>("testFont");
 
             // textures.
             Textures.pixel = Content.Load<Texture2D>("pixel");
@@ -98,11 +98,21 @@ namespace Crystalarium
 
 
             // setup our interaction related code and register it with the engine.
-            actions = new Actions(engine.Controller, this);
+            actions = new Actions(Engine.Controller, this);
+            try
+            {
+
+                Engine.Initialize();
+            }
+            catch(InitializationFailedException e)
+            {
+                errorSplash = new ErrorSplash(e.Message);
+                return;
+            }
 
 
             // create a test grid, and do some test things to it.
-            Grid = engine.addGrid(actions.CurrentRuleset);
+            Grid = Engine.addGrid(actions.CurrentRuleset);
             //g.ExpandGrid(Direction.right);
            
 
@@ -111,55 +121,33 @@ namespace Crystalarium
 
             // create the render modes we are likely to use.
 
-            ChunkViewConfig Standard = new ChunkViewConfig()
+            /*ChunkViewConfig Standard = new ChunkViewConfig()
             {
                 ChunkBackground = Textures.chunkGrid
                
-            };
+            };*/
 
 
             // create a couple test viewports.
-            view = engine.addView(Grid, 0, 0, width, height, Standard);
-
-            // background
-            view.Background = Textures.viewboxBG;
+            view = Engine.addView(Grid, 0, 0, width, height, actions.DefaultSkin);
 
             // prevent the camera from leaving the world.
             view.bindCamera();
-            //view.DoDebugPortRendering = true;
-            //view.Camera.Position = g.center;
+           
 
 
-            // for the minimap.
-            ChunkViewConfig Debug = new ChunkViewConfig()
-            {
-
-                ChunkBackground = Textures.pixel,
-                DoCheckerBoardColoring = true,
-                BackgroundColor = new Color(50, 50, 150),
-                OriginChunkColor = new Color(150, 50, 50),
-
-            
-            };
 
             // setup the minimap.
-            minimap = engine.addView(Grid, width - 250, 0, 250, 250, Debug);
-
-            // background
-            minimap.Background = Textures.viewboxBG;
+            minimap = Engine.addView(Grid, width - 250, 0, 250, 250, actions.MiniMapSkin);
 
             // setup borders
             minimap.Border.SetTextures(Textures.pixel, Textures.pixel);
             minimap.Border.Width = 2;
 
-
             // Set the camera of the minimap.
             minimap.Camera.MinScale = 1;
-                
 
             // to make it a minimap!
-
-            minimap.ViewCastOverlay = Textures.pixel;
             minimap.ViewCastTarget = view; // note that this must be done after view has been initialized.
             //minimap.DoAgentRendering = false;
 
@@ -174,11 +162,14 @@ namespace Crystalarium
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            
+            if(errorSplash!=null)
+            {
+                return;
+            }
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
 
-            view.Camera.VelZ += engine.Controller.DeltaScroll / 150f;
+            view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
             view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
 
             // minimap positions
@@ -186,17 +177,17 @@ namespace Crystalarium
             minimap.Camera.Zoom = view.Camera.Zoom / 12;
 
             // create ghosts.
-            actions.CurrentType.createGhost(view, actions.GetMousePos(), actions.Rotation);
+            view.CreateGhost(actions.CurrentType, actions.GetMousePos(), actions.Rotation);
 
 
-            engine.Update(gameTime);
+            Engine.Update(gameTime);
             base.Update(gameTime);
 
         }
 
         protected override void Draw(GameTime gameTime)
         {
-
+           
 
             // arguably temporary
             double frameRate = Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds, 2);
@@ -206,10 +197,17 @@ namespace Crystalarium
 
             spriteBatch.Begin();
 
+            if (errorSplash != null)
+            {
+                errorSplash.Draw(spriteBatch, GraphicsDevice);
+                EndDraw(height);
+                return;
+            }
+
             // make everything a flat color.
             GraphicsDevice.Clear(new Color(70, 70, 70));
 
-            engine.Draw(spriteBatch);
+            Engine.Draw(spriteBatch);
 
         
             string info = "Hovering over: " + actions.GetMousePos().X + ", " + actions.GetMousePos().Y;
@@ -217,17 +215,24 @@ namespace Crystalarium
 
             // some debug text. We'll clear this out sooner or later...
 
-            spriteBatch.DrawString(testFont, "FPS/SPS " + frameRate + "/" + engine.Sim.ActualStepsPS + " Chunks: " + Grid.gridSize.X * Grid.gridSize.Y, new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(testFont, "Placing: "+actions.CurrentType.Name+" (facing " + actions.Rotation + ") \n" + info+"\n"+rules, new Vector2(10, 30), Color.White);
+            spriteBatch.DrawString(Textures.testFont, "FPS/SPS " + frameRate + "/" + Engine.Sim.ActualStepsPS + " Chunks: " + Grid.gridSize.X * Grid.gridSize.Y, new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(Textures.testFont, "Placing: "+actions.CurrentType.Name+" (facing " + actions.Rotation + ") \n" + info+"\n"+rules, new Vector2(10, 30), Color.White);
 
-            spriteBatch.DrawString(testFont, "Milestone 4, Build " + BUILD, new Vector2(10, height - 25), Color.White);
-            spriteBatch.DrawString(testFont, "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. P to switch rulesets (resets grid).\nRMB to delete. R to rotate. Q and E to switch agent types. O to toggle port rendering.", new Vector2(10, height - 70), Color.White);
+           
+            spriteBatch.DrawString(Textures.testFont, "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. P to switch rulesets (resets grid).\nRMB to delete. R to rotate. Q and E to switch agent types. O to toggle port rendering.", new Vector2(10, height - 70), Color.White);
 
-
-            spriteBatch.End();
+            EndDraw(height);
+            
 
 
             base.Draw(gameTime);
+        }
+
+        private void EndDraw(int height)
+        {
+            spriteBatch.DrawString(Textures.testFont, "Milestone 4, Build " + BUILD, new Vector2(10, height - 25), Color.White);
+            spriteBatch.End();
+
         }
 
        

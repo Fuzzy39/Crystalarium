@@ -1,5 +1,5 @@
 ﻿using CrystalCore.Input;
-using CrystalCore.Rulesets;
+using CrystalCore.Model.Rulesets;
 using CrystalCore.Model;
 using CrystalCore.View;
 using Microsoft.Xna.Framework;
@@ -73,6 +73,7 @@ namespace CrystalCore
             }
             catch(InitializationFailedException e)
             {
+               
                 throw new InitializationFailedException("Crystalarium has failed to initialize. Reasons listed below:" + Util.Util.Indent(e.Message));
             }
 

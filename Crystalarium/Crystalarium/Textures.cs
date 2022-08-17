@@ -23,5 +23,8 @@ namespace Crystalarium
         // other textrues
         public static Texture2D viewboxBG;
 
+
+        public static SpriteFont testFont; // arial I think
+
     }
 }

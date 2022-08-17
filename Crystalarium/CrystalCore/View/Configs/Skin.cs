@@ -1,4 +1,5 @@
-﻿using CrystalCore.Rulesets;
+﻿using CrystalCore.Model.Rulesets;
+using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -95,7 +96,7 @@ namespace CrystalCore.View.Configs
      
 
 
-        internal Skin(Ruleset rs, SkinSet parent) : base()
+        public Skin(Ruleset rs, SkinSet parent) : base()
         {
             this._ruleset = rs;
             this._parent = parent;
@@ -111,6 +112,9 @@ namespace CrystalCore.View.Configs
             //background
             _gridViewBG= null;
             _gridViewBGColor = Color.White;
+
+            _beamConfig = new BeamViewConfig();
+            _chunkConfig = new ChunkViewConfig();
 
 
         }
@@ -157,7 +161,7 @@ namespace CrystalCore.View.Configs
             }
             catch (InitializationFailedException e)
             {
-                throw new InitializationFailedException("The skin rendering ruleset '" + _ruleset.Name + "' Failed to initialize:\n    " + Util.Util.Indent(e.Message));
+                throw new InitializationFailedException("The skin rendering ruleset '" + _ruleset.Name + "' Failed to initialize:" + Util.Util.Indent(e.Message));
             }
           
             base.Initialize();
@@ -174,6 +178,11 @@ namespace CrystalCore.View.Configs
                     throw new InitializationFailedException("There are multiple AgentViewConfigs for AgentType '" + config.AgentType.Name+"'.");
                 }
 
+                if(config.AgentType == null)
+                {
+                    throw new InitializationFailedException("An AgentViewConfig's agent type couldn't be found.");
+                }
+
                 if(_ruleset != config.AgentType.Ruleset)
                 {
                     throw new InitializationFailedException("A config exists for an incorrect ruleset '"+ config.AgentType.Ruleset.Name + "', attempting to configure AgentType '" +
@@ -181,6 +190,7 @@ namespace CrystalCore.View.Configs
                 }
 
                 config.Initialize();
+                typesConfigured.Add(config.AgentType);
                 
             }
 
@@ -193,6 +203,9 @@ namespace CrystalCore.View.Configs
                 }
             }
         }
+
+     
+
 
 
     }
