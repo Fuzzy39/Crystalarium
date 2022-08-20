@@ -74,9 +74,9 @@ namespace CrystalCore
             catch(InitializationFailedException e)
             {
                
-                throw new InitializationFailedException("Crystalarium has failed to initialize. Reasons listed below:" + Util.Util.Indent(e.Message));
+                throw new InitializationFailedException("Crystalarium's Engine was given an invalid setup configuration, and cannot initialize.\nDetailed description of the problem:" + Util.Util.Indent(e.Message));
             }
-
+   
             base.Initialize();
         }
 
@@ -139,6 +139,7 @@ namespace CrystalCore
 
             _sim.Update(gameTime);
 
+          
 
             // update viewports. (Camera Controls, mostly)
             foreach (GridView v in _viewports)
@@ -157,7 +158,7 @@ namespace CrystalCore
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before it can be drawn. Call Engine.Initialize().");
             }
-
+            
             // draw viewports
             foreach (GridView v in _viewports)
             {

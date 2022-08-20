@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crystalarium.Main;
+using System;
 
 namespace Crystalarium
 {
@@ -7,8 +8,8 @@ namespace Crystalarium
         [STAThread]
         static void Main()
         {
-            using (var game = new Crystalarium())
-                game.Run();
+            using var game = new CrystalGame();
+            game.Run();
         } //I GO TO KOREA < who put this here? billy? :/
     }
 }

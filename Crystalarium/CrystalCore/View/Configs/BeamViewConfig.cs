@@ -80,7 +80,7 @@ namespace CrystalCore.View.Configs
 
         internal override void Initialize()
         {
-
+         
             base.Initialize();
         }
 
