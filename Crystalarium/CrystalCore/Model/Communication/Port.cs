@@ -32,7 +32,7 @@ namespace CrystalCore.Model.Communication
 
         // context 
         private Agent _parent; // the agent we are part of.
-        private int _threshold; // the value required for this port to be activated.
+       
 
         // current state.
         protected PortStatus _status; // the status this port is in.
@@ -49,11 +49,7 @@ namespace CrystalCore.Model.Communication
             get => _parent;
         }
 
-        public int Threshold
-        {
-            get => _threshold;
-            set => _threshold = value;
-        }
+    
 
         public PortStatus Status
         {
@@ -61,7 +57,7 @@ namespace CrystalCore.Model.Communication
         }
 
         // returns true if this port is receiving a signal and its value is above the port's threshold.
-        public abstract bool IsActive
+        public abstract bool IsReceiving
         {
             get;
         }
@@ -187,7 +183,6 @@ namespace CrystalCore.Model.Communication
             _parent = parent;
 
             // defaults
-            _threshold = 1;
             _status = PortStatus.inactive;
 
 

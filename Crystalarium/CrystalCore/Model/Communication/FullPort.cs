@@ -30,7 +30,7 @@ namespace CrystalCore.Model.Communication
             _receiving = null;
         }
 
-        public override bool IsActive
+        public override bool IsReceiving
         {
             get
             {
@@ -39,7 +39,7 @@ namespace CrystalCore.Model.Communication
                     return false;
                 }
 
-                return _receiving.Value >= Threshold;
+                return true;
                
             }
         }

@@ -18,7 +18,7 @@ namespace CrystalCore.Model.Communication
         private bool transportWaiting;
 
 
-        public override bool IsActive
+        public override bool IsReceiving
         {
             get
             {
@@ -27,7 +27,7 @@ namespace CrystalCore.Model.Communication
                     return false;
                 }
 
-                return _boundTo.Value >= Threshold;
+                return true;
             }
         }
 
@@ -95,7 +95,7 @@ namespace CrystalCore.Model.Communication
 
         public bool Transmit()
         {
-            return Transmit(Threshold);
+            return Transmit(1);
         }
 
 

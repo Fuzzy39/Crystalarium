@@ -59,9 +59,9 @@ namespace Crystalarium.Main
 
 
             game.CurrentRuleset = BeamRules;
+         
 
-
-            // setup TouchRules
+             // setup TouchRules
 
             TouchRules = game.Engine.addRuleset("Touch");
 
