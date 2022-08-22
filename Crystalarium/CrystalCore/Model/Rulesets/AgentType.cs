@@ -9,7 +9,7 @@ using System.Text;
 
 namespace CrystalCore.Model.Rulesets
 {
-    public class AgentType:InitializableObject
+    public class AgentType : InitializableObject
     {
         /*
          * An AgentType is responsible for creating agents, and defines how a particular agent will behave.
@@ -24,7 +24,12 @@ namespace CrystalCore.Model.Rulesets
 
         private Point _size; // the size of this AgentType, when pointing up.
 
-        // and a list of states. (when we have those)
+        // and a list of states. 
+
+        private AgentState _defaultState;
+
+        private List<AgentState> _states;
+
 
         // Properties
         public Ruleset Ruleset
@@ -32,7 +37,7 @@ namespace CrystalCore.Model.Rulesets
             get => _ruleset;
         }
 
-    
+
         public string Name
         {
             get => _name;
@@ -42,7 +47,24 @@ namespace CrystalCore.Model.Rulesets
         {
             get => _size;
         }
-         
+
+        public AgentState DefaultState
+        {
+            get => _defaultState;
+        }
+
+        public List<AgentState> States
+        {
+            get
+            {
+                if(Initialized)
+                {
+                    throw new InvalidOperationException("Cannot modify/access an AgentTypes states after engine is initialized.");
+                }
+                return _states;
+            }
+        }
+
 
 
         // constructors
@@ -51,6 +73,40 @@ namespace CrystalCore.Model.Rulesets
             _ruleset = rs;
             _name = name;
             _size = size;
+            _defaultState = new AgentState();
+            _states = new List<AgentState>();
+
+        }
+
+
+        // methods
+
+        internal override void Initialize()
+        {
+            try
+            {
+                if (Size.X < 1 || Size.Y < 1)
+                {
+                    throw new InitializationFailedException("Invalid size of " + Size + ". Size must be positive.");
+                }
+
+                DefaultState.Initialize();
+                if (DefaultState.Condition != null)
+                {
+                    throw new InitializationFailedException("The Default state of an AgentType may not have any requirements.");
+                }
+
+                foreach (AgentState state in _states)
+                {
+                    state.Initialize();
+                }
+
+            }
+            catch (InitializationFailedException e)
+            {
+                throw new InitializationFailedException("AgentType '" + Name + "' Failed to Initialize:" + Util.Util.Indent(e.Message));
+            }
+            base.Initialize();
 
         }
 
