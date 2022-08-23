@@ -20,7 +20,7 @@ namespace CrystalCore.View
         /* A GridView represents an area that renders a grid.   
          * 
          * it has a camera, which controls where elements of the grid appear in the gridview, and if they appear at all.
-         * it also has a border, which can be optionally rendered to show where this gridview exists.
+         * it also has a border, which can be optionally rendered to show where this gridview   exists.
          * The gridview itself is responsible for parsing the grid and deciding which elements to render.
          * 
          * If anything seems strange, note that Border, Camera, and Gridview were oringially a single class, ViewPort (or ViewBox, later)
