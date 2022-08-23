@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Objects;
+using CrystalCore.Model.Rulesets.Conditions;
 using System;
 using System.Collections.Generic;
 using System.Text;

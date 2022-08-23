@@ -9,18 +9,18 @@ namespace CrystalCore.Model.Rulesets.Conditions
     /// <summary>
     /// A Condition describes the situation around an agent for it to qualify for a certain state.
     /// </summary>
-    internal class Condtition : Resolvable
+    public class Condition : Expression
     {
         // wowee, lookit me!
 
         // Fields
-        private Operand _first;
-        private Operand _second;
+        private Expression _first;
+        private Expression _second;
 
-        private Operation _operation;
+        private Operator _operation;
 
         // Properties
-        public Operand First
+        public Expression First
         {
             get { return _first; }
             set
@@ -34,7 +34,7 @@ namespace CrystalCore.Model.Rulesets.Conditions
 
         }
 
-        public Operand Second
+        public Expression Second
         {
             get { return _second; }
             set
@@ -47,15 +47,15 @@ namespace CrystalCore.Model.Rulesets.Conditions
             }
         }
 
-        public Operation Operation
+        public Operator Operation
         {
             get { return _operation; }
         }
 
         // Constructors
-        public Condition()
+        public Condition(AgentType at):base(TokenType.boolean, at)
         {
-            _operation = new Operation();
+            _operation = new Operator();
         }
 
         // Methods
@@ -72,10 +72,10 @@ namespace CrystalCore.Model.Rulesets.Conditions
                 _second.Initialize();
                 _operation.Initialize();
 
-                if (!_operation.IsValidType(_first.TokenType) ||
-                    !_operation.IsValidType(_second.TokenType))
+                if (!_operation.IsValidType(_first.ReturnType) ||
+                    !_operation.IsValidType(_second.ReturnType))
                 {
-                    throw new InitializationFailedException("Type Mismatch. Types " + _first.TokenType + " and " + _second.TokenType + " are not compatable" +
+                    throw new InitializationFailedException("Type Mismatch. Types " + _first.ReturnType + " and " + _second.ReturnType + " are not compatable" +
                         "with " + _operation);
                 }
             }
@@ -92,7 +92,7 @@ namespace CrystalCore.Model.Rulesets.Conditions
         {
             if (!Initialized)
             {
-                throw new InvalidOperationException("This Condition must be initalized before it may be resolved.")
+                throw new InvalidOperationException("This Condition must be initalized before it may be resolved.");
             }
             Token a = _first.Resolve(agent);
             Token b = _second.Resolve(agent);
