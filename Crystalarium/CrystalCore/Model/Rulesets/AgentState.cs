@@ -14,22 +14,22 @@ namespace CrystalCore.Model.Rulesets
     {
         // fields
 
-        private Condition _condition;
+        private Expression _requirements;
 
         private List<Transformation> _transformations;
 
         // properties
 
-        public Condition Condition
+        public Expression Requirements
         {
-            get { return _condition; }
+            get { return _requirements; }
             set
             {
                 if (Initialized)
                 {
                     throw new InvalidOperationException("An Agent State's condition may not be changed after the engine has been initialized.");
                 }
-                _condition = value;
+                _requirements = value;
             }
         }
 
@@ -64,9 +64,9 @@ namespace CrystalCore.Model.Rulesets
             {
 
                 // the condition of an agentstate can be null if it is the default state of the agent.
-                if (Condition != null)
+                if (Requirements != null)
                 {
-                    Condition.Initalize();
+                    Requirements.Initalize();
                 }
 
                 // an agentstate can have no transformations, and be inert, if it wishes.

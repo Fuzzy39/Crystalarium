@@ -50,13 +50,19 @@ namespace CrystalCore.Model.Rulesets.Conditions
         public Operator Operation
         {
             get { return _operation; }
+            set
+            {
+                if (Initialized)
+                {
+                    throw new InvalidOperationException("Condition may not be modified after engine is initallized.");
+                }
+                _operation = value;
+            }
         }
 
         // Constructors
-        public Condition(AgentType at):base(TokenType.boolean, at)
-        {
-            _operation = new Operator();
-        }
+        public Condition(AgentType at) : base(TokenType.boolean, at) { }
+
 
         // Methods
         internal override void Initialize()
@@ -70,13 +76,16 @@ namespace CrystalCore.Model.Rulesets.Conditions
 
                 _first.Initialize();
                 _second.Initialize();
-                _operation.Initialize();
+               
+                if(_operation== null)
+                {
+                    throw new InitializationFailedException("The Operator was null.");
+                }
 
-                if (!_operation.IsValidType(_first.ReturnType) ||
-                    !_operation.IsValidType(_second.ReturnType))
+                if (!_operation.IsValid(_first.ReturnType, _second.ReturnType) )
                 {
                     throw new InitializationFailedException("Type Mismatch. Types " + _first.ReturnType + " and " + _second.ReturnType + " are not compatable" +
-                        "with " + _operation);
+                        "with " + _operation.Type);
                 }
             }
             catch (InitializationFailedException e)
@@ -96,7 +105,7 @@ namespace CrystalCore.Model.Rulesets.Conditions
             }
             Token a = _first.Resolve(agent);
             Token b = _second.Resolve(agent);
-            return _operation.operate(a, b);
+            return _operation.Operate(a, b);
         }
     }
 }
