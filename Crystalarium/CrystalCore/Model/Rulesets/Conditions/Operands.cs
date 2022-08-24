@@ -74,40 +74,28 @@ namespace CrystalCore.Model.Rulesets.Conditions
 
     internal class PortValueOperand : Expression
     {
-        private CompassPoint cp;
-        private int portID;
+        private PortIdentifier portID;
 
-        public PortValueOperand(AgentType at, CompassPoint cp, int portID) : base(TokenType.integer, at)
+        public PortValueOperand(AgentType at, PortIdentifier portID) : base(TokenType.integer, at)
         {
-            this.cp = cp;
+            
             this.portID = portID;
         }
 
         internal override void Initialize()
         {
-            string errorMessage = "Port Value Operand attempted to target port " + cp + portID + " that agent type '" + AgentType.Name + "' does not have.";
-            if (AgentType.Ruleset.DiagonalSignalsAllowed & cp.IsDiagonal())
+            if (!portID.CheckValidity(AgentType))
             {
-                throw new InitializationFailedException(errorMessage);
+                throw new InitializationFailedException("Port Value Operand attempted to target port " + portID +
+                    " that agent type '" + AgentType.Name + "' does not have.");
             }
-
-            Direction d = (Direction)cp.ToDirection();
-
-            if (d.IsVertical() & AgentType.Size.X <= portID)
-            {
-                throw new InitializationFailedException(errorMessage);
-            }
-
-            if (d.IsHorizontal() & AgentType.Size.Y <= portID)
-            {
-                throw new InitializationFailedException(errorMessage);
-            }
+           
             base.Initialize();
         }
 
         internal override Token Resolve(Agent a)
         {
-            Signal s = a.Ports[(int)cp][portID].ReceivingSignal;
+            Signal s = a.Ports[(int)portID.Facing][portID.ID].ReceivingSignal;
             int toReturn = 0;
             if(s!=null)
             {

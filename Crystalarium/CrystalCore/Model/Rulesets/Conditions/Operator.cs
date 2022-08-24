@@ -38,12 +38,15 @@ namespace CrystalCore.Model.Rulesets.Conditions
             return _type switch
             {
                 OperatorType.EqualTo => new Token(TokenType.boolean, a.Value == b.Value),
+                OperatorType.NotEqualTo => new Token(TokenType.boolean, a.Value != b.Value),
+
                 OperatorType.GreaterThan => new Token(TokenType.boolean, (int)a.Value > (int)b.Value),
                 OperatorType.LessThan => new Token(TokenType.boolean, (int)a.Value < (int)b.Value),
-                OperatorType.NotEqualTo => new Token(TokenType.boolean, a.Value != b.Value),
+              
                 OperatorType.Or => new Token(TokenType.boolean, (bool)a.Value || (bool)b.Value),
                 OperatorType.And => new Token(TokenType.boolean, (bool)a.Value & (bool)b.Value),
                 OperatorType.Xor => new Token(TokenType.boolean, (bool)a.Value ^ (bool)b.Value),
+
                 _ => throw new InvalidOperationException("Missing a case here!"),
             };
         }

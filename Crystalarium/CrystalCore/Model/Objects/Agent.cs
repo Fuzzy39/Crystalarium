@@ -254,6 +254,13 @@ namespace CrystalCore.Model.Objects
             }
         }
 
-
+        internal Port GetPort(PortIdentifier portID)
+        {
+            if(!portID.CheckValidity(Type))
+            {
+                throw new InvalidOperationException("Bad PortID.");
+            }
+            return Ports[(int)portID.Facing][portID.ID];
+        }
     }
 }
