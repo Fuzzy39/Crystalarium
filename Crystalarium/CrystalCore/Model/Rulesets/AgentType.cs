@@ -1,5 +1,6 @@
 ﻿using CrystalCore.Model;
 using CrystalCore.Model.Objects;
+using CrystalCore.Model.Rulesets.Transformations;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
@@ -90,11 +91,21 @@ namespace CrystalCore.Model.Rulesets
                     throw new InitializationFailedException("Invalid size of " + Size + ". Size must be positive.");
                 }
 
-                DefaultState.Initialize();
-                if (DefaultState.Condition != null)
+                foreach (Transformation tf in DefaultState.Transformations)
                 {
-                    throw new InitializationFailedException("The Default state of an AgentType may not have any requirements.");
+                    if (tf.ChangesAgent)
+                    {
+                        throw new InitializationFailedException("The default state of an AgentType can only transmit, and cannot change its agent.");
+                    }
                 }
+
+                DefaultState.Initialize();
+                if (DefaultState.Requirements != null)
+                {
+                    throw new InitializationFailedException("The default state of an AgentType may not have any requirements.");
+                }
+
+              
 
                 foreach (AgentState state in _states)
                 {

@@ -38,7 +38,7 @@ namespace Crystalarium.Main
             // print the error message.
             
             DrawString(sb, new Vector2(50, 50),face, 2.5f);
-            DrawString(sb, new Vector2(50, 130), errorMessage,.9f);
+            DrawString(sb, new Vector2(50, 130), errorMessage,.75f);
 
             i += .005f;
         }

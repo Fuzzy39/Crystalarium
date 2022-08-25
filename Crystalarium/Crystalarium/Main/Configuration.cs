@@ -1,5 +1,7 @@
 ﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Rulesets;
+using CrystalCore.Model.Rulesets.Transformations;
+using CrystalCore.Util;
 using CrystalCore.View.Configs;
 using Microsoft.Xna.Framework;
 using System;
@@ -52,7 +54,10 @@ namespace Crystalarium.Main
 
             // setup agent types.
 
-            BeamRules.CreateType("small", new Point(1, 1));
+            t=BeamRules.CreateType("small", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, new PortIdentifier(0, CompassPoint.north)));
+
+
             BeamRules.CreateType("flat", new Point(2, 1));
             BeamRules.CreateType("tall", new Point(1, 2));
             BeamRules.CreateType("big", new Point(2, 2));

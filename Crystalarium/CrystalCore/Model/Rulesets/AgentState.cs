@@ -1,5 +1,6 @@
 ﻿using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rulesets.Conditions;
+using CrystalCore.Model.Rulesets.Transformations;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -66,7 +67,7 @@ namespace CrystalCore.Model.Rulesets
                 // the condition of an agentstate can be null if it is the default state of the agent.
                 if (Requirements != null)
                 {
-                    Requirements.Initalize();
+                    Requirements.Initialize();
                 }
 
                 // an agentstate can have no transformations, and be inert, if it wishes.
@@ -105,7 +106,7 @@ namespace CrystalCore.Model.Rulesets
 
             foreach(Transformation tf in _transformations)
             {
-                tf.apply(a);
+                tf.Transform(a);
             }
         }
 

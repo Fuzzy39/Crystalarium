@@ -20,6 +20,10 @@ namespace CrystalCore.Model.Objects
 
         private List<List<Port>> _ports; // this agent's ports, stored by direction relative to the agent.
 
+        private AgentState _state;
+
+        
+        // properties
         public Direction Facing
         {
             get => _facing;
@@ -62,7 +66,13 @@ namespace CrystalCore.Model.Objects
                 
         }
 
-        // SHOULD BE INTERNAL
+        public AgentState State
+        {
+            get { return _state; }
+        }
+
+
+        // Constructors
         internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : base(g, bounds)
         {
 
@@ -85,9 +95,9 @@ namespace CrystalCore.Model.Objects
             }
 
             // if diagonal signals are allowed, then agents should not be bigger than 1 by 1
-            if(Type.Ruleset.DiagonalSignalsAllowed && bounds.Size.X*bounds.Size.Y >1)
+            if (Type.Ruleset.DiagonalSignalsAllowed && bounds.Size.X * bounds.Size.Y > 1)
             {
-                throw new InvalidOperationException("The Ruleset '"+Type.Ruleset.Name+"' has specified that diagonal signals are allowed, which requires that no agents are greater than 1 by 1 in size.");
+                throw new InvalidOperationException("The Ruleset '" + Type.Ruleset.Name + "' has specified that diagonal signals are allowed, which requires that no agents are greater than 1 by 1 in size.");
             }
 
 
@@ -96,12 +106,9 @@ namespace CrystalCore.Model.Objects
 
             g.AddAgent(this);
 
-            // test code
-            Ports[(int)CompassPoint.north][0].Transmit(1);
-            if(Type.Ruleset.DiagonalSignalsAllowed)
-            {
-                Ports[(int)CompassPoint.southeast][0].Transmit(1);
-            }
+            // do the default thing.
+            _state = Type.DefaultState;
+            _state.Execute(this);
 
         }
 
