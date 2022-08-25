@@ -19,6 +19,7 @@ namespace Crystalarium.Main
         public static Texture2D tile; // unused
         public static Texture2D chunkGrid;
         public static Texture2D sampleAgent;
+        public static Texture2D emitter;
 
         // other textrues
         public static Texture2D viewboxBG;

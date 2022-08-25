@@ -96,11 +96,12 @@ namespace Crystalarium.Main
             Textures.viewboxBG = Content.Load<Texture2D>("ViewportBG");
             Textures.chunkGrid = Content.Load<Texture2D>("chunkGrid");
             Textures.sampleAgent = Content.Load<Texture2D>("SampleAgent");
+            Textures.sampleAgent = Content.Load<Texture2D>("emitter");
 
 
-        
 
-            
+
+
 
             try
             {
