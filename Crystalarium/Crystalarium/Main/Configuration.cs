@@ -46,7 +46,7 @@ namespace Crystalarium.Main
 
             // create a ruleset
             BeamRules = game.Engine.addRuleset("Beams");
-            BeamRules.PortChannelMode = PortChannelMode.fullDuplex;
+            BeamRules.PortChannelMode = PortChannelMode.halfDuplex;
             BeamRules.SignalType = SignalType.Beam;
 
             // define BeamRules
@@ -108,7 +108,8 @@ namespace Crystalarium.Main
 
             // small
             AgentViewConfig conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("small"));
-            conf.Color = Color.Crimson;
+            conf.Color = Color.White;
+            conf.DefaultTexture = Textures.emitter;
             beams.AgentConfigs.Add(conf);
 
             // flat
