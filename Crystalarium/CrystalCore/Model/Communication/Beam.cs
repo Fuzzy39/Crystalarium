@@ -84,6 +84,10 @@ namespace CrystalCore.Model.Communication
         {
             // we start looking for targets by getting the point where our min
 
+            if(Start==null)
+            {
+
+            }
             Point start = _start.Location;
             Point? p = Travel(start, MinLength);
             if (p==null)
@@ -165,7 +169,11 @@ namespace CrystalCore.Model.Communication
             }
 
             _end = p;
-            p.Receive(this);
+            if(!p.Receive(this))
+            {
+                throw new InvalidOperationException("Refused Bequest: Beam could not connect to port.");
+            }
+           
 
             //Console.WriteLine("Signal Connected!");
             //Console.WriteLine("From: " + _start);

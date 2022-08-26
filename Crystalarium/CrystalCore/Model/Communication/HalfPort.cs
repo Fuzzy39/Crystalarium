@@ -83,9 +83,11 @@ namespace CrystalCore.Model.Communication
         public override bool Receive(Signal s)
         {
             // if nothing else, by the end of this, I'll be able to spell receive.
-            if (Status != PortStatus.inactive)
+            if (Status == PortStatus.transmitting)
             {
-                return false;
+                toTransportValue = _boundTo.Value;
+                StopTransmitting();
+                transportWaiting = true;
             }
 
             _boundTo = s;
@@ -147,6 +149,7 @@ namespace CrystalCore.Model.Communication
 
         public override void StopTransmitting()
         {
+            transportWaiting = false;
             if(Status != PortStatus.transmitting)
             {
                 return;

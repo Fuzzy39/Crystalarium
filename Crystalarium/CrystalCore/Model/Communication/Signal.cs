@@ -87,5 +87,11 @@ namespace CrystalCore.Model.Communication
             _end = null;
         }
 
+        public override string ToString()
+        {
+            return "Signal: { start:" + Start + " end: " + End + " Bounds:" + Bounds + "}";
+
+        }
+
     }
 }

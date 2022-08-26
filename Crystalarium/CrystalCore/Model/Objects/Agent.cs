@@ -150,17 +150,21 @@ namespace CrystalCore.Model.Objects
 
         public override void Destroy()
         {
-            foreach(List<Port> ports in _ports)
+           
+
+            //Grid g = Grid;
+            base.Destroy();
+            //g.UpdateSignals(ChunksWithin);
+
+            foreach (List<Port> ports in _ports)
             {
-                foreach(Port port in ports)
+                foreach (Port port in ports)
                 {
                     port.StopTransmitting();
                     port.StopReceiving();
-                   
+
                 }
             }
-
-            base.Destroy();
         }
 
         // facing is direction of ports to be made relative to upwards face of agent
