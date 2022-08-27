@@ -68,44 +68,41 @@ namespace Crystalarium.Main
 
         private void SetupController()
         {
+            c.Context = "play";
 
             // test code.
             float camSpeed = 1.2f;
 
             // camera up
             c.addAction("up", () => game.view.Camera.AddVelocity(camSpeed, Direction.up));
-            new Keybind(c, Keystate.Down, "up", Button.W);
-            new Keybind(c, Keystate.Down, "up", Button.Up);
+            new Keybind(c, Keystate.Down, "up", "play", Button.W);
 
 
             // camera down
             c.addAction("down", () => game.view.Camera.AddVelocity(camSpeed, Direction.down));
-            new Keybind(c, Keystate.Down, "down", Button.S);
-            new Keybind(c, Keystate.Down, "down", Button.Down);
+            new Keybind(c, Keystate.Down, "down", "play", Button.S);
 
             // camera left
             c.addAction("left", () => game.view.Camera.AddVelocity(camSpeed, Direction.left));
-            new Keybind(c, Keystate.Down, "left", Button.A);
-            new Keybind(c, Keystate.Down, "left", Button.Left);
+            new Keybind(c, Keystate.Down, "left", "play", Button.A);
 
             // camera right
             c.addAction("right", () => game.view.Camera.AddVelocity(camSpeed, Direction.right));
-            new Keybind(c, Keystate.Down, "right", Button.D);
-            new Keybind(c, Keystate.Down, "right", Button.Right);
+            new Keybind(c, Keystate.Down, "right", "play", Button.D);
 
 
             // grow the game.Grid!
             c.addAction("grow up", () => game.Grid.ExpandGrid(Direction.up));
-            new Keybind(c, Keystate.OnPress, "grow up", Button.U);
+            new Keybind(c, Keystate.OnPress, "grow up", "play", Button.U);
             c.addAction("grow down", () => game.Grid.ExpandGrid(Direction.down));
-            new Keybind(c, Keystate.OnPress, "grow down", Button.J);
+            new Keybind(c, Keystate.OnPress, "grow down", "play", Button.J);
             c.addAction("grow left", () => game.Grid.ExpandGrid(Direction.left));
-            new Keybind(c, Keystate.OnPress, "grow left", Button.H);
+            new Keybind(c, Keystate.OnPress, "grow left", "play", Button.H);
             c.addAction("grow right", () => game.Grid.ExpandGrid(Direction.right));
-            new Keybind(c, Keystate.OnPress, "grow right", Button.K);
+            new Keybind(c, Keystate.OnPress, "grow right", "play", Button.K);
 
             c.addAction("toggle debug ports", () => game.view.DoDebugPortRendering = !game.view.DoDebugPortRendering);
-            new Keybind(c, Keystate.OnPress, "toggle debug ports", Button.O);
+            new Keybind(c, Keystate.OnPress, "toggle debug ports", "play", Button.O);
 
 
             c.addAction("place agent", () =>
@@ -119,7 +116,7 @@ namespace Crystalarium.Main
 
 
             });
-            new Keybind(c, Keystate.Down, "place agent", Button.MouseLeft);
+            new Keybind(c, Keystate.Down, "place agent", "play", Button.MouseLeft);
 
 
             c.addAction("remove agent", () =>
@@ -144,7 +141,7 @@ namespace Crystalarium.Main
 
 
             });
-            new Keybind(c, Keystate.Down, "remove agent", Button.MouseRight);
+            new Keybind(c, Keystate.Down, "remove agent", "play", Button.MouseRight);
 
 
             c.addAction("rotate", () =>
@@ -164,7 +161,7 @@ namespace Crystalarium.Main
 
 
             });
-            new Keybind(c, Keystate.OnPress, "rotate", Button.R);
+            new Keybind(c, Keystate.OnPress, "rotate", "play", Button.R);
 
 
 
@@ -178,7 +175,7 @@ namespace Crystalarium.Main
 
 
             });
-            new Keybind(c, Keystate.OnPress, "start pan", Button.MouseMiddle) { DisableOnSuperset = false };
+            new Keybind(c, Keystate.OnPress, "start pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
 
 
             c.addAction("pan", () =>
@@ -195,7 +192,7 @@ namespace Crystalarium.Main
 
 
             });
-            new Keybind(c, Keystate.Down, "pan", Button.MouseMiddle) { DisableOnSuperset = false };
+            new Keybind(c, Keystate.Down, "pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
 
 
             c.addAction("next agent", () =>
@@ -213,7 +210,7 @@ namespace Crystalarium.Main
                 CurrentType = types[i];
 
             });
-            new Keybind(c, Keystate.OnPress, "next agent", Button.E);
+            new Keybind(c, Keystate.OnPress, "next agent", "play", Button.E);
 
             c.addAction("prev agent", () =>
             {
@@ -229,29 +226,70 @@ namespace Crystalarium.Main
                 CurrentType = types[i];
 
             });
-            new Keybind(c, Keystate.OnPress, "prev agent", Button.Q);
+            new Keybind(c, Keystate.OnPress, "prev agent", "play", Button.Q);
 
 
-            c.addAction("swap ruleset", () =>
+            c.addAction("swap context", () =>
             {
-                if (game.CurrentRuleset == game.Configuration.BeamRules)
+                if (c.Context == "play")
                 {
-                    game.CurrentRuleset = game.Configuration.TouchRules;
+                    c.Context = "menu";
                 }
                 else
                 {
-                    game.CurrentRuleset = game.Configuration.BeamRules;
+                    c.Context = "play";
                 }
 
                 // triggers a reset.
-                game.Grid.Ruleset = game.CurrentRuleset;
-                CurrentType = game.CurrentRuleset.AgentTypes[0];
+                //game.Grid.Ruleset = game.CurrentRuleset;
+                //CurrentType = game.CurrentRuleset.AgentTypes[0];
 
             });
-            new Keybind(c, Keystate.OnPress, "swap ruleset", Button.P);
+            new Keybind(c, Keystate.OnPress, "swap context", Button.P);
+
+            c.addAction("ruleset 1", () => SwitchRuleset(0) );
+            new Keybind(c, Keystate.OnPress, "ruleset 1","menu", Button.D1);
+
+            c.addAction("ruleset 2", () => SwitchRuleset(1));
+            new Keybind(c, Keystate.OnPress, "ruleset 2", "menu", Button.D2);
+
+            c.addAction("ruleset 3", () => SwitchRuleset(2));
+            new Keybind(c, Keystate.OnPress, "ruleset 3", "menu", Button.D3);
+
+            c.addAction("ruleset 4", () => SwitchRuleset(3));
+            new Keybind(c, Keystate.OnPress, "ruleset 4", "menu", Button.D4);
+
+            c.addAction("ruleset 5", () => SwitchRuleset(4));
+            new Keybind(c, Keystate.OnPress, "ruleset 5", "menu", Button.D5);
+
+            c.addAction("ruleset 6", () => SwitchRuleset(5));
+            new Keybind(c, Keystate.OnPress, "ruleset 6", "menu", Button.D6);
+
+            c.addAction("ruleset 7", () => SwitchRuleset(6));
+            new Keybind(c, Keystate.OnPress, "ruleset 7", "menu", Button.D7);
+
+            c.addAction("ruleset 8", () => SwitchRuleset(7));
+            new Keybind(c, Keystate.OnPress, "ruleset 8", "menu", Button.D8);
+
+            c.addAction("ruleset 9", () => SwitchRuleset(8));
+            new Keybind(c, Keystate.OnPress, "ruleset 9", "menu", Button.D9);
 
         }
 
+        private void SwitchRuleset(int i)
+        {
+          
+            List<Ruleset> rulesets = game.Engine.Rulesets;
+            if(rulesets.Count>i)
+            {
+              
+                game.CurrentRuleset = rulesets[i];
+                game.Grid.Ruleset = game.CurrentRuleset;
+                CurrentType = game.CurrentRuleset.AgentTypes[0];
+                c.Context = "play";
+            }
+            // do nothing if it's not valid.
+        }
 
         // returns the position of the mouse in tilespace relative to the maingame.view.
         internal Point GetMousePos()

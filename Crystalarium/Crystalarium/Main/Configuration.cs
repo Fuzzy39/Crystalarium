@@ -21,8 +21,11 @@ namespace Crystalarium.Main
 
         private CrystalGame game; // The game.
 
-        internal Ruleset BeamRules { get; private set; }
-        internal Ruleset TouchRules { get; private set; }
+        internal Ruleset CrystalRules { get; private set; }
+        internal Ruleset BasicRules { get; private set; }
+        internal Ruleset FilumRules { get; private set; }
+        internal Ruleset WireRules { get; private set; } // wire rules
+
 
         internal SkinSet DefaultSkin { get; private set; }
         internal SkinSet MiniMapSkin { get; private set; }
@@ -43,45 +46,88 @@ namespace Crystalarium.Main
 
         private void CreateRulesets()
         {
+            PortIdentifier up = new PortIdentifier(0, CompassPoint.north);
+            PortIdentifier down = new PortIdentifier(0, CompassPoint.south);
+            PortIdentifier left = new PortIdentifier(0, CompassPoint.west);
+            PortIdentifier right = new PortIdentifier(0, CompassPoint.east);
+
 
             // create a ruleset
-            BeamRules = game.Engine.addRuleset("Beams");
-            BeamRules.PortChannelMode = PortChannelMode.halfDuplex;
-            BeamRules.SignalType = SignalType.Beam;
+            CrystalRules = game.Engine.addRuleset("Crystalarium");
+            CrystalRules.PortChannelMode = PortChannelMode.halfDuplex;
+            CrystalRules.SignalType = SignalType.Beam;
 
             // define BeamRules
             AgentType t;
 
             // setup agent types.
 
-            t=BeamRules.CreateType("small", new Point(1, 1));
-            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, new PortIdentifier(0, CompassPoint.north)));
+            t=CrystalRules.CreateType("emitter", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up));
 
 
-            BeamRules.CreateType("flat", new Point(2, 1));
-            BeamRules.CreateType("tall", new Point(1, 2));
-            BeamRules.CreateType("big", new Point(2, 2));
+            CrystalRules.CreateType("stopper", new Point(1, 1));
+            t=CrystalRules.CreateType("prism", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up,down,left,right));
 
+            t=CrystalRules.CreateType("mirror", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up, right));
 
-            game.CurrentRuleset = BeamRules;
+            CrystalRules.CreateType("luminal gate", new Point(1, 1));
+
+            t=CrystalRules.CreateType("channel", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up, down));
+
+            game.CurrentRuleset = CrystalRules;
          
 
              // setup TouchRules
 
-            TouchRules = game.Engine.addRuleset("Touch");
+            BasicRules = game.Engine.addRuleset("Minimal");
 
-            TouchRules.PortChannelMode = PortChannelMode.fullDuplex;
-            TouchRules.SignalType = SignalType.Beam;
-            TouchRules.BeamMaxLength = 1;
-            TouchRules.DiagonalSignalsAllowed = true;
+            BasicRules.PortChannelMode = PortChannelMode.halfDuplex;
+            BasicRules.SignalType = SignalType.Beam;
+            //
+            // 
+
+            t = BasicRules.CreateType("not gate", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up));
+
+            BasicRules.CreateType("stopper", new Point(1, 1));
+
+            t = BasicRules.CreateType("splitter", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up, down, left, right));
 
 
-            TouchRules.CreateType("bright", new Point(1, 1));
-            TouchRules.CreateType("dark", new Point(1, 1));
+            // setup filum
+           /* FilumRules = game.Engine.addRuleset("Filum");
 
+            FilumRules.PortChannelMode = PortChannelMode.fullDuplex;
+            FilumRules.SignalType = SignalType.Beam;
+            FilumRules.BeamMaxLength = 1;
+            FilumRules.RotateLock = true;
 
+            FilumRules.CreateType("void", new Point(1, 1));
+            FilumRules.CreateType("nand", new Point(1, 1));
+            FilumRules.CreateType("bridge", new Point(1, 1));
+            FilumRules.CreateType("splitter", new Point(1, 1));
+            FilumRules.CreateType("wall", new Point(1, 1));
+            FilumRules.CreateType("signal", new Point(1, 1));
+            FilumRules.CreateType("dying signal", new Point(1, 1));
 
+            // setup wireworld
+            WireRules = game.Engine.addRuleset("Wire World");
 
+            WireRules.PortChannelMode = PortChannelMode.fullDuplex;
+            WireRules.SignalType = SignalType.Beam;
+            WireRules.RotateLock = true;
+            WireRules.BeamMaxLength = 1;
+            WireRules.DiagonalSignalsAllowed = true;
+
+            WireRules.CreateType("void", new Point(1, 1));
+            WireRules.CreateType("wire", new Point(1, 1));
+            WireRules.CreateType("electron head", new Point(1, 1));
+            WireRules.CreateType("electron tail", new Point(1, 1));*/
 
         }
 
@@ -98,33 +144,42 @@ namespace Crystalarium.Main
             baseConfig.Background = Textures.pixel;
             baseConfig.BackgroundColor = new Color(50, 50, 50);
             baseConfig.DefaultTexture = Textures.sampleAgent;
-            baseConfig.Color = Color.Magenta;
+            baseConfig.Color = Color.White;
             baseConfig.Shrinkage = .05f;
 
 
             // Beams skin
-            Skin beams = new Skin(BeamRules, DefaultSkin);
+            Skin beams = new Skin(CrystalRules, DefaultSkin);
             beams.GridViewBG = Textures.viewboxBG;
 
-            // small
-            AgentViewConfig conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("small"));
-            conf.Color = Color.White;
+            // emitter
+            AgentViewConfig conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("emitter"));
             conf.DefaultTexture = Textures.emitter;
             beams.AgentConfigs.Add(conf);
 
-            // flat
-            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("flat"));
-            conf.Color = Color.Gold;
+            // stopper
+            conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("stopper"));
+            conf.DefaultTexture = Textures.stopper;
             beams.AgentConfigs.Add(conf);
 
-            // tall
-            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("tall"));
-            conf.Color = Color.LimeGreen;
+            // prism
+            conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("prism"));
+            conf.DefaultTexture = Textures.prism;
             beams.AgentConfigs.Add(conf);
 
-            // big 
-            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("big"));
-            conf.Color = Color.DodgerBlue;
+            // mirror
+            conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("mirror"));
+            conf.DefaultTexture = Textures.mirror;
+            beams.AgentConfigs.Add(conf);
+
+            // luminal gate
+            conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("luminal gate"));
+            conf.DefaultTexture = Textures.luminalGate;
+            beams.AgentConfigs.Add(conf);
+
+            // channel
+            conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("channel"));
+            conf.DefaultTexture = Textures.channel;
             beams.AgentConfigs.Add(conf);
 
             // beams
@@ -136,22 +191,29 @@ namespace Crystalarium.Main
 
 
             // touch skin
-            Skin touch = new Skin(TouchRules, DefaultSkin);
-            touch.GridViewBG = Textures.viewboxBG;
+            Skin basic = new Skin(BasicRules, DefaultSkin);
+            basic.GridViewBG = Textures.viewboxBG;
 
             // bright
-            conf = new AgentViewConfig(baseConfig, TouchRules.GetAgentType("bright"));
-            conf.Color = Color.White;
-            touch.AgentConfigs.Add(conf);
+            conf = new AgentViewConfig(baseConfig, BasicRules.GetAgentType("not gate"));
+            conf.DefaultTexture = Textures.notGate;
+            basic.AgentConfigs.Add(conf);
 
             // dark 
-            conf = new AgentViewConfig(baseConfig, TouchRules.GetAgentType("dark"));
-            conf.Color = Color.DimGray;
-            touch.AgentConfigs.Add(conf);
+            conf = new AgentViewConfig(baseConfig, BasicRules.GetAgentType("stopper"));
+            conf.DefaultTexture = Textures.stopper;
+            basic.AgentConfigs.Add(conf);
 
+            conf = new AgentViewConfig(baseConfig, BasicRules.GetAgentType("splitter"));
+            conf.DefaultTexture = Textures.prism;
+            basic.AgentConfigs.Add(conf);
+
+            // beams
+            basic.BeamConfig.BeamTexture = Textures.pixel;
+            basic.BeamConfig.Color = new Color(230, 230, 150);
 
             // chunks
-            touch.ChunkConfig.ChunkBackground = Textures.chunkGrid;
+            basic.ChunkConfig.ChunkBackground = Textures.chunkGrid;
 
 
         }
@@ -168,27 +230,39 @@ namespace Crystalarium.Main
             baseConfig.Color = Color.Magenta;
 
             // Beams skin
-            Skin beams = new Skin(BeamRules, MiniMapSkin);
+            Skin beams = new Skin(CrystalRules, MiniMapSkin);
             beams.GridViewBG = Textures.viewboxBG;
 
-            AgentViewConfig conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("small"));
-            conf.Color = Color.Crimson;
+            // emitter
+            AgentViewConfig conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("emitter"));
+            conf.Color = new Color(70, 220, 70);
             beams.AgentConfigs.Add(conf);
 
-            // flat
-            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("flat"));
-            conf.Color = Color.Gold;
+            //stopper
+            conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("stopper"));
+            conf.Color = new Color(180, 180, 180);
             beams.AgentConfigs.Add(conf);
 
-            // tall
-            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("tall"));
-            conf.Color = Color.LimeGreen;
+            // prism
+            conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("prism"));
+            conf.Color = new Color(50, 100, 200);
             beams.AgentConfigs.Add(conf);
 
-            // big 
-            conf = new AgentViewConfig(baseConfig, BeamRules.GetAgentType("big"));
-            conf.Color = Color.DodgerBlue;
+            // mirror
+            conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("mirror"));
+            conf.Color = new Color(120, 120, 230);
             beams.AgentConfigs.Add(conf);
+
+            // luminal gate
+            conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("luminal gate"));
+            conf.Color = new Color(220, 70, 70);
+            beams.AgentConfigs.Add(conf);
+
+            // channel
+            conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("channel"));
+            conf.Color = new Color(220, 120, 50);
+            beams.AgentConfigs.Add(conf);
+
 
             // beams
             beams.BeamConfig.BeamTexture = Textures.pixel;
@@ -202,22 +276,31 @@ namespace Crystalarium.Main
 
 
             // touch skin
-            Skin touch = new Skin(TouchRules, MiniMapSkin);
-            touch.GridViewBG = Textures.viewboxBG;
+            Skin basic = new Skin(BasicRules, MiniMapSkin);
+            basic.GridViewBG = Textures.viewboxBG;
 
             // bright
-            conf = new AgentViewConfig(baseConfig, TouchRules.GetAgentType("bright"));
-            conf.Color = Color.White;
-            touch.AgentConfigs.Add(conf);
+            conf = new AgentViewConfig(baseConfig, BasicRules.GetAgentType("not gate"));
+            conf.Color = new Color(220,70,70);
+            basic.AgentConfigs.Add(conf);
 
             // dark 
-            conf = new AgentViewConfig(baseConfig, TouchRules.GetAgentType("dark"));
-            conf.Color = Color.DimGray;
-            touch.AgentConfigs.Add(conf);
+            conf = new AgentViewConfig(baseConfig, BasicRules.GetAgentType("stopper"));
+            conf.Color = new Color(180, 180, 180);
+            basic.AgentConfigs.Add(conf);
 
+            // psitter
+            conf = new AgentViewConfig(baseConfig, BasicRules.GetAgentType("splitter"));
+            conf.Color = new Color(50, 100, 200);
+            basic.AgentConfigs.Add(conf);
+
+
+            // touch
+            basic.BeamConfig.BeamTexture = Textures.pixel;
+            basic.BeamConfig.Color = new Color(230, 230, 150);
 
             // chunks
-            touch.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
+            basic.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
 
 
         }

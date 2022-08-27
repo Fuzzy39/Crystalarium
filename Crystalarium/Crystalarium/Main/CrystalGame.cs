@@ -33,7 +33,7 @@ namespace Crystalarium.Main
         internal Engine Engine { get; private set; } // the 'engine'
         private const bool debugMode = false; // if true, crystalarium will not handle errors in a user-friendly way. this can be helpful for debugging.
 
-        private const int BUILD = 666; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 680; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
 
@@ -96,7 +96,15 @@ namespace Crystalarium.Main
             Textures.viewboxBG = Content.Load<Texture2D>("ViewportBG");
             Textures.chunkGrid = Content.Load<Texture2D>("chunkGrid");
             Textures.sampleAgent = Content.Load<Texture2D>("SampleAgent");
+
+            // agent textures
             Textures.emitter = Content.Load<Texture2D>("Agents/emitter");
+            Textures.channel = Content.Load<Texture2D>("Agents/channel");
+            Textures.luminalGate = Content.Load<Texture2D>("Agents/luminalGate");
+            Textures.mirror = Content.Load<Texture2D>("Agents/mirror");
+            Textures.notGate = Content.Load<Texture2D>("Agents/notgate");
+            Textures.prism = Content.Load<Texture2D>("Agents/prism");
+            Textures.stopper = Content.Load<Texture2D>("Agents/stopper");
 
 
 
@@ -185,15 +193,25 @@ namespace Crystalarium.Main
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
 
-            view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
-            view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
+            if (Engine.Controller.Context == "play")
+            {
+                view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
+                view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
+
+                // create ghosts.
+                view.CreateGhost(actions.CurrentType, actions.GetMousePos(), actions.Rotation);
+            }
+            else
+            {
+                // stop the camera
+                view.Camera.Velocity = new Vector3(0);
+            }
 
             // minimap positions
             minimap.Camera.Position = view.Camera.Position;
             minimap.Camera.Zoom = view.Camera.Zoom / 12;
 
-            // create ghosts.
-            view.CreateGhost(actions.CurrentType, actions.GetMousePos(), actions.Rotation);
+           
 
             try
             {
@@ -219,6 +237,7 @@ namespace Crystalarium.Main
             // arguably temporary
             double frameRate = Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds, 2);
 
+            // setup
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
 
@@ -234,6 +253,7 @@ namespace Crystalarium.Main
             // make everything a flat color.
             GraphicsDevice.Clear(new Color(70, 70, 70));
 
+            // tru to draw the game
             try
             {
                 Engine.Draw(spriteBatch);
@@ -248,17 +268,13 @@ namespace Crystalarium.Main
                 return;
             }
 
+            // Draw text on top of the game.
+            DrawText(width, height, frameRate);
 
-            string info = "Hovering over: " + actions.GetMousePos().X + ", " + actions.GetMousePos().Y;
-            string rules = "Ruleset: " + CurrentRuleset.Name;
-
-            // some debug text. We'll clear this out sooner or later...
-
-            spriteBatch.DrawString(Textures.testFont, "FPS/SPS " + frameRate + "/" + Engine.Sim.ActualStepsPS + " Chunks: " + Grid.gridSize.X * Grid.gridSize.Y, new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(Textures.testFont, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Vector2(10, 30), Color.White);
-
-
-            spriteBatch.DrawString(Textures.testFont, "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. P to switch rulesets (resets grid).\nRMB to delete. R to rotate. Q and E to switch agent types. O to toggle port rendering.", new Vector2(10, height - 70), Color.White);
+            if (Engine.Controller.Context == "menu")
+            {
+                DrawMenu(width, height);    
+            }
 
             EndDraw(height);
 
@@ -267,6 +283,47 @@ namespace Crystalarium.Main
             base.Draw(gameTime);
         }
 
+        // draw info on top of the game.
+        private void DrawText(int width, int height, double frameRate)
+        {
+
+
+            string info = "Hovering over: " + actions.GetMousePos().X + ", " + actions.GetMousePos().Y;
+            if (Engine.Controller.Context == "menu")
+            {
+                info = "Hovering over: N/A, N/A";
+            }
+
+            string rules = "Ruleset: " + CurrentRuleset.Name;
+
+            // some debug text. We'll clear this out sooner or later...
+
+            spriteBatch.DrawString(Textures.testFont, "FPS/SPS " + frameRate + "/" + Engine.Sim.ActualStepsPS + " Chunks: " + Grid.gridSize.X * Grid.gridSize.Y, new Vector2(10, 10), Color.White); spriteBatch.DrawString(Textures.testFont, "FPS/SPS " + frameRate + "/" + Engine.Sim.ActualStepsPS + " Chunks: " + Grid.gridSize.X * Grid.gridSize.Y, new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(Textures.testFont, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Vector2(10, 30), Color.White);
+
+
+            spriteBatch.DrawString(Textures.testFont, "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. P to switch rulesets (resets grid).\nRMB to delete. R to rotate. Q and E to switch agent types. O to toggle port rendering.", new Vector2(10, height - 70), Color.White);
+
+        }
+
+        //draw the crude menu for switching rulesets.
+        private void DrawMenu(int width, int height)
+        {
+            spriteBatch.Draw(Textures.pixel, new Rectangle(0, 0, width, height), new Color(0, 0, 0, 180));
+            spriteBatch.DrawString(Textures.testFont, "Switch Ruleset?", new Vector2(100, 100), Color.White, 0f, new Vector2(), 1.5f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(Textures.testFont, "Press P to return to game.", new Vector2(120, 150), Color.White);
+
+            for (int i = 1; i <= 9; i++)
+            {
+                if (Engine.Rulesets.Count < i)
+                {
+                    break;
+                }
+                spriteBatch.DrawString(Textures.testFont, "Press " + i + " to switch to ruleset '" + Engine.Rulesets[i - 1].Name + "'.", new Vector2(120, 150 + (25 * i)), Color.White);
+            }
+        }
+
+        // draw the build number, the most important thing!
         private void EndDraw(int height)
         {
             spriteBatch.DrawString(Textures.testFont, "Milestone 4, Build " + BUILD, new Vector2(10, height - 25), Color.White);
