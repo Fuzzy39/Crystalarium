@@ -337,7 +337,7 @@ namespace CrystalCore.Model
 
         internal void UpdateSignals( List<Chunk> where)
         {
-            Console.WriteLine("Update:");
+         
             // this will update some signals multiple times, but eh...
             foreach (Chunk ch in where)
             {
@@ -351,7 +351,7 @@ namespace CrystalCore.Model
 
                     Signal s = (Signal)member;
                     s.Update();
-                    Console.WriteLine(s);
+                
                 }
 
             }

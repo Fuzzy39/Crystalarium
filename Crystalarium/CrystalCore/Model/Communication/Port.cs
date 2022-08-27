@@ -189,10 +189,10 @@ namespace CrystalCore.Model.Communication
         }
 
         // create and transmit a signal. Returns weather it successfully has done so.
-        public abstract bool Transmit(int value);
+        public abstract void Transmit(int value);
 
         // receive a signal. Returns weather it successfully has done so.
-        public abstract bool Receive(Signal s);
+        public abstract void Receive(Signal s);
 
 
         // stop transmitting or receiving.

@@ -52,12 +52,12 @@ namespace CrystalCore.Model.Communication
             }
         }
 
-        public override bool Receive(Signal s)
+        public override void Receive(Signal s)
         {
 
             if (Status == PortStatus.receiving || Status == PortStatus.transceiving)
             {
-                return false;
+                throw new InvalidOperationException("Port in incorrect state to receive.");
             }
 
             _receiving = s;
@@ -65,11 +65,11 @@ namespace CrystalCore.Model.Communication
             if (Status == PortStatus.inactive)
             {
                 _status = PortStatus.receiving;
-                return true;
+                return;
             }
 
             _status = PortStatus.transceiving;
-            return true;
+            
 
 
         }
@@ -95,11 +95,11 @@ namespace CrystalCore.Model.Communication
 
       
 
-        public override bool Transmit(int value)
+        public override void Transmit(int value)
         {
             if(Status == PortStatus.transmitting ||Status == PortStatus.transceiving)
             {
-                return false;
+                throw new InvalidOperationException("Port in invalid state to transmit.");
             }
 
             // otherwise, start to transmit.
@@ -110,11 +110,11 @@ namespace CrystalCore.Model.Communication
             if(Status==PortStatus.receiving)
             {
                 _status = PortStatus.transceiving;
-                return true;
+                return;
             }
 
             _status = PortStatus.transmitting;
-            return true;
+ 
 
         }
 

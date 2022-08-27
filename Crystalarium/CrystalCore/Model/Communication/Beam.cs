@@ -169,10 +169,8 @@ namespace CrystalCore.Model.Communication
             }
 
             _end = p;
-            if(!p.Receive(this))
-            {
-                throw new InvalidOperationException("Refused Bequest: Beam could not connect to port.");
-            }
+            p.Receive(this);
+            
            
 
             //Console.WriteLine("Signal Connected!");

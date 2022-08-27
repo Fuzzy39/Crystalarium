@@ -80,7 +80,7 @@ namespace CrystalCore.Model.Communication
             _boundTo = null;
         }
 
-        public override bool Receive(Signal s)
+        public override void Receive(Signal s)
         {
             // if nothing else, by the end of this, I'll be able to spell receive.
             if (Status == PortStatus.transmitting)
@@ -92,30 +92,30 @@ namespace CrystalCore.Model.Communication
 
             _boundTo = s;
             _status = PortStatus.receiving;
-            return true;
+            
         }
 
-        public bool Transmit()
+        public void Transmit()
         {
-            return Transmit(1);
+            Transmit(1);
         }
 
 
-        public override bool Transmit(int value)
+        public override void Transmit(int value)
         {
             if (Status == PortStatus.receiving)
             {
                 // it is not possible to transmit if we are reveiving.
                 transportWaiting = true;
                 toTransportValue = value;
-                return false;
+                return;
 
             }
 
             if (Status == PortStatus.transmitting)
             {
                 // we may, however, overpower our own transmissions.
-                return false;
+                throw new InvalidOperationException("port cannot transmit while transmitting");
                 
             }
 
@@ -123,7 +123,7 @@ namespace CrystalCore.Model.Communication
             Signal s = Parent.Type.Ruleset.CreateSignal(Parent.Grid, this, value);
             _boundTo = s;
             _status = PortStatus.transmitting;
-            return true;
+         
 
         }
 
