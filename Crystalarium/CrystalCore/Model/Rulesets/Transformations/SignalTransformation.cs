@@ -42,15 +42,17 @@ namespace CrystalCore.Model.Rulesets.Transformations
         internal override void Transform(Agent a)
         {
             base.Transform(a);
+          
             foreach (PortIdentifier portID in ports)
             {
                 if(transmit)
                 {
                     Port p = a.GetPort(portID);
-                    //if (p.Status != PortStatus.receiving)
-                    //{
-                        a.GetPort(portID).Transmit(value);
-                    //}
+                    if (a.GetPortValue(portID) == 0  || p is FullPort)
+                    {
+                        p.Transmit(value);
+                        continue;
+                    }
 
                 }
                 else

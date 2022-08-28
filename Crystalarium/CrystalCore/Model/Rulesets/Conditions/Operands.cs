@@ -72,7 +72,7 @@ namespace CrystalCore.Model.Rulesets.Conditions
         }
     }
 
-    internal class PortValueOperand : Expression
+    public class PortValueOperand : Expression
     {
         private PortIdentifier portID;
 
@@ -95,14 +95,13 @@ namespace CrystalCore.Model.Rulesets.Conditions
 
         internal override Token Resolve(Agent a)
         {
-            Signal s = a.Ports[(int)portID.Facing][portID.ID].ReceivingSignal;
-            int toReturn = 0;
-            if(s!=null)
+            Port p = a.GetPort(portID);
+            if (p.Status == PortStatus.receiving || p.Status == PortStatus.transceiving)
             {
-                toReturn = s.Value;
+                return new Token(ReturnType, p.ReceivingSignal.Value);
             }
 
-            return new Token(ReturnType, toReturn);
+            return new Token(ReturnType, 0);
         }
     }
 

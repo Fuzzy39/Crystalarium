@@ -93,7 +93,7 @@ namespace CrystalCore.View.Subviews.Agents
 
         private Color DetermineColor()
         {
-            return Port.Status switch
+            Color c = Port.Status switch
             {
                 PortStatus.inactive => Color.DimGray,
                 PortStatus.receiving => Color.Blue,
@@ -101,6 +101,8 @@ namespace CrystalCore.View.Subviews.Agents
                 PortStatus.transceiving => Color.Purple,
                 _ => Color.Magenta,
             };
+            return c;
+
         }
 
     }

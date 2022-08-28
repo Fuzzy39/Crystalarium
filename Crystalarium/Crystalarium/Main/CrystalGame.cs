@@ -13,7 +13,7 @@ using CrystalCore.View;
 using CrystalCore.Model.Rulesets;
 using CrystalCore.View.Subviews.Agents;
 using CrystalCore.Model.Communication;
-using CrystalCore.View.Configs;
+using CrystalCore.View.Configs; 
 
 namespace Crystalarium.Main
 {
@@ -33,7 +33,7 @@ namespace Crystalarium.Main
         internal Engine Engine { get; private set; } // the 'engine'
         private const bool debugMode = false; // if true, crystalarium will not handle errors in a user-friendly way. this can be helpful for debugging.
 
-        private const int BUILD = 700; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 717; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
 
@@ -115,7 +115,7 @@ namespace Crystalarium.Main
             {
                 // setup the engine's configuration.
                 Configuration = new Configuration(this);
-               
+                
             }
             catch (InitializationFailedException e)
             {

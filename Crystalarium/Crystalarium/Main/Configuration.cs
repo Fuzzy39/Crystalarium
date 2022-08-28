@@ -60,34 +60,83 @@ namespace Crystalarium.Main
 
             // define BeamRules
             AgentType t;
+            Operator greaterThan = new Operator(OperatorType.GreaterThan);
+            Operator xor = new Operator(OperatorType.Xor);
+            Operator and = new Operator(OperatorType.And);
+            Operator or = new Operator(OperatorType.Or);
 
             // setup agent types.
 
-            t=CrystalRules.CreateType("emitter", new Point(1, 1));
-            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up));
-
-
+            // ############### STOPPER #####################
             CrystalRules.CreateType("stopper", new Point(1, 1));
 
-            // prism
+            // ############### Emitter #####################
+            t = CrystalRules.CreateType("emitter", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up));
+
+            // ############### PRISM #####################
             t = CrystalRules.CreateType("prism", new Point(1, 1));
-            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, false, up,down));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, false, up, down, left, right));
 
             t.States.Add(new AgentState());
             // condition: active ports > 0
-            t.States[0].Requirements = new Condition(t, new ThresholdOperand(t,1), new Operator(OperatorType.GreaterThan), new IntOperand(t, 0));
+            t.States[0].Requirements = new Condition(t, new ThresholdOperand(t, 1), new Operator(OperatorType.GreaterThan), new IntOperand(t, 0));
             // transmit on all sides
-            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up,down));
-      
+            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up, down, left, right));
 
-            // mirror
-            t=CrystalRules.CreateType("mirror", new Point(1, 1));
+
+            //############### MIRROR #####################
+            t = CrystalRules.CreateType("mirror", new Point(1, 1));
             t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up, right));
 
-            CrystalRules.CreateType("luminal gate", new Point(1, 1));
+            //############### LUMINAL GATE #####################
+            t = CrystalRules.CreateType("luminal gate", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, false, up, down));
 
-            t=CrystalRules.CreateType("channel", new Point(1, 1));
-            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up, down));
+            t.States.Add(new AgentState());
+
+            // condition: ((left>0) ^ (right>0)) & ( (up>0) || (down>0) )
+            // why did I make this monstrosity
+           
+            t.States[0].Requirements = new Condition
+            (t,
+                new Condition
+                (t,
+                    new Condition(t, new PortValueOperand(t, left), greaterThan, Zero(t)),
+                    xor,
+                    new Condition(t, new PortValueOperand(t, right), greaterThan, Zero(t))
+                ),
+                and,
+                new Condition
+                (t,
+                    new Condition(t, new PortValueOperand(t, up), greaterThan, Zero(t)),
+                    or,
+                    new Condition(t, new PortValueOperand(t, down), greaterThan, Zero(t))
+                )
+            ); 
+
+            // transmit 
+            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up, down));
+
+
+            // ############# CHANNEL ####################
+            t =CrystalRules.CreateType("channel", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, false, up, down));
+
+            t.States.Add(new AgentState());
+            // condition: upper port > 0
+            t.States[0].Requirements = new Condition(t, new PortValueOperand(t, up), new Operator(OperatorType.GreaterThan), new IntOperand(t, 0));
+            // transmit below
+            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, down));
+            t.States[0].Transformations.Add(new SignalTransformation(t, 1, false, up));
+
+            t.States.Add(new AgentState());
+            // condition: lower port > 0
+            t.States[1].Requirements = new Condition(t, new PortValueOperand(t, down), new Operator(OperatorType.GreaterThan), new IntOperand(t, 0));
+            // transmit above
+            t.States[1].Transformations.Add(new SignalTransformation(t, 1, false, down));
+            t.States[1].Transformations.Add(new SignalTransformation(t, 1, true, up));
+
 
             game.CurrentRuleset = CrystalRules;
          
@@ -142,7 +191,10 @@ namespace Crystalarium.Main
 
         }
 
-
+        private IntOperand Zero(AgentType t)
+        {
+            return new IntOperand(t, 0);
+        }
         private void CreateDefaultSkins()
         {
             // setup SkinSet.

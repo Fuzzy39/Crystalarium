@@ -14,11 +14,8 @@ namespace CrystalCore.Model.Communication
          */
 
         private Signal _boundTo;
-        private int toTransportValue;
-        private bool transportWaiting;
+      
 
-
-    
 
         private bool IsBinded
         {
@@ -74,10 +71,9 @@ namespace CrystalCore.Model.Communication
             // if nothing else, by the end of this, I'll be able to spell receive.
             if (Status == PortStatus.transmitting)
             {
-                throw new InvalidOperationException("Can't Receive while transmitting!");
-                //toTransportValue = _boundTo.Value;
-                //StopTransmitting();
-                //transportWaiting = true;
+                
+                StopTransmitting();
+               
             }
             if(s == null)
             {
@@ -100,10 +96,8 @@ namespace CrystalCore.Model.Communication
             if (Status == PortStatus.receiving)
             {
                 // it is not possible to transmit if we are reveiving.
-                transportWaiting = true;
-                toTransportValue = value;
-                return;
-
+                //throw new InvalidOperationException("HalfPorts cannot Transmit while receiving.");
+                return; // failed
             }
 
             if (Status == PortStatus.transmitting)
@@ -137,17 +131,13 @@ namespace CrystalCore.Model.Communication
             _boundTo.Reset();
             _boundTo = null;
             _status = PortStatus.inactive;
-            if(transportWaiting)
-            {
-                Transmit(toTransportValue);
-                transportWaiting = false;
-            }
+         
             
         }
 
         public override void StopTransmitting()
         {
-            transportWaiting = false;
+            
             if(Status != PortStatus.transmitting)
             {
                 return;
@@ -155,7 +145,9 @@ namespace CrystalCore.Model.Communication
             // this is the only time a port commands a signal. signals require a transmitter to exist.
             _status = PortStatus.inactive;
             _boundTo.Destroy();
+            
             _boundTo = null;
+            
            
         }
 

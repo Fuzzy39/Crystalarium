@@ -23,6 +23,7 @@ namespace CrystalCore.Model.Objects
 
         private AgentState _state;
 
+        private List<List<int>> _stalePortValues; // the value each port was receiving at the end of the last simulation step. 
         
         // properties
         public Direction Facing
@@ -109,7 +110,7 @@ namespace CrystalCore.Model.Objects
 
             // do the default thing.
             _state = Type.DefaultState;
-            _state.Execute(this);
+            //_state.Execute(this);
 
         }
 
@@ -117,13 +118,14 @@ namespace CrystalCore.Model.Objects
         private void CreatePorts()
         {
             _ports = new List<List<Port>>();
+            
 
             // should always be 8, but who knows, maybe they'll invent more directions on a compass.
             int length = Enum.GetNames(typeof(CompassPoint)).Length;
             for (int i=0; i<length; i++)
             {
                 List<Port> portList = new List<Port>();
-                
+                List<int> staleValues = new List<int>();
 
                 // add relevant ports to this list.
                 CompassPoint facing = (CompassPoint)i;
@@ -131,7 +133,7 @@ namespace CrystalCore.Model.Objects
                 if(facing.IsDiagonal())
                 {
                     _ports.Add(portList);
-
+                    
                     if (!Type.Ruleset.DiagonalSignalsAllowed)
                     {
                         continue;
@@ -145,6 +147,23 @@ namespace CrystalCore.Model.Objects
 
                 portList = CreateOrthagonalPorts(facing, portList);
                 _ports.Add(portList);
+            
+            }
+
+            CreateStaleVals();
+        }
+
+        private void CreateStaleVals()
+        {
+            _stalePortValues = new List<List<int>>();
+            foreach (List<Port> list in _ports)
+            {
+                List<int> staleList = new List<int>();
+                foreach (Port port in list)
+                {
+                    staleList.Add(0);
+                }
+                _stalePortValues.Add(staleList);
             }
         }
 
@@ -274,11 +293,33 @@ namespace CrystalCore.Model.Objects
             }
             return Ports[(int)portID.Facing][portID.ID];
         }
+        
+        
+        ///<summary>
+        /// 
+        /// </summary>
+        /// <returns> the value this port was receiving at the end of the last simulation step.</returns>
+        internal int GetPortValue(PortIdentifier portID)
+        {
+            if (!portID.CheckValidity(Type))
+            {
+                throw new InvalidOperationException("Bad PortID.");
+            }
+
+            return _stalePortValues[(int)portID.Facing][portID.ID];
+        }
+
 
         internal void UpdateState()
         {
+            UpdatePortValues();
             foreach(AgentState state in Type.States)
             {
+                if(state.Requirements == null)
+                {
+                    _state = state;
+                    return;
+                }
                 Token t = state.Requirements.Resolve(this);
                 if((bool)t.Value)
                 {
@@ -289,6 +330,31 @@ namespace CrystalCore.Model.Objects
             }
 
             _state = Type.DefaultState; 
+        }
+
+        internal void UpdatePortValues()
+        {
+            // loop through all directions
+            for(int i = 0; i<_ports.Count; i++)
+            {
+                List<Port> list = _ports[i];
+
+                // and every port in that direction...
+                for(int j = 0; j<list.Count; j++)
+                {
+                    // and update its stale value.
+                    Port p = list[j];
+                    if (p.Status == PortStatus.receiving)
+                    {
+                        _stalePortValues[i][j] = p.ReceivingSignal.Value;
+                        continue;
+                    }
+
+                    _stalePortValues[i][j] = 0;
+                   
+
+                }
+            }
         }
 
         internal void Update()

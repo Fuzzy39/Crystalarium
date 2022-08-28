@@ -363,14 +363,25 @@ namespace CrystalCore.Model
         /// </summary>
         internal void Step()
         {
+            List<AgentState> prev = new List<AgentState>();
             foreach(Agent a in _agents)
             {
+                prev.Add(a.State);
                 a.UpdateState();
             }
 
-            foreach(Agent a in _agents)
+            for(int i = 0; i < _agents.Count; i++)
             {
-                a.Update();
+                Agent a = _agents[i];
+
+                if (a.State != prev[i])
+                {
+                    a.Update();
+                }
+                if(a.State == a.Type.DefaultState)
+                {
+                    a.Update();
+                }
             }
 
         }
