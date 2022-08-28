@@ -60,7 +60,7 @@ namespace CrystalCore.Model.Rulesets.Conditions
             int toReturn = 0;
             foreach (Port p in a.PortList)
             {
-                if (p.IsReceiving)
+                if (p.Status == PortStatus.receiving || p.Status == PortStatus.transceiving)
                 {
                     if (p.ReceivingSignal.Value >= threshold)
                     {

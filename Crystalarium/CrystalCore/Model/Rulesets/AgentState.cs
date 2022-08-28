@@ -68,10 +68,16 @@ namespace CrystalCore.Model.Rulesets
                 if (Requirements != null)
                 {
                     Requirements.Initialize();
+                    if (Requirements.ReturnType != TokenType.boolean)
+                    {
+                        throw new InitializationFailedException("AgentState Requirement Expression must return a boolean.");
+                    }
+
                 }
 
+
                 // an agentstate can have no transformations, and be inert, if it wishes.
-                foreach(Transformation tf in Transformations)
+                foreach (Transformation tf in Transformations)
                 {
                     tf.Initialize();
                 }

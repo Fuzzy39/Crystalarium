@@ -354,10 +354,25 @@ namespace CrystalCore.Model
                 
                 }
 
+            }      
+           
+        }
+
+        /// <summary>
+        /// Perform a simulation step for this grid.
+        /// </summary>
+        internal void Step()
+        {
+            foreach(Agent a in _agents)
+            {
+                a.UpdateState();
             }
 
-            
-           
+            foreach(Agent a in _agents)
+            {
+                a.Update();
+            }
+
         }
     }
 }

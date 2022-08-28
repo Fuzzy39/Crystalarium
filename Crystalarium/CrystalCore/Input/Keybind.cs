@@ -65,6 +65,10 @@ namespace CrystalCore.Input
 
             // and the action
             _action = c.getAction(action);
+            if(_action == null)
+            {
+                throw new ArgumentException("Unkown Action '" + action + "'.");
+            }
 
             // set up the triggered state.
             _trigger = state;

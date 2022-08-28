@@ -34,14 +34,14 @@ namespace CrystalCore.Model.Rulesets.Conditions
             {
                 throw new InvalidOperationException("Invalid operation. How did this happen?");
             }
-
+        
             return _type switch
             {
                 OperatorType.EqualTo => new Token(TokenType.boolean, a.Value == b.Value),
                 OperatorType.NotEqualTo => new Token(TokenType.boolean, a.Value != b.Value),
 
-                OperatorType.GreaterThan => new Token(TokenType.boolean, (int)a.Value > (int)b.Value),
-                OperatorType.LessThan => new Token(TokenType.boolean, (int)a.Value < (int)b.Value),
+                OperatorType.GreaterThan => new Token(TokenType.boolean, ((int)a.Value) > ((int)b.Value)),
+                OperatorType.LessThan => new Token(TokenType.boolean, ((int)a.Value) < ((int)b.Value)),
               
                 OperatorType.Or => new Token(TokenType.boolean, (bool)a.Value || (bool)b.Value),
                 OperatorType.And => new Token(TokenType.boolean, (bool)a.Value & (bool)b.Value),

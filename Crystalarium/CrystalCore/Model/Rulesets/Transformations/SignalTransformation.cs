@@ -46,7 +46,11 @@ namespace CrystalCore.Model.Rulesets.Transformations
             {
                 if(transmit)
                 {
-                    a.GetPort(portID).Transmit(value);
+                    Port p = a.GetPort(portID);
+                    //if (p.Status != PortStatus.receiving)
+                    //{
+                        a.GetPort(portID).Transmit(value);
+                    //}
 
                 }
                 else

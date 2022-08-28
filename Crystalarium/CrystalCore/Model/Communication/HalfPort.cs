@@ -18,18 +18,7 @@ namespace CrystalCore.Model.Communication
         private bool transportWaiting;
 
 
-        public override bool IsReceiving
-        {
-            get
-            {
-                if (!IsBinded)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-        }
+    
 
         private bool IsBinded
         {
@@ -85,9 +74,14 @@ namespace CrystalCore.Model.Communication
             // if nothing else, by the end of this, I'll be able to spell receive.
             if (Status == PortStatus.transmitting)
             {
-                toTransportValue = _boundTo.Value;
-                StopTransmitting();
-                transportWaiting = true;
+                throw new InvalidOperationException("Can't Receive while transmitting!");
+                //toTransportValue = _boundTo.Value;
+                //StopTransmitting();
+                //transportWaiting = true;
+            }
+            if(s == null)
+            {
+                throw new ArgumentNullException();
             }
 
             _boundTo = s;
@@ -115,7 +109,11 @@ namespace CrystalCore.Model.Communication
             if (Status == PortStatus.transmitting)
             {
                 // we may, however, overpower our own transmissions.
-                throw new InvalidOperationException("port cannot transmit while transmitting");
+                if(value == TransmittingValue)
+                {
+                    return;
+                }
+                StopTransmitting();
                 
             }
 
@@ -155,10 +153,10 @@ namespace CrystalCore.Model.Communication
                 return;
             }
             // this is the only time a port commands a signal. signals require a transmitter to exist.
+            _status = PortStatus.inactive;
             _boundTo.Destroy();
             _boundTo = null;
-            _status = PortStatus.inactive;
-            
+           
         }
 
 

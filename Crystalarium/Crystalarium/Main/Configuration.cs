@@ -1,5 +1,6 @@
 ﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Rulesets;
+using CrystalCore.Model.Rulesets.Conditions;
 using CrystalCore.Model.Rulesets.Transformations;
 using CrystalCore.Util;
 using CrystalCore.View.Configs;
@@ -67,9 +68,19 @@ namespace Crystalarium.Main
 
 
             CrystalRules.CreateType("stopper", new Point(1, 1));
-            t=CrystalRules.CreateType("prism", new Point(1, 1));
-            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up,down,left,right));
 
+            // prism
+            t = CrystalRules.CreateType("prism", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, false, up,down));
+
+            t.States.Add(new AgentState());
+            // condition: active ports > 0
+            t.States[0].Requirements = new Condition(t, new ThresholdOperand(t,1), new Operator(OperatorType.GreaterThan), new IntOperand(t, 0));
+            // transmit on all sides
+            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up,down));
+      
+
+            // mirror
             t=CrystalRules.CreateType("mirror", new Point(1, 1));
             t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up, right));
 

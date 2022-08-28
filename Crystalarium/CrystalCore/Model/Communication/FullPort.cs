@@ -30,19 +30,7 @@ namespace CrystalCore.Model.Communication
             _receiving = null;
         }
 
-        public override bool IsReceiving
-        {
-            get
-            {
-                if(Status == PortStatus.transmitting || Status == PortStatus.inactive)
-                {
-                    return false;
-                }
-
-                return true;
-               
-            }
-        }
+       
 
         public override int TransmittingValue
         {
@@ -97,9 +85,16 @@ namespace CrystalCore.Model.Communication
 
         public override void Transmit(int value)
         {
-            if(Status == PortStatus.transmitting ||Status == PortStatus.transceiving)
+            if(Status == PortStatus.transmitting || Status == PortStatus.transceiving)
             {
-                throw new InvalidOperationException("Port in invalid state to transmit.");
+                if (value == TransmittingValue)
+                {
+                    return;
+                }
+                
+                StopTransmitting();
+                 
+                
             }
 
             // otherwise, start to transmit.

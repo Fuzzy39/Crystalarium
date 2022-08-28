@@ -56,12 +56,7 @@ namespace CrystalCore.Model.Communication
             get => _status;
         }
 
-        // returns true if this port is receiving a signal and its value is above the port's threshold.
-        public abstract bool IsReceiving
-        {
-            get;
-        }
-
+      
         public abstract int TransmittingValue
         {
             get;

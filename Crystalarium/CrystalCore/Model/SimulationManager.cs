@@ -26,7 +26,7 @@ namespace CrystalCore.Model
         private int _actualStepsPS; // the amount of times that the simulation is currently running per second.
                                     // Unless the game is lagging, it should be the same as the target.
 
-        public const int MIN_STEPS_PER_SECOND = 10; // the minimum allowable steps per second.
+        public const int MIN_STEPS_PER_SECOND = 5; // the minimum allowable steps per second.
 
         private double overdueSteps; // the progress/amount of steps that need to happen, but have not.
                                      // Note that overdue steps does not count the descrepancy between target and actual SPS.
@@ -36,6 +36,19 @@ namespace CrystalCore.Model
         private List<Grid> _grids; // The grids currently in existence.
 
 
+        public bool Paused
+        { 
+            get { return _paused; }
+            set 
+            { 
+                if(value)
+                {
+                    _actualStepsPS = _targetStepsPS;
+                }
+                _paused = value;
+            }
+
+        }
 
         // public properties
         public int TargetStepsPS
@@ -63,7 +76,8 @@ namespace CrystalCore.Model
             overdueSteps = 0;
 
             _grids = new List<Grid>();
-       
+            _paused = true;
+
         }
 
         // The expected step rate given the current simulation speed.
@@ -89,6 +103,11 @@ namespace CrystalCore.Model
         internal void Update( GameTime time)
         {
             // adjust our current steprate, if needbe
+            if(Paused)
+            {
+                _actualStepsPS = 0;
+                return;
+            }
 
             adjustActualSPS(time.IsRunningSlowly);
 
@@ -143,20 +162,16 @@ namespace CrystalCore.Model
             }
         }
 
-        private void Step()
+        public void Step()
         {
             // do a simulation step.
             // this is currently empty, but I imagine it would look like this:
 
-            /* foreach(Grid g in Grids)
-             * {
-             *      g.generateFutureStates();
-             * }
-             * foreach(Grid g in Grids)
-             * {
-             *     g.updateStates();
-             * }
-             */
+            foreach(Grid g in Grids)
+            {
+                g.Step();
+            }
+            
         }
 
         // add a grid to the list of grids

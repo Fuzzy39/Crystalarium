@@ -38,6 +38,11 @@ namespace CrystalCore.Model.Objects
         // constructors
         public GridObject(Grid g, Rectangle rect)
         {
+            if(g == null)
+            {
+                throw new ArgumentException("grid cannot be null for gridobject");
+            }
+
             if(rect.Size.X<1 || rect.Size.Y<1 )
             {
                 throw new ArgumentException("GridObjects must have size.");

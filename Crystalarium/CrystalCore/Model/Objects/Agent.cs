@@ -1,5 +1,6 @@
 ﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Rulesets;
+using CrystalCore.Model.Rulesets.Conditions;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
@@ -272,6 +273,27 @@ namespace CrystalCore.Model.Objects
                 throw new InvalidOperationException("Bad PortID.");
             }
             return Ports[(int)portID.Facing][portID.ID];
+        }
+
+        internal void UpdateState()
+        {
+            foreach(AgentState state in Type.States)
+            {
+                Token t = state.Requirements.Resolve(this);
+                if((bool)t.Value)
+                {
+                   
+                    _state = state;
+                    return;
+                }
+            }
+
+            _state = Type.DefaultState; 
+        }
+
+        internal void Update()
+        {
+            _state.Execute(this);
         }
     }
 }

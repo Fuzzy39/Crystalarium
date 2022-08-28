@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using CrystalCore.Model.Communication;
 using CrystalCore.View.Configs;
+using CrystalCore.Model;
 
 namespace Crystalarium.Main
 {
@@ -234,6 +235,7 @@ namespace Crystalarium.Main
                 if (c.Context == "play")
                 {
                     c.Context = "menu";
+
                 }
                 else
                 {
@@ -274,6 +276,52 @@ namespace Crystalarium.Main
             c.addAction("ruleset 9", () => SwitchRuleset(8));
             new Keybind(c, Keystate.OnPress, "ruleset 9", "menu", Button.D9);
 
+
+            c.addAction("toggle sim", () =>
+            {
+                game.Engine.Sim.Paused = !game.Engine.Sim.Paused;
+
+
+            });
+            new Keybind(c, Keystate.OnPress, "toggle sim", "play", Button.Space);
+
+
+            c.addAction("sim step", () =>
+            {
+
+                // no need to step if unpaused.
+                if (game.Engine.Sim.Paused) { game.Engine.Sim.Step(); }
+
+
+            });
+            new Keybind(c, Keystate.OnPress, "sim step", "play", Button.Z);
+
+            c.addAction("sim faster", () =>
+            {
+
+                SimulationManager sim = game.Engine.Sim;
+                if (sim.TargetStepsPS < 100)
+                {
+                    sim.TargetStepsPS += 10;
+                }
+
+
+            });
+            new Keybind(c, Keystate.OnPress, "sim faster", "play", Button.LeftShift);
+
+            c.addAction("sim slower", () =>
+            {
+
+                // no need to step if unpaused.
+                SimulationManager sim = game.Engine.Sim;
+                if(sim.TargetStepsPS>10)
+                {
+                    sim.TargetStepsPS -= 10;
+                }
+
+            });
+            new Keybind(c, Keystate.OnPress, "sim slower", "play", Button.LeftControl);
+
         }
 
         private void SwitchRuleset(int i)
@@ -282,9 +330,16 @@ namespace Crystalarium.Main
             List<Ruleset> rulesets = game.Engine.Rulesets;
             if(rulesets.Count>i)
             {
-              
-                game.CurrentRuleset = rulesets[i];
-                game.Grid.Ruleset = game.CurrentRuleset;
+                if (rulesets[i] == game.CurrentRuleset)
+                {
+                    game.Grid.Reset();
+                }
+                else
+                {
+                    game.CurrentRuleset = rulesets[i];
+                    game.Grid.Ruleset = game.CurrentRuleset;
+                }
+
                 CurrentType = game.CurrentRuleset.AgentTypes[0];
                 c.Context = "play";
             }

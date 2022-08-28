@@ -13,7 +13,7 @@ namespace CrystalCore.Model.Rulesets.Conditions
     internal class Token
     {
         public TokenType Type;
-        private int value;
+        private int _value;
 
         public object Value
         {
@@ -21,10 +21,10 @@ namespace CrystalCore.Model.Rulesets.Conditions
             {
                 if(Type == TokenType.boolean)
                 {
-                    return value > 1;
+                    return _value > 0;
                 }
 
-                return value;
+                return _value;
                     
             }
 
@@ -32,12 +32,14 @@ namespace CrystalCore.Model.Rulesets.Conditions
             {
                 if(value is bool & Type==TokenType.boolean)
                 {
-                    this.value = (bool)value ? 1 : 0;
+                    this._value = ((bool)value) ? 1 : 0;
+                    return;
                 }
 
                 if (value is int & Type == TokenType.integer)
                 {
-                    this.value = (int)value;
+                    this._value = (int)value;
+                    return;
                 }
 
                 throw new ArgumentException("value must be of boolean or integer type.");
@@ -47,7 +49,7 @@ namespace CrystalCore.Model.Rulesets.Conditions
         internal Token(TokenType type, object value)
         {
             Type = type;
-            value = 0;
+            _value = 0;
             Value = value;
         }
 

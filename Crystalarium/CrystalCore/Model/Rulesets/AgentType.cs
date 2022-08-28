@@ -58,10 +58,10 @@ namespace CrystalCore.Model.Rulesets
         {
             get
             {
-                if(Initialized)
+                /*if(Initialized)
                 {
                     throw new InvalidOperationException("Cannot modify/access an AgentTypes states after engine is initialized.");
-                }
+                }*/
                 return _states;
             }
         }
