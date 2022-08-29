@@ -276,6 +276,34 @@ namespace Crystalarium.Main
             c.addAction("ruleset 9", () => SwitchRuleset(8));
             new Keybind(c, Keystate.OnPress, "ruleset 9", "menu", Button.D9);
 
+            // agents
+            c.addAction("agent 1", () => SwitchAgent(0));
+            new Keybind(c, Keystate.OnPress, "agent 1", "play", Button.D1);
+
+            c.addAction("agent 2", () => SwitchAgent(1));
+            new Keybind(c, Keystate.OnPress, "agent 2", "play", Button.D2);
+
+            c.addAction("agent 3", () => SwitchAgent(2));
+            new Keybind(c, Keystate.OnPress, "agent 3", "play", Button.D3);
+
+            c.addAction("agent 4", () => SwitchAgent(3));
+            new Keybind(c, Keystate.OnPress, "agent 4", "play", Button.D4);
+
+            c.addAction("agent 5", () => SwitchAgent(4));
+            new Keybind(c, Keystate.OnPress, "agent 5", "play", Button.D5);
+
+            c.addAction("agent 6", () => SwitchAgent(5));
+            new Keybind(c, Keystate.OnPress, "agent 6", "play", Button.D6);
+
+            c.addAction("agent 7", () => SwitchAgent(6));
+            new Keybind(c, Keystate.OnPress, "agent 7", "play", Button.D7);
+
+            c.addAction("agent 8", () => SwitchAgent(7));
+            new Keybind(c, Keystate.OnPress, "agent 8", "play", Button.D8);
+
+            c.addAction("agent 9", () => SwitchAgent(8));
+            new Keybind(c, Keystate.OnPress, "agent 9", "play", Button.D9);
+
 
             c.addAction("toggle sim", () =>
             {
@@ -344,6 +372,14 @@ namespace Crystalarium.Main
                 c.Context = "play";
             }
             // do nothing if it's not valid.
+        }
+
+        private void SwitchAgent(int i)
+        {
+            if(i<game.CurrentRuleset.AgentTypes.Count)
+            {
+                CurrentType = game.CurrentRuleset.AgentTypes[i];   
+            }
         }
 
         // returns the position of the mouse in tilespace relative to the maingame.view.
