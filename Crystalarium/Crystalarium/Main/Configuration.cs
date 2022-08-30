@@ -253,6 +253,7 @@ namespace Crystalarium.Main
              FilumRules.CreateType("wall", new Point(1, 1));
              FilumRules.CreateType("signal", new Point(1, 1));
              FilumRules.CreateType("dying signal", new Point(1, 1));
+            */
 
              // setup wireworld
              WireRules = game.Engine.addRuleset("Wire World");
@@ -263,10 +264,21 @@ namespace Crystalarium.Main
              WireRules.BeamMaxLength = 1;
              WireRules.DiagonalSignalsAllowed = true;
 
-             WireRules.CreateType("void", new Point(1, 1));
-             WireRules.CreateType("wire", new Point(1, 1));
-             WireRules.CreateType("electron head", new Point(1, 1));
-             WireRules.CreateType("electron tail", new Point(1, 1));*/
+            t = WireRules.CreateType("wire", new Point(1, 1));
+
+            //
+            t =WireRules.CreateType("electron tail", new Point(1, 1));
+            t.States.Add(new AgentState());
+            t.States[0].Requirements = null;
+            // transmit on all sides
+            t.States[0].Transformations.Add(new MutateTransformation(t, WireRules.GetAgentType("wire")));
+
+       
+            t=WireRules.CreateType("electron head", new Point(1, 1));
+            t.States.Add(new AgentState());
+            t.States[0].Requirements = null;
+            // transmit on all sides
+            t.States[0].Transformations.Add(new MutateTransformation(t, WireRules.GetAgentType("electron tail")));
 
         }
 
@@ -274,6 +286,7 @@ namespace Crystalarium.Main
         {
             return new IntOperand(t, 0);
         }
+
         private void CreateDefaultSkins()
         {
             // setup SkinSet.
@@ -332,7 +345,7 @@ namespace Crystalarium.Main
             beams.ChunkConfig.ChunkBackground = Textures.chunkGrid;
 
 
-            // touch skin
+            // Minimal skin
             Skin basic = new Skin(BasicRules, DefaultSkin);
             basic.GridViewBG = Textures.viewboxBG;
 
@@ -356,6 +369,34 @@ namespace Crystalarium.Main
 
             // chunks
             basic.ChunkConfig.ChunkBackground = Textures.chunkGrid;
+
+
+
+            // ##### Wire World #####
+            Skin wire= new Skin(WireRules, DefaultSkin);
+            wire.GridViewBG = Textures.viewboxBG;
+
+            baseConfig = new AgentViewConfig(null);
+            baseConfig.DefaultTexture = Textures.pixel;
+            baseConfig.Color = Color.White;
+
+            // bright
+            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("wire"));
+            conf.Color = new Color(110, 140, 110);
+            wire.AgentConfigs.Add(conf);
+
+            // dark 
+            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron head"));
+            conf.Color = new Color(0, 255, 0);
+            wire.AgentConfigs.Add(conf);
+
+            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron tail"));
+            conf.Color = new Color(40, 220, 40);
+            wire.AgentConfigs.Add(conf);
+
+
+            // chunks
+            wire.ChunkConfig.ChunkBackground = Textures.altChunkGrid;
 
 
         }
@@ -443,6 +484,32 @@ namespace Crystalarium.Main
 
             // chunks
             basic.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
+
+            // 
+            Skin wire = new Skin(WireRules, MiniMapSkin);
+            wire.GridViewBG = Textures.viewboxBG;
+
+            baseConfig = new AgentViewConfig(null);
+            baseConfig.DefaultTexture = Textures.pixel;
+            baseConfig.Color = Color.White;
+
+            // bright
+            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("wire"));
+            conf.Color = new Color(110, 140, 110);
+            wire.AgentConfigs.Add(conf);
+
+            // dark 
+            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron head"));
+            conf.Color = new Color(0, 255, 0);
+            wire.AgentConfigs.Add(conf);
+
+            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron tail"));
+            conf.Color = new Color(40, 220, 40);
+            wire.AgentConfigs.Add(conf);
+
+
+            wire.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
+
 
 
         }

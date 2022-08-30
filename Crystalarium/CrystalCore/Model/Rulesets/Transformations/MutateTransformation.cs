@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CrystalCore.Model.Rulesets.Transformations
 {
-    internal class MutateTransformation : Transformation
+    public class MutateTransformation : Transformation
     {
 
         private AgentType mutateTo;
@@ -19,6 +19,11 @@ namespace CrystalCore.Model.Rulesets.Transformations
 
         internal override void Initialize()
         {
+            if (mutateTo == null)
+            {
+                throw new InitializationFailedException("Mutation Transformation: unkown mutate type.");
+            }
+
             if(!mutateTo.Size.Equals(AgentType.Size))
             {
                 throw new InitializationFailedException("Mutation Transformation: Agents that are mutated cannot change size.");
@@ -35,7 +40,10 @@ namespace CrystalCore.Model.Rulesets.Transformations
             Direction d =a.Facing;
             Point loc = a.Bounds.Location;
             a.Destroy();
-            mutateTo.createAgent(g, loc, d);
+            if (mutateTo.createAgent(g, loc, d) == null)
+            {
+                throw new InvalidOperationException("Failed to mutate agent.");
+            }
         }
 
     }

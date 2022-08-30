@@ -33,7 +33,7 @@ namespace Crystalarium.Main
         internal Engine Engine { get; private set; } // the 'engine'
         private const bool debugMode = false; // if true, crystalarium will not handle errors in a user-friendly way. this can be helpful for debugging.
 
-        private const int BUILD = 720; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 723; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
 
@@ -95,6 +95,7 @@ namespace Crystalarium.Main
             Textures.testSquare = Content.Load<Texture2D>("testSquare");
             Textures.viewboxBG = Content.Load<Texture2D>("ViewportBG");
             Textures.chunkGrid = Content.Load<Texture2D>("chunkGrid");
+            Textures.altChunkGrid = Content.Load<Texture2D>("AltChunkGrid");
             Textures.sampleAgent = Content.Load<Texture2D>("SampleAgent");
 
             // agent textures

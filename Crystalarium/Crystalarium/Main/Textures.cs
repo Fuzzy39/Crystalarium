@@ -18,6 +18,7 @@ namespace Crystalarium.Main
         //crysm textures
         public static Texture2D tile; // unused
         public static Texture2D chunkGrid;
+        public static Texture2D altChunkGrid;
         public static Texture2D sampleAgent;
 
         //
