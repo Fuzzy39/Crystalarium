@@ -72,7 +72,12 @@ namespace Crystalarium.Main
 
             // ############### Emitter #####################
             t = CrystalRules.CreateType("emitter", new Point(1, 1));
-            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up));
+        
+            t.States.Add(new AgentState());
+            // condition: active ports > 0
+            t.States[0].Requirements = null;
+            // transmit on all sides
+            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up));
 
             // ############### PRISM #####################
             t = CrystalRules.CreateType("prism", new Point(1, 1));
@@ -203,12 +208,17 @@ namespace Crystalarium.Main
 
             // ###### NOT GATE #######
             t = BasicRules.CreateType("not gate", new Point(1, 1));
-            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up));
+
+            t.States.Add(new AgentState());
+            // condition: active ports > 0
+            t.States[0].Requirements = null;
+            // transmit on all sides
+            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up));
 
             t.States.Add(new AgentState());
             // not gate
             // Condition (left>0)||(right>0)||(down>0)
-            t.States[0].Requirements = new Condition
+            t.States[1].Requirements = new Condition
             (t,
                 new Condition
                 (t,
@@ -222,7 +232,7 @@ namespace Crystalarium.Main
 
 
             // transmit on all sides
-            t.States[0].Transformations.Add(new SignalTransformation(t, 1, false, up));
+            t.States[1].Transformations.Add(new SignalTransformation(t, 1, false, up));
 
 
             // ########### STOPPER ##############
@@ -256,7 +266,7 @@ namespace Crystalarium.Main
             */
 
             // setup wireworld
-            WireRules = game.Engine.addRuleset("Wire World");
+            /*WireRules = game.Engine.addRuleset("Wire World");
 
             WireRules.PortChannelMode = PortChannelMode.fullDuplex;
             WireRules.SignalType = SignalType.Beam;
@@ -269,9 +279,9 @@ namespace Crystalarium.Main
             // condition: active ports > 0
             t.States[0].Requirements = new Condition
                 (t,
-                    new Condition(t, new ThresholdOperand(t, 0), greaterThan, Zero(t)),
+                    new Condition(t, new ThresholdOperand(t, 1), greaterThan, Zero(t)),
                     and,
-                    new Condition(t, new ThresholdOperand(t, 3), new Operator(OperatorType.LessThan), new IntOperand(t, 3))
+                    new Condition(t, new ThresholdOperand(t, 1), new Operator(OperatorType.LessThan), new IntOperand(t, 3))
                 );
 
             // transmit on all sides
@@ -285,13 +295,15 @@ namespace Crystalarium.Main
 
        
             t=WireRules.CreateType("electron head", new Point(1, 1));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up, down, left, right,
+               new PortIdentifier(0, CompassPoint.northwest), new PortIdentifier(0, CompassPoint.northeast),
+               new PortIdentifier(0, CompassPoint.southwest), new PortIdentifier(0, CompassPoint.southeast)));
+
             t.States.Add(new AgentState());
             t.States[0].Requirements = null;
             // transmit on all sides
-            t.States[0].Transformations.Add(new MutateTransformation(t, "electron tail"));
-            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up, down, left, right,
-                new PortIdentifier(0, CompassPoint.northwest), new PortIdentifier(0, CompassPoint.northeast),
-                new PortIdentifier(0, CompassPoint.southwest), new PortIdentifier(0, CompassPoint.southeast)));
+            t.States[0].Transformations.Add(new MutateTransformation(t, "electron tail"));*/
+           
 
         }
 
@@ -385,7 +397,7 @@ namespace Crystalarium.Main
 
 
 
-            // ##### Wire World #####
+            /*// ##### Wire World #####
             Skin wire= new Skin(WireRules, DefaultSkin);
             wire.GridViewBG = Textures.viewboxBG;
 
@@ -410,7 +422,7 @@ namespace Crystalarium.Main
 
 
             // chunks
-            wire.ChunkConfig.ChunkBackground = Textures.altChunkGrid;
+            wire.ChunkConfig.ChunkBackground = Textures.altChunkGrid;*/
 
 
         }
@@ -499,7 +511,7 @@ namespace Crystalarium.Main
             // chunks
             basic.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
 
-            // 
+            /*// 
             Skin wire = new Skin(WireRules, MiniMapSkin);
             wire.GridViewBG = Textures.viewboxBG;
 
@@ -522,7 +534,7 @@ namespace Crystalarium.Main
             wire.AgentConfigs.Add(conf);
 
 
-            wire.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
+            wire.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);*/
 
 
 

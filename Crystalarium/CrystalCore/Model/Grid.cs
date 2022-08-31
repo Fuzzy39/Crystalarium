@@ -137,13 +137,13 @@ namespace CrystalCore.Model
         {
         
             // Destroy all members of this grid, starting from the most dependent objects to the least.
-            if (_signals != null)
+            /*(if (_signals != null) // Agents manage signals, this shouldn't be a thing.
             {
                 while (_signals.Count > 0)
                 {
                     _signals[0].Destroy();
                 }
-            }
+            }*/
 
             if (_agents != null)
             {
