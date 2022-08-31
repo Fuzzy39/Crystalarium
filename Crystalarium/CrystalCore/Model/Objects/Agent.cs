@@ -170,11 +170,13 @@ namespace CrystalCore.Model.Objects
 
         public override void Destroy()
         {
-           
+
 
             //Grid g = Grid;
+            List<Chunk> toUpdate = new List<Chunk>(ChunksWithin);
+            Grid g = Grid;
             base.Destroy();
-            //g.UpdateSignals(ChunksWithin);
+           
 
             foreach (List<Port> ports in _ports)
             {
@@ -185,6 +187,8 @@ namespace CrystalCore.Model.Objects
 
                 }
             }
+
+            g.UpdateSignals(new List<Chunk>(toUpdate));
         }
 
         // facing is direction of ports to be made relative to upwards face of agent
