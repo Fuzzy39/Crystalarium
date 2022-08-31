@@ -56,7 +56,9 @@ namespace CrystalCore.Model
             get => chunksSize;
         }
 
-        public List<Agent> Agents { get => _agents; }
+        public int AgentCount { get => _agents.Count; }
+
+        public int SignalCount { get => _signals.Count; }
 
         public Vector2 center
         {
@@ -223,6 +225,16 @@ namespace CrystalCore.Model
             UpdateSignals(a.ChunksWithin);
         }
 
+        internal void AddSignal(Signal s)
+        {
+            if (s.Grid != this)
+            {
+                throw new ArgumentException("Signal " + s + "Does not belong to this grid.");
+            }
+
+            _signals.Add(s);
+        }
+
         public void ExpandGrid(Direction d)
         {
             if (d.IsHorizontal())
@@ -342,7 +354,7 @@ namespace CrystalCore.Model
             foreach (Chunk ch in where)
             {
                 List<ChunkMember> toUpdate = new List<ChunkMember>(ch.MembersWithin);
-                foreach(ChunkMember member in toUpdate)
+                foreach (ChunkMember member in toUpdate)
                 {
                     if (!(member is Signal))
                     {
@@ -350,6 +362,11 @@ namespace CrystalCore.Model
                     }
 
                     Signal s = (Signal)member;
+                    if (s.Bounds.Size == new Point(0))
+                    {
+                        continue; // this signal has been destroyed while other signals are updating.
+                                  // this can be caused by conflicts with half port communication.
+                    }
                     s.Update();
                 
                 }
@@ -377,6 +394,11 @@ namespace CrystalCore.Model
                 if (a.State != prev[i])
                 {
                     a.Update();
+                    if(a.Bounds==new Rectangle(new Point(0), new Point(0)))
+                    {
+                        i--;
+                    }
+                    continue;
                 }
                 if(a.State == a.Type.DefaultState)
                 {

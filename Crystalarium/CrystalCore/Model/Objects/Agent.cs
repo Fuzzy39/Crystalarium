@@ -313,6 +313,7 @@ namespace CrystalCore.Model.Objects
         internal void UpdateState()
         {
             UpdatePortValues();
+            _state = null;
             foreach(AgentState state in Type.States)
             {
                 if(state.Requirements == null)
@@ -328,7 +329,7 @@ namespace CrystalCore.Model.Objects
                     return;
                 }
             }
-
+           
             _state = Type.DefaultState; 
         }
 

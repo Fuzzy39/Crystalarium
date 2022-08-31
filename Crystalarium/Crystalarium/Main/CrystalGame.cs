@@ -33,7 +33,7 @@ namespace Crystalarium.Main
         internal Engine Engine { get; private set; } // the 'engine'
         private const bool debugMode = false; // if true, crystalarium will not handle errors in a user-friendly way. this can be helpful for debugging.
 
-        private const int BUILD = 723; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 726; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
 
@@ -301,7 +301,10 @@ namespace Crystalarium.Main
 
             // some debug text. We'll clear this out sooner or later...
 
-            spriteBatch.DrawString(Textures.testFont, "FPS/SPS " + frameRate + "/" + Engine.Sim.ActualStepsPS + " Chunks: " + Grid.gridSize.X * Grid.gridSize.Y, new Vector2(10, 10), Color.White); spriteBatch.DrawString(Textures.testFont, "FPS/SPS " + frameRate + "/" + Engine.Sim.ActualStepsPS + " Chunks: " + Grid.gridSize.X * Grid.gridSize.Y, new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(Textures.testFont, "FPS/SPS " + frameRate + "/" + Engine.Sim.ActualStepsPS + " Chunks: " 
+                + Grid.gridSize.X * Grid.gridSize.Y+" Agents: "+Grid.AgentCount+" Signals: "+Grid.SignalCount,
+                new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(Textures.testFont, "FPS/SPS " + frameRate + "/" + Engine.Sim.ActualStepsPS + " Chunks: " + Grid.gridSize.X * Grid.gridSize.Y, new Vector2(10, 10), Color.White);
             spriteBatch.DrawString(Textures.testFont, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Vector2(10, 30), Color.White);
 
 

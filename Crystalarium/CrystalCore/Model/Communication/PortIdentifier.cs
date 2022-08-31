@@ -25,7 +25,7 @@ namespace CrystalCore.Model.Communication
     public struct PortIdentifier
     {
 
-        public int ID;
+        public int ID;  
         public CompassPoint Facing;
 
         public PortIdentifier(int portID, CompassPoint compassPoint)
@@ -35,7 +35,7 @@ namespace CrystalCore.Model.Communication
         }
         public bool CheckValidity(AgentType at)
         {
-            if (at.Ruleset.DiagonalSignalsAllowed & Facing.IsDiagonal())
+            if (!at.Ruleset.DiagonalSignalsAllowed & Facing.IsDiagonal())
             {
                 return false;
             }

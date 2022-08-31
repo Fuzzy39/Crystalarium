@@ -88,7 +88,7 @@ namespace Crystalarium.Main
             //############### MIRROR #####################
             t = CrystalRules.CreateType("mirror", new Point(1, 1));
             // up right
-            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, false, up,down,left, right));
+            t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, false, up, down, left, right));
 
             t.States.Add(new AgentState());
             // condition: ((left>0) || (down>0)) & ( (up>0) || (right>0) )
@@ -110,19 +110,19 @@ namespace Crystalarium.Main
              );
 
             // transmit 
-            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up, down,left,right));
+            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up, down, left, right));
 
 
             t.States.Add(new AgentState());
-            t.States[1].Requirements =  new Condition
+            t.States[1].Requirements = new Condition
             (t,
                 new Condition(t, new PortValueOperand(t, left), greaterThan, Zero(t)),
                 or,
                 new Condition(t, new PortValueOperand(t, down), greaterThan, Zero(t))
             );
-             
+
             // transmit 
-            t.States[1].Transformations.Add(new SignalTransformation(t, 1, true,  down, left));
+            t.States[1].Transformations.Add(new SignalTransformation(t, 1, true, down, left));
             t.States[1].Transformations.Add(new SignalTransformation(t, 1, false, up, right));
 
 
@@ -148,7 +148,7 @@ namespace Crystalarium.Main
 
             // condition: ((left>0) ^ (right>0)) & ( (up>0) || (down>0) )
             // why did I make this monstrosity
-           
+
             t.States[0].Requirements = new Condition
             (t,
                 new Condition
@@ -164,14 +164,14 @@ namespace Crystalarium.Main
                     or,
                     new Condition(t, new PortValueOperand(t, down), greaterThan, Zero(t))
                 )
-            ); 
+            );
 
             // transmit 
             t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up, down));
 
 
             // ############# CHANNEL ####################
-            t =CrystalRules.CreateType("channel", new Point(1, 1));
+            t = CrystalRules.CreateType("channel", new Point(1, 1));
             t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, false, up, down));
 
             t.States.Add(new AgentState());
@@ -190,17 +190,17 @@ namespace Crystalarium.Main
 
 
             game.CurrentRuleset = CrystalRules;
-         
 
 
 
-             // setup TouchRules
+
+            // setup TouchRules
 
             BasicRules = game.Engine.addRuleset("Minimal");
 
             BasicRules.PortChannelMode = PortChannelMode.halfDuplex;
             BasicRules.SignalType = SignalType.Beam;
-           
+
             // ###### NOT GATE #######
             t = BasicRules.CreateType("not gate", new Point(1, 1));
             t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up));
@@ -209,10 +209,10 @@ namespace Crystalarium.Main
             // not gate
             // Condition (left>0)||(right>0)||(down>0)
             t.States[0].Requirements = new Condition
-            (t, 
+            (t,
                 new Condition
                 (t,
-                    new Condition(t, new PortValueOperand(t,left), greaterThan, Zero(t)),
+                    new Condition(t, new PortValueOperand(t, left), greaterThan, Zero(t)),
                     or,
                     new Condition(t, new PortValueOperand(t, right), greaterThan, Zero(t))
                 ),
@@ -255,30 +255,43 @@ namespace Crystalarium.Main
              FilumRules.CreateType("dying signal", new Point(1, 1));
             */
 
-             // setup wireworld
-             WireRules = game.Engine.addRuleset("Wire World");
+            // setup wireworld
+            WireRules = game.Engine.addRuleset("Wire World");
 
-             WireRules.PortChannelMode = PortChannelMode.fullDuplex;
-             WireRules.SignalType = SignalType.Beam;
-             WireRules.RotateLock = true;
-             WireRules.BeamMaxLength = 1;
-             WireRules.DiagonalSignalsAllowed = true;
+            WireRules.PortChannelMode = PortChannelMode.fullDuplex;
+            WireRules.SignalType = SignalType.Beam;
+            WireRules.RotateLock = true;
+            WireRules.BeamMaxLength = 1;
+            WireRules.DiagonalSignalsAllowed = true;
 
             t = WireRules.CreateType("wire", new Point(1, 1));
+            t.States.Add(new AgentState());
+            // condition: active ports > 0
+            t.States[0].Requirements = new Condition
+                (t,
+                    new Condition(t, new ThresholdOperand(t, 0), greaterThan, Zero(t)),
+                    and,
+                    new Condition(t, new ThresholdOperand(t, 3), new Operator(OperatorType.LessThan), new IntOperand(t, 3))
+                );
 
+            // transmit on all sides
+            t.States[0].Transformations.Add(new MutateTransformation(t, "electron head") ); 
             //
             t =WireRules.CreateType("electron tail", new Point(1, 1));
             t.States.Add(new AgentState());
             t.States[0].Requirements = null;
             // transmit on all sides
-            t.States[0].Transformations.Add(new MutateTransformation(t, WireRules.GetAgentType("wire")));
+            t.States[0].Transformations.Add(new MutateTransformation(t, "wire"));
 
        
             t=WireRules.CreateType("electron head", new Point(1, 1));
             t.States.Add(new AgentState());
             t.States[0].Requirements = null;
             // transmit on all sides
-            t.States[0].Transformations.Add(new MutateTransformation(t, WireRules.GetAgentType("electron tail")));
+            t.States[0].Transformations.Add(new MutateTransformation(t, "electron tail"));
+            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up, down, left, right,
+                new PortIdentifier(0, CompassPoint.northwest), new PortIdentifier(0, CompassPoint.northeast),
+                new PortIdentifier(0, CompassPoint.southwest), new PortIdentifier(0, CompassPoint.southeast)));
 
         }
 
@@ -378,6 +391,7 @@ namespace Crystalarium.Main
 
             baseConfig = new AgentViewConfig(null);
             baseConfig.DefaultTexture = Textures.pixel;
+            baseConfig.Background = Textures.pixel;
             baseConfig.Color = Color.White;
 
             // bright

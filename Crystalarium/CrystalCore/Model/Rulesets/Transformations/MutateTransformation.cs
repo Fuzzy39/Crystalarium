@@ -10,21 +10,21 @@ namespace CrystalCore.Model.Rulesets.Transformations
     public class MutateTransformation : Transformation
     {
 
-        private AgentType mutateTo;
+        private String mutateTo;
 
-        public MutateTransformation(AgentType at, AgentType mutateTo) : base(at)
+        public MutateTransformation(AgentType at, string mutateTo) : base(at)
         {
             this.mutateTo = mutateTo;
         }
 
         internal override void Initialize()
         {
-            if (mutateTo == null)
+            if (AgentType.Ruleset.GetAgentType(mutateTo) == null)
             {
                 throw new InitializationFailedException("Mutation Transformation: unkown mutate type.");
             }
 
-            if(!mutateTo.Size.Equals(AgentType.Size))
+            if(!AgentType.Ruleset.GetAgentType(mutateTo).Size.Equals(AgentType.Size))
             {
                 throw new InitializationFailedException("Mutation Transformation: Agents that are mutated cannot change size.");
             }
@@ -40,10 +40,12 @@ namespace CrystalCore.Model.Rulesets.Transformations
             Direction d =a.Facing;
             Point loc = a.Bounds.Location;
             a.Destroy();
-            if (mutateTo.createAgent(g, loc, d) == null)
+            Agent b = AgentType.Ruleset.GetAgentType(mutateTo).createAgent(g, loc, d);
+            if (b== null)
             {
                 throw new InvalidOperationException("Failed to mutate agent.");
             }
+            g.UpdateSignals(b.ChunksWithin);
         }
 
     }
