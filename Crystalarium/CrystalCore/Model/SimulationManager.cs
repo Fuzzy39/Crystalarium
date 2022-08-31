@@ -127,7 +127,7 @@ namespace CrystalCore.Model
         {
 
             // the rate that SPS will change in a frame. Fairly arbitrary.
-            int SPSChange = 10;
+            int SPSChange = 1;
              
 
             // this code feels dirty...

@@ -33,7 +33,7 @@ namespace Crystalarium.Main
         internal Engine Engine { get; private set; } // the 'engine'
         private const bool debugMode = false; // if true, crystalarium will not handle errors in a user-friendly way. this can be helpful for debugging.
 
-        private const int BUILD = 726; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 731; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
 

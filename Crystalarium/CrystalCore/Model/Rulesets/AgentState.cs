@@ -77,10 +77,23 @@ namespace CrystalCore.Model.Rulesets
 
 
                 // an agentstate can have no transformations, and be inert, if it wishes.
+                bool agentDestroyed = false;
                 foreach (Transformation tf in Transformations)
                 {
+                 
+                    if(agentDestroyed)
+                    {
+                        throw new InitializationFailedException("MutateTransformation and DestroyTransformation must be the last transformation that an agent undergoes.");
+                    }
+
                     tf.Initialize();
+
+                    if (tf is MutateTransformation || tf is DestroyTransformation)
+                    {
+                        agentDestroyed = true;
+                    }
                 }
+
 
             }
             catch(InitializationFailedException e)

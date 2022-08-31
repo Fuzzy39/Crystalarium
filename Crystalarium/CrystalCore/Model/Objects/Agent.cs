@@ -110,7 +110,7 @@ namespace CrystalCore.Model.Objects
 
             // do the default thing.
             _state = Type.DefaultState;
-            //_state.Execute(this);
+            _state.Execute(this);
 
         }
 

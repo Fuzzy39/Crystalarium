@@ -65,6 +65,7 @@ namespace CrystalCore.Model.Objects
         public virtual void Destroy()
         {
             // remove references to this object.
+
             _grid.Remove(this);
             _bounds = new Rectangle(0,0,0,0);
             _grid = null;
