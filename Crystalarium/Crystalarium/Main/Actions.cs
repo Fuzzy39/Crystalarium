@@ -108,7 +108,22 @@ namespace Crystalarium.Main
 
             c.addAction("place agent", () =>
             {
+
                 Point clickCoords = GetMousePos();
+                Agent toRemove = null;
+
+                // remove all agents on this tile (there should only be one once things are working properly)
+                while (true)
+                {
+
+                    toRemove = game.Grid.getAgentAtPos(clickCoords);
+                    if (toRemove == null)
+                    {
+                        break;
+                    }
+
+                    toRemove.Destroy();
+                }
 
                 if (CurrentType.isValidLocation(game.Grid, clickCoords, Rotation))
                 {
@@ -164,6 +179,24 @@ namespace Crystalarium.Main
             });
             new Keybind(c, Keystate.OnPress, "rotate", "play", Button.R);
 
+
+            c.addAction("pipette", () =>
+            {
+                Point clickCoords = GetMousePos();
+
+                Agent a = game.Grid.getAgentAtPos(clickCoords);
+                if (a == null)
+                {
+                    return;
+                }
+
+
+                CurrentType = a.Type;
+                Rotation = a.Facing;
+
+
+            });
+            new Keybind(c, Keystate.OnPress, "pipette", "play", Button.Tab);
 
 
             c.addAction("start pan", () =>

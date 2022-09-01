@@ -48,7 +48,7 @@ namespace CrystalCore.Model.Rulesets.Transformations
                 if(transmit)
                 {
                     Port p = a.GetPort(portID);
-                    if (a.GetPortValue(portID) == 0  || p is FullPort)
+                    //if (a.GetPortValue(portID) == 0  || p is FullPort)
                     {
                         p.Transmit(value);
                         continue;

@@ -61,6 +61,18 @@ namespace CrystalCore.Model.Communication
             }
         }
 
+        public override Signal TransmittingSignal
+        {
+            get
+            {
+                if(Status!=PortStatus.transmitting)
+                {
+                    throw new InvalidOperationException("Cannot obtain transmitting signal from a port that isn't transmitting.");
+                }
+                return _boundTo;
+            }
+        }
+
         public HalfPort(CompassPoint facing, int ID, Agent parent) : base(facing, ID, parent)
         {
             _boundTo = null;

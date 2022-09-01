@@ -209,16 +209,12 @@ namespace Crystalarium.Main
             // ###### NOT GATE #######
             t = BasicRules.CreateType("not gate", new Point(1, 1));
 
-            t.States.Add(new AgentState());
-            // condition: active ports > 0
-            t.States[0].Requirements = null;
-            // transmit on all sides
-            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up));
+           
 
             t.States.Add(new AgentState());
             // not gate
             // Condition (left>0)||(right>0)||(down>0)
-            t.States[1].Requirements = new Condition
+            t.States[0].Requirements = new Condition
             (t,
                 new Condition
                 (t,
@@ -232,8 +228,13 @@ namespace Crystalarium.Main
 
 
             // transmit on all sides
-            t.States[1].Transformations.Add(new SignalTransformation(t, 1, false, up));
+            t.States[0].Transformations.Add(new SignalTransformation(t, 1, false, up));
 
+            t.States.Add(new AgentState());
+            // condition: active ports > 0
+            t.States[1].Requirements = null;
+            // transmit on all sides
+            t.States[1].Transformations.Add(new SignalTransformation(t, 1, true, up));
 
             // ########### STOPPER ##############
             BasicRules.CreateType("stopper", new Point(1, 1));

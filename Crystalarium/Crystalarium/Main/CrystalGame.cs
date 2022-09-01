@@ -33,7 +33,7 @@ namespace Crystalarium.Main
         internal Engine Engine { get; private set; } // the 'engine'
         private const bool debugMode = false; // if true, crystalarium will not handle errors in a user-friendly way. this can be helpful for debugging.
 
-        private const int BUILD = 731; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 740; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
 
@@ -308,7 +308,7 @@ namespace Crystalarium.Main
             spriteBatch.DrawString(Textures.testFont, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Vector2(10, 30), Color.White);
 
 
-            spriteBatch.DrawString(Textures.testFont, "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. RMB to delete. R to rotate. " +
+            spriteBatch.DrawString(Textures.testFont, "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. RMB to delete. R to rotate. Tab to Copy Agent." +
                 "\nQ and E to switch agent types. P to switch rulesets (resets grid). O to toggle port rendering." +
                 "\nSpace to toggle simulation. Z for single sim step. Shift/Control to Raise/Lower sim speed.", 
                 new Vector2(10, height - 95), Color.White);
@@ -335,7 +335,7 @@ namespace Crystalarium.Main
         // draw the build number, the most important thing!
         private void EndDraw(int height)
         {
-            spriteBatch.DrawString(Textures.testFont, "Milestone 4, Build " + BUILD, new Vector2(10, height - 25), Color.White);
+            spriteBatch.DrawString(Textures.testFont, "Milestone 5, Build " + BUILD, new Vector2(10, height - 25), Color.White);
             spriteBatch.End();
 
         }

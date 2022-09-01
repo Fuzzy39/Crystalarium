@@ -133,7 +133,7 @@ namespace CrystalCore.Model
             // this code feels dirty...
             // I don't know how to fix it though...
 
-            if(isRunningSlowly)
+            /*if(isRunningSlowly)
             {
                 // we want to prevent the steprate from decreasing below it's minimum.
                 if( _actualStepsPS-SPSChange < MIN_STEPS_PER_SECOND )
@@ -145,7 +145,7 @@ namespace CrystalCore.Model
                 _actualStepsPS -= SPSChange;
                 return;
 
-            }
+            }*/
 
             // we can run the simulation faster again!
             if(_actualStepsPS<_targetStepsPS)

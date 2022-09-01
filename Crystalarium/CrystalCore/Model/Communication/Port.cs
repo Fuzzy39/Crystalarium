@@ -63,6 +63,7 @@ namespace CrystalCore.Model.Communication
         }
 
         public abstract Signal ReceivingSignal { get; }
+        public abstract Signal TransmittingSignal { get; }
 
         public CompassPoint AbsoluteFacing
         {

@@ -251,28 +251,32 @@ namespace CrystalCore.Model.Objects
             // stop transmitting and receiving signals, then 'reboot'
             List<Chunk> toUpdate = new List<Chunk>();
             toUpdate.AddRange(ChunksWithin);
+         
 
-            foreach( List<Port> ports in _ports)
+            foreach ( Port p in PortList)
             {
-                foreach(Port p in ports)
+                if (p.Status == PortStatus.transmitting || p.Status == PortStatus.transceiving)
                 {
-                    if (p.Status == PortStatus.transmitting || p.Status == PortStatus.transceiving)
-                    {
-                        int v = p.TransmittingValue;
-                        p.StopTransmitting();
-                        p.Transmit(v);
-                    }
-
-                    if(p.Status == PortStatus.receiving)
-                    {
-                        toUpdate.AddRange(p.ReceivingSignal.ChunksWithin);
-                    }
-                    p.StopReceiving();
+                    int v = p.TransmittingValue;
                     
+                    p.StopTransmitting();
+
+                    //p.Transmit(v);
                 }
+
+                if(p.Status == PortStatus.receiving)
+                {
+                    toUpdate.AddRange(p.ReceivingSignal.ChunksWithin);
+                }
+                p.StopReceiving();
+                    
+                
             }
 
             Grid.UpdateSignals(toUpdate);
+            _state = Type.DefaultState;
+
+
         }
 
         public override string ToString()
