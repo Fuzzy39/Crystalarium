@@ -16,6 +16,10 @@ namespace CrystalCore.Model.Communication
         private Signal _boundTo;
       
 
+        /// <summary>
+        /// Whether the port is allowed to transmit.
+        /// </summary>
+      
 
         private bool IsBinded
         {
@@ -87,6 +91,7 @@ namespace CrystalCore.Model.Communication
                 StopTransmitting();
                
             }
+
             if(s == null)
             {
                 throw new ArgumentNullException();
@@ -94,6 +99,8 @@ namespace CrystalCore.Model.Communication
 
             _boundTo = s;
             _status = PortStatus.receiving;
+
+            base.Receive(s);
             
         }
 
@@ -140,11 +147,12 @@ namespace CrystalCore.Model.Communication
             {
                 return;
             }
+
             _boundTo.Reset();
             _boundTo = null;
             _status = PortStatus.inactive;
-         
-            
+
+            base.StopReceiving();
         }
 
         public override void StopTransmitting()

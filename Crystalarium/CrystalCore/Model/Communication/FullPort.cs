@@ -60,6 +60,8 @@ namespace CrystalCore.Model.Communication
                 throw new InvalidOperationException("Port in incorrect state to receive.");
             }
 
+            base.Receive(s);
+
             _receiving = s;
 
             if (Status == PortStatus.inactive)
@@ -70,12 +72,14 @@ namespace CrystalCore.Model.Communication
 
             _status = PortStatus.transceiving;
             
-
+          
 
         }
 
         public override void StopReceiving()
         {
+            base.StopReceiving();
+
             if (Status != PortStatus.receiving && Status != PortStatus.transceiving)
             {
                 return;
@@ -91,6 +95,8 @@ namespace CrystalCore.Model.Communication
             }
 
             _status = PortStatus.inactive;
+
+         
         }
 
       

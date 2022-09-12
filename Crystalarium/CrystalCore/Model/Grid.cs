@@ -378,34 +378,68 @@ namespace CrystalCore.Model
         /// <summary>
         /// Perform a simulation step for this grid.
         /// </summary>
+        /* internal void Step()
+         {
+             List<AgentState> prev = new List<AgentState>();
+
+             foreach(Agent a in _agents)
+             {
+                 prev.Add(a.State);
+                 a.UpdateState();
+             }
+
+
+             for(int i = 0; i < _agents.Count; i++)
+             {
+                 Agent a = _agents[i];
+
+                 if (a.State != prev[i])
+                 {
+                     a.Update();
+                     if(a.Bounds==new Rectangle(new Point(0), new Point(0)))
+                     {
+                         i--;
+                     }
+                     continue;
+                 }
+
+                 if(a.State == a.Type.DefaultState)
+                 {
+                     a.Update();
+                 }
+
+             }
+
+         }*/
+
         internal void Step()
         {
-            List<AgentState> prev = new List<AgentState>();
-            foreach(Agent a in _agents)
+            Console.WriteLine("Step!");
+
+            // have each agent determine the state they will be in next step based on the state of the grid last step.
+            foreach (Agent a in _agents)
             {
-                prev.Add(a.State);
                 a.UpdateState();
             }
 
-            for(int i = 0; i < _agents.Count; i++)
+
+            // have each agent perform it's next step, no longer needing to look at the state of the grid.
+            for (int i = 0; i < _agents.Count; i++)
             {
                 Agent a = _agents[i];
 
-                if (a.State != prev[i])
-                {
-                    a.Update();
-                    if(a.Bounds==new Rectangle(new Point(0), new Point(0)))
-                    {
-                        i--;
-                    }
-                    continue;
-                }
-                if(a.State == a.Type.DefaultState)
-                {
-                    a.Update();
-                }
-            }
 
+                a.Update();
+
+                // transformations applied to agents can destroy them.
+                if (a.Destroyed)
+                {
+                    i--;
+                }
+
+
+            }
         }
+
     }
 }

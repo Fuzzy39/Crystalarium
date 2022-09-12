@@ -121,7 +121,7 @@ namespace CrystalCore.Model.Rulesets
                 throw new InvalidOperationException("Agent Attempted to execute a state it should not.");
             }
 
-          
+            
 
             foreach(Transformation tf in _transformations)
             {

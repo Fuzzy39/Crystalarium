@@ -24,6 +24,9 @@ namespace CrystalCore.Model.Objects
         private AgentState _state;
 
         private List<List<int>> _stalePortValues; // the value each port was receiving at the end of the last simulation step. 
+
+        private bool statusChanged; // whether a port started/stopped receiving this step.
+        private bool statusHadChanged; // whether a port started/stopped receiging last step.
         
         // properties
         public Direction Facing
@@ -80,6 +83,8 @@ namespace CrystalCore.Model.Objects
 
 
             _type = t;
+            statusChanged = true; // this is true at initialization so the agent can do things of it's own accord when it is created
+
 
             if (Type.Ruleset.RotateLock)
             {
@@ -110,7 +115,7 @@ namespace CrystalCore.Model.Objects
 
             // do the default thing.
             _state = Type.DefaultState;
-            _state.Execute(this);
+           
 
         }
 
@@ -122,6 +127,7 @@ namespace CrystalCore.Model.Objects
 
             // should always be 8, but who knows, maybe they'll invent more directions on a compass.
             int length = Enum.GetNames(typeof(CompassPoint)).Length;
+
             for (int i=0; i<length; i++)
             {
                 List<Port> portList = new List<Port>();
@@ -140,8 +146,11 @@ namespace CrystalCore.Model.Objects
                     }
 
                     // create a diagonal port.
-                    portList.Add(Type.Ruleset.CreatePort(facing, 0, this));
-                  
+                    Port p = Type.Ruleset.CreatePort(facing, 0, this);
+                    portList.Add(p);
+                    p.OnStartReiceving += OnPortStatusChanged;
+                    p.OnStopReiceving += OnPortStatusChanged;
+
                     continue;
                 }
 
@@ -167,6 +176,11 @@ namespace CrystalCore.Model.Objects
             }
         }
 
+        private void OnPortStatusChanged(Object Sender, EventArgs e)
+        {
+            Console.WriteLine("Agent '" + this + "' had a port start/stop receiving.");
+            statusChanged = true;
+        }
 
         public override void Destroy()
         {
@@ -200,14 +214,20 @@ namespace CrystalCore.Model.Objects
             {
                 for (int j = 0; j < Type.Size.X; j++)
                 {
-                    ports.Add(Type.Ruleset.CreatePort(facing, j, this));
+                    Port p = Type.Ruleset.CreatePort(facing, j, this);
+                    ports.Add(p);
+                    p.OnStartReiceving += OnPortStatusChanged;
+                    p.OnStopReiceving += OnPortStatusChanged;
                 }
                 return ports;
             }
 
             for (int j = 0; j < Type.Size.Y; j++)
             {
-                ports.Add(Type.Ruleset.CreatePort(facing, j, this));
+                Port p = Type.Ruleset.CreatePort(facing, j, this);
+                ports.Add(p);
+                p.OnStartReiceving += OnPortStatusChanged;
+                p.OnStopReiceving += OnPortStatusChanged;
             }
 
             return ports;
@@ -320,25 +340,42 @@ namespace CrystalCore.Model.Objects
 
         internal void UpdateState()
         {
-            UpdatePortValues();
-            _state = null;
-            foreach(AgentState state in Type.States)
+            statusHadChanged = statusChanged;
+            statusChanged = false;
+            if(!statusHadChanged)
             {
-                if(state.Requirements == null)
+                return;
+            }
+
+            UpdatePortValues();
+            _state = DetermineState();
+
+        }
+
+
+   
+
+        private AgentState DetermineState()
+        {
+            
+            foreach (AgentState state in Type.States)
+            {
+                // if a state has no requirements, it fits the bill!
+                if (state.Requirements == null)
                 {
-                    _state = state;
-                    return;
+                    return state;
                 }
+
+                // otherwise, check if we meet the requirements.
                 Token t = state.Requirements.Resolve(this);
-                if((bool)t.Value)
+                if ((bool)t.Value)
                 {
-                   
-                    _state = state;
-                    return;
+
+                    return state;
                 }
             }
-           
-            _state = Type.DefaultState; 
+
+            return Type.DefaultState;
         }
 
         internal void UpdatePortValues()
@@ -368,7 +405,16 @@ namespace CrystalCore.Model.Objects
 
         internal void Update()
         {
+            if(!statusHadChanged)
+            {
+                Console.WriteLine("Agent '" + this + "' is lame.");
+                return;
+            }
+            Console.WriteLine("Agent '" + this + "' is NOT lame. [executed] ");
             _state.Execute(this);
+
+            
+
         }
     }
 }

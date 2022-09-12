@@ -38,6 +38,10 @@ namespace CrystalCore.Model.Communication
         protected PortStatus _status; // the status this port is in.
         //private Signal _boundTo; // the signal this port is bound to.
 
+        // events
+        public event EventHandler OnStartReiceving;
+        public event EventHandler OnStopReiceving;
+
 
         public CompassPoint Facing
         {
@@ -69,6 +73,7 @@ namespace CrystalCore.Model.Communication
         {
             get
             {
+               
                 CompassPoint toReturn = _facing;
                 for (Direction i = _parent.Facing; i != Direction.up; i = i.Rotate(RotationalDirection.clockwise))
                 {
@@ -188,12 +193,24 @@ namespace CrystalCore.Model.Communication
         public abstract void Transmit(int value);
 
         // receive a signal. Returns weather it successfully has done so.
-        public abstract void Receive(Signal s);
+        public virtual void Receive(Signal s)
+        {
+            if (OnStartReiceving != null)
+            {
+                OnStartReiceving(this, new EventArgs());
+            }
+        }
 
 
         // stop transmitting or receiving.
         public abstract void StopTransmitting();
-        public abstract void StopReceiving();
+        public virtual void StopReceiving()
+        {
+            if(OnStopReiceving != null)
+            {
+                OnStopReiceving(this, new EventArgs());
+            }
+        }
 
 
         // tostring

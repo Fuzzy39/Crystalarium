@@ -14,6 +14,7 @@ namespace CrystalCore.Model.Objects
 
         private Rectangle _bounds;// the position and size in tile space where this GridObject is located.
         protected Grid _grid; // the grid that this object belongs to.
+        private bool _destroyed;
 
 
         public virtual Rectangle Bounds
@@ -21,7 +22,7 @@ namespace CrystalCore.Model.Objects
             get => _bounds;
             protected set
             {
-                if(value.Width*value.Height==0)
+                if (value.Width * value.Height == 0)
                 {
                     throw new ArgumentException("GridObjects must have size.");
                 }
@@ -32,6 +33,11 @@ namespace CrystalCore.Model.Objects
         public Grid Grid
         {
             get => _grid;
+        }
+
+        public bool Destroyed
+        {
+            get { return _destroyed; }
         }
 
 
@@ -50,7 +56,7 @@ namespace CrystalCore.Model.Objects
 
             _bounds = rect;
             _grid = g;
-
+            _destroyed = false;
 
         }
 
@@ -69,6 +75,7 @@ namespace CrystalCore.Model.Objects
             _grid.Remove(this);
             _bounds = new Rectangle(0,0,0,0);
             _grid = null;
+            _destroyed= true;
             
         }
 
