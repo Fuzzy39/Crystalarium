@@ -31,9 +31,8 @@ namespace Crystalarium.Main
         private SpriteBatch spriteBatch;
 
         internal Engine Engine { get; private set; } // the 'engine'
-        private const bool debugMode = false; // if true, crystalarium will not handle errors in a user-friendly way. this can be helpful for debugging.
 
-        private const int BUILD = 744; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 747; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
 
@@ -128,7 +127,6 @@ namespace Crystalarium.Main
                 errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed during initialization." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
                     "\nA detailed description of the problem is below:\n\n" + e.ToString());
-                if (debugMode) { throw; }
                 return;
             }
 
@@ -225,7 +223,6 @@ namespace Crystalarium.Main
                 errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed while updating the simulation." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
                     "\nA detailed description of the problem is below:\n\n" + e.ToString());
-                if (debugMode) { throw; }
                 return;
             }
 
@@ -266,7 +263,6 @@ namespace Crystalarium.Main
                 errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed while rendering graphics." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
                     "\nA detailed description of the problem is below:\n\n" + e.ToString());
-                if (debugMode) { throw; }
                 spriteBatch.End();
                 return;
             }

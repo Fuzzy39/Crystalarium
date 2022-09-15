@@ -14,7 +14,7 @@ namespace CrystalCore.Model.Rulesets
     {
         /*
          * An AgentType is responsible for creating agents, and defines how a particular agent will behave.
-         * It also defines what agentRenderers are used for this agent.
+         * It also defines  what agentRenderers are used for this agent.
          * 
          */
 

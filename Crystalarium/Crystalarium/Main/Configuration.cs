@@ -267,7 +267,7 @@ namespace Crystalarium.Main
             */
 
             // setup wireworld
-            /*WireRules = game.Engine.addRuleset("Wire World");
+            WireRules = game.Engine.addRuleset("Wire World");
 
             WireRules.PortChannelMode = PortChannelMode.fullDuplex;
             WireRules.SignalType = SignalType.Beam;
@@ -303,7 +303,7 @@ namespace Crystalarium.Main
             t.States.Add(new AgentState());
             t.States[0].Requirements = null;
             // transmit on all sides
-            t.States[0].Transformations.Add(new MutateTransformation(t, "electron tail"));*/
+            t.States[0].Transformations.Add(new MutateTransformation(t, "electron tail"));
            
 
         }
@@ -398,7 +398,7 @@ namespace Crystalarium.Main
 
 
 
-            /*// ##### Wire World #####
+            // ##### Wire World #####
             Skin wire= new Skin(WireRules, DefaultSkin);
             wire.GridViewBG = Textures.viewboxBG;
 
@@ -423,7 +423,7 @@ namespace Crystalarium.Main
 
 
             // chunks
-            wire.ChunkConfig.ChunkBackground = Textures.altChunkGrid;*/
+            wire.ChunkConfig.ChunkBackground = Textures.altChunkGrid;
 
 
         }
@@ -512,7 +512,7 @@ namespace Crystalarium.Main
             // chunks
             basic.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
 
-            /*// 
+            // 
             Skin wire = new Skin(WireRules, MiniMapSkin);
             wire.GridViewBG = Textures.viewboxBG;
 
@@ -535,7 +535,7 @@ namespace Crystalarium.Main
             wire.AgentConfigs.Add(conf);
 
 
-            wire.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);*/
+            wire.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
 
 
 

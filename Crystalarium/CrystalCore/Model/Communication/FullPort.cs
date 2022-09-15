@@ -78,12 +78,15 @@ namespace CrystalCore.Model.Communication
 
         public override void StopReceiving()
         {
-            base.StopReceiving();
+           
 
             if (Status != PortStatus.receiving && Status != PortStatus.transceiving)
             {
                 return;
             }
+
+            base.StopReceiving();
+
             _receiving.Reset();
             _receiving = null;
 

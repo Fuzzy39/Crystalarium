@@ -10,7 +10,7 @@ using CrystalCore.Model.Rulesets;
 
 namespace CrystalCore.Model
 {
-    public class Grid:EventGenerator
+    public class Grid
     {
         /* the grid class represents a grid.
         * In Crystalarium, a grid is a 2d plane where devices can be built using a number of systems,
@@ -33,6 +33,7 @@ namespace CrystalCore.Model
 
         private Ruleset _ruleset; // the ruleset this grid is following.
 
+        public event EventHandler OnReset;
         public List<List<Chunk>> Chunks
         {
             get => _chunks;
@@ -179,7 +180,11 @@ namespace CrystalCore.Model
             chunksOrigin = new Point(0, 0);
             chunksSize = new Point(1, 1);
 
-            Alert(); // Anything that might want to know we've been reset will.
+            // alert others that we have reset.
+            if (OnReset != null)
+            {
+                OnReset(this, new EventArgs());
+            }
         }
 
         public void Remove(GridObject o)
@@ -378,40 +383,6 @@ namespace CrystalCore.Model
         /// <summary>
         /// Perform a simulation step for this grid.
         /// </summary>
-        /* internal void Step()
-         {
-             List<AgentState> prev = new List<AgentState>();
-
-             foreach(Agent a in _agents)
-             {
-                 prev.Add(a.State);
-                 a.UpdateState();
-             }
-
-
-             for(int i = 0; i < _agents.Count; i++)
-             {
-                 Agent a = _agents[i];
-
-                 if (a.State != prev[i])
-                 {
-                     a.Update();
-                     if(a.Bounds==new Rectangle(new Point(0), new Point(0)))
-                     {
-                         i--;
-                     }
-                     continue;
-                 }
-
-                 if(a.State == a.Type.DefaultState)
-                 {
-                     a.Update();
-                 }
-
-             }
-
-         }*/
-
         internal void Step()
         {
             Console.WriteLine("Step!");

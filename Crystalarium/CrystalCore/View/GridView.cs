@@ -15,7 +15,7 @@ using CrystalCore.Model.Rulesets;
 
 namespace CrystalCore.View
 {
-    public class GridView:Observer
+    public class GridView
     {
         /* A GridView represents an area that renders a grid.   
          * 
@@ -142,7 +142,7 @@ namespace CrystalCore.View
         {
             // initialize from parameters
             _grid = g;
-            g.Subscribe(this);
+            g.OnReset += OnGridReset;
 
             this.container = container;
             this.container.Add(this);
@@ -263,7 +263,7 @@ namespace CrystalCore.View
             Camera.IsBound = false;
         }
         
-        public void Notify(EventGenerator eg)
+        public void OnGridReset(Object sender, EventArgs e)
         {
             Reset();
         }
