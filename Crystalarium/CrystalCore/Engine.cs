@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using CrystalCore.View.Configs;
+using CrystalCore.Model.Grids;
 
 namespace CrystalCore
 {

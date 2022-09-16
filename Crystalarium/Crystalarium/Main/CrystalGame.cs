@@ -8,12 +8,12 @@ using System.Collections.Generic;
 using CrystalCore;
 using CrystalCore.Input;
 using CrystalCore.Util;
-using CrystalCore.Model;
 using CrystalCore.View;
 using CrystalCore.Model.Rulesets;
 using CrystalCore.View.Subviews.Agents;
 using CrystalCore.Model.Communication;
-using CrystalCore.View.Configs; 
+using CrystalCore.View.Configs;
+using CrystalCore.Model.Grids;
 
 namespace Crystalarium.Main
 {

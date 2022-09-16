@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using CrystalCore.Model;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,6 +11,7 @@ using ChunkRenderer = CrystalCore.View.Subviews.ChunkView;
 using CrystalCore.View.Configs;
 using CrystalCore.View.Subviews.Agents;
 using CrystalCore.Model.Rulesets;
+using CrystalCore.Model.Grids;
 
 namespace CrystalCore.View
 {

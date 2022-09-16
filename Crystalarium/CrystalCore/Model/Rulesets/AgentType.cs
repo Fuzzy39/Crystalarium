@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model;
+﻿using CrystalCore.Model.Grids;
 using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rulesets.Transformations;
 using CrystalCore.Util;

@@ -1,5 +1,5 @@
-﻿using CrystalCore.Model;
-using CrystalCore.Model.Communication;
+﻿using CrystalCore.Model.Communication;
+using CrystalCore.Model.Grids;
 using CrystalCore.Model.Objects;
 using CrystalCore.Util;
 using CrystalCore.View.Configs;

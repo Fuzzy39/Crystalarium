@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CrystalCore.Util;
+using CrystalCore.Model.Grids;
 
 namespace CrystalCore.Model.Objects
 {

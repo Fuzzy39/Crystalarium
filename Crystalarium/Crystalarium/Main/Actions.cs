@@ -11,6 +11,7 @@ using System.Text;
 using CrystalCore.Model.Communication;
 using CrystalCore.View.Configs;
 using CrystalCore.Model;
+using CrystalCore.Model.Grids;
 
 namespace Crystalarium.Main
 {

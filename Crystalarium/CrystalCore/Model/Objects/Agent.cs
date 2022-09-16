@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Communication;
+using CrystalCore.Model.Grids;
 using CrystalCore.Model.Rulesets;
 using CrystalCore.Model.Rulesets.Conditions;
 using CrystalCore.Util;
