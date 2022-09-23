@@ -68,8 +68,8 @@ namespace CrystalCore.Model.Grids
             _agents = new List<Agent>();
             _signals = new List<Signal>();
 
-            
-            
+
+            Reset();
 
 
         }
@@ -80,7 +80,7 @@ namespace CrystalCore.Model.Grids
             sim.removeGrid(this);
         }
 
-        public override void Reset()
+        public new void Reset()
         {
             
             // Destroy all members of this grid, starting from the most dependent objects to the least. 
@@ -95,6 +95,12 @@ namespace CrystalCore.Model.Grids
 
             base.Reset();
           
+        }
+
+        public override void ExpandGrid(Direction d)
+        {
+            base.ExpandGrid(d);
+            UpdateSignals(chunks);
         }
 
         public void Remove(GridObject o)

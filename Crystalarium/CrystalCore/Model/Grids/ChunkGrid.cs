@@ -26,6 +26,14 @@ namespace CrystalCore.Model.Grids
             get => _chunks;
         }
 
+        public List<Chunk> AllChunks
+        {
+            get
+            {
+
+            }
+        }
+
         public Rectangle Bounds
         {
             get
@@ -100,7 +108,7 @@ namespace CrystalCore.Model.Grids
         }
 
 
-        public void ExpandGrid(Direction d)
+        public virtual void ExpandGrid(Direction d)
         {
             if (d.IsHorizontal())
             {
@@ -117,7 +125,7 @@ namespace CrystalCore.Model.Grids
             {
                 chunks.AddRange(list);
             }
-            UpdateSignals(chunks);
+          
 
         }
 
