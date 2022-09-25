@@ -32,9 +32,9 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 747; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 749; // I like to increment this number every time I run the code after changing it. I don't always though.
 
-
+        
 
         internal Ruleset CurrentRuleset { get; set; }
 
@@ -108,9 +108,6 @@ namespace Crystalarium.Main
 
 
 
-
-
-
             try
             {
                 // setup the engine's configuration.
@@ -138,19 +135,11 @@ namespace Crystalarium.Main
 
             // create a test grid, and do some test things to it.
             Grid = Engine.addGrid(CurrentRuleset);
-            //g.ExpandGrid(Direction.right);
 
 
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
 
-            // create the render modes we are likely to use.
-
-            /*ChunkViewConfig Standard = new ChunkViewConfig()
-            {
-                ChunkBackground = Textures.chunkGrid
-               
-            };*/
 
 
             // create a couple test viewports.
@@ -160,9 +149,14 @@ namespace Crystalarium.Main
             view.bindCamera();
 
 
-
-
             // setup the minimap.
+            SetupMinimap(width);
+            
+
+        }
+
+        private void SetupMinimap(int width)
+        {
             minimap = Engine.addView(Grid, width - 250, 0, 250, 250, Configuration.MiniMapSkin);
 
             // setup borders
@@ -175,8 +169,8 @@ namespace Crystalarium.Main
             // to make it a minimap!
             minimap.ViewCastTarget = view; // note that this must be done after view has been initialized.
             //minimap.DoAgentRendering = false;
-
         }
+
 
         // mostly ugly hacks
         protected override void Update(GameTime gameTime)

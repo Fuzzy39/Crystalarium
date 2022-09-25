@@ -1,4 +1,5 @@
-﻿    using CrystalCore.Model.Objects;
+﻿using CrystalCore.Model.Grids;
+using CrystalCore.Model.Objects;
 using CrystalCore.View.Configs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -49,7 +50,7 @@ namespace CrystalCore.View.Subviews
             // brighten checkboard tiles, if needbe.
             if (config.DoCheckerBoardColoring)
             {
-                Point pos = RenderData.Grid.getChunkPos((Chunk)RenderData);
+                Point pos = RenderData.Grid.GetChunkPos((Chunk)RenderData);
                 if ((pos.X + pos.Y) % 2 == 0)
                 {
                     brighten(ref toReturn, 1);

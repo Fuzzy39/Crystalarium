@@ -11,6 +11,33 @@ namespace CrystalCore.Model.Grids
     public static class GridExtensions
     {
 
+        /// <summary>
+        /// returns the Position in chunkCoords of a particular chunk
+        /// </summary>
+        /// <param name="ch"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static Point GetChunkPos(this ChunkGrid cg, Chunk ch)
+        {
+            // get the chunk
+
+            for (int x = 0; x < cg.Chunks.Count; x++)
+            {
+                List<Chunk> list = cg.Chunks[x];
+                for (int y = 0; y < list.Count; y++)
+                {
+                    if (list[y] == ch)
+                    {
+                        // we found the chunk!
+                        return new Point(x, y);
+                    }
+                }
+            }
+
+            throw new ArgumentException("Chunk '" + ch + "' is not part of Grid '" + cg + "'.");
+        }
+
+
         public static Agent getAgentAtPos(this Grid g, Point coords)
         {
             Chunk ch = g.getChunkAtCoords(coords);
@@ -122,8 +149,8 @@ namespace CrystalCore.Model.Grids
             // iterate through all chunks between (and including) the minimum and extreme, and add them.
 
             // how much to iterate?
-            Point initial = g.getChunkPos(minimum);
-            Point sizeInChunks = g.getChunkPos(extreme) - initial + new Point(1);
+            Point initial = g.GetChunkPos(minimum);
+            Point sizeInChunks = g.GetChunkPos(extreme) - initial + new Point(1);
 
             // this should get all of the chunks.
             for (int x = 0; x < sizeInChunks.X; x++)

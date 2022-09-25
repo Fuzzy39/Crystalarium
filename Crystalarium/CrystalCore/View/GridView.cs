@@ -253,7 +253,7 @@ namespace CrystalCore.View
         public void bindCamera()
         {
 
-            Camera.Position = _grid.center; // we want to prevent a crash, if the camera is in an invalid position when it is bound.
+            Camera.Position = _grid.Center; // we want to prevent a crash, if the camera is in an invalid position when it is bound.
             Camera.IsBound = true;
 
         }

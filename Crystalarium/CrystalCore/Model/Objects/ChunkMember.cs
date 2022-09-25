@@ -57,7 +57,7 @@ namespace CrystalCore.Model.Objects
             }
 
             // who is our parent?
-            _parentChunk = _grid.getChunkAtCoords(bounds.Location);
+            _parentChunk = Grid.getChunkAtCoords(bounds.Location);
             _parentChunk.Children.Add(this);
 
             //initialize the other owner array
@@ -74,7 +74,7 @@ namespace CrystalCore.Model.Objects
 
         private List<Chunk> SetChunksWithin()
         {
-            return _grid.ChunksInBounds(Bounds);            
+            return Grid.ChunksInBounds(Bounds);            
         }
             
         public override void Destroy()

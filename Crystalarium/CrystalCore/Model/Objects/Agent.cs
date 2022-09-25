@@ -179,7 +179,7 @@ namespace CrystalCore.Model.Objects
 
         private void OnPortStatusChanged(Object Sender, EventArgs e)
         {
-            Console.WriteLine("Agent '" + this + "' had a port start/stop receiving.");
+           
             statusChanged = true;
         }
 
@@ -408,10 +408,9 @@ namespace CrystalCore.Model.Objects
         {
             if(!statusHadChanged)
             {
-                Console.WriteLine("Agent '" + this + "' is lame.");
                 return;
             }
-            Console.WriteLine("Agent '" + this + "' is NOT lame. [executed] ");
+           
             _state.Execute(this);
 
             

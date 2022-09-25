@@ -100,39 +100,27 @@ namespace CrystalCore.Model.Grids
         public override void ExpandGrid(Direction d)
         {
             base.ExpandGrid(d);
-            UpdateSignals(chunks);
+            UpdateSignals(ChunkList);
         }
 
-        public void Remove(GridObject o)
+        internal override void OnObjectDestroyed(Object o, EventArgs e)
         {
 
-            // Remove a grid object from it's appropriate containers
-
-            if (o is Chunk) // chunks can't be removed once added.
-            {
-                o = null; // Doesn't change the size of the grid. This should be used sparingly.
-                return;
-            }
+            // Remove a grid object from it's appropriate containers.
 
             if (o is Agent)
             {
                 _agents.Remove((Agent)o);
-                UpdateSignals(((Agent)o).ChunksWithin);
-                o = null;
                 return;
             }
 
             if (o is Signal)
             {
                 _signals.Remove((Signal)o);
-
-                o = null;
-
                 return;
             }
 
-            throw new ArgumentException("Unknown or Invalid type of GridObject to remove from this grid.");
-
+            base.OnObjectDestroyed(o, e);
         }
 
         public void AddAgent(Agent a)
@@ -152,11 +140,14 @@ namespace CrystalCore.Model.Grids
             {
                 throw new ArgumentException("Signal " + s + "Does not belong to this grid.");
             }
-
             _signals.Add(s);
         }
 
 
+        /// <summary>
+        /// Asks each signal in where chunks to re establish their target.
+        /// </summary>
+        /// <param name="where"></param>
         internal void UpdateSignals(List<Chunk> where)
         {
 
@@ -172,11 +163,6 @@ namespace CrystalCore.Model.Grids
                     }
 
                     Signal s = (Signal)member;
-                    if (s.Bounds.Size == new Point(0))
-                    {
-                        continue; // this signal has been destroyed while other signals are updating.
-                                  // this can be caused by conflicts with half port communication.
-                    }
                     s.Update();
 
                 }
@@ -185,12 +171,14 @@ namespace CrystalCore.Model.Grids
 
         }
 
+  
+
         /// <summary>
         /// Perform a simulation step for this grid.
         /// </summary>
         internal void Step()
         {
-            Console.WriteLine("Step!");
+           
 
             // have each agent determine the state they will be in next step based on the state of the grid last step.
             foreach (Agent a in _agents)
@@ -203,7 +191,6 @@ namespace CrystalCore.Model.Grids
             for (int i = 0; i < _agents.Count; i++)
             {
                 Agent a = _agents[i];
-
 
                 a.Update();
 

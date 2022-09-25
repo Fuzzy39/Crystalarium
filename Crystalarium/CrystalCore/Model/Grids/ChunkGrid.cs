@@ -21,16 +21,22 @@ namespace CrystalCore.Model.Grids
         public event EventHandler OnReset;
 
 
-        public List<List<Chunk>> Chunks
+        internal List<List<Chunk>> Chunks
         {
             get => _chunks;
         }
 
-        public List<Chunk> AllChunks
+        internal List<Chunk> ChunkList
         {
             get
             {
-
+                List<Chunk> ToReturn = new List<Chunk>();
+                foreach(List<Chunk> chunks in _chunks)
+                {
+                    ToReturn.AddRange(chunks);
+                  
+                }
+                return ToReturn;
             }
         }
 
@@ -71,7 +77,9 @@ namespace CrystalCore.Model.Grids
         }
 
 
-
+        /// <summary>
+        /// should be called in child's constructor.
+        /// </summary>
         public void Reset()
         {
             // remove any existing chunks.
@@ -118,14 +126,6 @@ namespace CrystalCore.Model.Grids
             {
                 ExpandVertical(d);
             }
-
-            // update all chunks, 'cause I'm lazy.
-            List<Chunk> chunks = new List<Chunk>();
-            foreach (List<Chunk> list in _chunks)
-            {
-                chunks.AddRange(list);
-            }
-          
 
         }
 
@@ -199,26 +199,25 @@ namespace CrystalCore.Model.Grids
         }
 
 
-        // returns the Position in chunkCoords of a particular chunk
-        public Point getChunkPos(Chunk ch)
-        {
-            // get the chunk
+    
 
-            for (int x = 0; x < Chunks.Count; x++)
+        internal virtual void OnObjectDestroyed(Object sender, EventArgs e)
+        {
+            
+            if(!(sender is GridObject))
             {
-                List<Chunk> list = Chunks[x];
-                for (int y = 0; y < list.Count; y++)
-                {
-                    if (list[y] == ch)
-                    {
-                        // we found the chunk!
-                        return new Point(x, y);
-                    }
-                }
+                throw new ArgumentException("sender must be GridObject.");
             }
 
-            throw new ArgumentException("Chunk '" + ch + "' is not part of Grid '" + this + "'.");
+            GridObject o = (GridObject)sender; 
+
+            if (o is Chunk) 
+            {
+                return;
+            }
+
+            throw new ArgumentException("Unknown or Invalid type of GridObject to remove from this grid.");
         }
 
-    }
+}
 }

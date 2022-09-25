@@ -14,9 +14,10 @@ namespace CrystalCore.Model.Objects
          */
 
         private Rectangle _bounds;// the position and size in tile space where this GridObject is located.
-        protected Grid _grid; // the grid that this object belongs to.
+        protected ChunkGrid _grid; // the grid that this object belongs to.
         private bool _destroyed;
 
+        public event EventHandler OnDestroy;
 
         public virtual Rectangle Bounds
         {
@@ -31,9 +32,22 @@ namespace CrystalCore.Model.Objects
             }
         }
 
-        public Grid Grid
+        public ChunkGrid ChunkGrid
         {
             get => _grid;
+        }
+
+        public Grid Grid
+        {
+            get
+            {
+                if(_grid is ChunkGrid)
+                {
+                    return (Grid)_grid;
+                }
+
+                throw new InvalidOperationException("I feel like grids should be the only type of grid... If that no longer makes sense, remove this.");
+            }
         }
 
         public bool Destroyed
@@ -43,7 +57,7 @@ namespace CrystalCore.Model.Objects
 
 
         // constructors
-        public GridObject(Grid g, Rectangle rect)
+        public GridObject(ChunkGrid g, Rectangle rect)
         {
             if(g == null)
             {
@@ -59,13 +73,16 @@ namespace CrystalCore.Model.Objects
             _grid = g;
             _destroyed = false;
 
+            // our grid should be notified when we are destroyed.
+            OnDestroy += g.OnObjectDestroyed;
+
         }
 
-        public GridObject(Grid g, Point pos, Point size)
+        public GridObject(ChunkGrid g, Point pos, Point size)
           : this(g, new Rectangle(pos, size)) { }
 
 
-        public GridObject(Grid g, int x, int y, int width, int height)
+        public GridObject(ChunkGrid g, int x, int y, int width, int height)
             : this(g, new Rectangle(x, y, width, height)) { }
 
 
@@ -73,7 +90,10 @@ namespace CrystalCore.Model.Objects
         {
             // remove references to this object.
 
-            _grid.Remove(this);
+            if (OnDestroy != null)
+            {
+                OnDestroy(this, new EventArgs());
+            }
             _bounds = new Rectangle(0,0,0,0);
             _grid = null;
             _destroyed= true;
