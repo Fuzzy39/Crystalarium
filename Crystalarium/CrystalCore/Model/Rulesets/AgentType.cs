@@ -157,7 +157,7 @@ namespace CrystalCore.Model.Rulesets
        
 
         // returns whether an agent of type at can be placed at a location.
-        public  bool isValidLocation(Grid g, Point location, Direction facing)
+        public  bool IsValidLocation(Grid g, Point location, Direction facing)
         {
             if (!Initialized)
             {
@@ -167,7 +167,7 @@ namespace CrystalCore.Model.Rulesets
             Rectangle bounds = new Rectangle(location, GetSize(facing));
             if (g.Bounds.Contains(bounds))
             {
-                if (g.AgentsWithin(bounds).Count == 0)
+                if (g.EntitiesWithin(bounds).Count == 0)
                 {
                     return true;
                 }

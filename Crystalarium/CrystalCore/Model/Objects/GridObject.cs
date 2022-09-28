@@ -46,6 +46,10 @@ namespace CrystalCore.Model.Objects
                     return (Grid)_grid;
                 }
 
+                if(_grid == null)
+                {
+                    throw new InvalidOperationException("the grid of a gridobject was null? werid...");
+                }    
                 throw new InvalidOperationException("I feel like grids should be the only type of grid... If that no longer makes sense, remove this.");
             }
         }

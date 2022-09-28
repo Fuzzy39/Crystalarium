@@ -10,13 +10,13 @@ using System.Text;
 
 namespace CrystalCore.Model.Objects
 {
-    public class Agent : ChunkMember
+    public class Agent : Entity
     {
         /*
          * An Agent Represents most tangible things on a Grid.
          * They participate in the simulation, and they can be placed.
          */
-        private Direction _facing; // the direction this agent is facing.
+       
 
         private AgentType _type;
 
@@ -29,27 +29,7 @@ namespace CrystalCore.Model.Objects
         private bool statusChanged; // whether a port started/stopped receiving this step.
         private bool statusHadChanged; // whether a port started/stopped receiging last step.
         
-        // properties
-        public Direction Facing
-        {
-            get => _facing;
-            set
-            {
-                if (value == _facing) { return; }
-
-                if (IsRectangle())
-                {
-                    if (_facing != value.Opposite())
-                    {
-                        throw new ArgumentException("Rectangular Agents may not be rotated freely. " +
-                            "\nThey are limited to the direction they were placed with and their opposite.");
-                    }
-
-                }
-
-                _facing = value;
-            }
-        }
+       
 
         public AgentType Type
         {
@@ -79,28 +59,12 @@ namespace CrystalCore.Model.Objects
 
 
         // Constructors
-        internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : base(g, bounds)
+        internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : base(g, bounds, (t.Ruleset.RotateLock ? Direction.up:facing))
         {
 
 
             _type = t;
             statusChanged = true; // this is true at initialization so the agent can do things of it's own accord when it is created
-
-
-            if (Type.Ruleset.RotateLock)
-            {
-                _facing = Direction.up;
-            }
-            else
-            {
-                _facing = facing;
-            }
-
-
-            if (g.AgentsWithin(bounds).Count > 1) // it will always be at least 1, because we are in our bounds.
-            {
-                throw new InvalidOperationException("This Agent: " + this + " overlaps another agent.");
-            }
 
             // if diagonal signals are allowed, then agents should not be bigger than 1 by 1
             if (Type.Ruleset.DiagonalSignalsAllowed && bounds.Size.X * bounds.Size.Y > 1)
@@ -198,11 +162,11 @@ namespace CrystalCore.Model.Objects
                 foreach (Port port in ports)
                 {
                     port.StopTransmitting();
-                    port.StopReceiving();
+                      port.StopReceiving();
 
                 }
             }
-
+            base.Destroy();
             g.UpdateSignals(new List<Chunk>(toUpdate));
         }
 
@@ -236,35 +200,21 @@ namespace CrystalCore.Model.Objects
         }
 
 
-
-        private bool IsRectangle()
+        public override void Rotate(RotationalDirection d)
         {
-            return Bounds.Width != Bounds.Height;
-        }
 
-        public void Rotate(RotationalDirection d)
-        {
-            if(Type.Ruleset.RotateLock)
+            if (Type.Ruleset.RotateLock)
             {
                 Console.WriteLine("Warning: Ruleset '" + Type.Ruleset.Name + "' has Rotation Lock enabled, and Agents cannot be set facing any other direction than up. " +
-               "\n    Agent '" + this.ToString() + "' has attempted to rotate " + d+".");
+               "\n    Agent '" + this.ToString() + "' has attempted to rotate " + d + ".");
                 return;
             }
 
+            base.Rotate(d);
 
-
-            if (IsRectangle())
-            {
-                Facing = Facing.Opposite();
-                RecombobulateSignals();
-                return;
-            }
-
-            Facing = Facing.Rotate(d);
             RecombobulateSignals();
-
-
         }
+
 
         // how often do you get to type recombobulate? not often!
         private void RecombobulateSignals()
@@ -305,14 +255,7 @@ namespace CrystalCore.Model.Objects
             return "Agent { Type:\"" + Type.Name + "\", Location:" + Bounds.Location + ", Facing:" + Facing + " }";
         }
 
-        public void PortReport()
-        {
-            Console.WriteLine(ToString());
-            for (int i = 0; i<_ports.Count; i++)
-            {
-                Console.WriteLine(((CompassPoint)i) + ": " + _ports[i].Count);
-            }
-        }
+     
 
         internal Port GetPort(PortIdentifier portID)
         {
@@ -412,8 +355,6 @@ namespace CrystalCore.Model.Objects
             }
            
             _state.Execute(this);
-
-            
 
         }
     }

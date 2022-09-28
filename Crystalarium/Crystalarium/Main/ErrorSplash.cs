@@ -24,6 +24,7 @@ namespace Crystalarium.Main
             random = new Random();
             face = faces[random.Next(faces.Length)];
             this.errorMessage = errorMessage;
+            Console.WriteLine(errorMessage);
         }
 
 

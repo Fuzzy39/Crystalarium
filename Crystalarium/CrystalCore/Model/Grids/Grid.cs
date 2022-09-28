@@ -163,6 +163,12 @@ namespace CrystalCore.Model.Grids
                     }
 
                     Signal s = (Signal)member;
+
+                    // signals can be destroyed while this loop runs. if they are, ignore them.
+                    if(s.Destroyed)
+                    {
+                        continue;
+                    }
                     s.Update();
 
                 }

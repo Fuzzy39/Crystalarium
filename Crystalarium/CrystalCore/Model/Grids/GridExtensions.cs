@@ -68,31 +68,31 @@ namespace CrystalCore.Model.Grids
         }
 
         // returns the agents within these bounds
-        public static List<Agent> AgentsWithin(this Grid g, Rectangle bounds)
+        public static List<Entity> EntitiesWithin(this Grid g, Rectangle bounds)
         {
-            List<Agent> toReturn = new List<Agent>();
+            List<Entity> toReturn = new List<Entity>();
 
             foreach (Chunk ch in g.ChunksInBounds(bounds))
             {
                 foreach (ChunkMember chm in ch.MembersWithin)
                 {
 
-                    if (!(chm is Agent)) // only agents take up space.
+                    if (!(chm is Entity)) // only agents take up space.
                     {
                         continue;
                     }
 
-                    Agent a = (Agent)chm;
+                    Entity e = (Entity)chm;
 
-                    if (a.Bounds.Intersects(bounds))
+                    if (e.Bounds.Intersects(bounds))
                     {
                         // only add a if it isn't already in the list
-                        if (toReturn.Exists((obj) => { return obj == a; }))
+                        if (toReturn.Exists((obj) => { return obj == e; })) // I'm pretty sure this line of code is witchcraft, but whatever.
                         {
                             continue;
                         }
 
-                        toReturn.Add(a);
+                        toReturn.Add(e);
                     }
 
 
@@ -100,6 +100,25 @@ namespace CrystalCore.Model.Grids
             }
 
             return toReturn;
+        }
+
+
+        public static List<Agent> AgentsWithin(this Grid g, Rectangle bounds)
+        {
+            List<Entity> possibleList = EntitiesWithin(g, bounds);
+
+            List<Agent> toReturn = new List<Agent>();
+
+            foreach(Entity e in possibleList)
+            {
+                if (e is Agent)
+                {
+                    toReturn.Add((Agent)e);
+                }
+            }
+
+            return toReturn;
+
         }
 
 

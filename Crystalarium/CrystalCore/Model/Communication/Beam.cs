@@ -87,7 +87,7 @@ namespace CrystalCore.Model.Communication
 
             if(Start==null)
             {
-
+                throw new InvalidOperationException("This signal should be destroyed. Is it? "+Destroyed+"! It should not be updated, but it was.");
             }
             Point start = _start.Location;
             Point? p = Travel(start, MinLength);
