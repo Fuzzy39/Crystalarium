@@ -95,8 +95,18 @@ namespace CrystalCore.Model.Grids
 
             }
 
+            // do (re)initialization
+            Initialize();
 
+            // alert others that we have reset.
+            if (OnReset != null)
+            {
+                OnReset(this, new EventArgs());
+            }
+        }
 
+        private void Initialize()
+        {
             // initialize the chunk array.
             _chunks = new List<List<Chunk>>();
             _chunks.Add(new List<Chunk>());
@@ -107,12 +117,6 @@ namespace CrystalCore.Model.Grids
             // set the chunk origin.
             chunksOrigin = new Point(0, 0);
             chunksSize = new Point(1, 1);
-
-            // alert others that we have reset.
-            if (OnReset != null)
-            {
-                OnReset(this, new EventArgs());
-            }
         }
 
 
@@ -134,18 +138,16 @@ namespace CrystalCore.Model.Grids
             // we are adding a new list<Chunk> to _chunks.
             List<Chunk> newList = new List<Chunk>();
             chunksSize.X++;
-            int x;
+            int x = IndexOfAddition(d);
 
 
             if (d == Direction.left)
             {
-                x = 0;
                 _chunks.Insert(x, new List<Chunk>());
                 chunksOrigin.X--;
             }
             else
-            {
-                x = _chunks.Count;
+            { 
                 _chunks.Add(newList);
             }
 
@@ -172,20 +174,19 @@ namespace CrystalCore.Model.Grids
                 chunksOrigin.Y--;
 
             // create the new chunks.
-
+            int y = IndexOfAddition(d);
             for (int x = 0; x < _chunks.Count; x++)
             {
 
-                int y;
 
                 if (d == Direction.up)
                 {
-                    y = 0;
+                  
                     _chunks[x].Insert(0, null);
                 }
                 else
                 {
-                    y = _chunks[x].Count;
+                  
                     _chunks[x].Add(null);
 
                 }
@@ -198,7 +199,20 @@ namespace CrystalCore.Model.Grids
             }
         }
 
+        private int IndexOfAddition(Direction d)
+        {
+            if(d==Direction.up || d==Direction.left)
+            {
+                return 0;
+            }
 
+            if(d==Direction.right)
+            {
+                return _chunks.Count;
+            }
+
+            return _chunks[0].Count;
+        }
     
 
         internal virtual void OnObjectDestroyed(Object sender, EventArgs e)

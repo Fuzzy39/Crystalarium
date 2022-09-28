@@ -82,7 +82,7 @@ namespace CrystalCore.Model.Grids
 
         public new void Reset()
         {
-            
+                
             // Destroy all members of this grid, starting from the most dependent objects to the least. 
 
             if (_agents != null)
