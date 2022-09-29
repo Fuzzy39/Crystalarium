@@ -11,7 +11,7 @@ namespace CrystalCore.Model.Objects
     /// An Entity is a ChunkMember that faces a directaion.
     /// An Entity's bounds may not coincide with those of another entity. They are 'solid objects' on the grid.
     /// </summary>
-    public class Entity : ChunkMember
+    public abstract class Entity : ChunkMember
     {
 
         private Direction _facing; // the direction this entity is facing.
@@ -46,7 +46,7 @@ namespace CrystalCore.Model.Objects
 
             if (g.EntitiesWithin(bounds).Count > 1) // it will always be at least 1, because we are in our bounds.
             {
-                throw new InvalidOperationException("This Entity: " + this + " cannot be created. It overlaps another prexisting entity.");
+                throw new InvalidOperationException("Entity: " + this + " cannot be created. It overlaps another prexisting entity.");
             }
         }
 
