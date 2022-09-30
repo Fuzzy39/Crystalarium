@@ -189,7 +189,7 @@ namespace CrystalCore.Model.Grids
             // have each agent determine the state they will be in next step based on the state of the grid last step.
             foreach (Agent a in _agents)
             {
-                a.UpdateState();
+                a.PreserveState();
             }
 
 

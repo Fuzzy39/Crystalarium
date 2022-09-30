@@ -81,7 +81,7 @@ namespace CrystalCore.Model.Objects
             // create ports (what a helpful comment)
             CreatePorts();
 
-            g.AddAgent(this);
+            Grid.AddAgent(this);
 
         }
 
@@ -177,7 +177,7 @@ namespace CrystalCore.Model.Objects
         private void OnPortStatusChanged(Object Sender, EventArgs e)
         {
 
-            statusChanged = true;
+            StatusChanged();
         }
 
 
@@ -240,7 +240,7 @@ namespace CrystalCore.Model.Objects
         }
 
 
-        internal void UpdatePortValues()
+        protected override void PreserveValues()
         {
             // loop through all directions
             for (int i = 0; i < _ports.Count; i++)

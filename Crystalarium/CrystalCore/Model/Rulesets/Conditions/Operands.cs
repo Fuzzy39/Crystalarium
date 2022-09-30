@@ -58,7 +58,8 @@ namespace CrystalCore.Model.Rulesets.Conditions
         internal override Token Resolve(Agent a)
         {
             int toReturn = 0;
-            foreach (Port p in a.PortList)
+            PortAgent pa = (PortAgent)a;
+            foreach (Port p in pa.PortList)
             {
                 if (p.Status == PortStatus.receiving || p.Status == PortStatus.transceiving)
                 {
@@ -95,7 +96,7 @@ namespace CrystalCore.Model.Rulesets.Conditions
 
         internal override Token Resolve(Agent a)
         {
-            Port p = a.GetPort(portID);
+            Port p = ((PortAgent)a).GetPort(portID);
             if (p.Status == PortStatus.receiving || p.Status == PortStatus.transceiving)
             {
                 return new Token(ReturnType, p.ReceivingSignal.Value);

@@ -99,7 +99,7 @@ namespace CrystalCore.View.Subviews.Agents
                 throw new InvalidOperationException("Agent Type " + ((Agent)RenderData).Type.Name + "'s RenderConfig requires a background texture to render debug ports.");
             }
 
-            foreach (Port p in ((Agent)RenderData).PortList)
+            foreach (Port p in ((PortAgent)RenderData).PortList)
             {
                 _ports.Add(new DebugPort(config.Background, p, this));
             }

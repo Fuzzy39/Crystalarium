@@ -136,8 +136,8 @@ namespace CrystalCore.Model.Rulesets
 
             Rectangle bounds =  new Rectangle(pos, GetSize(d));
 
-
-            return new Agent(g, bounds,this,d);
+            // A safe assumption, for now.
+            return new PortAgent(g, bounds,this,d);
         }
 
 

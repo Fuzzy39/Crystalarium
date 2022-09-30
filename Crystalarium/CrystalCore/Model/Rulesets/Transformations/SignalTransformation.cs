@@ -47,7 +47,7 @@ namespace CrystalCore.Model.Rulesets.Transformations
             {
                 if(transmit)
                 {
-                    Port p = a.GetPort(portID);
+                    Port p = ((PortAgent)a).GetPort(portID);
                     //if (a.GetPortValue(portID) == 0  || p is FullPort)
                     {
                         p.Transmit(value);
@@ -57,7 +57,7 @@ namespace CrystalCore.Model.Rulesets.Transformations
                 }
                 else
                 {
-                    a.GetPort(portID).StopTransmitting();
+                    ((PortAgent)a).GetPort(portID).StopTransmitting();
                 }
             }
         }

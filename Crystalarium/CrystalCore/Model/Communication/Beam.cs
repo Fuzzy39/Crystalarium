@@ -111,7 +111,8 @@ namespace CrystalCore.Model.Communication
                 { 
 
 
-                    Agent target = targets[0];
+                    // this cast is safe, if we exist, port agents must.
+                    PortAgent target = (PortAgent)targets[0];
                     TransmitToTarget(target, end);
                     _length = length;
 
@@ -150,7 +151,7 @@ namespace CrystalCore.Model.Communication
             Bounds = r;
         }
 
-        private void TransmitToTarget(Agent target, Point loc)
+        private void TransmitToTarget(PortAgent target, Point loc)
         {
 
            

@@ -18,7 +18,7 @@ namespace CrystalCore.Model.Objects
 
         private AgentType _type;
 
-        private AgentState _state;
+        protected AgentState _state;
     
         private bool statusChanged; // whether a port started/stopped receiving this step.
         private bool statusHadChanged; // whether a port started/stopped receiging last step.
@@ -56,7 +56,10 @@ namespace CrystalCore.Model.Objects
         protected abstract void Init();
         
 
-
+        protected void StatusChanged()
+        {
+            statusChanged = true;
+        }
       
 
 
@@ -81,8 +84,10 @@ namespace CrystalCore.Model.Objects
             return "Agent { Type:\"" + Type.Name + "\", Location:" + Bounds.Location + ", Facing:" + Facing + " }";
         }
 
-
-        internal void UpdateState()
+        /// <summary>
+        /// This method tranistions the current simulation step's state into the last step. This allows us to freely change the state of the grid without causing any changes to what we are making decisions about.
+        /// </summary>
+        internal void PreserveState()
         {
             statusHadChanged = statusChanged;
             statusChanged = false;
@@ -91,10 +96,12 @@ namespace CrystalCore.Model.Objects
                 return;
             }
 
-            UpdatePortValues();
+            PreserveValues();
             _state = DetermineState();
 
         }
+
+        protected abstract void PreserveValues();
 
 
         private AgentState DetermineState()
