@@ -60,7 +60,7 @@ namespace CrystalCore.Model.Objects
         {
             statusChanged = true;
         }
-      
+
 
 
         public override void Rotate(RotationalDirection d)
@@ -74,10 +74,12 @@ namespace CrystalCore.Model.Objects
             }
 
             base.Rotate(d);
+
+            StatusChanged();
         }
 
 
-       
+
 
         public override string ToString()
         {
