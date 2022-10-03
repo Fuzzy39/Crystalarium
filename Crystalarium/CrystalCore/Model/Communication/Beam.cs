@@ -113,19 +113,14 @@ namespace CrystalCore.Model.Communication
 
                     // this cast is safe, if we exist, port agents must.
                     PortAgent target = (PortAgent)targets[0];
-                    TransmitToTarget(target, end);
-                    _length = length;
-
-                    // we need to adjust our bounds now.
-                    SetBounds(start, end);
+                    TransmitTo(target, end,length);
                     return;
 
                 }
 
-                // Nope.
+                // If we have a max length, have we reached it?
                 if(MaxLength!=0 & length == MaxLength)
                 {
-                    // no targets to be had.
                     break;
                 }
 
@@ -134,11 +129,9 @@ namespace CrystalCore.Model.Communication
                 nextEnd = Travel(end, 1);
             }
 
-            if (length != _length)
-            {
-                _length = length;
-                SetBounds(start, end);
-            }
+            // at this point, we have either reached our max length, or hit the end of the grid without finding a target.
+            // we should update our length and bounds to reflect that.
+            TransmitTo(null, end, length);
 
 
         }
@@ -151,10 +144,25 @@ namespace CrystalCore.Model.Communication
             Bounds = r;
         }
 
+        private void TransmitTo(PortAgent target, Point loc, int length)
+        {
+            if(target!=null)
+            {
+                TransmitToTarget(target, loc);
+            }
+
+            _length = length;
+
+            // we need to adjust our bounds now.
+            SetBounds(_start.Location, loc);
+
+        }
+
+
         private void TransmitToTarget(PortAgent target, Point loc)
         {
 
-           
+            
             CompassPoint portFacing = _start.AbsoluteFacing.Opposite();
 
             Port p = FindPort(target, loc, portFacing);

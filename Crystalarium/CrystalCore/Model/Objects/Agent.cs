@@ -87,7 +87,8 @@ namespace CrystalCore.Model.Objects
         }
 
         /// <summary>
-        /// This method tranistions the current simulation step's state into the last step. This allows us to freely change the state of the grid without causing any changes to what we are making decisions about.
+        /// This method tranistions the current simulation step's state into the last step. This allows us to freely change the state of the grid without 
+        /// causing any changes to what we are making decisions about.
         /// </summary>
         internal void PreserveState()
         {
