@@ -96,30 +96,36 @@ namespace CrystalCore.Model.Communication
                 _length = 1;
                 return;
             }
-            Point end = (Point)p;
             int length = MinLength;
+            Point end = (Point)p;
 
+            PortAgent target = FindTarget(ref length, ref end);
+            TransmitTo(target, end, length);
+
+        }
+
+        private PortAgent FindTarget(ref int length, ref Point end)
+        {
             // start looking for targets, one tile at a time.
             Point? nextEnd = end;
-            while(nextEnd!=null)
+            while (nextEnd != null)
             {
                 end = (Point)nextEnd;
                 List<Agent> targets = Grid.AgentsWithin(new Rectangle(end, new Point(1)));
 
                 // We found a target!
-                if (targets.Count!=0)
-                { 
+                if (targets.Count != 0)
+                {
 
 
                     // this cast is safe, if we exist, port agents must.
                     PortAgent target = (PortAgent)targets[0];
-                    TransmitTo(target, end,length);
-                    return;
+                    return target;
 
                 }
 
                 // If we have a max length, have we reached it?
-                if(MaxLength!=0 & length == MaxLength)
+                if (MaxLength != 0 & length == MaxLength)
                 {
                     break;
                 }
@@ -131,9 +137,7 @@ namespace CrystalCore.Model.Communication
 
             // at this point, we have either reached our max length, or hit the end of the grid without finding a target.
             // we should update our length and bounds to reflect that.
-            TransmitTo(null, end, length);
-
-
+            return null;
         }
 
         private void SetBounds(Point start, Point end)
