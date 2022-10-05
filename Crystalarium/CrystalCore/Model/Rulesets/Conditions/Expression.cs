@@ -11,12 +11,12 @@ namespace CrystalCore.Model.Rulesets.Conditions
     public abstract class Expression : InitializableObject
     { 
         internal TokenType ReturnType { get; private set; }
-        internal AgentType AgentType { get; private set; }
 
-        internal Expression(TokenType tokenType, AgentType at)
+
+        internal Expression(TokenType tokenType)
         {
             ReturnType = tokenType;
-            AgentType = at;
+      
         }
 
         internal abstract Token Resolve(Agent a);

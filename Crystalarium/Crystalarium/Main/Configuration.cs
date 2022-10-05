@@ -1,6 +1,7 @@
 ﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Rulesets;
 using CrystalCore.Model.Rulesets.Conditions;
+using CrystalCore.Model.Rulesets.Operands;
 using CrystalCore.Model.Rulesets.Transformations;
 using CrystalCore.Util;
 using CrystalCore.View.Configs;
@@ -85,7 +86,7 @@ namespace Crystalarium.Main
 
             t.States.Add(new AgentState());
             // condition: active ports > 0
-            t.States[0].Requirements = new Condition(t, new ThresholdOperand(t, 1), new Operator(OperatorType.GreaterThan), new IntOperand(t, 0));
+            t.States[0].Requirements = new Condition( new ThresholdOperand( 1), new Operator(OperatorType.GreaterThan), new IntOperand(0));
             // transmit on all sides
             t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up, down, left, right));
 
@@ -98,19 +99,19 @@ namespace Crystalarium.Main
             t.States.Add(new AgentState());
             // condition: ((left>0) || (down>0)) & ( (up>0) || (right>0) )
             t.States[0].Requirements = new Condition
-            (t,
+            (
                 new Condition
-                (t,
-                    new Condition(t, new PortValueOperand(t, left), greaterThan, Zero(t)),
+                (
+                    new Condition( new PortValueOperand( left), greaterThan, Zero()),
                     or,
-                    new Condition(t, new PortValueOperand(t, down), greaterThan, Zero(t))
+                    new Condition( new PortValueOperand( down), greaterThan, Zero())
                 ),
                 and,
                 new Condition
-                (t,
-                    new Condition(t, new PortValueOperand(t, up), greaterThan, Zero(t)),
+                (
+                    new Condition( new PortValueOperand( up), greaterThan, Zero()),
                     or,
-                    new Condition(t, new PortValueOperand(t, right), greaterThan, Zero(t))
+                    new Condition( new PortValueOperand( right), greaterThan, Zero())
                 )
              );
 
@@ -120,10 +121,10 @@ namespace Crystalarium.Main
 
             t.States.Add(new AgentState());
             t.States[1].Requirements = new Condition
-            (t,
-                new Condition(t, new PortValueOperand(t, left), greaterThan, Zero(t)),
+            (
+                new Condition( new PortValueOperand( left), greaterThan, Zero()),
                 or,
-                new Condition(t, new PortValueOperand(t, down), greaterThan, Zero(t))
+                new Condition( new PortValueOperand( down), greaterThan, Zero())
             );
 
             // transmit 
@@ -133,10 +134,10 @@ namespace Crystalarium.Main
 
             t.States.Add(new AgentState());
             t.States[2].Requirements = new Condition
-            (t,
-                new Condition(t, new PortValueOperand(t, right), greaterThan, Zero(t)),
+            (
+                new Condition( new PortValueOperand( right), greaterThan, Zero()),
                 or,
-                new Condition(t, new PortValueOperand(t, up), greaterThan, Zero(t))
+                new Condition( new PortValueOperand( up), greaterThan, Zero())
             );
 
             // transmit 
@@ -155,19 +156,19 @@ namespace Crystalarium.Main
             // why did I make this monstrosity
 
             t.States[0].Requirements = new Condition
-            (t,
+            (
                 new Condition
-                (t,
-                    new Condition(t, new PortValueOperand(t, left), greaterThan, Zero(t)),
+                (
+                    new Condition( new PortValueOperand(left), greaterThan, Zero()),
                     xor,
-                    new Condition(t, new PortValueOperand(t, right), greaterThan, Zero(t))
+                    new Condition( new PortValueOperand( right), greaterThan, Zero())
                 ),
                 and,
                 new Condition
-                (t,
-                    new Condition(t, new PortValueOperand(t, up), greaterThan, Zero(t)),
+                (
+                    new Condition( new PortValueOperand( up), greaterThan, Zero()),
                     or,
-                    new Condition(t, new PortValueOperand(t, down), greaterThan, Zero(t))
+                    new Condition( new PortValueOperand( down), greaterThan, Zero())
                 )
             );
 
@@ -181,14 +182,14 @@ namespace Crystalarium.Main
 
             t.States.Add(new AgentState());
             // condition: upper port > 0
-            t.States[0].Requirements = new Condition(t, new PortValueOperand(t, up), new Operator(OperatorType.GreaterThan), new IntOperand(t, 0));
+            t.States[0].Requirements = new Condition( new PortValueOperand( up), new Operator(OperatorType.GreaterThan), new IntOperand(0));
             // transmit below
             t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, down));
             t.States[0].Transformations.Add(new SignalTransformation(t, 1, false, up));
 
             t.States.Add(new AgentState());
             // condition: lower port > 0
-            t.States[1].Requirements = new Condition(t, new PortValueOperand(t, down), new Operator(OperatorType.GreaterThan), new IntOperand(t, 0));
+            t.States[1].Requirements = new Condition( new PortValueOperand( down), new Operator(OperatorType.GreaterThan), new IntOperand(0));
             // transmit above
             t.States[1].Transformations.Add(new SignalTransformation(t, 1, false, down));
             t.States[1].Transformations.Add(new SignalTransformation(t, 1, true, up));
@@ -215,15 +216,15 @@ namespace Crystalarium.Main
             // not gate
             // Condition (left>0)||(right>0)||(down>0)
             t.States[0].Requirements = new Condition
-            (t,
+            (
                 new Condition
-                (t,
-                    new Condition(t, new PortValueOperand(t, left), greaterThan, Zero(t)),
+                (
+                    new Condition( new PortValueOperand(left), greaterThan, Zero()),
                     or,
-                    new Condition(t, new PortValueOperand(t, right), greaterThan, Zero(t))
+                    new Condition( new PortValueOperand(right), greaterThan, Zero())
                 ),
                 or,
-                new Condition(t, new PortValueOperand(t, down), greaterThan, Zero(t))
+                new Condition( new PortValueOperand(down), greaterThan, Zero())
             );
 
 
@@ -244,7 +245,7 @@ namespace Crystalarium.Main
             t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, false, up, down, left, right));
 
             t.States.Add(new AgentState());
-            t.States[0].Requirements = new Condition(t, new ThresholdOperand(t, 1), greaterThan, Zero(t));
+            t.States[0].Requirements = new Condition( new ThresholdOperand( 1), greaterThan, Zero());
             // transmit on all sides
             t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up, down, left, right));
 
@@ -279,10 +280,10 @@ namespace Crystalarium.Main
             t.States.Add(new AgentState());
             // condition: active ports > 0
             t.States[0].Requirements = new Condition
-                (t,
-                    new Condition(t, new ThresholdOperand(t, 1), greaterThan, Zero(t)),
+                (
+                    new Condition( new ThresholdOperand( 1), greaterThan, Zero()),
                     and,
-                    new Condition(t, new ThresholdOperand(t, 1), new Operator(OperatorType.LessThan), new IntOperand(t, 3))
+                    new Condition( new ThresholdOperand( 1), new Operator(OperatorType.LessThan), new IntOperand(3))
                 );
 
             // transmit on all sides
@@ -308,9 +309,9 @@ namespace Crystalarium.Main
 
         }
 
-        private IntOperand Zero(AgentType t)
+        private IntOperand Zero()
         {
-            return new IntOperand(t, 0);
+            return new IntOperand(0);
         }
 
         private void CreateDefaultSkins()

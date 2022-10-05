@@ -61,7 +61,7 @@ namespace CrystalCore.Model.Rulesets.Conditions
         }
 
         // Constructors
-        public Condition(AgentType at, Expression first, Operator operation, Expression second) : base(TokenType.boolean, at) 
+        public Condition(Expression first, Operator operation, Expression second) : base(TokenType.boolean) 
         {
             First = first;
             Second = second;
