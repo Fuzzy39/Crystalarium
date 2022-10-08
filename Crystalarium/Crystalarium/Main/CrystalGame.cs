@@ -14,6 +14,8 @@ using CrystalCore.View.Subviews.Agents;
 using CrystalCore.Model.Communication;
 using CrystalCore.View.Configs;
 using CrystalCore.Model.Grids;
+using System.Diagnostics;
+using CrystalCore.Util.Timekeeping;
 
 namespace Crystalarium.Main
 {
@@ -32,7 +34,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 758; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 761; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         
 
@@ -177,6 +179,7 @@ namespace Crystalarium.Main
         {
 
             
+
             // provided by monogame. Escape closes the program. I suppose it can stay for now.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -222,12 +225,15 @@ namespace Crystalarium.Main
 
             base.Update(gameTime);
 
+          
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            Stopwatch timer = new Stopwatch();
+            Duration update = new Duration("update", timer.Elapsed);
+            timer.Start();
 
-            
             // arguably temporary
             double frameRate = Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds, 2);
 
@@ -274,6 +280,10 @@ namespace Crystalarium.Main
 
 
             base.Draw(gameTime);
+
+            timer.Stop();
+            Console.WriteLine("Time to draw:" + update.GetFormattedDuration(timer.Elapsed));
+
         }
 
         // draw info on top of the game.
