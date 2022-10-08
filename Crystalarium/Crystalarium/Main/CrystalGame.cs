@@ -176,7 +176,7 @@ namespace Crystalarium.Main
         protected override void Update(GameTime gameTime)
         {
 
-
+            
             // provided by monogame. Escape closes the program. I suppose it can stay for now.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -227,7 +227,7 @@ namespace Crystalarium.Main
         protected override void Draw(GameTime gameTime)
         {
 
-
+            
             // arguably temporary
             double frameRate = Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds, 2);
 
