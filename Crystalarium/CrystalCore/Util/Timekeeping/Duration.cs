@@ -8,65 +8,86 @@ namespace CrystalCore.Util.Timekeeping
     /// <summary>
     /// A duration represents an event that can be timed.
     /// </summary>
-    public class Duration
+    public abstract class Duration
     {
         private string _name;
-        private TimeSpan startTime;
+
+        Queue<TimeSpan> previousDurations;
+        private int averageSpan;
+        protected TimeSpan lengthThisFrame;
+
+        internal TimeSpan AverageLength
+        {
+            get
+            {
+                TimeSpan toReturn = new TimeSpan();
+                foreach (TimeSpan t in previousDurations)
+                {
+                    toReturn += t;
+                }
+
+                return toReturn / previousDurations.Count;
+
+            }
+        }
+
+        /// <summary>
+        /// The Average length, formatted in a human readable form.
+        /// </summary>
+        internal string FormattedLength
+        {
+            get
+            {
+                return Util.FormatTime(AverageLength);
+            }
+        }
+        
+        /// <summary>
+        /// The length of this duration for the current frame, currently.
+        /// </summary>
+        internal TimeSpan LengthThisFrame
+        {
+            get { return lengthThisFrame; }
+        }
 
         public string Name
         {
             get { return _name; }
         }
 
-        public Duration(string name, TimeSpan time)
+        internal Duration(string name, int averageSpan)
         {
             _name = name;
-            Reset(time);
+            previousDurations = new Queue<TimeSpan>();
+            this.averageSpan = averageSpan;
+            lengthThisFrame = new TimeSpan();
         }
 
-        public void Reset(TimeSpan time)
+        /// <summary>
+        /// Saves the time taken for the current frame.
+        /// </summary>
+        internal virtual void Reset()
         {
-            startTime = time;
+            if (previousDurations.Count == averageSpan)
+            {
+                previousDurations.Dequeue();
+            }
+
+            previousDurations.Enqueue(lengthThisFrame);
+            lengthThisFrame = new TimeSpan();
+
+
         }
 
-        public TimeSpan GetDuration(TimeSpan time)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Total">The total time used on average during the averaging period.</param>
+        /// <returns></returns>
+        internal virtual string CreateReport(TimeSpan Total)
         {
-            return time - startTime;
-        }
-
-        public string GetFormattedDuration(TimeSpan time)
-        {
-            TimeSpan duration = GetDuration(time);
-            
-            if(duration.TotalDays>=1)
-            {
-                return duration.Days + "d " + duration.Hours+"h";
-            }
-            if(duration.TotalHours>=1)
-            {
-                return duration.Hours+"h "+duration.Minutes+"m";
-            }
-            if(duration.TotalMinutes>=1)
-            {
-                return duration.Minutes + "m "+duration.Seconds+"s";
-            }
-            if(duration.TotalSeconds>=1)
-            {
-                return duration.Seconds + "s " + duration.Milliseconds + "ms";
-            }
-
-            if(duration.TotalMilliseconds>=1)
-            {
-                return duration.Milliseconds + "ms " + ((duration.Ticks - (duration.Milliseconds * 10 * 1000))/10) + "us";
-            }
-
-            if(duration.Ticks!=0)
-            {
-                return Math.Round(duration.Ticks / 1000.0, 1) + "us";
-            }
-
-            return "0us";
-            
+            return Name + ": " + FormattedLength + " (" + Math.Round((AverageLength / Total)*100, 1) + "%)";
         }
 
     }

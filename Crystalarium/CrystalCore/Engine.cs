@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using CrystalCore.View.Configs;
 using CrystalCore.Model.Grids;
+using CrystalCore.Util.Timekeeping;
 
 namespace CrystalCore
 {
@@ -18,6 +19,7 @@ namespace CrystalCore
 
         private SimulationManager _sim;
         private Controller _controller;
+        private Timekeeper _timeDiag;
        
       
         private List<GridView> _viewports;
@@ -48,6 +50,7 @@ namespace CrystalCore
         public Engine(TimeSpan timeBetweenFrames)
         {
             _sim = new SimulationManager(timeBetweenFrames.TotalSeconds);
+            
             _controller = new Controller();
 
             _viewports = new List<GridView>();
@@ -55,7 +58,18 @@ namespace CrystalCore
 
             _skinSets = new List<SkinSet>();
             _rulesets = new List<Ruleset>();
+
+
+            _timeDiag = new Timekeeper(timeBetweenFrames);
+            _timeDiag.CreateWorkload("", "Update");
+         
+            _timeDiag.CreateWorkload("", "Draw");
+
+            _timeDiag.CreateTask("Update", "Engine Update");
+            _timeDiag.CreateTask("Draw", "Engine Draw");
+     
             
+
         }
 
         public void Initialize() 
@@ -137,6 +151,11 @@ namespace CrystalCore
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before it can be updated. Call Engine.Initialize().");
             }
+            _timeDiag.NextFrame();
+
+            
+            Console.WriteLine("\n\n\n"+_timeDiag.CreateReport());
+            _timeDiag.StartTask("Engine Update");
 
             _sim.Update(gameTime);
 
@@ -150,6 +169,8 @@ namespace CrystalCore
 
             _controller.Update();
 
+            _timeDiag.StopTask("Engine Update");
+
         }
 
 
@@ -159,13 +180,14 @@ namespace CrystalCore
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before it can be drawn. Call Engine.Initialize().");
             }
+            _timeDiag.StartTask("Engine Draw");
             
             // draw viewports
             foreach (GridView v in _viewports)
             {
                 v.Draw(sb);
             }
-
+            _timeDiag.StopTask("Engine Draw");
         }
     }
 }
