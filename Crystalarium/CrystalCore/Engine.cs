@@ -60,12 +60,16 @@ namespace CrystalCore
             _rulesets = new List<Ruleset>();
 
 
-            _timeDiag = new Timekeeper(timeBetweenFrames);
+            _timeDiag = Timekeeper.Instance;
             _timeDiag.CreateWorkload("", "Update");
-         
+            _timeDiag.CreateWorkload("Update", "Engine Update");
+            _timeDiag.CreateTask("Engine Update", "Simulation");
+            _timeDiag.CreateTask("Engine Update", "Camera");
+            _timeDiag.CreateTask("Engine Update", "Controller");
+
             _timeDiag.CreateWorkload("", "Draw");
 
-            _timeDiag.CreateTask("Update", "Engine Update");
+        
             _timeDiag.CreateTask("Draw", "Engine Draw");
      
             
@@ -154,22 +158,25 @@ namespace CrystalCore
             _timeDiag.NextFrame();
 
             
-            Console.WriteLine("\n\n\n"+_timeDiag.CreateReport());
-            _timeDiag.StartTask("Engine Update");
-
-            _sim.Update(gameTime);
-
           
+            
+            _timeDiag.StartTask("Simulation");
+            _sim.Update(gameTime);
+            _timeDiag.StopTask("Simulation");
+
 
             // update viewports. (Camera Controls, mostly)
+            _timeDiag.StartTask("Camera");
             foreach (GridView v in _viewports)
             {
                 v.Update();
             }
+            _timeDiag.StopTask("Camera");
 
+
+            _timeDiag.StartTask("Controller");
             _controller.Update();
-
-            _timeDiag.StopTask("Engine Update");
+            _timeDiag.StopTask("Controller");
 
         }
 

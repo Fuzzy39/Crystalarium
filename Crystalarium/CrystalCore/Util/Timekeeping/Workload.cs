@@ -12,6 +12,20 @@ namespace CrystalCore.Util.Timekeeping
     {
         List<Duration> children;
 
+
+        internal override TimeSpan LengthThisFrame
+        {
+            get
+            {
+                TimeSpan toReturn = TimeSpan.Zero;
+                foreach(Duration d in children)
+                {
+                    toReturn += d.LengthThisFrame;
+                }
+                return toReturn;
+            }
+        }
+
         internal Workload(string name, int averageSpan, params Duration[] toAdd) : base(name, averageSpan)
         {
 
@@ -48,16 +62,24 @@ namespace CrystalCore.Util.Timekeeping
 
         internal override void Reset()
         {
+
+            // important!
+            // This must occur before our children get reset.
+            lengthThisFrame = LengthThisFrame;
+
             // we ought to calculate our length before resetting.
-            foreach(Duration d in children)
+            foreach (Duration d in children)
             {
               
-                lengthThisFrame += d.LengthThisFrame;
                 d.Reset();
+
             }
-            
+
+           
             base.Reset();
         }
+
+   
 
         internal override string CreateReport(TimeSpan total)
         {

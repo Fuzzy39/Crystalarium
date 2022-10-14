@@ -34,7 +34,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 766; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 773; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         
 
@@ -304,9 +304,16 @@ namespace Crystalarium.Main
             spriteBatch.DrawString(Textures.testFont, "FPS/SPS " + frameRate + "/" + Engine.Sim.ActualStepsPS + " Chunks: " + Grid.gridSize.X * Grid.gridSize.Y, new Vector2(10, 10), Color.White);
             spriteBatch.DrawString(Textures.testFont, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Vector2(10, 30), Color.White);
 
+            // diag info
+            if (actions.TimingInfoEnabled)
+            {
+                spriteBatch.DrawString(Textures.testFont, Timekeeper.Instance.CreateReport(), new Vector2(10, 100), Color.White, 0f, new Vector2(), .8f, SpriteEffects.None, 0);
+            }
 
-            spriteBatch.DrawString(Textures.testFont, "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. RMB to delete. R to rotate. Tab to Copy Agent." +
-                "\nQ and E to switch agent types. P to switch rulesets (resets grid). O to toggle port rendering." +
+
+            spriteBatch.DrawString(Textures.testFont, 
+                "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. RMB to delete. R to rotate. Tab to Copy Agent." +
+                "\nQ and E to switch agent types. P to switch rulesets (resets grid). O to toggle port rendering. I to toggle performance info." +
                 "\nSpace to toggle simulation. Z for single sim step. Shift/Control to Raise/Lower sim speed.", 
                 new Vector2(10, height - 95), Color.White);
 

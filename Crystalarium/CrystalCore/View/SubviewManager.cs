@@ -1,6 +1,5 @@
 ﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Objects;
-using CrystalCore.View.Configs;
 using CrystalCore.View.Subviews;
 using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework.Graphics;

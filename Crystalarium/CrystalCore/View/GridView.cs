@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CrystalCore.Model.Grids;
+using CrystalCore.Model.Rulesets;
 using CrystalCore.Util;
+using CrystalCore.View.Configs;
+using CrystalCore.View.Rendering;
+using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using CrystalCore.Input;
-using CrystalCore.View.Rendering;
-
-using AgentRenderer = CrystalCore.View.Subviews.Agents.AgentView;
-using ChunkRenderer = CrystalCore.View.Subviews.ChunkView;
-using CrystalCore.View.Configs;
-using CrystalCore.View.Subviews.Agents;
-using CrystalCore.Model.Rulesets;
-using CrystalCore.Model.Grids;
+using System;
+using System.Collections.Generic;
 
 namespace CrystalCore.View
 {

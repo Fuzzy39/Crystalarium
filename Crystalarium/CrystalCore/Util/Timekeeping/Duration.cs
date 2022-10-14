@@ -45,7 +45,7 @@ namespace CrystalCore.Util.Timekeeping
         /// <summary>
         /// The length of this duration for the current frame, currently.
         /// </summary>
-        internal TimeSpan LengthThisFrame
+        internal virtual TimeSpan LengthThisFrame
         {
             get { return lengthThisFrame; }
         }

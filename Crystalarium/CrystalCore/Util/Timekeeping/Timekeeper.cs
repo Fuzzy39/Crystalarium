@@ -6,11 +6,15 @@ using System.Text;
 namespace CrystalCore.Util.Timekeeping
 {
     /// <summary>
-    /// The Timekeeper class is for diagnostics
-    /// I don't have a plan for how it should work...
+    /// The Timekeeper class is for diagnostics...
+    /// THERE IS ONLY ONE. It is foolish to meddle with Chronos, keeper of time.
     /// </summary>
+    // Ahem. Excuse the outburst.
     public class Timekeeper
     {
+        // there is only one keeper of time.
+        private static Timekeeper timekeeper = null;
+
         // The timekeeper class keeps track of all durations, and averages them for a number of frames.
         private List<Duration> durations;
         private List<Duration> children;
@@ -18,7 +22,20 @@ namespace CrystalCore.Util.Timekeeping
         private Stopwatch timer;
         private const int AVG_SIZE = 30; // The amount of frames to average over for calculations.
         private TimeSpan targetElapsed; // the time between frames, nominally.
-        private Task total;
+        private Task total; // the total time between now and the last frame.
+
+        public static Timekeeper Instance
+        {
+            get
+            {
+                if (timekeeper == null)
+                {
+                    timekeeper = new Timekeeper();
+                }
+                return timekeeper;
+            }
+        }
+
 
         public double FrameRate
         {
@@ -41,19 +58,29 @@ namespace CrystalCore.Util.Timekeeping
             }
         }
 
-        public TimeSpan TotalTime
+        public TimeSpan UsedTime
         {
             get 
             {  
 
-                if(total.AverageLength>targetElapsed)
+                if(total.AverageLength>(targetElapsed + TimeSpan.FromMilliseconds(.5)))
                 {
                     return total.AverageLength;
                 }
 
-                TimeSpan toReturn = new TimeSpan(); 
+                return AccountedTime;
 
-                foreach(Duration d in children)
+            }
+        }
+
+        private TimeSpan AccountedTime // the time acounted for by durations
+        {
+            get
+            {
+
+                TimeSpan toReturn = new TimeSpan();
+
+                foreach (Duration d in children)
                 {
                     toReturn += d.AverageLength;
                 }
@@ -61,18 +88,20 @@ namespace CrystalCore.Util.Timekeeping
             }
         }
 
-        internal Timekeeper(TimeSpan targetElapsed)
+        private Timekeeper()
         {
             durations = new List<Duration>();
             children = new List<Duration>();
          
-            this.targetElapsed = targetElapsed;
+            this.targetElapsed = TimeSpan.FromSeconds(1/60.0);
 
             total = new Task("!", AVG_SIZE);
             total.Start(new TimeSpan());
             timer = new Stopwatch();
             timer.Start();
         }
+
+       
 
         public void NextFrame()
         {
@@ -115,7 +144,13 @@ namespace CrystalCore.Util.Timekeeping
         {
             if(GetDuration(name) != null)
             {
-                throw new ArgumentException("Cannot create Task '" + name + "'. Another duration of the same name already exists.");
+
+                if (GetDuration(name) is Task)
+                {
+                    return (Task)GetDuration(name);
+                }
+
+                throw new ArgumentException("Cannot create Task '" + name + "'. A Workload of the same name already exists.");
             }
 
 
@@ -145,7 +180,12 @@ namespace CrystalCore.Util.Timekeeping
         {
             if (GetDuration(name) != null)
             {
-                throw new ArgumentException("Cannot create Workload '" + name + "'. Another duration of the same name already exists.");
+                if(GetDuration(name) is Workload)
+                {
+                    return (Workload)GetDuration(name);
+                }
+
+                throw new ArgumentException("Cannot create Workload '" + name + "'. A task of the same name already exists.");
             }
 
 
@@ -217,15 +257,18 @@ namespace CrystalCore.Util.Timekeeping
             string toReturn = "--------TIMING REPORT----------\n" +
                 "Average of the past " + AVG_SIZE + " frames: \n" +
                 "FPS: " + Math.Round(FrameRate, 2) + "\n\n" +
-                "Used Time: " + Util.FormatTime(TotalTime)+" ("+Math.Round((TotalTime/targetElapsed)*100, 1)+"%):";
+                "Used Time: " + Util.FormatTime(UsedTime)+" ("+Math.Round((UsedTime/targetElapsed)*100, 1)+"%):";
               
             String s = "";
             foreach (Duration child in children)
             {
-                s+=child.CreateReport(total.AverageLength)+"\n";
+                s+=child.CreateReport(UsedTime)+"\n";
             }
             toReturn += Util.Indent(s);
-            return toReturn+ "\rFree Time: "+Util.FormatTime(FreeTime)+ "\n-------------------------------";
+            // this line is hideous
+            return toReturn+ "Other: "+((UsedTime>AccountedTime)?Util.FormatTime(UsedTime-AccountedTime)+" ("+
+                Math.Round(((UsedTime-AccountedTime) / UsedTime) * 100, 1) +"%)" :Util.FormatTime(new TimeSpan())+" (0%)")
+                +"\nFree Time: "+Util.FormatTime(FreeTime)+ "\n-------------------------------";
         }
 
 

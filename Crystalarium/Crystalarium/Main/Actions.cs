@@ -39,6 +39,7 @@ namespace Crystalarium.Main
 
         internal AgentType CurrentType { get; private set; } // the agent type selected to place.
 
+        internal bool TimingInfoEnabled { get; private set; }
        
   
 
@@ -59,6 +60,7 @@ namespace Crystalarium.Main
             SetupController();
 
             CurrentType = game.CurrentRuleset.AgentTypes[0];
+            TimingInfoEnabled = false;
         }
 
       
@@ -106,6 +108,8 @@ namespace Crystalarium.Main
             c.addAction("toggle debug ports", () => game.view.DoDebugPortRendering = !game.view.DoDebugPortRendering);
             new Keybind(c, Keystate.OnPress, "toggle debug ports", "play", Button.O);
 
+            c.addAction("toggle timing info", () => TimingInfoEnabled = !TimingInfoEnabled);
+            new Keybind(c, Keystate.OnPress, "toggle timing info", "play", Button.I);
 
             c.addAction("place agent", () =>
             {
