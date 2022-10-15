@@ -60,17 +60,28 @@ namespace CrystalCore
             _rulesets = new List<Ruleset>();
 
 
+            // this is kinda gross, but...
             _timeDiag = Timekeeper.Instance;
             _timeDiag.CreateWorkload("", "Update");
+            _timeDiag.CreateTask("Update", "Other Update");
             _timeDiag.CreateWorkload("Update", "Engine Update");
-            _timeDiag.CreateTask("Engine Update", "Simulation");
+
+            _timeDiag.CreateWorkload("Engine Update", "Simulation");
+            _timeDiag.CreateTask("Simulation", "Get AgentState");
+            _timeDiag.CreateTask("Simulation", "Transform");
+
+
             _timeDiag.CreateTask("Engine Update", "Camera");
             _timeDiag.CreateTask("Engine Update", "Controller");
 
             _timeDiag.CreateWorkload("", "Draw");
+            _timeDiag.CreateTask("Draw", "Other Draw");
+            _timeDiag.CreateWorkload("Draw", "Engine Draw");
+            _timeDiag.CreateTask("Engine Draw", "Chunks");
+            _timeDiag.CreateTask("Engine Draw", "Agents");
+            _timeDiag.CreateTask("Engine Draw", "Beams");
+            _timeDiag.CreateTask("Engine Draw", "Gridview Other");
 
-        
-            _timeDiag.CreateTask("Draw", "Engine Draw");
      
             
 
@@ -157,12 +168,9 @@ namespace CrystalCore
             }
             _timeDiag.NextFrame();
 
-            
-          
-            
-            _timeDiag.StartTask("Simulation");
+
             _sim.Update(gameTime);
-            _timeDiag.StopTask("Simulation");
+          
 
 
             // update viewports. (Camera Controls, mostly)
@@ -187,14 +195,14 @@ namespace CrystalCore
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before it can be drawn. Call Engine.Initialize().");
             }
-            _timeDiag.StartTask("Engine Draw");
+           
             
             // draw viewports
             foreach (GridView v in _viewports)
             {
                 v.Draw(sb);
             }
-            _timeDiag.StopTask("Engine Draw");
+           
         }
     }
 }

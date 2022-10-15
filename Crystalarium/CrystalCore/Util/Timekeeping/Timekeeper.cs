@@ -54,7 +54,7 @@ namespace CrystalCore.Util.Timekeeping
         {
             get 
             {
-                return targetElapsed - total.AverageLength; // can be negative, if we're lagging.
+                return targetElapsed - UsedTime; // can be negative, if we're lagging.
             }
         }
 
@@ -268,7 +268,7 @@ namespace CrystalCore.Util.Timekeeping
             // this line is hideous
             return toReturn+ "Other: "+((UsedTime>AccountedTime)?Util.FormatTime(UsedTime-AccountedTime)+" ("+
                 Math.Round(((UsedTime-AccountedTime) / UsedTime) * 100, 1) +"%)" :Util.FormatTime(new TimeSpan())+" (0%)")
-                +"\nFree Time: "+Util.FormatTime(FreeTime)+ "\n-------------------------------";
+                +"\nFree Time: "+Util.FormatTime(FreeTime)+" ("+Math.Round(FreeTime / total.AverageLength * 100, 1) + "%)\n-------------------------------";
         }
 
 

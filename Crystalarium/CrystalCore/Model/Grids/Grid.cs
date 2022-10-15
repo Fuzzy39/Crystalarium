@@ -7,6 +7,7 @@ using System.Diagnostics;
 using CrystalCore.Model.Objects;
 using CrystalCore.Model.Communication;
 using CrystalCore.Model.Rulesets;
+using CrystalCore.Util.Timekeeping;
 
 namespace CrystalCore.Model.Grids
 {
@@ -184,16 +185,18 @@ namespace CrystalCore.Model.Grids
         /// </summary>
         internal void Step()
         {
-           
+
 
             // have each agent determine the state they will be in next step based on the state of the grid last step.
+            Timekeeper.Instance.StartTask("Get AgentState");
             foreach (Agent a in _agents)
             {
                 a.PreserveState();
             }
-
+            Timekeeper.Instance.StopTask("Get AgentState");
 
             // have each agent perform it's next step, no longer needing to look at the state of the grid.
+            Timekeeper.Instance.StartTask("Transform");
             for (int i = 0; i < _agents.Count; i++)
             {
                 Agent a = _agents[i];
@@ -208,6 +211,7 @@ namespace CrystalCore.Model.Grids
 
 
             }
+            Timekeeper.Instance.StopTask("Transform");
         }
 
     }

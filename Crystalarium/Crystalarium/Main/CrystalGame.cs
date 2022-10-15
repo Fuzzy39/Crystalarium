@@ -34,7 +34,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 773; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 782; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         
 
@@ -178,7 +178,8 @@ namespace Crystalarium.Main
         protected override void Update(GameTime gameTime)
         {
 
-            
+
+            Timekeeper.Instance.StartTask("Other Update");
 
             // provided by monogame. Escape closes the program. I suppose it can stay for now.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -209,7 +210,8 @@ namespace Crystalarium.Main
             minimap.Camera.Position = view.Camera.Position;
             minimap.Camera.Zoom = view.Camera.Zoom / 12;
 
-           
+
+            Timekeeper.Instance.StopTask("Other Update");
 
             try
             {
@@ -230,10 +232,9 @@ namespace Crystalarium.Main
 
         protected override void Draw(GameTime gameTime)
         {
-         
 
-            // arguably temporary
-            double frameRate = Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds, 2);
+            Timekeeper.Instance.StartTask("Other Draw");
+          
 
             // setup
             int width = GraphicsDevice.Viewport.Width;
@@ -251,6 +252,8 @@ namespace Crystalarium.Main
             // make everything a flat color.
             GraphicsDevice.Clear(new Color(70, 70, 70));
 
+            Timekeeper.Instance.StopTask("Other Draw");
+
             // tru to draw the game
             try
             {
@@ -265,8 +268,9 @@ namespace Crystalarium.Main
                 return;
             }
 
+            Timekeeper.Instance.StartTask("Other Draw");
             // Draw text on top of the game.
-            DrawText(width, height, frameRate);
+            DrawText(width, height);
 
             if (Engine.Controller.Context == "menu")
             {
@@ -276,7 +280,7 @@ namespace Crystalarium.Main
             EndDraw(height);
 
 
-
+            Timekeeper.Instance.StopTask("Other Draw");
             base.Draw(gameTime);
 
         
@@ -284,7 +288,7 @@ namespace Crystalarium.Main
         }
 
         // draw info on top of the game.
-        private void DrawText(int width, int height, double frameRate)
+        private void DrawText(int width, int height)
         {
 
 
@@ -298,10 +302,9 @@ namespace Crystalarium.Main
 
             // some debug text. We'll clear this out sooner or later...
 
-            spriteBatch.DrawString(Textures.testFont, "FPS/SPS " + frameRate + "/" + Engine.Sim.ActualStepsPS + " Chunks: " 
+            spriteBatch.DrawString(Textures.testFont, "Sim Speed: "+Engine.Sim.ActualStepsPS + " Steps/Second Chunks: " 
                 + Grid.gridSize.X * Grid.gridSize.Y+" Agents: "+Grid.AgentCount+" Signals: "+Grid.SignalCount,
                 new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(Textures.testFont, "FPS/SPS " + frameRate + "/" + Engine.Sim.ActualStepsPS + " Chunks: " + Grid.gridSize.X * Grid.gridSize.Y, new Vector2(10, 10), Color.White);
             spriteBatch.DrawString(Textures.testFont, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Vector2(10, 30), Color.White);
 
             // diag info

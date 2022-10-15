@@ -166,7 +166,7 @@ namespace CrystalCore.Model
         public void Step()
         {
             // do a simulation step.
-            // this is currently empty, but I imagine it would look like this:
+            
 
             foreach(Grid g in Grids)
             {

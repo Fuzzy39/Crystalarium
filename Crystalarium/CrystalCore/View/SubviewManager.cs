@@ -1,5 +1,6 @@
 ﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Objects;
+using CrystalCore.Util.Timekeeping;
 using CrystalCore.View.Subviews;
 using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework.Graphics;
@@ -94,29 +95,37 @@ namespace CrystalCore.View
         internal void Draw( SpriteBatch sb)
         {
             // first update the chunk list and draw chunks.
+            Timekeeper.Instance.StartTask("Chunks");
             AddChunks();
             DrawObjects(sb, _chunkViews);
+            Timekeeper.Instance.StopTask("Chunks");
 
             // do the same with agents.
             if (Parent.DoAgentRendering)
             {
-             
+                Timekeeper.Instance.StartTask("Agents");
                 AddAgents();
                 foreach(AgentView av in _agentViews)
                 {
                     av.DrawBackground(sb);
                 }
-              
+                Timekeeper.Instance.StopTask("Agents");
+
+                Timekeeper.Instance.StartTask("Beams");
                 AddBeams();
                 DrawObjects(sb, _beamViews);
+                Timekeeper.Instance.StopTask("Beams");
 
-
+                Timekeeper.Instance.StartTask("Agents");
                 DrawObjects(sb, _agentViews);
+                Timekeeper.Instance.StopTask("Agents");
 
 
             }
-
+            Timekeeper.Instance.StartTask("Gridview Other");
             DrawGhosts(sb);
+            Timekeeper.Instance.StopTask("Gridview Other");
+
         }
 
 

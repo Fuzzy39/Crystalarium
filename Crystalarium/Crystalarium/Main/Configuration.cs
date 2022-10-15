@@ -279,7 +279,7 @@ namespace Crystalarium.Main
             t = WireRules.CreateType("wire", new Point(1, 1));
             t.States.Add(new AgentState());
             // condition: active ports > 0
-            t.States[0].Requirements = new Condition
+            t.States[0].Requirements =  new Condition
                 (
                     new Condition( new ThresholdOperand( 1), greaterThan, Zero()),
                     and,
@@ -293,13 +293,13 @@ namespace Crystalarium.Main
             t.States.Add(new AgentState());
             t.States[0].Requirements = null;
             // transmit on all sides
-            t.States[0].Transformations.Add(new MutateTransformation(t, "wire"));
+            t.States[0].Transformations.Add(new MutateTransformation(t, "electron head"));
 
        
             t=WireRules.CreateType("electron head", new Point(1, 1));
             t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, true, up, down, left, right,
-               new PortIdentifier(0, CompassPoint.northwest), new PortIdentifier(0, CompassPoint.northeast),
-               new PortIdentifier(0, CompassPoint.southwest), new PortIdentifier(0, CompassPoint.southeast)));
+              new PortIdentifier(0, CompassPoint.northwest), new PortIdentifier(0, CompassPoint.northeast),
+              new PortIdentifier(0, CompassPoint.southwest), new PortIdentifier(0, CompassPoint.southeast)));
 
             t.States.Add(new AgentState());
             t.States[0].Requirements = null;
