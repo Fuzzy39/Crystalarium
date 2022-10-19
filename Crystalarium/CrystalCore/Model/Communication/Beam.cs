@@ -99,28 +99,28 @@ namespace CrystalCore.Model.Communication
             int length = MinLength;
             Point end = (Point)p;
 
-            PortAgent target = FindTarget(ref length, ref end);
-            TransmitTo(target, end, length);
+            PortAgent target = FindTarget(length, ref end);
+            TransmitTo(target, end);
 
         }
 
-        private PortAgent FindTarget(ref int length, ref Point end)
+        private PortAgent FindTarget( int length,  ref Point end)
         {
             // start looking for targets, one tile at a time.
             Point? nextEnd = end;
             while (nextEnd != null)
             {
                 end = (Point)nextEnd;
-                List<Agent> targets = Grid.AgentsWithin(new Rectangle(end, new Point(1)));
+                Agent target = Grid.AgentAt(end);
 
                 // We found a target!
-                if (targets.Count != 0)
+                if (target!=null)
                 {
 
 
                     // this cast is safe, if we exist, port agents must.
-                    PortAgent target = (PortAgent)targets[0];
-                    return target;
+                    _length = length;
+                    return (PortAgent)target;
 
                 }
 
@@ -137,6 +137,7 @@ namespace CrystalCore.Model.Communication
 
             // at this point, we have either reached our max length, or hit the end of the grid without finding a target.
             // we should update our length and bounds to reflect that.
+            _length = length;
             return null;
         }
 
@@ -148,14 +149,14 @@ namespace CrystalCore.Model.Communication
             Bounds = r;
         }
 
-        private void TransmitTo(PortAgent target, Point loc, int length)
+        private void TransmitTo(PortAgent target, Point loc)
         {
             if(target!=null)
             {
                 TransmitToTarget(target, loc);
             }
 
-            _length = length;
+           
 
             // we need to adjust our bounds now.
             SetBounds(_start.Location, loc);

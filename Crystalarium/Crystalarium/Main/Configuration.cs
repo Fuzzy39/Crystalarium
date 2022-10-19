@@ -293,7 +293,7 @@ namespace Crystalarium.Main
             t.States.Add(new AgentState());
             t.States[0].Requirements = null;
             // transmit on all sides
-            t.States[0].Transformations.Add(new MutateTransformation(t, "electron head"));
+            t.States[0].Transformations.Add(new MutateTransformation(t, "wire"));
 
        
             t=WireRules.CreateType("electron head", new Point(1, 1));

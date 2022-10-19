@@ -67,6 +67,28 @@ namespace CrystalCore.Model.Grids
             return null;
         }
 
+        public static Agent AgentAt(this Grid g, Point p)
+        {
+            Chunk c = g.getChunkAtCoords(p);
+
+            foreach (ChunkMember cm in c.MembersWithin)
+            {
+                if (!(cm is Agent))
+                {
+                    continue;
+                }
+
+                if(cm.Bounds.Contains(p))
+                {
+                    return (Agent)cm;
+                }
+            }
+
+            return null;
+        }
+
+
+
         // returns the agents within these bounds
         public static List<Entity> EntitiesWithin(this Grid g, Rectangle bounds)
         {

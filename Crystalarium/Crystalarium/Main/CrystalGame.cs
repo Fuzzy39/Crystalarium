@@ -1,21 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CrystalCore;
+using CrystalCore.Model.Grids;
+using CrystalCore.Model.Rulesets;
+using CrystalCore.Util.Timekeeping;
+using CrystalCore.View;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using System;
-using System.Collections.Generic;
-
-using CrystalCore;
-using CrystalCore.Input;
-using CrystalCore.Util;
-using CrystalCore.View;
-using CrystalCore.Model.Rulesets;
-using CrystalCore.View.Subviews.Agents;
-using CrystalCore.Model.Communication;
-using CrystalCore.View.Configs;
-using CrystalCore.Model.Grids;
-using System.Diagnostics;
-using CrystalCore.Util.Timekeeping;
 
 namespace Crystalarium.Main
 {
@@ -34,7 +26,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 782; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 783; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         
 
