@@ -56,8 +56,7 @@ namespace Crystalarium.Main
 
             // create a ruleset
             CrystalRules = game.Engine.addRuleset("Crystalarium");
-            CrystalRules.PortChannelMode = PortChannelMode.halfDuplex;
-            CrystalRules.SignalType = SignalType.Beam;
+     
 
             // define BeamRules
             AgentType t;
@@ -204,9 +203,6 @@ namespace Crystalarium.Main
 
             BasicRules = game.Engine.addRuleset("Minimal");
 
-            BasicRules.PortChannelMode = PortChannelMode.halfDuplex;
-            BasicRules.SignalType = SignalType.Beam;
-
             // ###### NOT GATE #######
             t = BasicRules.CreateType("not gate", new Point(1, 1));
 
@@ -270,8 +266,6 @@ namespace Crystalarium.Main
             // setup wireworld
             WireRules = game.Engine.addRuleset("Wire World");
 
-            WireRules.PortChannelMode = PortChannelMode.fullDuplex;
-            WireRules.SignalType = SignalType.Beam;
             WireRules.RotateLock = true;
             WireRules.BeamMaxLength = 1;
             WireRules.DiagonalSignalsAllowed = true;

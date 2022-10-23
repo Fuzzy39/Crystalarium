@@ -15,11 +15,6 @@ namespace CrystalCore.Model.Communication
         transceiving
     }
 
-    public enum PortChannelMode
-    {
-        halfDuplex,
-        fullDuplex
-    }
 
     // relative portID.
     public struct PortIdentifier

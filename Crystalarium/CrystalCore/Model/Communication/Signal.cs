@@ -9,11 +9,6 @@ using System.Text;
 namespace CrystalCore.Model.Communication
 {
 
-    public enum SignalType
-    {
-        
-        Beam
-    }
 
     internal abstract class Signal : ChunkMember
     {

@@ -1,11 +1,6 @@
 ﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rulesets.Conditions;
-using CrystalCore.Util;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 ///
 namespace CrystalCore.Model.Rulesets.Operands
 {

@@ -111,7 +111,7 @@ namespace CrystalCore.Model.Objects
                     }
 
                     // create a diagonal port.
-                    Port p = Type.Ruleset.CreatePort(facing, 0, this);
+                    Port p = new FullPort(facing, 0, this);
                     portList.Add(p);
                     p.OnStartReiceving += OnPortStatusChanged;
                     p.OnStopReiceving += OnPortStatusChanged;
@@ -138,7 +138,7 @@ namespace CrystalCore.Model.Objects
             {
                 for (int j = 0; j < Type.Size.X; j++)
                 {
-                    Port p = Type.Ruleset.CreatePort(facing, j, this);
+                    Port p = new FullPort(facing, j, this);
                     ports.Add(p);
                     p.OnStartReiceving += OnPortStatusChanged;
                     p.OnStopReiceving += OnPortStatusChanged;
@@ -148,7 +148,7 @@ namespace CrystalCore.Model.Objects
 
             for (int j = 0; j < Type.Size.Y; j++)
             {
-                Port p = Type.Ruleset.CreatePort(facing, j, this);
+                Port p = new FullPort(facing, j, this);
                 ports.Add(p);
                 p.OnStartReiceving += OnPortStatusChanged;
                 p.OnStopReiceving += OnPortStatusChanged;
