@@ -1,5 +1,4 @@
 ﻿using CrystalCore.Input;
-using CrystalCore.Model.Rulesets;
 using CrystalCore.Model;
 using CrystalCore.View;
 using Microsoft.Xna.Framework;
@@ -8,8 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using CrystalCore.View.Configs;
-using CrystalCore.Model.Grids;
 using CrystalCore.Util.Timekeeping;
+using CrystalCore.Model.Rules;
+using CrystalCore.Model.Elements;
 
 namespace CrystalCore
 {

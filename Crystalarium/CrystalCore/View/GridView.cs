@@ -1,5 +1,5 @@
-﻿using CrystalCore.Model.Grids;
-using CrystalCore.Model.Rulesets;
+﻿using CrystalCore.Model.Elements;
+using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using CrystalCore.Util.Timekeeping;
 using CrystalCore.View.Configs;

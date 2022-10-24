@@ -1,7 +1,6 @@
-﻿using CrystalCore.Model.Communication;
-using CrystalCore.Model.Grids;
-using CrystalCore.Model.Rulesets;
-using CrystalCore.Model.Rulesets.Conditions;
+﻿using CrystalCore.Model.Elements;
+using CrystalCore.Model.Language;
+using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;

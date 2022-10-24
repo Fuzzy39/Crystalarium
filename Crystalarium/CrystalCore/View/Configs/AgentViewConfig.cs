@@ -1,5 +1,5 @@
 ﻿using CrystalCore.Model.Objects;
-using CrystalCore.Model.Rulesets;
+using CrystalCore.Model.Rules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

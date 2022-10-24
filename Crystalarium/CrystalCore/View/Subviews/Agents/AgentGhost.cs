@@ -1,6 +1,4 @@
-﻿using CrystalCore.Model.Rulesets;
-using CrystalCore.Model;
-using CrystalCore.Util;
+﻿using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

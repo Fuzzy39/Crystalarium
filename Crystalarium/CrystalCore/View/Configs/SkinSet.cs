@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.Rulesets;
+﻿using CrystalCore.Model.Rules;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;

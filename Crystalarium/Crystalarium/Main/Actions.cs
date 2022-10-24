@@ -1,5 +1,4 @@
 ﻿using CrystalCore.Input;
-using CrystalCore.Model.Rulesets;
 using CrystalCore.Model.Objects;
 using CrystalCore.Util;
 using CrystalCore.View;
@@ -8,10 +7,10 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CrystalCore.Model.Communication;
 using CrystalCore.View.Configs;
 using CrystalCore.Model;
-using CrystalCore.Model.Grids;
+using CrystalCore.Model.Rules;
+using CrystalCore.Model.Elements;
 
 namespace Crystalarium.Main
 {

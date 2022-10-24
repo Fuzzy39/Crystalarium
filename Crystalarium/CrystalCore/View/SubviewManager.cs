@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.Communication;
+﻿using CrystalCore.Model.Elements;
 using CrystalCore.Model.Objects;
 using CrystalCore.Util.Timekeeping;
 using CrystalCore.View.Subviews;

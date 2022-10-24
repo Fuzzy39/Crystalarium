@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CrystalCore.Model;
-using CrystalCore.Model.Objects;
+using CrystalCore.Model.Elements;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace CrystalCore.View.Subviews

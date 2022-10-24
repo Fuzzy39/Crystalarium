@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.Communication;
+﻿using CrystalCore.Model.Objects;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

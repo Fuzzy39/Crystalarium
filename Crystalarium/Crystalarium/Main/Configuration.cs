@@ -1,8 +1,7 @@
-﻿using CrystalCore.Model.Communication;
-using CrystalCore.Model.Rulesets;
-using CrystalCore.Model.Rulesets.Conditions;
-using CrystalCore.Model.Rulesets.Operands;
-using CrystalCore.Model.Rulesets.Transformations;
+﻿using CrystalCore.Model.Interface;
+using CrystalCore.Model.Language;
+using CrystalCore.Model.Objects;
+using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using CrystalCore.View.Configs;
 using Microsoft.Xna.Framework;
@@ -180,18 +179,31 @@ namespace Crystalarium.Main
             t.DefaultState.Transformations.Add(new SignalTransformation(t, 1, false, up, down));
 
             t.States.Add(new AgentState());
-            // condition: upper port > 0
-            t.States[0].Requirements = new Condition( new PortValueOperand( up), new Operator(OperatorType.GreaterThan), new IntOperand(0));
-            // transmit below
+            // condition: upper port > 0 and lower port > 0
+            t.States[0].Requirements = new Condition
+            (
+                new Condition(new PortValueOperand(up), greaterThan, Zero()),
+                and,
+                new Condition(new PortValueOperand(down), greaterThan, Zero())
+            );
+
+            // transmit above and below
             t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, down));
-            t.States[0].Transformations.Add(new SignalTransformation(t, 1, false, up));
+            t.States[0].Transformations.Add(new SignalTransformation(t, 1, true, up));
+
+            t.States.Add(new AgentState());
+            // condition: upper port > 0
+            t.States[1].Requirements = new Condition( new PortValueOperand( up), new Operator(OperatorType.GreaterThan), new IntOperand(0));
+            // transmit below
+            t.States[1].Transformations.Add(new SignalTransformation(t, 1, true, down));
+            t.States[1].Transformations.Add(new SignalTransformation(t, 1, false, up));
 
             t.States.Add(new AgentState());
             // condition: lower port > 0
-            t.States[1].Requirements = new Condition( new PortValueOperand( down), new Operator(OperatorType.GreaterThan), new IntOperand(0));
+            t.States[2].Requirements = new Condition( new PortValueOperand( down), new Operator(OperatorType.GreaterThan), new IntOperand(0));
             // transmit above
-            t.States[1].Transformations.Add(new SignalTransformation(t, 1, false, down));
-            t.States[1].Transformations.Add(new SignalTransformation(t, 1, true, up));
+            t.States[2].Transformations.Add(new SignalTransformation(t, 1, false, down));
+            t.States[2].Transformations.Add(new SignalTransformation(t, 1, true, up));
 
 
             game.CurrentRuleset = CrystalRules;
