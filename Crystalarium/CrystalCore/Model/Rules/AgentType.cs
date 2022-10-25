@@ -1,6 +1,5 @@
 ﻿using CrystalCore.Model.Elements;
 using CrystalCore.Model.Objects;
-using CrystalCore.Model.Language;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;

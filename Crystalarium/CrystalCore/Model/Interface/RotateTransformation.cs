@@ -1,5 +1,4 @@
-﻿using CrystalCore.Model.Language;
-using CrystalCore.Model.Objects;
+﻿using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using System;
@@ -15,21 +14,24 @@ namespace CrystalCore.Model.Interface
 
         private RotationalDirection direction;
 
-        public RotateTransformation(AgentType at, RotationalDirection direction) : base(at)
+        public RotateTransformation(RotationalDirection direction) 
         {
             this.direction = direction;
         }
 
-        internal override void Initialize()
+        internal override void Validate(AgentType at)
         {
-
-            base.Initialize();
-
+          // nothing can go wrong, that's good.
         }
+       
 
-        internal override void Transform(Agent a)
+        internal override void Transform(object o)
         {
-            base.Transform(a);
+            if(!(o is Agent))
+            {
+                throw new ArgumentException("o must be a ");
+            }
+            Agent a = (Agent)o;
             a.Rotate(direction);
         }
     }

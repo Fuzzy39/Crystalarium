@@ -1,6 +1,7 @@
 ﻿using CrystalCore.Model.Language;
 using CrystalCore.Model.Objects;
-///
+using System;
+
 namespace CrystalCore.Model.Interface
 {
     /// <summary>
@@ -14,7 +15,7 @@ namespace CrystalCore.Model.Interface
 
             this.value = value;
         }
-        internal override Token Resolve(Agent a)
+        internal override Token Resolve(object none)
         {
             return new Token(ReturnType, value);
         }
@@ -32,7 +33,7 @@ namespace CrystalCore.Model.Interface
 
             this.value = value;
         }
-        internal override Token Resolve(Agent a)
+        internal override Token Resolve(object none)
         {
             return new Token(ReturnType, value);
         }
@@ -51,8 +52,14 @@ namespace CrystalCore.Model.Interface
             this.threshold = threshold;
         }
 
-        internal override Token Resolve(Agent a)
+        internal override Token Resolve(object agent)
         {
+            if (!(agent is object))
+            {
+                throw new ArgumentException("agent parameter must of of type Agent");
+            }
+            Agent a = (Agent)agent;
+            
             int toReturn = 0;
             PortAgent pa = (PortAgent)a;
             foreach (Port p in pa.PortList)
@@ -86,8 +93,13 @@ namespace CrystalCore.Model.Interface
             base.Initialize();
         }
 
-        internal override Token Resolve(Agent a)
+        internal override Token Resolve(object agent)
         {
+            if(!(agent is object))
+            {
+                throw new ArgumentException("agent parameter must of of type Agent");
+            }
+            Agent a = (Agent)agent;
             Port p = ((PortAgent)a).GetPort(portID);
             if (p.Status == PortStatus.receiving || p.Status == PortStatus.transceiving)
             {
