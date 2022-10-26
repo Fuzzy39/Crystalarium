@@ -12,37 +12,50 @@ namespace CrystalCore.Model.Interface
     public class MutateTransformation : Transformation
     {
 
-        private string mutateTo;
+        private AgentType mutateTo;
 
-        public MutateTransformation(AgentType at, string mutateTo) : base(at)
+        public MutateTransformation(AgentType mutateTo) : base()
         {
+            ChecksRequired = true;
+            MustBeLast = true;
+
+            if (mutateTo == null)
+            {
+                throw new ArgumentNullException();
+
+            }
+                
             this.mutateTo = mutateTo;
         }
 
-        internal override void Initialize()
+        internal override void Validate(AgentType at)
         {
-            if (AgentType.Ruleset.GetAgentType(mutateTo) == null)
+            if (at.Ruleset!=mutateTo.Ruleset)
             {
                 throw new InitializationFailedException("Mutation Transformation: unkown mutate type.");
             }
 
-            if (!AgentType.Ruleset.GetAgentType(mutateTo).Size.Equals(AgentType.Size))
+            if (!mutateTo.Size.Equals(at.Size))
             {
                 throw new InitializationFailedException("Mutation Transformation: Agents that are mutated cannot change size.");
             }
 
-            base.Initialize();
 
         }
 
-        internal override void Transform(Agent a)
+        internal override void Transform(object o)
         {
-            base.Transform(a);
+            if (!(o is Agent))
+            {
+                throw new ArgumentException("o must be a ");
+            }
+            Agent a = (Agent)o;
+
             Grid g = a.Grid;
             Direction d = a.Facing;
             Point loc = a.Bounds.Location;
             a.Destroy();
-            Agent b = AgentType.Ruleset.GetAgentType(mutateTo).createAgent(g, loc, d);
+            Agent b = mutateTo.createAgent(g, loc, d);
             if (b == null)
             {
                 throw new InvalidOperationException("Failed to mutate agent.");

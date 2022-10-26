@@ -75,6 +75,7 @@ namespace CrystalCore.Model.Rules
 
                 }
 
+                
 
                 // an agentstate can have no transformations, and be inert, if it wishes.
                 bool agentDestroyed = false;
@@ -86,9 +87,10 @@ namespace CrystalCore.Model.Rules
                         throw new InitializationFailedException("MutateTransformation and DestroyTransformation must be the last transformation that an agent undergoes.");
                     }
 
-                    tf.Initialize();
+             
+                   
 
-                    if (tf is MutateTransformation || tf is DestroyTransformation)
+                    if (tf.MustBeLast)
                     {
                         agentDestroyed = true;
                     }
@@ -104,6 +106,21 @@ namespace CrystalCore.Model.Rules
             base.Initialize();
         }
 
+        internal void Validate(AgentType at)
+        {
+            try
+            {
+                foreach (Transformation tf in Transformations)
+                {
+
+                    tf.Validate(at);
+                }
+            }
+            catch (InitializationFailedException e)
+            {
+                throw new InitializationFailedException("An AgentState failed to initialize:" + Util.Util.Indent(e.Message));
+            }
+        }
 
         /// <summary>
         /// Runs through transformations of this agent type.

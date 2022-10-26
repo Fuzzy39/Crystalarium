@@ -18,6 +18,9 @@ namespace CrystalCore.Model.Interface
 
         public SignalTransformation( int value, bool transmit, params PortIdentifier[] ports) : base()
         {
+            ChecksRequired = false; 
+            MustBeLast = false;
+
             this.value = value;
             this.ports = ports;
             this.transmit = transmit;

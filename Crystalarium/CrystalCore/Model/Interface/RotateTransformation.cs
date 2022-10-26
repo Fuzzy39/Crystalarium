@@ -16,6 +16,8 @@ namespace CrystalCore.Model.Interface
 
         public RotateTransformation(RotationalDirection direction) 
         {
+            ChecksRequired = true;
+            MustBeLast = false;
             this.direction = direction;
         }
 

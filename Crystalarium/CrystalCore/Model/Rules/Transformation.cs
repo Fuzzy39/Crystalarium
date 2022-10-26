@@ -10,7 +10,8 @@ namespace CrystalCore.Model.Rules
     public abstract class Transformation
     {
         // Transformations should set this property. default states cannot have transformations that change the agent.
-
+        internal protected bool ChecksRequired { get; protected set; }
+        internal protected bool MustBeLast { get; protected set; }
 
 
         public Transformation()

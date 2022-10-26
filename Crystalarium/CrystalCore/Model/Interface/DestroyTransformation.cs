@@ -9,15 +9,28 @@ namespace CrystalCore.Model.Interface
     internal class DestroyTransformation : Transformation
     {
 
-        public DestroyTransformation(AgentType at) : base(at)
+        public DestroyTransformation() : base()
         {
-            ChangesAgent = true;
+            ChecksRequired = true;
+            MustBeLast = true;
         }
 
-        internal override void Transform(Agent a)
+        internal override void Transform(object o)
         {
-            base.Transform(a);
+            
+            if (!(o is Agent))
+            {
+                throw new ArgumentException("o must be a ");
+            }
+            Agent a = (Agent)o;
+            
             a.Destroy(); // hopefull this is the right way to do things.
         }
+
+        internal override void Validate(AgentType at)
+        {
+            
+        }
+
     }
 }

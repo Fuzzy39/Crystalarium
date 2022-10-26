@@ -92,13 +92,14 @@ namespace CrystalCore.Model.Rules
 
                 foreach (Transformation tf in DefaultState.Transformations)
                 {
-                    if (tf.ChangesAgent)
+                    if(tf.ChecksRequired)
                     {
-                        throw new InitializationFailedException("The default state of an AgentType can only transmit, and cannot change its agent.");
+                        throw new InitializationFailedException("The default state of an Agent cannot perform a '" + tf.GetType().ToString() + "'.");
                     }
                 }
 
                 DefaultState.Initialize();
+                DefaultState.Validate(this);
                 if (DefaultState.Requirements != null)
                 {
                     throw new InitializationFailedException("The default state of an AgentType may not have any requirements.");
@@ -109,6 +110,7 @@ namespace CrystalCore.Model.Rules
                 foreach (AgentState state in _states)
                 {
                     state.Initialize();
+                    state.Validate(this);
                 }
 
             }
