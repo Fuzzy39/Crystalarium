@@ -1,6 +1,6 @@
-﻿using CrystalCore.Model.Interface;
+﻿// namespace
 using CrystalCore.Model.Language;
-using CrystalCore.Model.Objects;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -122,29 +122,7 @@ namespace CrystalCore.Model.Rules
             }
         }
 
-        /// <summary>
-        /// Runs through transformations of this agent type.
-        /// </summary>
-        /// <param name="a"></param>
-        internal void Execute(Agent a)
-        {
-            if (!Initialized)
-            {
-                throw new InvalidOperationException("this method cannot be executed until CrystalCore has been initalized. Call Engine.Initialize().");
-            }
-            if (a.State != this)
-            {
-                // hopefully, this never happens.
-                throw new InvalidOperationException("Agent Attempted to execute a state it should not.");
-            }
-
-
-
-            foreach (Transformation tf in _transformations)
-            {
-                tf.Transform(a);
-            }
-        }
+        
 
     }
 }

@@ -1,5 +1,7 @@
-﻿using CrystalCore.Model.Elements;
-using CrystalCore.Model.Objects;
+﻿// Namespace
+
+using CrystalCore.Model.Language;
+
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;

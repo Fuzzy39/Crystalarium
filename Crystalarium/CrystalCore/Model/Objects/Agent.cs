@@ -48,7 +48,7 @@ namespace CrystalCore.Model.Objects
 
             // do the default thing.
             _state = Type.DefaultState;
-            _state.Execute(this);
+            Execute();
 
         }
 
@@ -129,7 +129,19 @@ namespace CrystalCore.Model.Objects
             return Type.DefaultState;
         }
 
-        
+        /// <summary> 
+        /// Runs through transformations of this agent type.
+        /// </summary>
+        /// <param name="a"></param>
+        internal void Execute()
+        {
+            
+
+            foreach (Transformation tf in _state.Transformations)
+            {
+                tf.Transform(this);
+            }
+        }
 
         internal void Update()
         {
@@ -138,7 +150,7 @@ namespace CrystalCore.Model.Objects
                 return;
             }
            
-            _state.Execute(this);
+            Execute();
 
         }
     }
