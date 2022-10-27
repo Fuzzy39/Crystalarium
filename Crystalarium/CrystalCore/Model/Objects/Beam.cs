@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Elements;
+using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
@@ -70,10 +71,10 @@ namespace CrystalCore.Model.Objects
         public int Length { get => _length; }
 
 
-        public Beam(Grid g, Port transmitter, int value, int min, int max) : base(g, transmitter, value)
+        public Beam(Grid g, Port transmitter, int value, Ruleset r) : base(g, transmitter, value)
         {
-            MaxLength = max;
-            MinLength = min;
+            MaxLength = r.BeamMaxLength;
+            MinLength = r.BeamMinLength;
             _length = 0;
 
             Update(); // update, to be safe.

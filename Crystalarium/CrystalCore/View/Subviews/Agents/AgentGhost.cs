@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using CrystalCore.View.Configs;
+using CrystalCore.Model.Elements;
 
 namespace CrystalCore.View.Subviews.Agents
 {
@@ -44,7 +45,7 @@ namespace CrystalCore.View.Subviews.Agents
             Color c;
 
             // get the color of the agent. if the agent cannot be placed, make it red, instead.
-            if (config.AgentType.IsValidLocation(renderTarget.Grid, Bounds.Location, Facing))
+            if (Entity.IsValidLocation(renderTarget.Grid, Bounds, Facing))
             {
                 // these ought to be exposed better.
                 c = config.Color; //Color.Green;

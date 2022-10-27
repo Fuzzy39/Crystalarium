@@ -53,9 +53,9 @@ namespace CrystalCore.Model.Interface
 
             Grid g = a.Grid;
             Direction d = a.Facing;
-            Point loc = a.Bounds.Location;
+            Rectangle bounds = a.Bounds;
             a.Destroy();
-            Agent b = mutateTo.createAgent(g, loc, d);
+            Agent b = new PortAgent(g, bounds.Location, mutateTo, d);
             if (b == null)
             {
                 throw new InvalidOperationException("Failed to mutate agent.");

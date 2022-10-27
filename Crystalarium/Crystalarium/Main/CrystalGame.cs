@@ -26,7 +26,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 787; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 790; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         
 
@@ -179,6 +179,7 @@ namespace Crystalarium.Main
 
             if (errorSplash != null)
             {
+                Timekeeper.Instance.StopTask("Other Update");
                 return;
             }
 
@@ -272,7 +273,7 @@ namespace Crystalarium.Main
             EndDraw(height);
 
 
-            Timekeeper.Instance.StopTask("Other Draw");
+           
             base.Draw(gameTime);
 
         
@@ -336,7 +337,7 @@ namespace Crystalarium.Main
         {
             spriteBatch.DrawString(Textures.testFont, "Milestone 5, Build " + BUILD, new Vector2(10, height - 25), Color.White);
             spriteBatch.End();
-
+            Timekeeper.Instance.StopTask("Other Draw");
         }
 
 

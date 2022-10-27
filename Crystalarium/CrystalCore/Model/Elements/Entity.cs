@@ -1,8 +1,6 @@
 ﻿using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.Model.Elements
 {
@@ -39,7 +37,8 @@ namespace CrystalCore.Model.Elements
             }
         }
 
-        public Entity(Grid g, Rectangle bounds, Direction facing) : base(g, bounds)
+        // the disgusting line there properly rotates the entitiy.
+        public Entity(Grid g, Rectangle bounds, Direction facing) : base ( g, AdjustBounds(bounds, facing))
         {
             _facing = facing;
 
@@ -69,6 +68,35 @@ namespace CrystalCore.Model.Elements
             Facing = Facing.Rotate(d);
 
         }
+
+
+        public static bool IsValidLocation(Grid g, Rectangle bounds, Direction facing)
+        {
+           
+
+            bounds = AdjustBounds(bounds, facing);
+            if (g.Bounds.Contains(bounds))
+            {
+                if (g.EntitiesWithin(bounds).Count == 0)
+                {
+                    return true;
+                }
+
+            }
+
+            return false;
+        }
+
+        private static Rectangle AdjustBounds(Rectangle bounds, Direction facing)
+        {
+            if (facing.IsVertical())
+            {
+                return bounds;
+            }
+
+            return new Rectangle(bounds.Location, new Point(bounds.Size.Y, bounds.Size.X));
+        }
+        
 
     }
 }

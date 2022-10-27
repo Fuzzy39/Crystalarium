@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using CrystalCore.Util;
-using System.Diagnostics;
-using CrystalCore.Model.Objects;
-using CrystalCore.Util.Timekeeping;
+﻿using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
+using CrystalCore.Util;
+using CrystalCore.Util.Timekeeping;
+using System;
+using System.Collections.Generic;
 
 namespace CrystalCore.Model.Elements
 {

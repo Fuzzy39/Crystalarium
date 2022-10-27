@@ -136,19 +136,6 @@ namespace CrystalCore.Model.Rules
         }
 
 
-        internal Signal CreateSignal(Grid g, Port transmitter, int value)
-        {
-
-            if (!Initialized)
-            {
-                throw new InvalidOperationException("Ruleset cannot be used before it is initialized. Call Engine.Initialize().");
-            }
-
-
-            return new Beam(g, transmitter, value, BeamMinLength, BeamMaxLength);
-
-        }
-
         internal override void Initialize()
         {
             try

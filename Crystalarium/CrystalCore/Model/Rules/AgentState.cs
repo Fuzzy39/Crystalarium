@@ -38,9 +38,10 @@ namespace CrystalCore.Model.Rules
         {
             get
             {
+                // return a copy.
                 if (Initialized)
                 {
-                    throw new InvalidOperationException("An Agent State's Actions/Transformations may not be edited or viewed after the engine has been initialized.");
+                    return new List<Transformation>(_transformations);
                 }
 
                 return _transformations;

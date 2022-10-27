@@ -1,8 +1,6 @@
-﻿using CrystalCore.Model.Elements;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.Model.Elements
 {

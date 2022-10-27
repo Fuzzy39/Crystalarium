@@ -129,9 +129,9 @@ namespace Crystalarium.Main
                     toRemove.Destroy();
                 }
 
-                if (CurrentType.IsValidLocation(game.Grid, clickCoords, Rotation))
+                if (Entity.IsValidLocation(game.Grid, new Rectangle(clickCoords, CurrentType.Size), Rotation))
                 {
-                    CurrentType.createAgent(game.Grid, clickCoords, Rotation);
+                    new PortAgent(game.Grid, clickCoords, CurrentType, Rotation);
                 }
 
 

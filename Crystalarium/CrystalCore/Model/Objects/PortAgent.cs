@@ -11,7 +11,7 @@ namespace CrystalCore.Model.Objects
     /// <summary>
     /// A PortAgent is an agent that determines its state via its ports that use beams (signals) to communicate with other agents.
     /// </summary>
-    internal class PortAgent:Agent
+    public class PortAgent:Agent
     {
         private List<List<Port>> _ports; // this agent's ports, stored by direction relative to the agent.
         private List<List<int>> _stalePortValues; // the value each port was receiving at the end of the last simulation step.
@@ -35,7 +35,7 @@ namespace CrystalCore.Model.Objects
         }
 
 
-        public PortAgent(Grid g, Rectangle bounds, AgentType t, Direction facing) : base(g, bounds, t, facing)
+        public PortAgent(Grid g, Point location, AgentType t, Direction facing) : base(g, new Rectangle(location, t.Size), t, facing)
         {
         }
 

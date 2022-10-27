@@ -1,5 +1,4 @@
 ﻿using CrystalCore.Model.Elements;
-using CrystalCore.Model.Language;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
@@ -40,6 +39,10 @@ namespace CrystalCore.Model.Objects
         internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : base(g, bounds, (t.Ruleset.RotateLock ? Direction.up:facing))
         {
 
+            if (g.Ruleset != t.Ruleset)
+            {
+                throw new InvalidOperationException("Cannot add " + t.Name + " type agent of ruleset " + t.Ruleset.Name + " to grid of ruleset " + g.Ruleset.Name + ".");
+            }
 
             _type = t;
             statusChanged = true; // this is true at initialization so the agent can do things of it's own accord when it is created
@@ -135,12 +138,12 @@ namespace CrystalCore.Model.Objects
         /// <param name="a"></param>
         internal void Execute()
         {
-            
 
             foreach (Transformation tf in _state.Transformations)
             {
                 tf.Transform(this);
             }
+
         }
 
         internal void Update()

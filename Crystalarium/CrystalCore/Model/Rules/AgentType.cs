@@ -99,8 +99,9 @@ namespace CrystalCore.Model.Rules
                     }
                 }
 
-                DefaultState.Initialize();
                 DefaultState.Validate(this);
+                DefaultState.Initialize();
+              
                 if (DefaultState.Requirements != null)
                 {
                     throw new InitializationFailedException("The default state of an AgentType may not have any requirements.");
@@ -110,8 +111,9 @@ namespace CrystalCore.Model.Rules
 
                 foreach (AgentState state in _states)
                 {
-                    state.Initialize();
                     state.Validate(this);
+                    state.Initialize();
+                    
                 }
 
             }
@@ -121,25 +123,6 @@ namespace CrystalCore.Model.Rules
             }
             base.Initialize();
 
-        }
-
-        public Agent createAgent(Grid g, Point pos, Direction d)
-        {
-
-            if (!Initialized)
-            {
-                throw new InvalidOperationException("This AgentType cannot be used before it is initialized. Call Engine.Initialize().");
-            }
-
-            if (g.Ruleset != Ruleset)
-            {
-                throw new InvalidOperationException("Cannot add " + Name + " type agent of ruleset " + Ruleset.Name + " to grid of ruleset " + g.Ruleset.Name + ".");
-            }
-
-            Rectangle bounds = new Rectangle(pos, GetSize(d));
-
-            // A safe assumption, for now.
-            return new PortAgent(g, bounds, this, d);
         }
 
 
@@ -155,30 +138,6 @@ namespace CrystalCore.Model.Rules
                 return new Point(_size.Y, _size.X);
             }
         }
-
-
-
-        // returns whether an agent of type at can be placed at a location.
-        public bool IsValidLocation(Grid g, Point location, Direction facing)
-        {
-            if (!Initialized)
-            {
-                throw new InvalidOperationException("This AgentType cannot be used before it is initialized. Call Engine.Initialize().");
-            }
-
-            Rectangle bounds = new Rectangle(location, GetSize(facing));
-            if (g.Bounds.Contains(bounds))
-            {
-                if (g.EntitiesWithin(bounds).Count == 0)
-                {
-                    return true;
-                }
-
-            }
-
-            return false;
-        }
-
 
 
     }
