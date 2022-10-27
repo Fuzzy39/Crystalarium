@@ -59,6 +59,12 @@ namespace CrystalCore.Model.Rules
 
         // Methods
 
+        internal bool SatisfiesRequirements(object context)
+        {
+           
+            return (bool)_requirements.Resolve(context).Value;
+        }
+
         internal override void Initialize()
         {
 

@@ -20,6 +20,7 @@ namespace CrystalCore.Model.Language
 
         internal abstract Token Resolve(object context);
 
+      
         internal override void Initialize()
         {
             if (Initialized)

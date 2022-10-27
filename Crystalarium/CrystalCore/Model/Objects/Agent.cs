@@ -121,8 +121,8 @@ namespace CrystalCore.Model.Objects
                 }
 
                 // otherwise, check if we meet the requirements.
-                Token t = state.Requirements.Resolve(this);
-                if ((bool)t.Value)
+                
+                if (state.SatisfiesRequirements(this))
                 {
 
                     return state;
