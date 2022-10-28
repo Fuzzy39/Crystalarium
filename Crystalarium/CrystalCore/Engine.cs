@@ -23,7 +23,7 @@ namespace CrystalCore
        
       
         private List<GridView> _viewports;
-        private List<Grid> _grids;
+        private List<Map> _grids;
 
         private List<Ruleset> _rulesets;
         private List<SkinSet> _skinSets;
@@ -54,7 +54,7 @@ namespace CrystalCore
             _controller = new Controller();
 
             _viewports = new List<GridView>();
-            _grids = new List<Grid>();
+            _grids = new List<Map>();
 
             _skinSets = new List<SkinSet>();
             _rulesets = new List<Ruleset>();
@@ -111,12 +111,12 @@ namespace CrystalCore
         }
 
         // manual ways to create gridviews
-        public GridView addView(Grid g, int x, int y, int width, int height, SkinSet skinSet)
+        public GridView addView(Map g, int x, int y, int width, int height, SkinSet skinSet)
         {
             return addView(g,new Point(x,y), new Point(width,height), skinSet);
         }
 
-        public GridView addView(Grid g, Point location, Point size, SkinSet skinSet)
+        public GridView addView(Map g, Point location, Point size, SkinSet skinSet)
         {
             if(!Initialized)
             {
@@ -125,14 +125,14 @@ namespace CrystalCore
             return new GridView(_viewports, g, location, size, skinSet);
         }
 
-        public Grid addGrid( Ruleset r)
+        public Map addGrid( Ruleset r)
         {
             if (!Initialized)
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before grids can be created. call Engine.Initialize().");
             }
 
-            _grids.Add(new Grid(Sim, r));
+            _grids.Add(new Map(Sim, r));
 
             return _grids[_grids.Count - 1];
         }

@@ -10,33 +10,14 @@ namespace CrystalCore.Model.Elements
     /// </summary>
     public abstract class ChunkGrid
     {
-        private List<List<Chunk>> _chunks; // a 2d array where the outer array represents rows and the inner array represents columns. [x][y]
+
 
         private Point chunksOrigin; // the chunk coords where the chunk array, chunks, starts.
-        private Point chunksSize; // the size, in chunks, of the grid.
+     
 
 
         public event EventHandler OnReset;
 
-
-        internal List<List<Chunk>> Chunks
-        {
-            get => _chunks;
-        }
-
-        internal List<Chunk> ChunkList
-        {
-            get
-            {
-                List<Chunk> ToReturn = new List<Chunk>();
-                foreach (List<Chunk> chunks in _chunks)
-                {
-                    ToReturn.AddRange(chunks);
-
-                }
-                return ToReturn;
-            }
-        }
 
         public Rectangle Bounds
         {
@@ -50,6 +31,8 @@ namespace CrystalCore.Model.Elements
             }
 
         }
+
+
 
         public Point gridSize
         {

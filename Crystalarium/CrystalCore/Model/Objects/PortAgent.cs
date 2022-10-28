@@ -35,7 +35,7 @@ namespace CrystalCore.Model.Objects
         }
 
 
-        public PortAgent(Grid g, Point location, AgentType t, Direction facing) : base(g, new Rectangle(location, t.Size), t, facing)
+        public PortAgent(Map g, Point location, AgentType t, Direction facing) : base(g, new Rectangle(location, t.Size), t, facing)
         {
         }
 
@@ -43,7 +43,7 @@ namespace CrystalCore.Model.Objects
         {
 
             List<Chunk> toUpdate = new List<Chunk>(ChunksWithin);
-            Grid g = Grid;
+            Map g = Grid;
             base.Destroy();
 
 

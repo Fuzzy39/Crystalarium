@@ -33,7 +33,7 @@ namespace CrystalCore.View
         private Rectangle _pixelBounds; // the bounds, in pixels, of the viewport on the game window.
 
         // elements
-        private Grid _grid; // the grid that this GridView is rendering.
+        private Map _grid; // the grid that this GridView is rendering.
         private Border _border; // the border of this Gridview (which exists, whether it is being rendered or not)
         private PhysicsCamera _camera; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
         private SubviewManager _subviewManager; // our subview manager, who kindly takes after our subviews.
@@ -51,7 +51,7 @@ namespace CrystalCore.View
             get => _pixelBounds;
         }
 
-        public Grid Grid
+        public Map Grid
         {
             get => _grid;
         }
@@ -135,7 +135,7 @@ namespace CrystalCore.View
 
 
         // create the viewport
-        internal GridView(List<GridView> container, Grid g, Point pos, Point dimensions, SkinSet skinSet)
+        internal GridView(List<GridView> container, Map g, Point pos, Point dimensions, SkinSet skinSet)
         {
             // initialize from parameters
             _grid = g;
@@ -168,7 +168,7 @@ namespace CrystalCore.View
         }
 
         // an alternate viewport constructor, without points.
-        internal GridView(List<GridView> container, Grid g, int x, int y, int width, int height, SkinSet skinSet)
+        internal GridView(List<GridView> container, Map g, int x, int y, int width, int height, SkinSet skinSet)
             : this(container, g, new Point(x, y), new Point(width, height), skinSet) { }
 
 

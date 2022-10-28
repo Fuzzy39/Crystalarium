@@ -22,7 +22,7 @@ namespace CrystalCore.Model.Objects
         public Port End { get { return _end; } }
 
 
-        public Signal(Grid g, Port transmitter, int value) : base(g, new Rectangle(transmitter.Location, new Point(1)))
+        public Signal(Map g, Port transmitter, int value) : base(g, new Rectangle(transmitter.Location, new Point(1)))
         {
 
             _start = transmitter;

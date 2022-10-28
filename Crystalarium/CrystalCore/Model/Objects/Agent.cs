@@ -36,7 +36,7 @@ namespace CrystalCore.Model.Objects
 
 
         // Constructors
-        internal Agent(Grid g, Rectangle bounds, AgentType t, Direction facing) : base(g, bounds, (t.Ruleset.RotateLock ? Direction.up:facing))
+        internal Agent(Map g, Rectangle bounds, AgentType t, Direction facing) : base(g, bounds, (t.Ruleset.RotateLock ? Direction.up:facing))
         {
 
             if (g.Ruleset != t.Ruleset)

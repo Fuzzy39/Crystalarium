@@ -38,7 +38,7 @@ namespace Crystalarium.Main
         internal GridView view { get; private set; } // the primary view
         private GridView minimap; // the minimap
 
-        internal Grid Grid { get; private set; } // the world seen by the view and minimap
+        internal Map Grid { get; private set; } // the world seen by the view and minimap
 
         private Actions actions; // this sets up our user interaction.
         internal Configuration Configuration{get; private set;}

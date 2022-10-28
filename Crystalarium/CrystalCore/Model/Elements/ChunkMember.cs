@@ -45,7 +45,7 @@ namespace CrystalCore.Model.Elements
         }
 
 
-        public ChunkMember(Grid g, Rectangle bounds) : base(g, bounds)
+        public ChunkMember(Map g, Rectangle bounds) : base(g, bounds)
         {
             // since this ChunkMember exists purely on the chunk grid, it cannot exist outside of it.
             if (!g.Bounds.Contains(bounds))

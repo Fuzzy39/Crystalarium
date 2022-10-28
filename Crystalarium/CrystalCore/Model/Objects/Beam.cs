@@ -71,7 +71,7 @@ namespace CrystalCore.Model.Objects
         public int Length { get => _length; }
 
 
-        public Beam(Grid g, Port transmitter, int value, Ruleset r) : base(g, transmitter, value)
+        public Beam(Map g, Port transmitter, int value, Ruleset r) : base(g, transmitter, value)
         {
             MaxLength = r.BeamMaxLength;
             MinLength = r.BeamMinLength;

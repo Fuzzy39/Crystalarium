@@ -37,7 +37,7 @@ namespace CrystalCore.Model.Elements
         }
 
 
-        public static Agent getAgentAtPos(this Grid g, Point coords)
+        public static Agent getAgentAtPos(this Map g, Point coords)
         {
             Chunk ch = g.getChunkAtCoords(coords);
 
@@ -66,7 +66,7 @@ namespace CrystalCore.Model.Elements
             return null;
         }
 
-        public static Agent AgentAt(this Grid g, Point p)
+        public static Agent AgentAt(this Map g, Point p)
         {
             Chunk c = g.getChunkAtCoords(p);
 
@@ -89,7 +89,7 @@ namespace CrystalCore.Model.Elements
 
 
         // returns the agents within these bounds
-        public static List<Entity> EntitiesWithin(this Grid g, Rectangle bounds)
+        public static List<Entity> EntitiesWithin(this Map g, Rectangle bounds)
         {
             List<Entity> toReturn = new List<Entity>();
 
@@ -124,7 +124,7 @@ namespace CrystalCore.Model.Elements
         }
 
 
-        public static List<Agent> AgentsWithin(this Grid g, Rectangle bounds)
+        public static List<Agent> AgentsWithin(this Map g, Rectangle bounds)
         {
             List<Entity> possibleList = g.EntitiesWithin(bounds);
 
@@ -143,7 +143,7 @@ namespace CrystalCore.Model.Elements
         }
 
 
-        public static Chunk getChunkAtCoords(this Grid g, Point Coords)
+        public static Chunk getChunkAtCoords(this Map g, Point Coords)
         {
             // we could iterate through every chunk, but we could also do math.
             // math is probably better
@@ -170,7 +170,7 @@ namespace CrystalCore.Model.Elements
 
 
 
-        public static List<Chunk> ChunksInBounds(this Grid g, Rectangle rect)
+        public static List<Chunk> ChunksInBounds(this Map g, Rectangle rect)
         {
             if (!g.Bounds.Contains(rect))
             {
@@ -207,7 +207,7 @@ namespace CrystalCore.Model.Elements
             return toReturn;
         }
 
-        public static void ExpandToFit(this Grid g, Rectangle rect)
+        public static void ExpandToFit(this Map g, Rectangle rect)
         {
             // First: which way to expand?
             while (rect.Y < g.Bounds.Y)

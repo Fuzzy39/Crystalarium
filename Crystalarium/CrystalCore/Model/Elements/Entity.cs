@@ -38,7 +38,7 @@ namespace CrystalCore.Model.Elements
         }
 
         // the disgusting line there properly rotates the entitiy.
-        public Entity(Grid g, Rectangle bounds, Direction facing) : base ( g, AdjustBounds(bounds, facing))
+        public Entity(Map g, Rectangle bounds, Direction facing) : base ( g, AdjustBounds(bounds, facing))
         {
             _facing = facing;
 
@@ -70,7 +70,7 @@ namespace CrystalCore.Model.Elements
         }
 
 
-        public static bool IsValidLocation(Grid g, Rectangle bounds, Direction facing)
+        public static bool IsValidLocation(Map g, Rectangle bounds, Direction facing)
         {
            
 

@@ -34,13 +34,13 @@ namespace CrystalCore.Model.Elements
             get => _grid;
         }
 
-        public Grid Grid
+        public Map Grid
         {
             get
             {
                 if (_grid is ChunkGrid)
                 {
-                    return (Grid)_grid;
+                    return (Map)_grid;
                 }
 
                 if (_grid == null)
