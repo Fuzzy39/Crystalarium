@@ -99,12 +99,12 @@ namespace CrystalCore.Model.Objects
             int length = MinLength;
             Point end = (Point)p;
 
-            PortAgent target = FindTarget(length, ref end);
+            Agent target = FindTarget(length, ref end);
             TransmitTo(target, end);
 
         }
 
-        private PortAgent FindTarget(int length, ref Point end)
+        private Agent FindTarget(int length, ref Point end)
         {
             // start looking for targets, one tile at a time.
             Point? nextEnd = end;
@@ -120,7 +120,7 @@ namespace CrystalCore.Model.Objects
 
                     // this cast is safe, if we exist, port agents must.
                     _length = length;
-                    return (PortAgent)target;
+                    return (Agent)target;
 
                 }
 
@@ -149,7 +149,7 @@ namespace CrystalCore.Model.Objects
             Bounds = r;
         }
 
-        private void TransmitTo(PortAgent target, Point loc)
+        private void TransmitTo(Agent target, Point loc)
         {
             if (target != null)
             {
@@ -164,7 +164,7 @@ namespace CrystalCore.Model.Objects
         }
 
 
-        private void TransmitToTarget(PortAgent target, Point loc)
+        private void TransmitToTarget(Agent target, Point loc)
         {
 
 

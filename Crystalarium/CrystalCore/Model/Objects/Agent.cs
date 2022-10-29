@@ -11,16 +11,17 @@ namespace CrystalCore.Model.Objects
     /// <summary>
     /// Agents are entities that actively participate in the simulation. It deterimines its state every stepa and acts accordingly.
     /// </summary>
-    public abstract class Agent : Entity
+    public class Agent : Entity
     {
 
         private AgentType _type;
 
         protected AgentState _state;
     
-        private bool statusChanged; // whether a port started/stopped receiving this step.
-        private bool statusHadChanged; // whether a port started/stopped receiging last step.
-        
+       private PortInterface portInterface;
+
+        // properties 
+
        
 
         public AgentType Type
@@ -34,9 +35,18 @@ namespace CrystalCore.Model.Objects
             get { return _state; }
         }
 
+        internal List<List<Port>> Ports
+        {
+            get { return portInterface.Ports; }
+        }
+
+        internal List<Port> PortList
+        {
+            get { return portInterface.PortList; }
+        }
 
         // Constructors
-        internal Agent(Map g, Rectangle bounds, AgentType t, Direction facing) : base(g, bounds, (t.Ruleset.RotateLock ? Direction.up:facing))
+        public Agent(Map g, Point location, AgentType t, Direction facing) : base(g, new Rectangle(location, t.Size), (t.Ruleset.RotateLock ? Direction.up:facing))
         {
 
             if (g.Ruleset != t.Ruleset)
@@ -45,9 +55,15 @@ namespace CrystalCore.Model.Objects
             }
 
             _type = t;
-            statusChanged = true; // this is true at initialization so the agent can do things of it's own accord when it is created
+            portInterface = new PortInterface(t, this);
+            g.UpdateSignals(new List<Chunk>(ChunksWithin));
 
-            Init();
+            // if diagonal signals are allowed, then agents should not be bigger than 1 by 1
+            if (Type.Ruleset.DiagonalSignalsAllowed && Bounds.Size.X * Bounds.Size.Y > 1)
+            {
+                throw new InvalidOperationException("The Ruleset '" + Type.Ruleset.Name + "' has specified that diagonal signals are allowed, which requires that no agents are greater than 1 by 1 in size.");
+            }
+
 
             // do the default thing.
             _state = Type.DefaultState;
@@ -55,13 +71,24 @@ namespace CrystalCore.Model.Objects
 
         }
 
-        protected abstract void Init();
-        
 
-        protected void StatusChanged()
+
+        public override void Destroy()
         {
-            statusChanged = true;
+
+            List<Chunk> toUpdate = new List<Chunk>(ChunksWithin);
+            Map g = Map;
+            base.Destroy();
+
+
+            portInterface.Destroy();
+
+            g.UpdateSignals(new List<Chunk>(toUpdate));
+
         }
+
+
+        
 
 
 
@@ -77,7 +104,8 @@ namespace CrystalCore.Model.Objects
 
             base.Rotate(d);
 
-            StatusChanged();
+            portInterface.StatusChanged();
+            RecombobulateSignals();
         }
 
 
@@ -94,19 +122,12 @@ namespace CrystalCore.Model.Objects
         /// </summary>
         internal void PreserveState()
         {
-            statusHadChanged = statusChanged;
-            statusChanged = false;
-            if(!statusHadChanged)
-            {
-                return;
-            }
-
-            PreserveValues();
+            portInterface.PreserveState();
             _state = DetermineState();
 
         }
 
-        protected abstract void PreserveValues();
+        
 
 
         private AgentState DetermineState()
@@ -148,7 +169,7 @@ namespace CrystalCore.Model.Objects
 
         internal void Update()
         {
-            if(!statusHadChanged)
+            if(!portInterface.StatusHadChanged)
             {
                 return;
             }
@@ -156,5 +177,64 @@ namespace CrystalCore.Model.Objects
             Execute();
 
         }
+
+
+        // how often do you get to type recombobulate? not often!
+        private void RecombobulateSignals()
+        {
+            // stop transmitting and receiving signals, then 'reboot'
+            List<Chunk> toUpdate = new List<Chunk>();
+            toUpdate.AddRange(ChunksWithin);
+
+
+            foreach (Port p in portInterface.PortList)
+            {
+                if (p.Status == PortStatus.transmitting || p.Status == PortStatus.transceiving)
+                {
+                    int v = p.TransmittingValue;
+
+                    p.StopTransmitting();
+
+                    //p.Transmit(v);
+                }
+
+                if (p.Status == PortStatus.receiving)
+                {
+                    toUpdate.AddRange(p.ReceivingSignal.ChunksWithin);
+                }
+                p.StopReceiving();
+
+
+            }
+
+            Map.UpdateSignals(toUpdate);
+            _state = Type.DefaultState;
+
+
+        }
+
+        internal Port GetPort(PortIdentifier portID)
+        {
+            if (!portID.CheckValidity(Type))
+            {
+                throw new InvalidOperationException("Bad PortID.");
+            }
+            return portInterface.Ports[(int)portID.Facing][portID.ID];
+        }
+
+
+       /* ///<summary>
+        /// 
+        /// </summary>
+        /// <returns> the value this port was receiving at the end of the last simulation step.</returns>
+        internal int GetPortValue(PortIdentifier portID)
+        {
+            if (!portID.CheckValidity(Type))
+            {
+                throw new InvalidOperationException("Bad PortID.");
+            }
+
+            return _stalePortValues[(int)portID.Facing][portID.ID];
+        }*/
     }
 }

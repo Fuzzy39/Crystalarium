@@ -53,7 +53,7 @@ namespace CrystalCore.Model.Interface
             {
                 if (transmit)
                 {
-                    Port p = ((PortAgent)a).GetPort(portID);
+                    Port p = a.GetPort(portID);
                     //if (a.GetPortValue(portID) == 0  || p is FullPort)
                     {
                         p.Transmit(value);
@@ -63,7 +63,7 @@ namespace CrystalCore.Model.Interface
                 }
                 else
                 {
-                    ((PortAgent)a).GetPort(portID).StopTransmitting();
+                    a.GetPort(portID).StopTransmitting();
                 }
             }
         }

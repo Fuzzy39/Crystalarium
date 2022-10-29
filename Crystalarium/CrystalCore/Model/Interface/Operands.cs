@@ -61,8 +61,8 @@ namespace CrystalCore.Model.Interface
             Agent a = (Agent)agent;
             
             int toReturn = 0;
-            PortAgent pa = (PortAgent)a;
-            foreach (Port p in pa.PortList)
+     
+            foreach (Port p in a.PortList)
             {
                 if (p.Status == PortStatus.receiving || p.Status == PortStatus.transceiving)
                 {
@@ -100,7 +100,7 @@ namespace CrystalCore.Model.Interface
                 throw new ArgumentException("agent parameter must of of type Agent");
             }
             Agent a = (Agent)agent;
-            Port p = ((PortAgent)a).GetPort(portID);
+            Port p = a.GetPort(portID);
             if (p.Status == PortStatus.receiving || p.Status == PortStatus.transceiving)
             {
                 return new Token(ReturnType, p.ReceivingSignal.Value);

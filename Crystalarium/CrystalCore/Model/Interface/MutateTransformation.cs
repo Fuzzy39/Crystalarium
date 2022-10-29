@@ -55,7 +55,7 @@ namespace CrystalCore.Model.Interface
             Direction d = a.Facing;
             Rectangle bounds = a.Bounds;
             a.Destroy();
-            Agent b = new PortAgent(g, bounds.Location, mutateTo, d);
+            Agent b = new Agent(g, bounds.Location, mutateTo, d);
             if (b == null)
             {
                 throw new InvalidOperationException("Failed to mutate agent.");

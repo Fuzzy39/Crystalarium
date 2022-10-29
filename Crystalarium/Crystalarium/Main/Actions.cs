@@ -131,7 +131,7 @@ namespace Crystalarium.Main
 
                 if (Entity.IsValidLocation(game.Map, new Rectangle(clickCoords, CurrentType.Size), Rotation))
                 {
-                    new PortAgent(game.Map, clickCoords, CurrentType, Rotation);
+                    new Agent(game.Map, clickCoords, CurrentType, Rotation);
                 }
 
 

@@ -47,7 +47,7 @@ namespace CrystalCore.Model.Objects
 
         public abstract void Update();
 
-        protected Port FindPort(PortAgent a, Point loc, CompassPoint AbsFacing)
+        protected Port FindPort(Agent a, Point loc, CompassPoint AbsFacing)
         {
             // we need to find a port with the absolute facing matching ours.
             List<Port> potentialMatches = null;
