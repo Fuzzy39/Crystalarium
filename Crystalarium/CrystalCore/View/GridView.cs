@@ -33,7 +33,7 @@ namespace CrystalCore.View
         private Rectangle _pixelBounds; // the bounds, in pixels, of the viewport on the game window.
 
         // elements
-        private Map _grid; // the grid that this GridView is rendering.
+        private Map _map; // the grid that this GridView is rendering.
         private Border _border; // the border of this Gridview (which exists, whether it is being rendered or not)
         private PhysicsCamera _camera; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
         private SubviewManager _subviewManager; // our subview manager, who kindly takes after our subviews.
@@ -51,9 +51,9 @@ namespace CrystalCore.View
             get => _pixelBounds;
         }
 
-        public Map Grid
+        public Map Map
         {
-            get => _grid;
+            get => _map;
         }
 
         public Border Border
@@ -81,7 +81,7 @@ namespace CrystalCore.View
         {
             get
             {
-                return _skinSet.GetSkin(Grid.Ruleset);
+                return _skinSet.GetSkin(Map.Ruleset);
             }
         }
 
@@ -115,7 +115,7 @@ namespace CrystalCore.View
                 }
 
 
-                if (value.Grid != this.Grid)
+                if (value.Map != this.Map)
                 {
                     // hopefully these error messages make sense.
                     throw new InvalidOperationException("Viewcasting requires GridViews that view the same grid.");
@@ -138,7 +138,7 @@ namespace CrystalCore.View
         internal GridView(List<GridView> container, Map g, Point pos, Point dimensions, SkinSet skinSet)
         {
             // initialize from parameters
-            _grid = g;
+            _map = g;
             g.OnReset += OnGridReset;
 
             this.container = container;
@@ -238,12 +238,12 @@ namespace CrystalCore.View
         { 
             try
             {
-                _camera.Update(_grid.Bounds);
+                _camera.Update(_map.Bounds);
             }
             catch
             {
                 Console.WriteLine("Camera is out of bounds. Resetting position.");
-                _camera.Position = new Vector2(Grid.Bounds.Width/2f, Grid.Bounds.Height/2f);
+                _camera.Position = new Vector2(Map.Bounds.Width/2f, Map.Bounds.Height/2f);
             }
         }
 
@@ -251,7 +251,7 @@ namespace CrystalCore.View
         public void bindCamera()
         {
 
-            Camera.Position = _grid.Center; // we want to prevent a crash, if the camera is in an invalid position when it is bound.
+            Camera.Position = _map.Center; // we want to prevent a crash, if the camera is in an invalid position when it is bound.
             Camera.IsBound = true;
 
         }

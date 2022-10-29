@@ -2,6 +2,7 @@
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using CrystalCore.Util.Timekeeping;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +12,7 @@ namespace CrystalCore.Model.Elements
     /// the grid class represents a grid, a 2D plane where devices are built using various rulesets.
     /// The Grid class manages all gridobjects on the grid.
     /// </summary>
-    public class Map : ChunkGrid
+    public class Map
     {
 
 
@@ -19,19 +20,23 @@ namespace CrystalCore.Model.Elements
 
 
         private List<Agent> _agents; // t  he amount of agents in this grid.
-        private List<Signal> _signals;
+        private int _signals;
+        private int _chunks;
 
+        internal Grid<Chunk> grid;
 
 
 
         private Ruleset _ruleset; // the ruleset this grid is following.
 
 
-
+        public event EventHandler OnReset;
 
         public int AgentCount { get => _agents.Count; }
 
-        public int SignalCount { get => _signals.Count; }
+        public int SignalCount { get => _signals; }
+
+        public int ChunkCount { get => _chunks; }
 
 
 
@@ -52,6 +57,34 @@ namespace CrystalCore.Model.Elements
             }
         }
 
+     
+
+
+
+        public Rectangle Bounds
+        {
+            get
+            {
+                return new Rectangle
+                  ( grid.Origin.X * Chunk.SIZE,
+                    grid.Origin.Y * Chunk.SIZE,
+                    grid.Size.X * Chunk.SIZE,
+                    grid.Size.Y * Chunk.SIZE);
+            }
+
+        }
+
+        public Vector2 Center
+        {
+            get
+            {
+                // the center tile coords of this grid
+                return grid.Size.ToVector2() * Chunk.SIZE / 2f;
+
+            }
+
+
+        }
 
         internal Map(SimulationManager sim, Ruleset r)
         {
@@ -62,9 +95,8 @@ namespace CrystalCore.Model.Elements
             _ruleset = r;
             this.sim = sim;
             sim.addGrid(this);
-            _agents = new List<Agent>();
-            _signals = new List<Signal>();
 
+            _agents = new List<Agent>();
 
             Reset();
 
@@ -77,30 +109,83 @@ namespace CrystalCore.Model.Elements
             sim.removeGrid(this);
         }
 
-        public new void Reset()
+        public void Reset()
         {
 
-            // Destroy all members of this grid, starting from the most dependent objects to the least. 
-
-            if (_agents != null)
+            // reseting our grid should remove all references to any remaining mapObjects
+            if (grid != null)
             {
-                while (_agents.Count > 0)
+                foreach (Chunk ch in grid.ElementList)
                 {
-                    _agents[0].Destroy();
+                    ch.Destroy();
                 }
+
+            }
+            grid = new Grid<Chunk>(new Chunk(this, new Point(0, 0) ));
+
+
+
+            // could be redundant?
+            _agents.Clear();
+            _signals = 0;
+            _chunks = 0;
+
+        }
+
+        public void ExpandGrid(Direction d)
+        {
+            Chunk[] toAdd;
+            Point start;
+
+            // figure out a sensible starting point in grid space.
+            // if we switched on direction and made each one make sense, then 
+            if (d == Direction.up || d == Direction.left)
+            {
+                start = grid.Elements[0][0].Coords + d.ToPoint();
+            }
+            else
+            {
+                start = (grid.Origin + (grid.Size-new Point(1))) + d.ToPoint();
             }
 
-            base.Reset();
+            // get the size of the new entries.
+            if (d.IsVertical())
+            {
+                // create an array!
+                toAdd = new Chunk[grid.Size.X];
+            }
+            else
+            {
+                toAdd = new Chunk[grid.Size.Y];
 
+            }
+
+            // calculate the direction we need to move from our starting point to generate the required chunks
+            Direction counting = d.IsVertical() ? d.Rotate(RotationalDirection.cw) : d.Rotate(RotationalDirection.ccw);
+            Point traverse = counting.ToPoint();
+
+            // make all the chunks
+            for (int i = 0; i < toAdd.Length; i++)
+            {
+                
+                // calculate our distance from our start
+                Point add = new Point(i * traverse.X, i * traverse.Y);
+                    Point coord = start + add;
+                // create the chunk, add it to the list.
+                toAdd[i] = new Chunk(this, coord);
+            }
+
+            if(d == Direction.right || d == Direction.down)
+            {
+               Array.Reverse(toAdd);
+            }
+
+            grid.AddElements(toAdd, d);
+
+            UpdateSignals(grid.ElementList);
         }
 
-        public override void ExpandGrid(Direction d)
-        {
-            base.ExpandGrid(d);
-            UpdateSignals(ChunkList);
-        }
-
-        internal override void OnObjectDestroyed(object o, EventArgs e)
+        internal void OnObjectDestroyed(object o, EventArgs e)
         {
 
             // Remove a grid object from it's appropriate containers.
@@ -113,33 +198,39 @@ namespace CrystalCore.Model.Elements
 
             if (o is Signal)
             {
-                _signals.Remove((Signal)o);
+                _signals--;
                 return;
             }
 
-            base.OnObjectDestroyed(o, e);
+            if (o is Chunk)
+            {
+                _chunks--;
+                return;
+            }
         }
 
-        public void AddAgent(Agent a)
+        internal void OnObjectCreated(object o, EventArgs e)
         {
-            if (a.Grid != this)
+            if (o is Agent)
             {
-                throw new ArgumentException("Agent " + a + "Does not belong to this grid.");
+                _agents.Add((Agent)o);
+                return;
             }
 
-            _agents.Add(a);
-            UpdateSignals(a.ChunksWithin);
-        }
-
-        internal void AddSignal(Signal s)
-        {
-            if (s.Grid != this)
+            if (o is Signal)
             {
-                throw new ArgumentException("Signal " + s + "Does not belong to this grid.");
+                _signals++;
+                return;
             }
-            _signals.Add(s);
+
+            if (o is Chunk)
+            {
+                _chunks++;
+                return;
+            }
         }
 
+        
 
         /// <summary>
         /// Asks each signal in where chunks to re establish their target.

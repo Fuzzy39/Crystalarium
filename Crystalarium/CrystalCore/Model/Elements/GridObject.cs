@@ -3,7 +3,7 @@ using System;
 
 namespace CrystalCore.Model.Elements
 {
-    abstract public class GridObject
+    abstract public class MapObject
     {
 
         /*
@@ -11,10 +11,11 @@ namespace CrystalCore.Model.Elements
          */
 
         private Rectangle _bounds;// the position and size in tile space where this GridObject is located.
-        protected ChunkGrid _grid; // the grid that this object belongs to.
+        protected Map _map; // the grid that this object belongs to.
         private bool _destroyed;
 
         public event EventHandler OnDestroy;
+        public event EventHandler OnCreate;
 
         public virtual Rectangle Bounds
         {
@@ -29,25 +30,18 @@ namespace CrystalCore.Model.Elements
             }
         }
 
-        public ChunkGrid ChunkGrid
-        {
-            get => _grid;
-        }
+      
 
-        public Map Grid
+        public Map Map
         {
             get
             {
-                if (_grid is ChunkGrid)
-                {
-                    return (Map)_grid;
-                }
-
-                if (_grid == null)
+                if (_map == null)
                 {
                     throw new InvalidOperationException("the grid of a gridobject was null? werid...");
                 }
-                throw new InvalidOperationException("I feel like grids should be the only type of grid... If that no longer makes sense, remove this.");
+
+                return _map;
             }
         }
 
@@ -58,9 +52,9 @@ namespace CrystalCore.Model.Elements
 
 
         // constructors
-        public GridObject(ChunkGrid g, Rectangle rect)
+        public MapObject(Map m, Rectangle rect)
         {
-            if (g == null)
+            if (m == null)
             {
                 throw new ArgumentException("grid cannot be null for gridobject");
             }
@@ -71,20 +65,23 @@ namespace CrystalCore.Model.Elements
             }
 
             _bounds = rect;
-            _grid = g;
+            _map = m;
             _destroyed = false;
 
             // our grid should be notified when we are destroyed.
-            OnDestroy += g.OnObjectDestroyed;
+            OnCreate += m.OnObjectCreated;
+            OnCreate(this, null);
+
+            OnDestroy += m.OnObjectDestroyed;
 
         }
 
-        public GridObject(ChunkGrid g, Point pos, Point size)
-          : this(g, new Rectangle(pos, size)) { }
+        public MapObject(Map m, Point pos, Point size)
+          : this(m, new Rectangle(pos, size)) { }
 
 
-        public GridObject(ChunkGrid g, int x, int y, int width, int height)
-            : this(g, new Rectangle(x, y, width, height)) { }
+        public MapObject(Map m, int x, int y, int width, int height)
+            : this(m, new Rectangle(x, y, width, height)) { }
 
 
         public virtual void Destroy()
@@ -96,7 +93,7 @@ namespace CrystalCore.Model.Elements
                 OnDestroy(this, new EventArgs());
             }
             _bounds = new Rectangle(0, 0, 0, 0);
-            _grid = null;
+            _map = null;
             _destroyed = true;
 
         }

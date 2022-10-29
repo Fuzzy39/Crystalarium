@@ -26,7 +26,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 791; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 796; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         
 
@@ -38,7 +38,7 @@ namespace Crystalarium.Main
         internal GridView view { get; private set; } // the primary view
         private GridView minimap; // the minimap
 
-        internal Map Grid { get; private set; } // the world seen by the view and minimap
+        internal Map Map { get; private set; } // the world seen by the view and minimap
 
         private Actions actions; // this sets up our user interaction.
         internal Configuration Configuration{get; private set;}
@@ -128,7 +128,7 @@ namespace Crystalarium.Main
 
 
             // create a test grid, and do some test things to it.
-            Grid = Engine.addGrid(CurrentRuleset);
+            Map = Engine.addGrid(CurrentRuleset);
 
 
             int width = GraphicsDevice.Viewport.Width;
@@ -137,7 +137,7 @@ namespace Crystalarium.Main
 
 
             // create a couple test viewports.
-            view = Engine.addView(Grid, 0, 0, width, height, Configuration.DefaultSkin);
+            view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
 
             // prevent the camera from leaving the world.
             view.bindCamera();
@@ -151,7 +151,7 @@ namespace Crystalarium.Main
 
         private void SetupMinimap(int width)
         {
-            minimap = Engine.addView(Grid, width - 250, 0, 250, 250, Configuration.MiniMapSkin);
+            minimap = Engine.addView(Map, width - 250, 0, 250, 250, Configuration.MiniMapSkin);
 
             // setup borders
             minimap.Border.SetTextures(Textures.pixel, Textures.pixel);
@@ -296,7 +296,7 @@ namespace Crystalarium.Main
             // some debug text. We'll clear this out sooner or later...
 
             spriteBatch.DrawString(Textures.testFont, "Sim Speed: "+Engine.Sim.ActualStepsPS + " Steps/Second Chunks: " 
-                + Grid.gridSize.X * Grid.gridSize.Y+" Agents: "+Grid.AgentCount+" Signals: "+Grid.SignalCount,
+                + Map.ChunkCount +" Agents: "+Map.AgentCount+" Signals: "+Map.SignalCount,
                 new Vector2(10, 10), Color.White);
             spriteBatch.DrawString(Textures.testFont, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Vector2(10, 30), Color.White);
 

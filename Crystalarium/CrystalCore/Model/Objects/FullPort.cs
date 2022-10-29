@@ -118,7 +118,7 @@ namespace CrystalCore.Model.Objects
             }
 
             // otherwise, start to transmit.
-            Signal s = new Beam(Parent.Grid, this, value, Parent.Type.Ruleset);
+            Signal s = new Beam(Parent.Map, this, value, Parent.Type.Ruleset);
             _sending = s;
 
 

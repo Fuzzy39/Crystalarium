@@ -45,7 +45,7 @@ namespace CrystalCore.View.Subviews.Agents
             Color c;
 
             // get the color of the agent. if the agent cannot be placed, make it red, instead.
-            if (Entity.IsValidLocation(renderTarget.Grid, Bounds, Facing))
+            if (Entity.IsValidLocation(renderTarget.Map, Bounds, Facing))
             {
                 // these ought to be exposed better.
                 c = config.Color; //Color.Green;

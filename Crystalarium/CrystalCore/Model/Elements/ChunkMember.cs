@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace CrystalCore.Model.Elements
 {
     // does this need to be public? not sure.
-    public abstract class ChunkMember : GridObject
+    public abstract class ChunkMember : MapObject
     {
         /*
          * A Chunk Member is a GridObject that is not a chunk, and exists on top of a chunk.
@@ -35,9 +35,9 @@ namespace CrystalCore.Model.Elements
             {
 
 
-                if (!Grid.Bounds.Contains(value))
+                if (!Map.Bounds.Contains(value))
                 {
-                    throw new ArgumentException("Bounds: " + value + " Are outside of Grid with bounds: " + Grid.Bounds);
+                    throw new ArgumentException("Bounds: " + value + " Are outside of Grid with bounds: " + Map.Bounds);
                 }
                 base.Bounds = value;
                 ResetChunksWithin();
@@ -55,7 +55,7 @@ namespace CrystalCore.Model.Elements
             }
 
             // who is our parent?
-            _parentChunk = Grid.getChunkAtCoords(bounds.Location);
+            _parentChunk = Map.getChunkAtCoords(bounds.Location);
             _parentChunk.Children.Add(this);
 
             //initialize the other owner array
@@ -72,7 +72,7 @@ namespace CrystalCore.Model.Elements
 
         private List<Chunk> SetChunksWithin()
         {
-            return Grid.ChunksInBounds(Bounds);
+            return Map.ChunksInBounds(Bounds);
         }
 
         public override void Destroy()

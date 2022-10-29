@@ -15,8 +15,8 @@ namespace CrystalCore.Util
 
     public enum RotationalDirection
     {
-        clockwise,
-        counterclockwise
+        cw,
+        ccw
     }
 
     public enum CompassPoint
@@ -116,7 +116,7 @@ namespace CrystalCore.Util
         public static Direction Rotate(this Direction d, RotationalDirection r)
         {
             // it's big, 'cause I'm lazy
-            if (r == RotationalDirection.clockwise)
+            if (r == RotationalDirection.cw)
             {
                 return d switch
                 {
@@ -159,7 +159,7 @@ namespace CrystalCore.Util
         public static CompassPoint Rotate(this CompassPoint cp, RotationalDirection r)
         {
             int toReturn = (int)cp;
-            if(r == RotationalDirection.clockwise)
+            if(r == RotationalDirection.cw)
             {
                 toReturn++;
                 if (toReturn >= Enum.GetNames(typeof(CompassPoint)).Length)
@@ -186,7 +186,7 @@ namespace CrystalCore.Util
         {
             for (int i = 0; i < 4; i++)
             {
-                cp = cp.Rotate(RotationalDirection.clockwise);
+                cp = cp.Rotate(RotationalDirection.cw);
             }
             return cp;
         }

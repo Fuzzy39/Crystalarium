@@ -95,13 +95,13 @@ namespace Crystalarium.Main
 
 
             // grow the game.Grid!
-            c.addAction("grow up", () => game.Grid.ExpandGrid(Direction.up));
+            c.addAction("grow up", () => game.Map.ExpandGrid(Direction.up));
             new Keybind(c, Keystate.OnPress, "grow up", "play", Button.U);
-            c.addAction("grow down", () => game.Grid.ExpandGrid(Direction.down));
+            c.addAction("grow down", () => game.Map.ExpandGrid(Direction.down));
             new Keybind(c, Keystate.OnPress, "grow down", "play", Button.J);
-            c.addAction("grow left", () => game.Grid.ExpandGrid(Direction.left));
+            c.addAction("grow left", () => game.Map.ExpandGrid(Direction.left));
             new Keybind(c, Keystate.OnPress, "grow left", "play", Button.H);
-            c.addAction("grow right", () => game.Grid.ExpandGrid(Direction.right));
+            c.addAction("grow right", () => game.Map.ExpandGrid(Direction.right));
             new Keybind(c, Keystate.OnPress, "grow right", "play", Button.K);
 
             c.addAction("toggle debug ports", () => game.view.DoDebugPortRendering = !game.view.DoDebugPortRendering);
@@ -120,7 +120,7 @@ namespace Crystalarium.Main
                 while (true)
                 {
 
-                    toRemove = game.Grid.getAgentAtPos(clickCoords);
+                    toRemove = game.Map.getAgentAtPos(clickCoords);
                     if (toRemove == null)
                     {
                         break;
@@ -129,9 +129,9 @@ namespace Crystalarium.Main
                     toRemove.Destroy();
                 }
 
-                if (Entity.IsValidLocation(game.Grid, new Rectangle(clickCoords, CurrentType.Size), Rotation))
+                if (Entity.IsValidLocation(game.Map, new Rectangle(clickCoords, CurrentType.Size), Rotation))
                 {
-                    new PortAgent(game.Grid, clickCoords, CurrentType, Rotation);
+                    new PortAgent(game.Map, clickCoords, CurrentType, Rotation);
                 }
 
 
@@ -148,7 +148,7 @@ namespace Crystalarium.Main
                 while (true)
                 {
 
-                    toRemove = game.Grid.getAgentAtPos(clickCoords);
+                    toRemove = game.Map.getAgentAtPos(clickCoords);
                     if (toRemove == null)
                     {
                         break;
@@ -168,15 +168,15 @@ namespace Crystalarium.Main
             {
                 Point clickCoords = GetMousePos();
 
-                Agent a = game.Grid.getAgentAtPos(clickCoords);
+                Agent a = game.Map.getAgentAtPos(clickCoords);
                 if (a == null)
                 {
-                    Rotation = Rotation.Rotate(RotationalDirection.clockwise);
+                    Rotation = Rotation.Rotate(RotationalDirection.cw);
                     return;
                 }
 
 
-                a.Rotate(RotationalDirection.clockwise);
+                a.Rotate(RotationalDirection.cw);
                 Rotation = a.Facing;
 
 
@@ -188,7 +188,7 @@ namespace Crystalarium.Main
             {
                 Point clickCoords = GetMousePos();
 
-                Agent a = game.Grid.getAgentAtPos(clickCoords);
+                Agent a = game.Map.getAgentAtPos(clickCoords);
                 if (a == null)
                 {
                     return;
@@ -397,12 +397,12 @@ namespace Crystalarium.Main
             {
                 if (rulesets[i] == game.CurrentRuleset)
                 {
-                    game.Grid.Reset();
+                    game.Map.Reset();
                 }
                 else
                 {
                     game.CurrentRuleset = rulesets[i];
-                    game.Grid.Ruleset = game.CurrentRuleset;
+                    game.Map.Ruleset = game.CurrentRuleset;
                 }
 
                 CurrentType = game.CurrentRuleset.AgentTypes[0];

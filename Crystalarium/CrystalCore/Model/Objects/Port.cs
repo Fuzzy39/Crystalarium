@@ -74,10 +74,10 @@ namespace CrystalCore.Model.Objects
             {
 
                 CompassPoint toReturn = _facing;
-                for (Direction i = _parent.Facing; i != Direction.up; i = i.Rotate(RotationalDirection.clockwise))
+                for (Direction i = _parent.Facing; i != Direction.up; i = i.Rotate(RotationalDirection.cw))
                 {
-                    toReturn = toReturn.Rotate(RotationalDirection.counterclockwise);
-                    toReturn = toReturn.Rotate(RotationalDirection.counterclockwise);
+                    toReturn = toReturn.Rotate(RotationalDirection.ccw);
+                    toReturn = toReturn.Rotate(RotationalDirection.ccw);
                 }
                 return toReturn;
             }

@@ -133,7 +133,7 @@ namespace CrystalCore.View
         // adds chunks to be rendered, if needbe.
         private void AddChunks()
         {
-            foreach (List<Chunk> list in Parent.Grid.Chunks)
+            foreach (List<Chunk> list in Parent.Map.grid.Elements)
             {
                 foreach (Chunk ch in list)
                 {

@@ -51,7 +51,7 @@ namespace CrystalCore.Model.Interface
             }
             Agent a = (Agent)o;
 
-            Map g = a.Grid;
+            Map g = a.Map;
             Direction d = a.Facing;
             Rectangle bounds = a.Bounds;
             a.Destroy();

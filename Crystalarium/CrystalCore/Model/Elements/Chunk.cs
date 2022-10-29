@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CrystalCore.Model.Elements
 {
-    public class Chunk : GridObject
+    public class Chunk : MapObject
     {
         /*
          * A chunk is a unit of several tiles. together, they make up the grid.
@@ -40,33 +40,12 @@ namespace CrystalCore.Model.Elements
         }
 
 
-        internal Chunk(ChunkGrid g, Point pos) : base(g, pos * new Point(SIZE), new Point(SIZE))
+        internal Chunk(Map m, Point pos) : base(m, pos * new Point(SIZE), new Point(SIZE))
         {
             // check that this chunk does not exist over another chunk.
-            foreach (List<Chunk> chunks in Grid.Chunks)
+            if (m.grid != null)
             {
-                foreach (Chunk ch in chunks)
-                {
-                    if (ch == null)
-                    {
-                        continue;
-                    }
-
-
-                    if (!ch.Bounds.Intersects(Bounds))
-                    {
-                        continue;
-                    }
-
-                    if (ch == this)
-                    {
-                        continue;
-                    }
-
-                    // uh oh, this chunk intersects another chunk! bail!
-                    Console.WriteLine("Chunk intersected another chunk at " + Bounds);
-                    Destroy();
-                }
+                CheckOverlap();
             }
 
             _coords = pos;
@@ -75,9 +54,51 @@ namespace CrystalCore.Model.Elements
             _membersWithin = new List<ChunkMember>();
         }
 
+        private void CheckOverlap()
+        {
+            foreach (Chunk ch in Map.grid.ElementList)
+            {
+
+                if (ch == null)
+                {
+                    continue;
+                }
+
+
+                if (!ch.Bounds.Intersects(Bounds))
+                {
+                    continue;
+                }
+
+                if (ch == this)
+                {
+                    continue;
+                }
+
+                // uh oh, this chunk intersects another chunk! bail!
+                throw new InvalidOperationException("Chunk intersected another chunk at " + Bounds);
+
+
+            }
+        }
+
         public override string ToString()
         {
             return "Chunk " + Coords;
+        }
+
+
+        public override void Destroy()
+        {
+
+            // how was this not a thing until M6?
+            while(_membersWithin.Count>0)
+            {
+                _membersWithin[0].Destroy(); 
+            }
+
+            base.Destroy();
+
         }
 
     }

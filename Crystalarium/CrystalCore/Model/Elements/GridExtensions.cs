@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace CrystalCore.Model.Elements
 {
-    public static class GridExtensions
+    public static class MapExtensions
     {
 
         /// <summary>
@@ -16,13 +16,13 @@ namespace CrystalCore.Model.Elements
         /// <param name="ch"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static Point GetChunkPos(this ChunkGrid cg, Chunk ch)
+        public static Point GetChunkPos(this Map cg, Chunk ch)
         {
             // get the chunk
 
-            for (int x = 0; x < cg.Chunks.Count; x++)
+            for (int x = 0; x < cg.grid.ElementList.Count; x++)
             {
-                List<Chunk> list = cg.Chunks[x];
+                List<Chunk> list = cg.grid.Elements[x];
                 for (int y = 0; y < list.Count; y++)
                 {
                     if (list[y] == ch)
@@ -158,7 +158,7 @@ namespace CrystalCore.Model.Elements
             Point chunkCoord = (Coords - g.Bounds.Location) / new Point(Chunk.SIZE);
 
             // get and return that chunk.
-            Chunk toReturn = g.Chunks[chunkCoord.X][chunkCoord.Y];
+            Chunk toReturn = g.grid.Elements[chunkCoord.X][chunkCoord.Y];
 
             // it's possible this doesn't work. If that's true, I'd like to know.
             Debug.Assert(toReturn.Bounds.Contains(Coords));
@@ -199,7 +199,7 @@ namespace CrystalCore.Model.Elements
                 {
                     Point i = new Point(x, y) + initial;
 
-                    toReturn.Add(g.Chunks[i.X][i.Y]);
+                    toReturn.Add(g.grid.Elements[i.X][i.Y]);
 
                 }
             }

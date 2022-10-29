@@ -111,7 +111,7 @@ namespace CrystalCore.Model.Objects
             while (nextEnd != null)
             {
                 end = (Point)nextEnd;
-                Agent target = Grid.AgentAt(end);
+                Agent target = Map.AgentAt(end);
 
                 // We found a target!
                 if (target != null)
@@ -198,7 +198,7 @@ namespace CrystalCore.Model.Objects
             for (int i = 0; i < distance; i++)
             {
                 Point p = toReturn + _start.AbsoluteFacing.ToPoint();
-                if (!Grid.Bounds.Contains(p))
+                if (!Map.Bounds.Contains(p))
                 {
                     // this is the end of the road for us.
                     return null;

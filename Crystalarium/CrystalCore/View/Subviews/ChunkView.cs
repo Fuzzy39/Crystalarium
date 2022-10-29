@@ -49,7 +49,7 @@ namespace CrystalCore.View.Subviews
             // brighten checkboard tiles, if needbe.
             if (config.DoCheckerBoardColoring)
             {
-                Point pos = RenderData.Grid.GetChunkPos((Chunk)RenderData);
+                Point pos = RenderData.Map.GetChunkPos((Chunk)RenderData);
                 if ((pos.X + pos.Y) % 2 == 0)
                 {
                     brighten(ref toReturn, 1);

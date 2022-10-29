@@ -43,7 +43,7 @@ namespace CrystalCore.Model.Objects
         {
 
             List<Chunk> toUpdate = new List<Chunk>(ChunksWithin);
-            Map g = Grid;
+            Map g = Map;
             base.Destroy();
 
 
@@ -80,7 +80,7 @@ namespace CrystalCore.Model.Objects
             // create ports (what a helpful comment)
             CreatePorts();
 
-            Grid.AddAgent(this);
+          
 
         }
 
@@ -208,7 +208,7 @@ namespace CrystalCore.Model.Objects
 
             }
 
-            Grid.UpdateSignals(toUpdate);
+            Map.UpdateSignals(toUpdate);
             _state = Type.DefaultState;
 
 

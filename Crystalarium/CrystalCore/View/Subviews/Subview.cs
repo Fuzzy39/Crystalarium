@@ -13,16 +13,16 @@ namespace CrystalCore.View.Subviews
     internal abstract class Subview : ViewObject
     {
 
-        protected GridObject _renderData; // the thing we view
+        protected MapObject _renderData; // the thing we view
         private List<Subview> others; // I forget what this is for...
 
-        internal GridObject RenderData
+        internal MapObject RenderData
         {
             get => _renderData;
         }
 
 
-        protected Subview(GridView v, GridObject o, List<Subview> others) : base(v)
+        protected Subview(GridView v, MapObject o, List<Subview> others) : base(v)
         {
             // check that we don't already exist
             foreach (Subview r in others)
@@ -101,7 +101,7 @@ namespace CrystalCore.View.Subviews
         /// <param name="views"></param>
         /// <param name="gobj"></param>
         /// <returns></returns>
-        public static bool ViewExistsFor(this List<Subview> views, GridObject gobj)
+        public static bool ViewExistsFor(this List<Subview> views, MapObject gobj)
         {
             foreach (Subview view in views)
             {

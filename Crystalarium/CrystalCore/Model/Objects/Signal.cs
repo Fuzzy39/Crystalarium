@@ -28,7 +28,7 @@ namespace CrystalCore.Model.Objects
             _start = transmitter;
             _value = value;
 
-            g.AddSignal(this);
+      
             //Update(); // subclasses need to call this method after their constructor has ran.
         }
 

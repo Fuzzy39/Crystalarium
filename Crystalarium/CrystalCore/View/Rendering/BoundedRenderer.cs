@@ -240,10 +240,10 @@ namespace CrystalCore.View.Rendering
             for (int i = 0; i < cuts.Length; i++)
             {
                
-                for (Direction j = facing; j != Direction.up; j=j.Rotate(RotationalDirection.counterclockwise))
+                for (Direction j = facing; j != Direction.up; j=j.Rotate(RotationalDirection.ccw))
                 {
                     // I think counterclockwise is right, but I could be wrong.
-                    cuts[i].dir = cuts[i].dir.Rotate(RotationalDirection.counterclockwise);
+                    cuts[i].dir = cuts[i].dir.Rotate(RotationalDirection.ccw);
                 }
             }
 
