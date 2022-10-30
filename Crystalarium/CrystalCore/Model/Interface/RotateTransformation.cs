@@ -36,5 +36,11 @@ namespace CrystalCore.Model.Interface
             Agent a = (Agent)o;
             a.Rotate(direction);
         }
+
+        internal override Transformation Add(Transformation toAdd)
+        {
+            CheckType(toAdd);
+            return toAdd;
+        }
     }
 }

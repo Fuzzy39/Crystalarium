@@ -191,6 +191,24 @@ namespace CrystalCore.Util
             return cp;
         }
 
+        public static CompassPoint ToCompassPoint(this Direction d)
+        {
+            return d switch
+            {
+                Direction.up => CompassPoint.north,
+
+                Direction.down => CompassPoint.south,
+
+                Direction.left => CompassPoint.west,
+
+                Direction.right => CompassPoint.east,
+
+                // default
+                _ => CompassPoint.north,
+
+
+            };
+        }
 
         public static Direction? ToDirection(this CompassPoint p)
         {

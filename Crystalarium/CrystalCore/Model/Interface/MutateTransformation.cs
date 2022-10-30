@@ -63,5 +63,10 @@ namespace CrystalCore.Model.Interface
             g.UpdateSignals(b.ChunksWithin);
         }
 
+        internal override Transformation Add(Transformation toAdd)
+        {
+            CheckType(toAdd);
+            return toAdd;
+        }
     }
 }

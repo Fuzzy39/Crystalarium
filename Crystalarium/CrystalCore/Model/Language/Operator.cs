@@ -37,8 +37,8 @@ namespace CrystalCore.Model.Language
 
             return _type switch
             {
-                OperatorType.EqualTo => new Token(TokenType.boolean, a.Value == b.Value),
-                OperatorType.NotEqualTo => new Token(TokenType.boolean, a.Value != b.Value),
+                OperatorType.EqualTo => new Token(TokenType.boolean, a.Value.Equals( b.Value)),
+                OperatorType.NotEqualTo => new Token(TokenType.boolean, !a.Value.Equals(b.Value)),
 
                 OperatorType.GreaterThan => new Token(TokenType.boolean, (int)a.Value > (int)b.Value),
                 OperatorType.LessThan => new Token(TokenType.boolean, (int)a.Value < (int)b.Value),
@@ -53,13 +53,15 @@ namespace CrystalCore.Model.Language
 
         internal bool IsValid(TokenType a, TokenType b)
         {
+            if (_type == OperatorType.NotEqualTo || _type == OperatorType.EqualTo)
+            {
+                return true;
+            }
+
+
             if (a != b)
             {
-                if (_type == OperatorType.NotEqualTo || _type == OperatorType.EqualTo)
-                {
-                    return true;
-                }
-
+              
                 return false;
             }
 
@@ -73,7 +75,7 @@ namespace CrystalCore.Model.Language
                 return false;
             }
 
-            if (_type == OperatorType.GreaterThan || _type == OperatorType.LessThan)
+            if (_type == OperatorType.GreaterThan || _type == OperatorType.LessThan) 
             {
                 return true;
             }

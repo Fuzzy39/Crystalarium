@@ -11,29 +11,43 @@ namespace CrystalCore.Model.Interface
     /// </summary>
     public class SignalTransformation: Transformation
     {
-        private PortIdentifier[] ports;
-        private int value;
-        private bool transmit; // whether this transformation results in the agent transmitting or stopping transmission.
+        private PortTransmission[] ports;
+    
+      
 
 
-        public SignalTransformation( int value, bool transmit, params PortIdentifier[] ports) : base()
+        public SignalTransformation( int value, params PortID[] ports) : base()
         {
-            ChecksRequired = false; 
+
+            ChecksRequired = false;
             MustBeLast = false;
 
-            this.value = value;
+            // give all ports this value.
+            this.ports = new PortTransmission[ports.Length];
+            for (int i =0; i<ports.Length; i++)
+            {
+                this.ports[i] = new PortTransmission(value, ports[i]);
+            }
+
+          
+        }
+
+        public SignalTransformation(params PortTransmission[] ports )
+        {
+            ChecksRequired = false;
+            MustBeLast = false; 
+
             this.ports = ports;
-            this.transmit = transmit;
         }
 
         internal override void Validate(AgentType at)
         {
-            foreach (PortIdentifier portID in ports)
+            foreach (PortTransmission portTrans in ports)
             {
-                if (!portID.CheckValidity(at))
+                if (!portTrans.portID.CheckValidity(at))
                 {
                     throw new InitializationFailedException(
-                        "Transmit Transformation: Port ID: " + portID + " is not valid for AgentType '" + at.Name + "'.");
+                        "Transmit Transformation: Port ID: " + portTrans.portID + " is not valid for AgentType '" + at.Name + "'.");
                 }
             }
 
@@ -49,23 +63,51 @@ namespace CrystalCore.Model.Interface
 
             Agent a = (Agent)o;
 
-            foreach (PortIdentifier portID in ports)
-            {
-                if (transmit)
-                {
-                    Port p = a.GetPort(portID);
-                    //if (a.GetPortValue(portID) == 0  || p is FullPort)
-                    {
-                        p.Transmit(value);
-                        continue;
-                    }
+            a.OnlyTransmitOn(ports);
+        }
 
-                }
-                else
-                {
-                    a.GetPort(portID).StopTransmitting();
-                }
+        internal override Transformation Add(Transformation toAdd)
+        {
+            CheckType(toAdd);
+            SignalTransformation other = (SignalTransformation)toAdd;
+
+
+            // This is the list of our transmissions that are entirely unique to us compared to ToAdd.
+            List<PortTransmission> unalike = new List<PortTransmission>(ports);
+
+
+            // get the portIDs we are transmiting on.
+            List<PortID> toTransmitOn = new List<PortID>();
+            foreach(PortTransmission pt in ports)
+            {
+                toTransmitOn.Add(pt.portID);
             }
+
+            // if we share any portIDs with toAdd, we remove them from the unique list.
+            foreach(PortTransmission portTrans in other.ports)
+            {
+
+                if(toTransmitOn.Contains(portTrans.portID))
+                {
+                    PortTransmission? toRemove = null;
+                    foreach(PortTransmission pt in unalike)
+                    {
+                        if(pt.portID.Equals(portTrans.portID))
+                        {
+                            toRemove = pt;
+                            break;
+                        }
+                    }
+                    unalike.Remove((PortTransmission)toRemove);
+                }
+                
+            }
+
+            List<PortTransmission> toTransmit = new List<PortTransmission>(other.ports);
+            toTransmit.AddRange(unalike);
+
+            return new SignalTransformation(toTransmit.ToArray());
+
         }
     }
 }

@@ -17,13 +17,13 @@ namespace CrystalCore.Model.Objects
 
 
     // relative portID.
-    public struct PortIdentifier
+    public struct PortID
     {
 
         public int ID;
         public CompassPoint Facing;
 
-        public PortIdentifier(int portID, CompassPoint compassPoint)
+        public PortID(int portID, CompassPoint compassPoint)
         {
             ID = portID;
             Facing = compassPoint;
@@ -61,10 +61,37 @@ namespace CrystalCore.Model.Objects
             return true;
         }
 
+        public override bool Equals(object obj)
+        {
+            if(!(obj is PortID)) { return false;}
+            PortID other = (PortID)obj;
+            if(other.ID != ID) { return false; }
+            if(other.Facing != Facing) { return false; }
+            return true;
 
+        }
         public override string ToString()
         {
             return Facing + "," + ID;
+        }
+    }
+
+
+    public struct PortTransmission
+    {
+        public PortID portID;
+        public int value;
+
+        public PortTransmission(int value, PortID pid)
+        {
+            portID = pid;
+            this.value = value;
+        }
+
+        public PortTransmission(int value ,int portID, CompassPoint compassPoint):this(value, new PortID(portID, compassPoint))
+        {
+           
+           
         }
     }
 }

@@ -16,10 +16,11 @@ namespace CrystalCore.Model.Objects
 
         private AgentType _type;
 
-        protected AgentState _state;
+        protected List<TransformationRule> _activeRules;
     
-       private PortInterface portInterface;
+        private PortInterface portInterface;
 
+        private bool updatedSignalsThisStep;
         // properties 
 
        
@@ -30,9 +31,9 @@ namespace CrystalCore.Model.Objects
         }
 
 
-        public AgentState State
+        public List<TransformationRule> ActiveRules
         {
-            get { return _state; }
+            get { return _activeRules; }
         }
 
         internal List<List<Port>> Ports
@@ -64,9 +65,11 @@ namespace CrystalCore.Model.Objects
                 throw new InvalidOperationException("The Ruleset '" + Type.Ruleset.Name + "' has specified that diagonal signals are allowed, which requires that no agents are greater than 1 by 1 in size.");
             }
 
+            updatedSignalsThisStep = false;
 
-            // do the default thing.
-            _state = Type.DefaultState;
+           // do the default thing.
+           _activeRules = new List<TransformationRule>();
+            _activeRules.Add(Type.DefaultState);
             Execute();
 
         }
@@ -123,47 +126,104 @@ namespace CrystalCore.Model.Objects
         internal void PreserveState()
         {
             portInterface.PreserveState();
-            _state = DetermineState();
+            _activeRules = DetermineState();
 
         }
 
         
 
 
-        private AgentState DetermineState()
+        private List<TransformationRule> DetermineState()
         {
-            
-            foreach (AgentState state in Type.States)
-            {
-                // if a state has no requirements, it fits the bill!
-                if (state.Requirements == null)
-                {
-                    return state;
-                }
+            List<TransformationRule> toReturn = new List<TransformationRule>();
 
-                // otherwise, check if we meet the requirements.
+            foreach (TransformationRule state in Type.States)
+            {
                 
+                // check if we meet the requirements
                 if (state.SatisfiesRequirements(this))
                 {
 
-                    return state;
+                    toReturn.Add(state);
                 }
             }
 
-            return Type.DefaultState;
+            if (toReturn.Count == 0)
+            {
+                toReturn.Add( Type.DefaultState);
+            }
+
+            return toReturn;
         }
 
+        private List<Transformation> GetTransformations()
+        {
+            List<Transformation> toReturn = new List<Transformation>();
+            foreach(TransformationRule tr in _activeRules)
+            {
+                toReturn.AddRange(tr.Transformations);
+            }
+            return Compact(toReturn);
+                
+        }
+
+        // add all transformations that can be added.
+        private List<Transformation> Compact(List<Transformation> list)
+        {
+
+            if (list.Count == 0) { return list; }
+
+            List<Transformation> toReturn = new List<Transformation>();
+            Transformation t = list[0];
+            bool compacted = false;
+
+
+            foreach(Transformation lookat in list)
+            {
+                if (lookat == t) { continue; }
+
+                // compact add together any transformations that can be added to ours.
+                if(t.GetType()==lookat.GetType())
+                {
+                    t = t.Add(lookat);
+                    compacted = true;
+                    continue;
+
+                }
+                toReturn.Add(lookat);
+
+            }
+            
+            // stick ours back on to the end.
+            toReturn.Add(t);
+
+            if(compacted)
+            {
+                return Compact(toReturn);
+            }
+
+            return toReturn;
+
+        }
         /// <summary> 
         /// Runs through transformations of this agent type.
         /// </summary>
         /// <param name="a"></param>
         internal void Execute()
         {
-
-            foreach (Transformation tf in _state.Transformations)
+            
+            List<Transformation> transformations = GetTransformations();
+            foreach(Transformation tf in transformations)
             {
                 tf.Transform(this);
             }
+
+            if(!updatedSignalsThisStep)
+            {
+                OnlyTransmitOn(new PortTransmission[0]);
+            }
+
+            updatedSignalsThisStep = false;
 
         }
 
@@ -178,6 +238,17 @@ namespace CrystalCore.Model.Objects
 
         }
 
+        internal void OnlyTransmitOn(PortTransmission[] pts)
+        {
+            List<Port> ports = new List<Port>();
+            foreach(PortTransmission pt in pts)
+            {
+                ports.Add(GetPort(pt.portID));
+            }
+
+            portInterface.OnlyTransmitOn(ports, pts);
+            updatedSignalsThisStep = true;
+        }
 
         // how often do you get to type recombobulate? not often!
         private void RecombobulateSignals()
@@ -208,12 +279,13 @@ namespace CrystalCore.Model.Objects
             }
 
             Map.UpdateSignals(toUpdate);
-            _state = Type.DefaultState;
-
+         
+            _activeRules.Clear();
+            _activeRules.Add(Type.DefaultState);
 
         }
 
-        internal Port GetPort(PortIdentifier portID)
+        internal Port GetPort(PortID portID)
         {
             if (!portID.CheckValidity(Type))
             {

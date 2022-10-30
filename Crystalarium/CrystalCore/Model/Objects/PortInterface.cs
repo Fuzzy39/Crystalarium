@@ -205,5 +205,23 @@ namespace CrystalCore.Model.Objects
                 }
             }
         }
+
+        internal void OnlyTransmitOn(List<Port> ports, PortTransmission[] transmits)
+        {
+            
+
+            List<Port> toTurnOff = new List<Port>(PortList);
+            for(int i = 0; i<ports.Count; i++)
+            {
+                toTurnOff.Remove(ports[i]);
+                ports[i].Transmit(transmits[i].value);
+            }
+
+            foreach(Port p in toTurnOff)
+            {
+                p.StopTransmitting();
+            }
+
+        }
     }
 }

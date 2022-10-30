@@ -27,9 +27,9 @@ namespace CrystalCore.Model.Rules
 
         // and a list of states. 
 
-        private AgentState _defaultState;
+        private TransformationRule _defaultState;
 
-        private List<AgentState> _states;
+        private List<TransformationRule> _rules;
 
 
         // Properties
@@ -49,12 +49,12 @@ namespace CrystalCore.Model.Rules
             get => _size;
         }
 
-        public AgentState DefaultState
+        public TransformationRule DefaultState
         {
             get => _defaultState;
         }
 
-        public List<AgentState> States
+        public List<TransformationRule> States
         {
             get
             {
@@ -62,7 +62,7 @@ namespace CrystalCore.Model.Rules
                 {
                     throw new InvalidOperationException("Cannot modify/access an AgentTypes states after engine is initialized.");
                 }*/
-                return _states;
+                return _rules;
             }
         }
 
@@ -74,8 +74,8 @@ namespace CrystalCore.Model.Rules
             _ruleset = rs;
             _name = name;
             _size = size;
-            _defaultState = new AgentState();
-            _states = new List<AgentState>();
+            _defaultState = new TransformationRule();
+            _rules = new List<TransformationRule>();
 
         }
 
@@ -100,7 +100,7 @@ namespace CrystalCore.Model.Rules
                 }
 
                 DefaultState.Validate(this);
-                DefaultState.Initialize();
+             
               
                 if (DefaultState.Requirements != null)
                 {
@@ -109,10 +109,10 @@ namespace CrystalCore.Model.Rules
 
 
 
-                foreach (AgentState state in _states)
+                foreach (TransformationRule state in _rules)
                 {
                     state.Validate(this);
-                    state.Initialize();
+                  
                     
                 }
 

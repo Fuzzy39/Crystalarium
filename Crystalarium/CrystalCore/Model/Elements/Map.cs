@@ -128,7 +128,7 @@ namespace CrystalCore.Model.Elements
             // could be redundant?
             _agents.Clear();
             _signals = 0;
-            _chunks = 0;
+            _chunks = 1;
 
         }
 

@@ -78,9 +78,9 @@ namespace CrystalCore.Model.Interface
 
     public class PortValueOperand : Expression
     {
-        private PortIdentifier portID;
+        private PortID portID;
 
-        public PortValueOperand(PortIdentifier portID) : base(TokenType.integer)
+        public PortValueOperand(PortID portID) : base(TokenType.integer)
         {
 
             this.portID = portID;

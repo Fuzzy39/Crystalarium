@@ -15,6 +15,12 @@ namespace CrystalCore.Model.Interface
             MustBeLast = true;
         }
 
+        internal override Transformation Add(Transformation toAdd)
+        {
+            CheckType(toAdd);
+            return this; // not like it matters.
+        }
+
         internal override void Transform(object o)
         {
             

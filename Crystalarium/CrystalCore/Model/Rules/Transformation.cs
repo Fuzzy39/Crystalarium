@@ -23,7 +23,18 @@ namespace CrystalCore.Model.Rules
 
         internal abstract void Transform(object o);
 
-    }
+        protected void CheckType(Transformation toCheck)
+        {
+            if (this.GetType() != toCheck.GetType())
+            {
+                throw new ArgumentException("Transformations must be of the same type.");
+            }
 
+
+        }
+
+        internal abstract Transformation Add(Transformation toAdd);
+
+    }
 
 }
