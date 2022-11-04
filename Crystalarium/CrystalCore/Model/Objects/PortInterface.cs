@@ -148,8 +148,7 @@ namespace CrystalCore.Model.Objects
             {
                 foreach (Port port in ports)
                 {
-                    port.StopTransmitting();
-                    port.StopReceiving();
+                    port.Destroy();
 
                 }
             }

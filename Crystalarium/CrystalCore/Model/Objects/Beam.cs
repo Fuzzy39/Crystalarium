@@ -14,7 +14,31 @@ namespace CrystalCore.Model.Objects
         private int _minLength = 1;
         private int _length = 0;
 
+        private Port Start
+        {
+            get
+            {
+                if (portA == null)
+                {
+                    return portB;
+                }
 
+                return portA;
+            }
+        }
+
+        private Port End
+        {
+            get
+            {
+                if(portA == Start)
+                {
+                    return portB;
+                }
+
+                return portA;
+            }
+        }
 
         // how long can this beam get? 0 or lower means limitless.
         public int MaxLength
@@ -71,7 +95,7 @@ namespace CrystalCore.Model.Objects
         public int Length { get => _length; }
 
 
-        public Beam(Map g, Port transmitter, int value, Ruleset r) : base(g, transmitter, value)
+        public Beam(Map g, Port transmitter, Ruleset r) : base(g, transmitter)
         {
             MaxLength = r.BeamMaxLength;
             MinLength = r.BeamMinLength;
@@ -85,11 +109,12 @@ namespace CrystalCore.Model.Objects
         {
             // we start looking for targets by getting the point where our min
 
-            if (Start == null)
+            if (Destroyed)
             {
                 throw new InvalidOperationException("This signal should be destroyed. Is it? " + Destroyed + "! It should not be updated, but it was.");
             }
-            Point start = _start.Location;
+
+            Point start = (portA==null)? portB.Location : portA.Location;
             Point? p = Travel(start, MinLength);
             if (p == null)
             {
@@ -159,7 +184,7 @@ namespace CrystalCore.Model.Objects
 
 
             // we need to adjust our bounds now.
-            SetBounds(_start.Location, loc);
+            SetBounds(Start.Location, loc);
 
         }
 
@@ -168,23 +193,35 @@ namespace CrystalCore.Model.Objects
         {
 
 
-            CompassPoint portFacing = _start.AbsoluteFacing.Opposite();
+            CompassPoint portFacing = Start.AbsoluteFacing.Opposite();
 
             Port p = FindPort(target, loc, portFacing);
 
-            if (p == _end)
+            if (p == End)
             {
                 // oh, nothing changed. Alright, neat.
                 return;
             }
 
-            if (_end != null)
+            if (End != null)
             {
-                _end.StopReceiving();
+                throw new InvalidOperationException("well, a beam shouldn't have two ends...");
             }
 
-            _end = p;
-            p.Receive(this);
+            if (portA == null)
+            {
+                p = portA;
+               
+
+            }
+            else
+            {
+                p = portB;
+                
+            }
+            p.SetupConnection(this);
+
+           
 
 
 
@@ -197,7 +234,7 @@ namespace CrystalCore.Model.Objects
             Point toReturn = start;
             for (int i = 0; i < distance; i++)
             {
-                Point p = toReturn + _start.AbsoluteFacing.ToPoint();
+                Point p = toReturn + Start.AbsoluteFacing.ToPoint();
                 if (!Map.Bounds.Contains(p))
                 {
                     // this is the end of the road for us.

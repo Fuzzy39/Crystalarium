@@ -260,7 +260,7 @@ namespace CrystalCore.Model.Objects
 
             foreach (Port p in portInterface.PortList)
             {
-                if (p.Status == PortStatus.transmitting || p.Status == PortStatus.transceiving)
+                if (p.   Status == PortStatus.transmitting || p.Status == PortStatus.transceiving)
                 {
                     int v = p.TransmittingValue;
 

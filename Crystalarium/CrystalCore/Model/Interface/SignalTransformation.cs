@@ -66,6 +66,12 @@ namespace CrystalCore.Model.Interface
             a.OnlyTransmitOn(ports);
         }
 
+        /// <summary>
+        /// This method is scary
+        /// It combines the portTransmissions by port of this transform and toAdd, favoring toAdd if there is a conflict.
+        /// </summary>
+        /// <param name="toAdd"></param>
+        /// <returns></returns>
         internal override Transformation Add(Transformation toAdd)
         {
             CheckType(toAdd);

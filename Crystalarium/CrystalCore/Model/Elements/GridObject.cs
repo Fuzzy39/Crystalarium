@@ -3,7 +3,7 @@ using System;
 
 namespace CrystalCore.Model.Elements
 {
-    abstract public class MapObject
+    abstract public class MapObject : IDestroyable
     {
 
         /*
@@ -48,6 +48,7 @@ namespace CrystalCore.Model.Elements
         public bool Destroyed
         {
             get { return _destroyed; }
+
         }
 
 

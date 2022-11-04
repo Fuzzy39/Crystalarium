@@ -26,7 +26,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 804; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 805; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         
 
@@ -62,6 +62,9 @@ namespace Crystalarium.Main
             _graphics.PreferredBackBufferHeight = 720;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
 
+            // DELETE BEFORE RELEASING M6
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
 
 
 
@@ -72,6 +75,13 @@ namespace Crystalarium.Main
 
             base.Initialize();
 
+        }
+
+        public void OnResize(object sender, EventArgs e)
+        {
+            _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+            _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+            _graphics.ApplyChanges();
         }
 
         protected override void LoadContent()
@@ -343,3 +353,4 @@ namespace Crystalarium.Main
 
     }
 }
+ 

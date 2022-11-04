@@ -12,39 +12,50 @@ namespace CrystalCore.Model.Objects
     internal abstract class Signal : ChunkMember
     {
 
-        protected Port _start;
-        protected Port _end;
+        protected Port portA;
+        protected Port portB;
 
-        private int _value;
-
-        public int Value { get { return _value; } }
-        public Port Start { get { return _start; } }
-        public Port End { get { return _end; } }
+        private int fromA; // the value of this signal from a to b
+        private int fromB; // the value of this signal from b to a.
 
 
-        public Signal(Map g, Port transmitter, int value) : base(g, new Rectangle(transmitter.Location, new Point(1)))
+
+
+
+
+        public Signal(Map g, Port transmitter) : base(g, new Rectangle(transmitter.Location, new Point(1)))
         {
 
-            _start = transmitter;
-            _value = value;
+            portA = transmitter;
+            fromA = 0;
+            fromB = 0;
 
+            portA.OnDestroy += OnPortDestroyed;
+            portA.SetupConnection(this);
       
             //Update(); // subclasses need to call this method after their constructor has ran.
         }
 
-        // this should only be called by Port.StopTransmitting()
-        public override void Destroy()
+        private void OnPortDestroyed(object o, EventArgs e)
         {
-            if (_end != null)
+            if (o == portA)
             {
-                // Console.WriteLine("Signal disconnected by transmitter.");
-                _end.StopReceiving();
+                portA = null;
+            }
+            else
+            {
+                portB = null;
             }
 
-            base.Destroy();
+            if(portA==null & portB == null)
+            {
+                this.Destroy();
+                return;
+            }
 
+            Update();
         }
-
+        
         public abstract void Update();
 
         protected Port FindPort(Agent a, Point loc, CompassPoint AbsFacing)
@@ -77,16 +88,41 @@ namespace CrystalCore.Model.Objects
         }
 
 
-        public void Reset()
+        public int Receive(Port p)
         {
-            //Console.WriteLine("Signal disconnected by receiver.");
+            if(p == portA)
+            {
+                return fromB;
+            }
+            
+            if(p == portB)
+            {
+                return fromA;
+            }
 
-            _end = null;
+            throw new ArgumentException(p + " is not connected to signal " + this+" it cannot receive a value");
+        }
+
+
+        public void Transmit(Port p, int value)
+        {
+            if(p==portA)
+            {
+                fromA = value;
+            }
+
+            if(p == portB)
+            {
+                fromB = value;
+            }
+
+            throw new ArgumentException(p + " is not connected to signal " + this + " it cannot transmit a value");
+
         }
 
         public override string ToString()
         {
-            return "Signal: { start:" + Start + " end: " + End + " Bounds:" + Bounds + "}";
+            return "Signal: { A:" + portA + " B: " + portB + " Bounds:" + Bounds + "}";
 
         }
 

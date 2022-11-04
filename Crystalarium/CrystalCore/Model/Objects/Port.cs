@@ -1,4 +1,5 @@
-﻿using CrystalCore.Util;
+﻿using CrystalCore.Model.Elements;
+using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -6,23 +7,8 @@ using System.Text;
 
 namespace CrystalCore.Model.Objects
 {
-
-
-    internal abstract class Port
+    internal class Port : IDestroyable
     {
-        // if only, if only...
-        // if only I could spell.
-        // a poty is no port.
-
-        /*
-         * Anyways...
-         * A port is an inert object on the face of an agent. an agent can command it to send a signal, or a signal can command it to bind to it.
-         * it registers the signal it is bound to.
-         * 
-         * Ports do not interact with signals. Signals and Agents command ports. Agents do not interact with signals. Agents read and write to their ports.
-         * Ports can create and destroy signals when they are transmitting them.
-         */
-
 
         // location.
         private CompassPoint _facing; // the direction this port is facing. if it were on the top of an agent, it is facing up/north.
@@ -33,40 +19,16 @@ namespace CrystalCore.Model.Objects
         private Agent _parent; // the agent we are part of.
 
 
-        // current state.
-        protected PortStatus _status; // the status this port is in.
-        //private Signal _boundTo; // the signal this port is bound to.
+        private Signal connection;
+
 
         // events
         public event EventHandler OnStartReiceving;
         public event EventHandler OnStopReiceving;
+        public event EventHandler OnDestroy;
 
+        public bool Destroyed => ((IDestroyable)_parent).Destroyed;
 
-        public CompassPoint Facing
-        {
-            get => _facing;
-        }
-
-        public Agent Parent
-        {
-            get => _parent;
-        }
-
-
-
-        public PortStatus Status
-        {
-            get => _status;
-        }
-
-
-        public abstract int TransmittingValue
-        {
-            get;
-        }
-
-        public abstract Signal ReceivingSignal { get; }
-        public abstract Signal TransmittingSignal { get; }
 
         public CompassPoint AbsoluteFacing
         {
@@ -82,7 +44,6 @@ namespace CrystalCore.Model.Objects
                 return toReturn;
             }
         }
-
 
         public Point Location
         {
@@ -125,6 +86,51 @@ namespace CrystalCore.Model.Objects
 
             }
         }
+
+        public int Value
+        {
+            get 
+            {
+                return connection.Receive(this);
+            }
+        }
+
+        internal Port(CompassPoint facing, int ID, Agent parent)
+        {
+
+            _facing = facing;
+            this.ID = ID;
+            _parent = parent;
+  
+        }
+
+
+        public void Destroy()
+        {
+            if (OnDestroy != null)
+            {
+                OnDestroy(this, new EventArgs());
+            }
+        }
+
+        internal void SetupConnection(Signal s)
+        {
+            if(connection != null)
+            {
+                throw new InvalidOperationException();
+            }
+
+
+            if (s == null)
+            {
+                connection = new Signal(_parent.Map, this);
+                return;
+            }
+
+            connection = s;
+
+        }
+
 
         private int DetermineRelX(Direction facing)
         {
@@ -176,49 +182,14 @@ namespace CrystalCore.Model.Objects
         }
 
 
-        internal Port(CompassPoint facing, int ID, Agent parent)
+        // transmit a signal. 
+        public void Transmit(int value)
         {
-            _facing = facing;
-            this.ID = ID;
-            _parent = parent;
-
-            // defaults
-            _status = PortStatus.inactive;
-
-
-        }
-
-        // create and transmit a signal. Returns weather it successfully has done so.
-        public abstract void Transmit(int value);
-
-        // receive a signal. Returns weather it successfully has done so.
-        public virtual void Receive(Signal s)
-        {
-            if (OnStartReiceving != null)
+            if(connection==null)
             {
-                OnStartReiceving(this, new EventArgs());
+                throw new InvalidOperationException("Port attempted to transmit before connection was established.");
             }
+            connection.Transmit(this, value);
         }
-
-
-        // stop transmitting or receiving.
-        public abstract void StopTransmitting();
-        public virtual void StopReceiving()
-        {
-            if (OnStopReiceving != null)
-            {
-                OnStopReiceving(this, new EventArgs());
-            }
-        }
-
-
-        // tostring
-        public override string ToString()
-        {
-            return "Port: { Location:" + Location + " ID: " + ID + ", Facing: " + Facing + " (ABS):" + AbsoluteFacing + "}";
-        }
-
-
     }
 }
-
