@@ -107,11 +107,28 @@ namespace CrystalCore.Model.Objects
 
             base.Rotate(d);
 
-            portInterface.StatusChanged();
+           
             RecombobulateSignals();
         }
 
 
+        // how often do you get to type recombobulate? not often!
+        private void RecombobulateSignals()
+        {
+            // stop transmitting and receiving signals, then 'reboot'
+            List<Chunk> toUpdate = new List<Chunk>();
+            toUpdate.AddRange(ChunksWithin);
+
+            // this will probably work?
+            portInterface.Destroy();
+            portInterface = new PortInterface(Type, this);
+
+            Map.UpdateSignals(toUpdate);
+
+            _activeRules.Clear();
+            _activeRules.Add(Type.DefaultState);
+
+        }
 
 
         public override string ToString()
@@ -250,40 +267,7 @@ namespace CrystalCore.Model.Objects
             updatedSignalsThisStep = true;
         }
 
-        // how often do you get to type recombobulate? not often!
-        private void RecombobulateSignals()
-        {
-            // stop transmitting and receiving signals, then 'reboot'
-            List<Chunk> toUpdate = new List<Chunk>();
-            toUpdate.AddRange(ChunksWithin);
-
-
-            foreach (Port p in portInterface.PortList)
-            {
-                if (p.Status == PortStatus.transmitting || p.Status == PortStatus.transceiving)
-                {
-                    int v = p.TransmittingValue;
-
-                    p.StopTransmitting();
-
-                    //p.Transmit(v);
-                }
-
-                if (p.Status == PortStatus.receiving)
-                {
-                    toUpdate.AddRange(p.ReceivingSignal.ChunksWithin);
-                }
-                p.StopReceiving();
-
-
-            }
-
-            Map.UpdateSignals(toUpdate);
-         
-            _activeRules.Clear();
-            _activeRules.Add(Type.DefaultState);
-
-        }
+    
 
         internal Port GetPort(PortID portID)
         {

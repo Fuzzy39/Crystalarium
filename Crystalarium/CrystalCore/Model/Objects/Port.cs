@@ -55,6 +55,16 @@ namespace CrystalCore.Model.Objects
             }
         }
 
+
+        public int TransmittingValue
+        {
+            get
+            {
+                return transmitting;
+            }
+        }
+
+
         public Point Location
         {
             get
@@ -146,7 +156,7 @@ namespace CrystalCore.Model.Objects
 
             if (s == null)
             {
-                connection = new Beam(_parent.Map, this);
+                connection = new Beam(_parent.Map, this );
                 return;
             }
 

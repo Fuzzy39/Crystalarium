@@ -48,11 +48,9 @@ namespace CrystalCore.View.Subviews
             Direction facing = (Direction)absFacing.ToDirection();
 
 
-            if (((Beam)_renderData).Start is FullPort)
-            {
-                renderBounds = RenderFull(renderBounds, facing);
+            renderBounds = RenderFull(renderBounds, facing);
 
-            }
+            
 
             renderTarget.Camera.RenderTexture(sb, config.BeamTexture, renderBounds, config.Color, facing);
 

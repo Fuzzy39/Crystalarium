@@ -93,15 +93,29 @@ namespace CrystalCore.View.Subviews.Agents
 
         private Color DetermineColor()
         {
-            Color c = Port.Status switch
+          
+            if(Port.HasConnection == false)
             {
-                PortStatus.inactive => Color.DimGray,
-                PortStatus.receiving => Color.Blue,
-                PortStatus.transmitting => Color.Red,
-                PortStatus.transceiving => Color.Purple,
-                _ => Color.Magenta,
-            };
-            return c;
+                return Color.Magenta;
+            }
+
+            if(Port.Value == 0 & Port.TransmittingValue == 0)
+            {
+                return Color.DimGray;
+            }
+
+            if(Port.Value != 0 & Port.TransmittingValue != 0)
+            {
+                return Color.Purple;
+            }
+
+            if(Port.Value!= 0)
+            {
+                return Color.Blue;
+            }
+
+            return Color.Red;
+
 
         }
 
