@@ -1,4 +1,5 @@
-﻿using CrystalCore.Model.Rules;
+﻿using CrystalCore.Model.Elements;
+using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,12 @@ namespace CrystalCore.Model.Objects
 
             // create ports (what a helpful comment)
             CreatePorts();
+            parent.Map.UpdateSignals(new List<Chunk>(parent.ChunksWithin));
+            foreach (Port p in PortList)
+            {
+                if (!p.HasConnection) { p.SetupConnection(null); }
+            }
+
         }
 
 
@@ -80,11 +87,10 @@ namespace CrystalCore.Model.Objects
                     }
 
                     // create a diagonal port.
-                    Port p = new FullPort(facing, 0, parent);
+                    Port p = new Port(facing, 0, parent);
                     portList.Add(p);
-                    p.OnStartReiceving += OnPortStatusChanged;
-                    p.OnStopReiceving += OnPortStatusChanged;
-
+                    p.OnValueChange += OnPortStatusChanged;
+                  
                     continue;
                 }
 
@@ -107,20 +113,20 @@ namespace CrystalCore.Model.Objects
             {
                 for (int j = 0; j < type.Size.X; j++)
                 {
-                    Port p = new FullPort(facing, j, parent);
+                    Port p = new Port(facing, j, parent);
                     ports.Add(p);
-                    p.OnStartReiceving += OnPortStatusChanged;
-                    p.OnStopReiceving += OnPortStatusChanged;
+                    p.OnValueChange += OnPortStatusChanged;
+                   
                 }
                 return ports;
             }
 
             for (int j = 0; j < type.Size.Y; j++)
             {
-                Port p = new FullPort(facing, j, parent);
+                Port p = new Port(facing, j, parent);
                 ports.Add(p);
-                p.OnStartReiceving += OnPortStatusChanged;
-                p.OnStopReiceving += OnPortStatusChanged;
+                p.OnValueChange += OnPortStatusChanged;
+
             }
 
             return ports;
@@ -192,15 +198,9 @@ namespace CrystalCore.Model.Objects
                 {
                     // and update its stale value.
                     Port p = list[j];
-                    if (p.Status == PortStatus.receiving)
-                    {
-                        _stalePortValues[i][j] = p.ReceivingSignal.Value;
-                        continue;
-                    }
-
-                    _stalePortValues[i][j] = 0;
-
-
+               
+                    _stalePortValues[i][j] = p.Value;
+                    
                 }
             }
         }
@@ -218,7 +218,7 @@ namespace CrystalCore.Model.Objects
 
             foreach(Port p in toTurnOff)
             {
-                p.StopTransmitting();
+                p.Transmit(0);
             }
 
         }

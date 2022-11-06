@@ -57,7 +57,7 @@ namespace CrystalCore.Model.Objects
 
             _type = t;
             portInterface = new PortInterface(t, this);
-            g.UpdateSignals(new List<Chunk>(ChunksWithin));
+         
 
             // if diagonal signals are allowed, then agents should not be bigger than 1 by 1
             if (Type.Ruleset.DiagonalSignalsAllowed && Bounds.Size.X * Bounds.Size.Y > 1)
@@ -260,7 +260,7 @@ namespace CrystalCore.Model.Objects
 
             foreach (Port p in portInterface.PortList)
             {
-                if (p.   Status == PortStatus.transmitting || p.Status == PortStatus.transceiving)
+                if (p.Status == PortStatus.transmitting || p.Status == PortStatus.transceiving)
                 {
                     int v = p.TransmittingValue;
 

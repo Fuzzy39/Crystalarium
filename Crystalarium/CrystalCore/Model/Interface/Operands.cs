@@ -64,13 +64,12 @@ namespace CrystalCore.Model.Interface
      
             foreach (Port p in a.PortList)
             {
-                if (p.Status == PortStatus.receiving || p.Status == PortStatus.transceiving)
+               
+                if (p.Value >= threshold)
                 {
-                    if (p.ReceivingSignal.Value >= threshold)
-                    {
-                        toReturn++;
-                    }
+                    toReturn++;
                 }
+                
             }
             return new Token(ReturnType, toReturn);
         }
@@ -101,12 +100,9 @@ namespace CrystalCore.Model.Interface
             }
             Agent a = (Agent)agent;
             Port p = a.GetPort(portID);
-            if (p.Status == PortStatus.receiving || p.Status == PortStatus.transceiving)
-            {
-                return new Token(ReturnType, p.ReceivingSignal.Value);
-            }
 
-            return new Token(ReturnType, 0);
+            return new Token(ReturnType, p.Value);
+            
         }
     }
 

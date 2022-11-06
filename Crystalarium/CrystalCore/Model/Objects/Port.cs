@@ -21,10 +21,12 @@ namespace CrystalCore.Model.Objects
 
         private Signal connection;
 
+        private int transmitting;
+
 
         // events
-        public event EventHandler OnStartReiceving;
-        public event EventHandler OnStopReiceving;
+        public event EventHandler OnValueChange;
+       
         public event EventHandler OnDestroy;
 
         public bool Destroyed => ((IDestroyable)_parent).Destroyed;
@@ -42,6 +44,14 @@ namespace CrystalCore.Model.Objects
                     toReturn = toReturn.Rotate(RotationalDirection.ccw);
                 }
                 return toReturn;
+            }
+        }
+
+        public bool HasConnection
+        {
+            get
+            {
+                return connection != null;
             }
         }
 
@@ -91,6 +101,10 @@ namespace CrystalCore.Model.Objects
         {
             get 
             {
+                if(connection == null)
+                {
+                    throw new InvalidOperationException("UH oh it bork bork - that was unprofessional of me, sorry. My porthole has been empty for a while.");
+                }
                 return connection.Receive(this);
             }
         }
@@ -101,7 +115,8 @@ namespace CrystalCore.Model.Objects
             _facing = facing;
             this.ID = ID;
             _parent = parent;
-  
+            transmitting = 0;
+
         }
 
 
@@ -110,6 +125,14 @@ namespace CrystalCore.Model.Objects
             if (OnDestroy != null)
             {
                 OnDestroy(this, new EventArgs());
+            }
+        }
+
+        internal void ValueChange()
+        {
+            if(OnValueChange != null)
+            {
+                OnValueChange(this, new EventArgs());
             }
         }
 
@@ -123,7 +146,7 @@ namespace CrystalCore.Model.Objects
 
             if (s == null)
             {
-                connection = new Signal(_parent.Map, this);
+                connection = new Beam(_parent.Map, this);
                 return;
             }
 
@@ -190,6 +213,7 @@ namespace CrystalCore.Model.Objects
                 throw new InvalidOperationException("Port attempted to transmit before connection was established.");
             }
             connection.Transmit(this, value);
+            transmitting = value;
         }
     }
 }

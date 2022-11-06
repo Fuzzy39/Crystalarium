@@ -93,6 +93,7 @@ namespace CrystalCore.Model.Objects
             if(p == portA)
             {
                 return fromB;
+
             }
             
             if(p == portB)
@@ -109,11 +110,13 @@ namespace CrystalCore.Model.Objects
             if(p==portA)
             {
                 fromA = value;
+                portB.ValueChange();
             }
 
             if(p == portB)
             {
                 fromB = value;
+                portA.ValueChange();
             }
 
             throw new ArgumentException(p + " is not connected to signal " + this + " it cannot transmit a value");
