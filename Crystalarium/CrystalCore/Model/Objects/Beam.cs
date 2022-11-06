@@ -14,7 +14,7 @@ namespace CrystalCore.Model.Objects
         private int _minLength = 1;
         private int _length = 0;
 
-        private Port Start
+        internal Port Start
         {
             get
             {
@@ -27,7 +27,7 @@ namespace CrystalCore.Model.Objects
             }
         }
 
-        private Port End
+        internal Port End
         {
             get
             {

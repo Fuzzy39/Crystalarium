@@ -26,7 +26,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 805; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 811; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         
 
@@ -81,7 +81,24 @@ namespace Crystalarium.Main
         {
             _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
             _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+
             _graphics.ApplyChanges();
+            int width = GraphicsDevice.Viewport.Width;
+            int height = GraphicsDevice.Viewport.Height;
+
+
+            view.Destroy();
+            view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
+
+            // prevent the camera from leaving the world.
+            view.bindCamera();
+
+
+            minimap.Destroy();
+            SetupMinimap(width);
+
+           
+
         }
 
         protected override void LoadContent()

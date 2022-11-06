@@ -18,7 +18,25 @@ namespace CrystalCore.Model.Objects
         private int fromA; // the value of this signal from a to b
         private int fromB; // the value of this signal from b to a.
 
+        internal Port PortA
+        {
+            get { return portA; }
+        }
 
+        internal Port PortB
+        {
+            get { return portB; }
+        }
+
+        internal int FromA
+        {
+            get { return fromA; }
+        }
+
+        internal int FromB
+        {
+            get { return fromB; }
+        }
 
 
 
@@ -107,16 +125,29 @@ namespace CrystalCore.Model.Objects
 
         public void Transmit(Port p, int value)
         {
+            if(p == null)
+            {
+                throw new ArgumentNullException("Can't transmit from a null port.");
+            }
+
             if(p==portA)
             {
                 fromA = value;
-                portB.ValueChange();
+                if (portB != null)
+                {
+                    portB.ValueChange();
+                }
+                return;
             }
 
             if(p == portB)
             {
                 fromB = value;
-                portA.ValueChange();
+                if (portA != null)
+                {
+                    portA.ValueChange();
+                }
+                return;
             }
 
             throw new ArgumentException(p + " is not connected to signal " + this + " it cannot transmit a value");
@@ -125,7 +156,7 @@ namespace CrystalCore.Model.Objects
 
         public override string ToString()
         {
-            return "Signal: { A:" + portA + " B: " + portB + " Bounds:" + Bounds + "}";
+            return "Signal: { A:" + (portA==null?"null":PortA.ToString()) + " B: " + (portB == null ? "null" : portB.ToString()) + " Bounds:" + Bounds + "}";
 
         }
 

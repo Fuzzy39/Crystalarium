@@ -41,35 +41,90 @@ namespace CrystalCore.View.Subviews
 
             }
 
-            RectangleF renderBounds = new RectangleF(CalcLoc(), CalcSize());
+            RenderFromA(sb);
+            RenderFromB(sb);
+           
 
-            // which way does this beam flow?
-            CompassPoint absFacing = ((Beam)RenderData).Start.AbsoluteFacing;
-            Direction facing = (Direction)absFacing.ToDirection();
+        }
+
+
+        private void RenderFromA(SpriteBatch sb)
+        {
+
+            Beam beam = (Beam)_renderData;
+            Direction facing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
+
+            // if portA is null, then the direction from A would be reversed from the start, which is B.
+            if (beam.PortA != beam.Start)
+            {
+                facing = facing.Opposite();
+            }
+
+            bool hasEnd = beam.End != null;
+            int value = beam.FromA;
+            RenderChannel(sb, facing, hasEnd, value);
+        }
+
+        private void RenderFromB(SpriteBatch sb)
+        {
+
+            Beam beam = (Beam)_renderData;
+            Direction facing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
+
+            // if portA is null, then the direction from A would be reversed from the start, which is B.
+            if (beam.PortB != beam.Start)
+            {
+                facing = facing.Opposite();
+            }
+
+            bool hasEnd = beam.End != null;
+            int value = beam.FromB;
+            RenderChannel(sb, facing, hasEnd, value);
+        }
+
+
+        private void RenderChannel(SpriteBatch sb, Direction facing, bool hasEnd, int value)
+        {
+
+            RectangleF renderBounds = new RectangleF(CalcLoc(facing, hasEnd), CalcSize(facing, hasEnd));
+
 
 
             renderBounds = RenderFull(renderBounds, facing);
 
-            
 
-            renderTarget.Camera.RenderTexture(sb, config.BeamTexture, renderBounds, config.Color, facing);
 
+            renderTarget.Camera.RenderTexture(sb, config.BeamTexture, renderBounds, DetermineColor(value, hasEnd), facing);
+        }
+
+        private Color DetermineColor(int value, bool hasEnd)
+        {
+            if(!hasEnd)
+            {
+                return Color.Black;
+            }
+
+            if(value == 0)
+            {
+                return Color.DimGray;
+            }
+
+            return config.Color;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns>The size, in tiles, of the beam as it will be rendered.</returns>
-        private Vector2 CalcSize()
+        private Vector2 CalcSize(Direction facing, bool hasEnd)
         {
             // get helpful variables.
             Beam beam = (Beam)_renderData;
-            Direction facing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
 
 
             Vector2 size = new Vector2(config.BeamWidth, beam.Length);
 
-            if (beam.End == null)
+            if (!hasEnd)
             {
                 // we do not want to go out of the grid if we have no target.
                 size.Y -= .5f;
@@ -87,10 +142,10 @@ namespace CrystalCore.View.Subviews
         /// 
         /// </summary>
         /// <returns>the location that our rendered bounds will start.</returns>
-        private Vector2 CalcLoc()
+        private Vector2 CalcLoc(Direction facing, bool hasEnd)
         {
             Beam beam = (Beam)_renderData;
-            Direction facing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
+            
 
             Vector2 loc = new Vector2(0);
             loc.X = (1 - config.BeamWidth) / 2f; // adjust for the width of the beam.
@@ -98,7 +153,7 @@ namespace CrystalCore.View.Subviews
             // if the beam is facing in a positive direction, we always increase the position so that the beam starts in the middle of the tile.
             // otherwise, we only do this if it has an end, so that the starting position is in the middle of a tile.
             // that made no sense, just trust me, it works with this, and doesn't without.
-            if (beam.End != null || facing == Direction.down || facing == Direction.right)
+            if (hasEnd || facing == Direction.down || facing == Direction.right)
             {
 
                 loc.Y += .5f;
@@ -137,6 +192,8 @@ namespace CrystalCore.View.Subviews
             }
             return start;
         }
+
+
 
 
         // the bean beam? I'm confused...
