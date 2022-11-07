@@ -12,8 +12,8 @@ namespace CrystalCore.Model.Objects
     internal abstract class Signal : ChunkMember
     {
 
-        protected Port portA;
-        protected Port portB;
+        private Port portA;
+        private Port portB;
 
         private int fromA; // the value of this signal from a to b
         private int fromB; // the value of this signal from b to a.
@@ -44,19 +44,49 @@ namespace CrystalCore.Model.Objects
         public Signal(Map g, Port transmitter) : base(g, new Rectangle(transmitter.Location, new Point(1)))
         {
 
-            portA = transmitter;
+           
             fromA = 0;
             fromB = 0;
 
-            portA.OnDestroy += OnPortDestroyed;
-            portA.SetupConnection(this);
+            Connect(transmitter);
+            
       
             //Update(); // subclasses need to call this method after their constructor has ran.
         }
 
+
+        public override void Destroy()
+        {
+
+            if(PortA != null)
+            {
+                PortA.Disconnect(); // this will only be called when there is another signal ready to displace us. therefore, it is impossible for a port to have no connection this way.
+                PortA.OnDestroy -= OnPortDestroyed;
+                PortA.OnConnect -= OnSignalConnectedToOwnPort;
+            }
+            if(PortB != null)
+            {
+                portB.Disconnect();
+
+                PortB.OnDestroy -= OnPortDestroyed;
+                PortB.OnConnect -= OnSignalConnectedToOwnPort;
+
+            }
+
+
+
+
+            base.Destroy();
+        }
+
         private void OnPortDestroyed(object o, EventArgs e)
         {
-            if (o == portA)
+            if(Destroyed)
+            {
+                return;
+            }
+
+            if (portA != null && portA.Destroyed)
             {
                 portA = null;
             }
@@ -65,13 +95,14 @@ namespace CrystalCore.Model.Objects
                 portB = null;
             }
 
-            if(portA==null & portB == null)
+            if(portA==null && portB == null)
             {
                 this.Destroy();
                 return;
             }
 
-            Update();
+            Console.WriteLine("I'm still alive! " + this);
+            //Update();
         }
         
         public abstract void Update();
@@ -104,7 +135,41 @@ namespace CrystalCore.Model.Objects
 
             throw new InvalidOperationException("Could not find port facing (Absolute): " + AbsFacing + " on tile " + loc + " in agent " + a + "\nSomething went wrong...");
         }
+        
+        internal virtual void Connect(Port p)
+        {
+            if (portA == null)
+            {
+                portA = p;
 
+
+            }
+            else
+            {
+                portB = p;
+
+
+            }
+
+           
+            p.OnDestroy += OnPortDestroyed;
+            p.OnConnect += OnSignalConnectedToOwnPort;
+
+            if(portA == portB)
+            {
+                throw new InvalidOperationException("yeah, no, a port should not be on both ends of a beam");
+            }
+        }
+
+        public void OnSignalConnectedToOwnPort(object o, EventArgs e)
+        {
+            Signal s = (Signal)o;
+            if(s!=this)
+            {
+                // we have been surplanted.
+                this.Destroy();
+            }
+        }
 
         public int Receive(Port p)
         {

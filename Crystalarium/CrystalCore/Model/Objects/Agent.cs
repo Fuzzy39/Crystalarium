@@ -23,7 +23,7 @@ namespace CrystalCore.Model.Objects
         private bool updatedSignalsThisStep;
         // properties 
 
-       
+        internal event EventHandler OnPortsDestroyed;
 
         public AgentType Type
         {
@@ -57,7 +57,13 @@ namespace CrystalCore.Model.Objects
 
             _type = t;
             portInterface = new PortInterface(t, this);
-         
+
+            // setup our port's connections.
+            Map.UpdateSignals(new List<Chunk>(ChunksWithin));
+            foreach (Port p in PortList)
+            {
+                if (!p.HasConnection) { p.Connect(null); }
+            }
 
             // if diagonal signals are allowed, then agents should not be bigger than 1 by 1
             if (Type.Ruleset.DiagonalSignalsAllowed && Bounds.Size.X * Bounds.Size.Y > 1)
@@ -85,6 +91,11 @@ namespace CrystalCore.Model.Objects
 
 
             portInterface.Destroy();
+
+            if(OnPortsDestroyed != null)
+            {
+                OnPortsDestroyed(this, EventArgs.Empty);
+            }
 
             g.UpdateSignals(new List<Chunk>(toUpdate));
 
@@ -115,15 +126,23 @@ namespace CrystalCore.Model.Objects
         // how often do you get to type recombobulate? not often!
         private void RecombobulateSignals()
         {
-            // stop transmitting and receiving signals, then 'reboot'
-            List<Chunk> toUpdate = new List<Chunk>();
-            toUpdate.AddRange(ChunksWithin);
+         
 
             // this will probably work?
             portInterface.Destroy();
-            portInterface = new PortInterface(Type, this);
 
-            Map.UpdateSignals(toUpdate);
+            if (OnPortsDestroyed != null)
+            {
+                OnPortsDestroyed(this, EventArgs.Empty);
+            }
+
+
+            //portInterface = new PortInterface(Type, this);
+
+
+            
+
+            //Map.UpdateSignals(ChunksWithin);
 
             _activeRules.Clear();
             _activeRules.Add(Type.DefaultState);

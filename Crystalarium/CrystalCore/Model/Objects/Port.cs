@@ -26,9 +26,8 @@ namespace CrystalCore.Model.Objects
 
         // events
         public event EventHandler OnValueChange;
-       
-        public event EventHandler OnDestroy;
-
+        public event EventHandler OnConnect;
+      
         public bool Destroyed => ((IDestroyable)_parent).Destroyed;
 
 
@@ -129,13 +128,29 @@ namespace CrystalCore.Model.Objects
 
         }
 
+        public event EventHandler OnDestroy
+        {
+            add
+            {
+                _parent.OnPortsDestroyed += value;
+            }
+
+            remove
+            {
+                _parent.OnPortsDestroyed -= value;
+            }
+        }
+
+        // tostring
+        public override string ToString()
+        {
+            return "Port: { Location:" + Location + " ID: " + ID + ", Facing: " + _facing + " (ABS):" + AbsoluteFacing + "}";
+        }
+
 
         public void Destroy()
         {
-            if (OnDestroy != null)
-            {
-                OnDestroy(this, new EventArgs());
-            }
+           // does nothing?
         }
 
         internal void ValueChange()
@@ -146,22 +161,42 @@ namespace CrystalCore.Model.Objects
             }
         }
 
-        internal void SetupConnection(Signal s)
+        internal void Connect(Signal s)
         {
-            if(connection != null)
+
+            if (OnConnect != null)
             {
-                throw new InvalidOperationException();
+                OnConnect(s, null);
+            }
+
+            if (connection != null)
+            {
+                throw new InvalidOperationException("Port is already connected. Cannot Connect a new signal.");
             }
 
 
             if (s == null)
             {
                 connection = new Beam(_parent.Map, this );
+                //connection.Connect(this); // signal constructor does this now
+
                 return;
             }
 
             connection = s;
+            connection.Connect(this);
+            
+        }
 
+
+        internal void Disconnect()
+        {
+            if(connection == null)
+            {
+                throw new InvalidOperationException("Port already disconnected, no action needed.");
+            }
+
+            connection = null;
         }
 
 

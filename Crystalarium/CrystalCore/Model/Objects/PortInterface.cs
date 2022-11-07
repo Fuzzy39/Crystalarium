@@ -51,11 +51,7 @@ namespace CrystalCore.Model.Objects
 
             // create ports (what a helpful comment)
             CreatePorts();
-            parent.Map.UpdateSignals(new List<Chunk>(parent.ChunksWithin));
-            foreach (Port p in PortList)
-            {
-                if (!p.HasConnection) { p.SetupConnection(null); }
-            }
+           
 
         }
 
@@ -158,6 +154,8 @@ namespace CrystalCore.Model.Objects
 
                 }
             }
+
+            _ports.Clear();
 
         }
 

@@ -18,12 +18,12 @@ namespace CrystalCore.Model.Objects
         {
             get
             {
-                if (portA == null)
+                if (PortA == null)
                 {
-                    return portB;
+                    return PortB;
                 }
 
-                return portA;
+                return PortA;
             }
         }
 
@@ -31,12 +31,12 @@ namespace CrystalCore.Model.Objects
         {
             get
             {
-                if(portA == Start)
+                if(PortA == Start)
                 {
-                    return portB;
+                    return PortB;
                 }
 
-                return portA;
+                return PortA;
             }
         }
 
@@ -103,6 +103,7 @@ namespace CrystalCore.Model.Objects
 
             Update(); // update, to be safe.
 
+           
         }
 
         public override void Update()
@@ -114,7 +115,17 @@ namespace CrystalCore.Model.Objects
                 throw new InvalidOperationException("This signal should be destroyed. Is it? " + Destroyed + "! It should not be updated, but it was.");
             }
 
-            Point start = (portA==null)? portB.Location : portA.Location;
+            // we found all connections. no need to update.
+            if(Start != null 
+               && End != null 
+               && !Start.Destroyed 
+               && !End.Destroyed )
+            {
+              
+                return;
+            }
+
+            Point start = (PortA==null)? PortB.Location : PortA.Location;
             Point? p = Travel(start, MinLength);
             if (p == null)
             {
@@ -145,7 +156,7 @@ namespace CrystalCore.Model.Objects
 
                     // this cast is safe, if we exist, port agents must.
                     _length = length;
-                    return (Agent)target;
+                    return target;
 
                 }
 
@@ -203,25 +214,9 @@ namespace CrystalCore.Model.Objects
                 return;
             }
 
-            if (End != null)
-            {
-                throw new InvalidOperationException("well, a beam shouldn't have two ends...");
-            }
+            p.Connect(this);
 
-            if (portA == null)
-            {
-                p = portA;
-               
 
-            }
-            else
-            {
-                p = portB;
-                
-            }
-            p.SetupConnection(this);
-
-           
 
 
 

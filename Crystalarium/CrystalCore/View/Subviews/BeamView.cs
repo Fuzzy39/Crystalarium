@@ -43,6 +43,7 @@ namespace CrystalCore.View.Subviews
 
             RenderFromA(sb);
             RenderFromB(sb);
+
            
 
         }
@@ -52,41 +53,43 @@ namespace CrystalCore.View.Subviews
         {
 
             Beam beam = (Beam)_renderData;
-            Direction facing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
+            Direction absfacing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
+            Direction facing = absfacing;
 
             // if portA is null, then the direction from A would be reversed from the start, which is B.
             if (beam.PortA != beam.Start)
             {
-                facing = facing.Opposite();
+                facing = absfacing.Opposite();
             }
 
             bool hasEnd = beam.End != null;
             int value = beam.FromA;
-            RenderChannel(sb, facing, hasEnd, value);
+            RenderChannel(sb, facing, absfacing, hasEnd, value);
         }
 
         private void RenderFromB(SpriteBatch sb)
         {
 
             Beam beam = (Beam)_renderData;
-            Direction facing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
+            Direction absfacing = (Direction)beam.Start.AbsoluteFacing.ToDirection();
+            Direction facing = absfacing;
 
             // if portA is null, then the direction from A would be reversed from the start, which is B.
             if (beam.PortB != beam.Start)
             {
-                facing = facing.Opposite();
+                facing = absfacing.Opposite();
             }
 
             bool hasEnd = beam.End != null;
             int value = beam.FromB;
-            RenderChannel(sb, facing, hasEnd, value);
+            RenderChannel(sb, facing, absfacing, hasEnd, value);
         }
 
 
-        private void RenderChannel(SpriteBatch sb, Direction facing, bool hasEnd, int value)
+        private void RenderChannel(SpriteBatch sb, Direction facing, Direction absFacing, bool hasEnd, int value)
         {
 
-            RectangleF renderBounds = new RectangleF(CalcLoc(facing, hasEnd), CalcSize(facing, hasEnd));
+            RectangleF renderBounds = new RectangleF(CalcLoc(absFacing, hasEnd), CalcSize(facing, hasEnd));
 
 
 
@@ -99,17 +102,19 @@ namespace CrystalCore.View.Subviews
 
         private Color DetermineColor(int value, bool hasEnd)
         {
-            if(!hasEnd)
+            if (value != 0)
+            {
+                return config.Color;
+            }
+
+            if (!hasEnd)
             {
                 return Color.Black;
             }
 
-            if(value == 0)
-            {
-                return Color.DimGray;
-            }
 
-            return config.Color;
+            return Color.DimGray;
+           
         }
 
         /// <summary>
