@@ -57,7 +57,7 @@ namespace Crystalarium.Main
             CrystalRules = game.Engine.addRuleset("Crystalarium");
 
 
-            // define BeamRules
+            // define SignalRules
             AgentType t;
             TransformationRule tr;
             Operator greaterThan = new Operator(OperatorType.GreaterThan);
@@ -306,8 +306,8 @@ namespace Crystalarium.Main
             /* FilumRules = game.Engine.addRuleset("Filum");
 
              FilumRules.PortChannelMode = PortChannelMode.fullDuplex;
-             FilumRules.SignalType = SignalType.Beam;
-             FilumRules.BeamMaxLength = 1;
+             FilumRules.SignalType = SignalType.Signal;
+             FilumRules.SignalMaxLength = 1;
              FilumRules.RotateLock = true;
 
              FilumRules.CreateType("void", new Point(1, 1));
@@ -323,7 +323,7 @@ namespace Crystalarium.Main
             WireRules = game.Engine.addRuleset("Wire World");
 
             WireRules.RotateLock = true;
-            WireRules.BeamMaxLength = 1;
+            WireRules.SignalMaxLength = 1;
             WireRules.DiagonalSignalsAllowed = true;
 
             // Wire
@@ -390,7 +390,7 @@ namespace Crystalarium.Main
             baseConfig.Shrinkage = .05f;
 
 
-            // Beams skin
+            // Signals skin
             Skin beams = new Skin(CrystalRules, DefaultSkin);
             beams.GridViewBG = Textures.viewboxBG;
 
@@ -425,8 +425,8 @@ namespace Crystalarium.Main
             beams.AgentConfigs.Add(conf);
 
             // beams
-            beams.BeamConfig.BeamTexture = Textures.pixel;
-            beams.BeamConfig.Color = new Color(230, 230, 150);
+            beams.SignalConfig.SignalTexture = Textures.pixel;
+            beams.SignalConfig.Color = new Color(230, 230, 150);
 
             // chunks
             beams.ChunkConfig.ChunkBackground = Textures.chunkGrid;
@@ -451,8 +451,8 @@ namespace Crystalarium.Main
             basic.AgentConfigs.Add(conf);
 
             // beams
-            basic.BeamConfig.BeamTexture = Textures.pixel;
-            basic.BeamConfig.Color = new Color(230, 230, 150);
+            basic.SignalConfig.SignalTexture = Textures.pixel;
+            basic.SignalConfig.Color = new Color(230, 230, 150);
 
             // chunks
             basic.ChunkConfig.ChunkBackground = Textures.chunkGrid;
@@ -500,7 +500,7 @@ namespace Crystalarium.Main
             baseConfig.DefaultTexture = Textures.pixel;
             baseConfig.Color = Color.Magenta;
 
-            // Beams skin
+            // Signals skin
             Skin beams = new Skin(CrystalRules, MiniMapSkin);
             beams.GridViewBG = Textures.viewboxBG;
 
@@ -536,8 +536,8 @@ namespace Crystalarium.Main
 
 
             // beams
-            beams.BeamConfig.BeamTexture = Textures.pixel;
-            beams.BeamConfig.Color = new Color(230, 230, 150);
+            beams.SignalConfig.SignalTexture = Textures.pixel;
+            beams.SignalConfig.Color = new Color(230, 230, 150);
 
             // chunks
             beams.ChunkConfig.ChunkBackground = Textures.pixel;
@@ -567,8 +567,8 @@ namespace Crystalarium.Main
 
 
             // touch
-            basic.BeamConfig.BeamTexture = Textures.pixel;
-            basic.BeamConfig.Color = new Color(230, 230, 150);
+            basic.SignalConfig.SignalTexture = Textures.pixel;
+            basic.SignalConfig.Color = new Color(230, 230, 150);
 
             // chunks
             basic.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);

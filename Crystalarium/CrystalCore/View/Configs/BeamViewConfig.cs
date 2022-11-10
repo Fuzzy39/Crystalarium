@@ -6,16 +6,16 @@ using System.Text;
 
 namespace CrystalCore.View.Configs
 {
-    public class BeamViewConfig : InitializableObject
+    public class SignalViewConfig : InitializableObject
     {
 
-        // See the BeamView class for descriptions of these fields.
+        // See the SignalView class for descriptions of these fields.
 
         private Texture2D beamTexture;
         private Color color;
         private float beamWidth;
 
-        public Texture2D BeamTexture // the texture for use as the chunk's background.
+        public Texture2D SignalTexture // the texture for use as the chunk's background.
         {
             get => beamTexture;
             set
@@ -42,7 +42,7 @@ namespace CrystalCore.View.Configs
         }
 
 
-        public float BeamWidth
+        public float SignalWidth
         {
             get => beamWidth;
             set
@@ -62,18 +62,18 @@ namespace CrystalCore.View.Configs
             }
         }
 
-        public BeamViewConfig() : base()
+        public SignalViewConfig() : base()
         {
-            BeamTexture = null;
+            SignalTexture = null;
             Color = Color.White;
-            BeamWidth = .25f;
+            SignalWidth = .25f;
         }
 
-        public BeamViewConfig(BeamViewConfig from) : base()
+        public SignalViewConfig(SignalViewConfig from) : base()
         {
-            BeamTexture = from.beamTexture;
+            SignalTexture = from.beamTexture;
             Color = from.Color;
-            BeamWidth = from.beamWidth;
+            SignalWidth = from.beamWidth;
         }
 
         internal override void Initialize()

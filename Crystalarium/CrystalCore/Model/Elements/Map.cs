@@ -196,7 +196,7 @@ namespace CrystalCore.Model.Elements
                 return;
             }
 
-            if (o is Signal)
+            if (o is Connection)
             {
                 _signals--;
                 return;
@@ -217,7 +217,7 @@ namespace CrystalCore.Model.Elements
                 return;
             }
 
-            if (o is Signal)
+            if (o is Connection)
             {
                 _signals++;
                 return;
@@ -245,12 +245,12 @@ namespace CrystalCore.Model.Elements
                 List<ChunkMember> toUpdate = new List<ChunkMember>(ch.MembersWithin);
                 foreach (ChunkMember member in toUpdate)
                 {
-                    if (!(member is Signal))
+                    if (!(member is Connection))
                     {
                         continue;
                     }
 
-                    Signal s = (Signal)member;
+                    Connection s = (Connection)member;
 
                     // signals can be destroyed while this loop runs. if they are, ignore them.
                     if (s.Destroyed)

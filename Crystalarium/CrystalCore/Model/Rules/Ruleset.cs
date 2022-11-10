@@ -52,7 +52,7 @@ namespace CrystalCore.Model.Rules
 
 
         // mildly hacky.
-        public int BeamMinLength
+        public int SignalMinLength
         {
             get => _beamMinLength;
             set
@@ -62,7 +62,7 @@ namespace CrystalCore.Model.Rules
             }
         }
 
-        public int BeamMaxLength
+        public int SignalMaxLength
         {
             get => _beamMaxLength;
             set
@@ -97,8 +97,8 @@ namespace CrystalCore.Model.Rules
             RotateLock = false;
             DiagonalSignalsAllowed = false;
 
-            BeamMinLength = 1; // defaults, infinite, unbounded beams.
-            BeamMaxLength = 0;
+            SignalMinLength = 1; // defaults, infinite, unbounded beams.
+            SignalMaxLength = 0;
 
         }
 

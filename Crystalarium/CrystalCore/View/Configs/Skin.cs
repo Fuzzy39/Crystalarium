@@ -17,7 +17,7 @@ namespace CrystalCore.View.Configs
 
         // the configs which make up most of this skin's settings.
         private ChunkViewConfig _chunkConfig;
-        private BeamViewConfig _beamConfig;
+        private SignalViewConfig _beamConfig;
         private List<AgentViewConfig> _agentConfigs;
 
         // Settings specific to the gridview itself belong here, such as border and background textures.
@@ -48,7 +48,7 @@ namespace CrystalCore.View.Configs
             }
         }
 
-        public BeamViewConfig BeamConfig
+        public SignalViewConfig SignalConfig
         {
             get
             {  
@@ -112,7 +112,7 @@ namespace CrystalCore.View.Configs
             _gridViewBG= null;
             _gridViewBGColor = Color.White;
 
-            _beamConfig = new BeamViewConfig();
+            _beamConfig = new SignalViewConfig();
             _chunkConfig = new ChunkViewConfig();
 
 
@@ -148,12 +148,12 @@ namespace CrystalCore.View.Configs
 
                 ChunkConfig.Initialize();
 
-                if (BeamConfig == null)
+                if (SignalConfig == null)
                 {
-                    throw new InitializationFailedException("The Skin's BeamConfig property was null.");
+                    throw new InitializationFailedException("The Skin's SignalConfig property was null.");
                 }
 
-                BeamConfig.Initialize();
+                SignalConfig.Initialize();
                 // Skinby.Initalize();
 
                 InitializeAgentConfigs();

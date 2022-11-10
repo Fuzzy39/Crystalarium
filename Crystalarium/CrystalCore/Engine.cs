@@ -79,7 +79,7 @@ namespace CrystalCore
             _timeDiag.CreateWorkload("Draw", "Engine Draw");
             _timeDiag.CreateTask("Engine Draw", "Chunks");
             _timeDiag.CreateTask("Engine Draw", "Agents");
-            _timeDiag.CreateTask("Engine Draw", "Beams");
+            _timeDiag.CreateTask("Engine Draw", "Signals");
             _timeDiag.CreateTask("Engine Draw", "Gridview Other");
 
      

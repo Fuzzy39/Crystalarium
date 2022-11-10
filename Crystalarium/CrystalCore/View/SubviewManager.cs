@@ -43,7 +43,7 @@ namespace CrystalCore.View
         }
 
 
-        internal List<Subview> BeamViews
+        internal List<Subview> SignalViews
         {
             get => _beamViews;
         }
@@ -111,10 +111,10 @@ namespace CrystalCore.View
                 }
                 Timekeeper.Instance.StopTask("Agents");
 
-                Timekeeper.Instance.StartTask("Beams");
-                AddBeams();
+                Timekeeper.Instance.StartTask("Signals");
+                AddSignals();
                 DrawObjects(sb, _beamViews);
-                Timekeeper.Instance.StopTask("Beams");
+                Timekeeper.Instance.StopTask("Signals");
 
                 Timekeeper.Instance.StartTask("Agents");
                 DrawObjects(sb, _agentViews);
@@ -199,7 +199,7 @@ namespace CrystalCore.View
             }
         }
 
-        private void AddBeams()
+        private void AddSignals()
         {
             // find agents that need rendered
             foreach (ChunkView chr in _chunkViews)
@@ -208,19 +208,19 @@ namespace CrystalCore.View
                 foreach( ChunkMember cm in ((Chunk)chr.RenderData).MembersWithin)
                 {
 
-                    if (!(cm is Beam))
+                    if (!(cm is Connection))
                     {
                         continue;
                        
                     }
 
-                    Beam beam = (Beam)cm;
+                    Connection beam = (Connection)cm;
 
          
                     if (!_beamViews.ViewExistsFor(beam))
                     {
                         
-                        new BeamView (_parent, beam, _beamViews, Parent.CurrentSkin.BeamConfig);
+                        new SignalView (_parent, beam, _beamViews, Parent.CurrentSkin.SignalConfig);
 
                     }
                 }

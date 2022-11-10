@@ -19,7 +19,7 @@ namespace CrystalCore.Model.Objects
         private Agent _parent; // the agent we are part of.
 
 
-        private Signal connection;
+        private Connection connection;
 
         private int transmitting;
 
@@ -161,7 +161,7 @@ namespace CrystalCore.Model.Objects
             }
         }
 
-        internal void Connect(Signal s)
+        internal void Connect(Connection s)
         {
 
             if (OnConnect != null)
@@ -177,7 +177,7 @@ namespace CrystalCore.Model.Objects
 
             if (s == null)
             {
-                connection = new Beam(_parent.Map, this );
+                connection = new Connection(_parent.Map, this );
                 //connection.Connect(this); // signal constructor does this now
 
                 return;
