@@ -1,9 +1,7 @@
 ﻿using CrystalCore;
 using CrystalCore.Model.Elements;
 using CrystalCore.Model.Rules;
-using CrystalCore.Util.Timekeeping;
 using CrystalCore.View;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -26,7 +24,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 822; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 823; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         
 
@@ -198,7 +196,6 @@ namespace Crystalarium.Main
         {
 
 
-            Timekeeper.Instance.StartTask("Other Update");
 
             // provided by monogame. Escape closes the program. I suppose it can stay for now.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -206,7 +203,6 @@ namespace Crystalarium.Main
 
             if (errorSplash != null)
             {
-                Timekeeper.Instance.StopTask("Other Update");
                 return;
             }
 
@@ -231,7 +227,6 @@ namespace Crystalarium.Main
             minimap.Camera.Zoom = view.Camera.Zoom / 12;
 
 
-            Timekeeper.Instance.StopTask("Other Update");
 
             try
             {
@@ -253,7 +248,6 @@ namespace Crystalarium.Main
         protected override void Draw(GameTime gameTime)
         {
 
-            Timekeeper.Instance.StartTask("Other Draw");
           
 
             // setup
@@ -272,7 +266,6 @@ namespace Crystalarium.Main
             // make everything a flat color.
             GraphicsDevice.Clear(new Color(70, 70, 70));
 
-            Timekeeper.Instance.StopTask("Other Draw");
 
             // tru to draw the game
             try
@@ -288,7 +281,6 @@ namespace Crystalarium.Main
                 return;
             }
 
-            Timekeeper.Instance.StartTask("Other Draw");
             // Draw text on top of the game.
             DrawText(width, height);
 
@@ -327,16 +319,12 @@ namespace Crystalarium.Main
                 new Vector2(10, 10), Color.White);
             spriteBatch.DrawString(Textures.testFont, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Vector2(10, 30), Color.White);
 
-            // diag info
-            if (actions.TimingInfoEnabled)
-            {
-                spriteBatch.DrawString(Textures.testFont, Timekeeper.Instance.CreateReport(), new Vector2(10, 100), Color.White, 0f, new Vector2(), .8f, SpriteEffects.None, 0);
-            }
+       
 
 
             spriteBatch.DrawString(Textures.testFont, 
                 "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. RMB to delete. R to rotate. Tab to Copy Agent." +
-                "\nQ and E to switch agent types. P to switch rulesets (resets grid). O to toggle port rendering. I to toggle performance info." +
+                "\nQ and E to switch agent types. P to switch rulesets (resets grid). O to toggle port rendering." +
                 "\nSpace to toggle simulation. Z for single sim step. Shift/Control to Raise/Lower sim speed.", 
                 new Vector2(10, height - 95), Color.White);
 
@@ -364,7 +352,6 @@ namespace Crystalarium.Main
         {
             spriteBatch.DrawString(Textures.testFont, "Milestone 5, Build " + BUILD, new Vector2(10, height - 25), Color.White);
             spriteBatch.End();
-            Timekeeper.Instance.StopTask("Other Draw");
         }
 
 

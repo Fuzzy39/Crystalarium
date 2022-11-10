@@ -1,7 +1,6 @@
 ﻿using CrystalCore.Model.Elements;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
-using CrystalCore.Util.Timekeeping;
 using CrystalCore.View.Configs;
 using CrystalCore.View.Rendering;
 using CrystalCore.View.Subviews.Agents;
@@ -193,22 +192,18 @@ namespace CrystalCore.View
 
         internal void Draw(SpriteBatch sb)
         {
-            Timekeeper.Instance.StartTask("Gridview Other");
             // draw the background.
             DrawBackground(sb);
-            Timekeeper.Instance.StopTask("Gridview Other");
 
             // Update our subview manager and have it render its subviews.
             _subviewManager.Draw(sb);
 
-            Timekeeper.Instance.StartTask("Gridview Other");
             // draw the viewport if in debug mode.
             DrawOtherGridView(sb);
 
 
             // finally, draw the border.
             _border.Draw(sb);
-            Timekeeper.Instance.StopTask("Gridview Other");
         }
 
 

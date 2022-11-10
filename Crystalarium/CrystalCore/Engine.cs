@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using CrystalCore.View.Configs;
-using CrystalCore.Util.Timekeeping;
 using CrystalCore.Model.Rules;
 using CrystalCore.Model.Elements;
 
@@ -19,7 +18,7 @@ namespace CrystalCore
 
         private SimulationManager _sim;
         private Controller _controller;
-        private Timekeeper _timeDiag;
+    
        
       
         private List<GridView> _viewports;
@@ -58,29 +57,6 @@ namespace CrystalCore
 
             _skinSets = new List<SkinSet>();
             _rulesets = new List<Ruleset>();
-
-
-            // this is kinda gross, but...
-            _timeDiag = Timekeeper.Instance;
-            _timeDiag.CreateWorkload("", "Update");
-            _timeDiag.CreateTask("Update", "Other Update");
-            _timeDiag.CreateWorkload("Update", "Engine Update");
-
-            _timeDiag.CreateWorkload("Engine Update", "Simulation");
-            _timeDiag.CreateTask("Simulation", "Get AgentState");
-            _timeDiag.CreateTask("Simulation", "Transform");
-
-
-            _timeDiag.CreateTask("Engine Update", "Camera");
-            _timeDiag.CreateTask("Engine Update", "Controller");
-
-            _timeDiag.CreateWorkload("", "Draw");
-            _timeDiag.CreateTask("Draw", "Other Draw");
-            _timeDiag.CreateWorkload("Draw", "Engine Draw");
-            _timeDiag.CreateTask("Engine Draw", "Chunks");
-            _timeDiag.CreateTask("Engine Draw", "Agents");
-            _timeDiag.CreateTask("Engine Draw", "Signals");
-            _timeDiag.CreateTask("Engine Draw", "Gridview Other");
 
      
             
@@ -166,7 +142,6 @@ namespace CrystalCore
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before it can be updated. Call Engine.Initialize().");
             }
-            _timeDiag.NextFrame();
 
 
             _sim.Update(gameTime);
@@ -174,17 +149,13 @@ namespace CrystalCore
 
 
             // update viewports. (Camera Controls, mostly)
-            _timeDiag.StartTask("Camera");
             foreach (GridView v in _viewports)
             {
                 v.Update();
             }
-            _timeDiag.StopTask("Camera");
 
 
-            _timeDiag.StartTask("Controller");
             _controller.Update();
-            _timeDiag.StopTask("Controller");
 
         }
 
