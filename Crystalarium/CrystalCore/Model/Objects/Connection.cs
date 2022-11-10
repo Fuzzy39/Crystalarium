@@ -15,8 +15,8 @@ namespace CrystalCore.Model.Objects
         private Port portA;
         private Port portB;
 
-        private int fromA; // the value of this signal from a to b
-        private int fromB; // the value of this signal from b to a.
+        //private int fromA; // the value of this signal from a to b
+       // private int fromB; // the value of this signal from b to a.
 
         private int _maxLength = 0;
         private int _minLength = 1;
@@ -113,12 +113,28 @@ namespace CrystalCore.Model.Objects
 
         internal int FromA
         {
-            get { return fromA; }
+            get 
+            {
+                if (portA == null)
+                {
+                    return 0;
+                }
+
+                return portA.TransmittingValue;
+            }
         }
 
         internal int FromB
         {
-            get { return fromB; }
+            get 
+            {
+                if (portB == null)
+                {
+                    return 0;
+                }
+
+                return portB.TransmittingValue;
+            }
         }
 
 
@@ -128,9 +144,6 @@ namespace CrystalCore.Model.Objects
         {
 
            
-            fromA = 0;
-            fromB = 0;
-
             Connect(transmitter);
 
 
@@ -211,7 +224,7 @@ namespace CrystalCore.Model.Objects
                     }
                 }
             }
-
+                    
             foreach (Port p in potentialMatches)
             {
                 if (p.Location.Equals(loc))
@@ -264,13 +277,13 @@ namespace CrystalCore.Model.Objects
         {
             if(p == portA)
             {
-                return fromB;
+                return FromB;
 
             }
             
             if(p == portB)
             {
-                return fromA;
+                return FromA;
             }
 
             throw new ArgumentException(p + " is not connected to signal " + this+" it cannot receive a value");
@@ -286,7 +299,6 @@ namespace CrystalCore.Model.Objects
 
             if(p==portA)
             {
-                fromA = value;
                 if (portB != null)
                 {
                     portB.ValueChange();
@@ -296,7 +308,6 @@ namespace CrystalCore.Model.Objects
 
             if(p == portB)
             {
-                fromB = value;
                 if (portA != null)
                 {
                     portA.ValueChange();
@@ -317,9 +328,9 @@ namespace CrystalCore.Model.Objects
 
 
 
-        /*#########################
-         *  BEAM METHODS
-         * ############################
+        /* #########################
+         *  #    BEAM METHODS     #
+         * #########################
          */
 
         public void Update()
@@ -342,6 +353,7 @@ namespace CrystalCore.Model.Objects
             }
 
             Point start = (PortA == null) ? PortB.Location : PortA.Location;
+            // jacob is horny
             Point? p = Travel(start, MinLength);
             if (p == null)
             {
