@@ -24,12 +24,14 @@ namespace CrystalCore.Model.Objects
         private int transmitting;
 
 
-        // events
-        public event EventHandler OnValueChange;
-        public event EventHandler OnConnect;
-      
+
+
         public bool Destroyed => ((IDestroyable)_parent).Destroyed;
 
+        public Agent Parent
+        {
+            get{ return _parent;}
+        }
 
         public CompassPoint AbsoluteFacing
         {
@@ -153,21 +155,10 @@ namespace CrystalCore.Model.Objects
            // does nothing?
         }
 
-        internal void ValueChange()
-        {
-            if(OnValueChange != null)
-            {
-                OnValueChange(this, new EventArgs());
-            }
-        }
+     
 
         internal void Connect(Connection s)
         {
-
-            if (OnConnect != null)
-            {
-                OnConnect(s, null);
-            }
 
             if (connection != null)
             {
@@ -257,7 +248,6 @@ namespace CrystalCore.Model.Objects
             {
                 throw new InvalidOperationException("Port attempted to transmit before connection was established.");
             }
-            connection.Transmit(this, value);
             transmitting = value;
         }
     }

@@ -85,7 +85,7 @@ namespace CrystalCore.Model.Objects
                     // create a diagonal port.
                     Port p = new Port(facing, 0, parent);
                     portList.Add(p);
-                    p.OnValueChange += OnPortStatusChanged;
+                   
                   
                     continue;
                 }
@@ -111,7 +111,7 @@ namespace CrystalCore.Model.Objects
                 {
                     Port p = new Port(facing, j, parent);
                     ports.Add(p);
-                    p.OnValueChange += OnPortStatusChanged;
+                  
                    
                 }
                 return ports;
@@ -121,7 +121,7 @@ namespace CrystalCore.Model.Objects
             {
                 Port p = new Port(facing, j, parent);
                 ports.Add(p);
-                p.OnValueChange += OnPortStatusChanged;
+
 
             }
 
@@ -160,11 +160,7 @@ namespace CrystalCore.Model.Objects
         }
 
 
-        private void OnPortStatusChanged(Object Sender, EventArgs e)
-        {
-
-            StatusChanged();
-        }
+     
 
         internal void StatusChanged()
         {
