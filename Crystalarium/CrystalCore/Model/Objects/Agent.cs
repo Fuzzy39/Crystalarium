@@ -56,14 +56,47 @@ namespace CrystalCore.Model.Objects
             }
 
             _type = t;
+
+            // create the portinterface
             portInterface = new PortInterface(t, this);
 
-            // setup our port's connections.
-            Map.UpdateSignals(new List<Chunk>(ChunksWithin));
-            foreach (Port p in PortList)
+            // get intersecting connections.
+            List<Connection> intersecting= new List<Connection>();
+            foreach(Chunk ch in ChunksWithin)
             {
-                if (!p.HasConnection) { p.Connect(null); }
+                foreach(ChunkMember chm in ch.MembersWithin )
+                {
+                    if(chm is Connection && !intersecting.Contains((Connection)chm))
+                    {
+                        intersecting.Add((Connection)chm);
+                    }
+                }
             }
+
+            List<Port> toUpdate = new List<Port>();
+            foreach(Connection conn in intersecting)
+            {
+                if (conn.PortA != null)
+                {
+                    toUpdate.Add(conn.PortA);
+                }
+
+                if (conn.PortB != null)
+                {
+                    toUpdate.Add(conn.PortB);
+                }
+            }
+
+            foreach(Port p in toUpdate)
+            {
+                p.Update();
+            }
+
+            foreach(Port p in PortList)
+            {
+                p.Update();
+            }
+            
 
             // if diagonal signals are allowed, then agents should not be bigger than 1 by 1
             if (Type.Ruleset.DiagonalSignalsAllowed && Bounds.Size.X * Bounds.Size.Y > 1)

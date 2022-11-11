@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Elements;
+using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
@@ -23,6 +24,7 @@ namespace CrystalCore.Model.Objects
 
         private int transmitting;
 
+        private Pathfinder pathfinder;
 
 
 
@@ -127,6 +129,7 @@ namespace CrystalCore.Model.Objects
             this.ID = ID;
             _parent = parent;
             transmitting = 0;
+            pathfinder = new Pathfinder(this, parent.Map);
 
         }
 
@@ -152,9 +155,18 @@ namespace CrystalCore.Model.Objects
 
         public void Destroy()
         {
-           // does nothing?
+            // does nothing?
+            if(connection!= null)
+            {
+                connection.Destroy();
+            }    
         }
 
+        public void Update()
+        {
+            Ruleset r = Parent.Type.Ruleset;
+            pathfinder.FindPath(r.SignalMinLength, r.SignalMaxLength, null);
+        }
      
 
         internal void Connect(Connection s)
@@ -168,14 +180,14 @@ namespace CrystalCore.Model.Objects
 
             if (s == null)
             {
-                connection = new Connection(_parent.Map, this );
-                //connection.Connect(this); // signal constructor does this now
 
+
+                Update();
                 return;
             }
 
             connection = s;
-            connection.Connect(this);
+       
             
         }
 

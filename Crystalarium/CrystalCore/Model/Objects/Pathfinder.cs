@@ -22,6 +22,7 @@ namespace CrystalCore.Model.Objects
         internal Pathfinder(Port port, Map map)
         {
             this.port = port;
+            this.Map = map;
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace CrystalCore.Model.Objects
         /// <returns>null if no new connection. connection otherwise</returns>
         internal void FindPath(int minLength, int maxLength, Connection currentConnection)
         {
-
+            
             start = port.Location;
             facing = port.AbsoluteFacing;
             current = currentConnection;
@@ -61,13 +62,14 @@ namespace CrystalCore.Model.Objects
 
 
             // it is! grab the appropriate port.
+            current.Destroy();
             new Connection
             (
                 Map, 
                 port, 
                 FindPort(target, connectTo, facing.Opposite()), 
                 currentLength, 
-                facing.Opposite()
+                facing
             );
           
 
@@ -113,7 +115,28 @@ namespace CrystalCore.Model.Objects
         private Connection CheckTarget(Agent target)
         {
             // if we found no target...
-            if (current.Other(port) == null & target == null)
+            if(current == null)
+            {
+                if (target == null)
+                {
+                    //current.Destroy();
+                    return new Connection
+                        (
+                        Map,
+                        port,
+                        null,
+                        currentLength,
+                        facing
+                        );
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+
+            if ( current.Other(port) == null && target == null)
             {
                 if (currentLength == current.Length)
                 {
@@ -121,19 +144,20 @@ namespace CrystalCore.Model.Objects
                 }
 
                 // into the void!
+                current.Destroy();
                 return new Connection
                     (
                     Map,
                     port,
                     null,
                     currentLength,
-                    facing.Opposite()
+                    facing
                     ) ;
 
             }
 
             // if we found nothing new...
-            if (target == current.Other(port).Parent)
+            if ( target == current.Other(port).Parent)
             {
                 return current;
             }

@@ -17,7 +17,7 @@ namespace CrystalCore.View.Subviews
         {
             get { return renderTarget; }
         }
-
+        //Jacob did unspeakable thngs here
         protected ViewObject(GridView v)
         {
             renderTarget = v;

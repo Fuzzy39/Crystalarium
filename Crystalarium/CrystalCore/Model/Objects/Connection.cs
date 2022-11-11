@@ -170,8 +170,22 @@ namespace CrystalCore.Model.Objects
              
 
             Point b = from.ToPoint();
-            b.X *= length;
-            b.Y *= length;
+            b.X *= (length-1);
+            b.Y *= (length-1);
+
+            b += a;
+            if (!from.IsDiagonal())
+            {
+                Direction d = (Direction)from.ToDirection();
+                if (d.IsVertical())
+                {
+                    b.X++;
+                }
+                else
+                {
+                    b.Y++;
+                }
+            }   
             return Util.Util.RectFromPoints(a, b);
         }
 
@@ -213,29 +227,7 @@ namespace CrystalCore.Model.Objects
             }
 
         }
-        
-        internal virtual void Connect(Port p)
-        {
-            if (portA == null)
-            {
-                portA = p;
-
-
-            }
-            else
-            {
-                portB = p;
-
-
-            }
-
-           
-
-            if(portA == portB)
-            {
-                throw new InvalidOperationException("yeah, no, a port should not be on both ends of a beam");
-            }
-        }
+       
 
        
         public int Receive(Port p)

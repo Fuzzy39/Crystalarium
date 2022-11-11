@@ -7,14 +7,6 @@ using System.Text;
 namespace CrystalCore.Model.Objects
 {
 
-    internal enum PortStatus
-    {
-        inactive,
-        receiving,
-        transmitting,
-        transceiving
-    }
-
 
     // relative portID.
     public struct PortID
