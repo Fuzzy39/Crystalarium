@@ -49,6 +49,12 @@ namespace CrystalCore.Util
 
         }
 
+        public static bool IsPositive(this Direction d)
+        {
+            return d == Direction.right || d == Direction.down;
+           
+        }
+
         public static Direction Opposite(this Direction d)
         {
 

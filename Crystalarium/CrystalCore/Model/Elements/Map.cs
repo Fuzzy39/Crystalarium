@@ -30,6 +30,7 @@ namespace CrystalCore.Model.Elements
 
 
         public event EventHandler OnReset;
+        public event EventHandler OnResize;
 
         public int AgentCount { get => _agents.Count; }
 
@@ -110,6 +111,11 @@ namespace CrystalCore.Model.Elements
 
         public void Reset()
         {
+            if(OnReset != null)
+            {
+                OnReset(this, null);
+            }
+           
 
             // reseting our grid should remove all references to any remaining mapObjects
             if (grid != null)
@@ -181,7 +187,10 @@ namespace CrystalCore.Model.Elements
 
             grid.AddElements(toAdd, d);
 
-            UpdateSignals(grid.ElementList);
+            if (OnResize != null)
+            {
+                OnResize(this, null);
+            }
         }
 
         internal void OnObjectDestroyed(object o, EventArgs e)
@@ -229,42 +238,7 @@ namespace CrystalCore.Model.Elements
             }
         }
 
-        
-
-        /// <summary>
-        /// Asks each signal in where chunks to re establish their target.
-        /// </summary>
-        /// <param name="where"></param>
-        internal void UpdateSignals(List<Chunk> where)
-        {
-
-            // this will update some signals multiple times, but eh...
-            foreach (Chunk ch in where)
-            {
-                List<ChunkMember> toUpdate = new List<ChunkMember>(ch.MembersWithin);
-                foreach (ChunkMember member in toUpdate)
-                {
-                    if (!(member is Connection))
-                    {
-                        continue;
-                    }
-
-                    Connection s = (Connection)member;
-
-                    // signals can be destroyed while this loop runs. if they are, ignore them.
-                    if (s.Destroyed)
-                    {
-                        continue;
-                    }
-                    s.Update();
-
-                }
-
-            }
-
-        }
-
-
+       
 
         /// <summary>
         /// Perform a simulation step for this grid.

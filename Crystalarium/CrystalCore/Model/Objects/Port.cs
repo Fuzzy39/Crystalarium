@@ -30,6 +30,7 @@ namespace CrystalCore.Model.Objects
 
         public bool Destroyed => ((IDestroyable)_parent).Destroyed;
 
+
         public Agent Parent
         {
             get{ return _parent;}
@@ -58,6 +59,13 @@ namespace CrystalCore.Model.Objects
             }
         }
 
+        public Port ConnectedTo
+        {
+            get
+            {
+                return connection.Other(this);
+            }
+        }
 
         public int TransmittingValue
         {
@@ -130,21 +138,40 @@ namespace CrystalCore.Model.Objects
             _parent = parent;
             transmitting = 0;
             pathfinder = new Pathfinder(this, parent.Map);
+            parent.Map.OnResize += OnMapResize;
 
         }
+        
+        private void OnMapResize(object sender, EventArgs e)
+        {
+            // frankly, we no longer care.
+            if(Destroyed)
+            {
+                ((Map)sender).OnResize -= OnMapResize;
+                return;
+            }
+
+            if(ConnectedTo == null)
+            {
+                Update();
+            }
+        }
+
 
         public event EventHandler OnDestroy
         {
             add
             {
-                _parent.OnPortsDestroyed += value;
+                ((IDestroyable)_parent).OnDestroy += value;
             }
 
             remove
             {
-                _parent.OnPortsDestroyed -= value;
+                ((IDestroyable)_parent).OnDestroy -= value;
             }
         }
+
+
 
         // tostring
         public override string ToString()
@@ -160,21 +187,23 @@ namespace CrystalCore.Model.Objects
             {
                 connection.Destroy();
             }    
+
+           
         }
 
         public void Update()
         {
             Ruleset r = Parent.Type.Ruleset;
-            pathfinder.FindPath(r.SignalMinLength, r.SignalMaxLength, null);
+            pathfinder.FindPath(r.SignalMinLength, r.SignalMaxLength, connection);
         }
      
 
         internal void Connect(Connection s)
         {
 
-            if (connection != null)
+            if (connection != null && !connection.Destroyed)
             {
-                throw new InvalidOperationException("Port is already connected. Cannot Connect a new signal.");
+                throw new InvalidOperationException("Port '"+ this + "' is already connected. Cannot Connect a new signal.");
             }
 
 

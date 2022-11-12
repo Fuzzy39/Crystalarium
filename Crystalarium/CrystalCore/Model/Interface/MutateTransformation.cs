@@ -60,7 +60,7 @@ namespace CrystalCore.Model.Interface
             {
                 throw new InvalidOperationException("Failed to mutate agent.");
             }
-            g.UpdateSignals(b.ChunksWithin);
+            
         }
 
         internal override Transformation Add(Transformation toAdd)

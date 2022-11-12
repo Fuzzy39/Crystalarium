@@ -45,7 +45,17 @@ namespace CrystalCore.Model.Objects
             if (p == null)
             {
                 // no connection established. May cause issues?
-                throw new NotImplementedException("welp, I was evidently too lazy to write code to ensure minimum beam lengths worked properly. huh, should probably fix that...");
+                if (current != null) { current.Destroy(); }
+                new Connection
+                (
+                   Map,
+                   port,
+                   null,
+                   1,
+                   facing
+                );
+
+                return;
             }
             currentLength = minLength;
 
@@ -62,8 +72,9 @@ namespace CrystalCore.Model.Objects
 
 
             // it is! grab the appropriate port.
-            current.Destroy();
-            new Connection
+            if (current != null) { current.Destroy(); }
+            Console.WriteLine("Should be false: "+ port.HasConnection);
+            Connection c = new Connection
             (
                 Map, 
                 port, 
@@ -71,7 +82,7 @@ namespace CrystalCore.Model.Objects
                 currentLength, 
                 facing
             );
-          
+            Console.WriteLine("FULLY OPERATIONAL? : " + c);
 
         
 
@@ -111,7 +122,12 @@ namespace CrystalCore.Model.Objects
             // we should update our length and bounds to reflect that.
             return null;
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns>Null if a new connection must be made, otherwise a conenction already exists.</returns>
         private Connection CheckTarget(Agent target)
         {
             // if we found no target...
@@ -156,8 +172,8 @@ namespace CrystalCore.Model.Objects
 
             }
 
-            // if we found nothing new...
-            if ( target == current.Other(port).Parent)
+            // if we are connected to the same target that we are calculating now, there's no need to do anything.
+            if (current.Other(port) != null && target == current.Other(port).Parent)
             {
                 return current;
             }

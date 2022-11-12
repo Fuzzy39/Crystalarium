@@ -50,7 +50,7 @@ namespace CrystalCore.Model.Elements
             // since this ChunkMember exists purely on the chunk grid, it cannot exist outside of it.
             if (!g.Bounds.Contains(bounds))
             {
-                Console.WriteLine("I'm fucked");
+     
                 throw new ArgumentException("Invalid Bounds for ChunkMember '" + bounds + "'. Bounds were outside the currently existing chunk grid, with bounds " + g.Bounds);
             }
 

@@ -23,7 +23,7 @@ namespace CrystalCore.Model.Objects
         private bool updatedSignalsThisStep;
         // properties 
 
-        internal event EventHandler OnPortsDestroyed;
+       // internal event EventHandler OnPortsDestroyed;
 
         public AgentType Type
         {
@@ -59,43 +59,7 @@ namespace CrystalCore.Model.Objects
 
             // create the portinterface
             portInterface = new PortInterface(t, this);
-
-            // get intersecting connections.
-            List<Connection> intersecting= new List<Connection>();
-            foreach(Chunk ch in ChunksWithin)
-            {
-                foreach(ChunkMember chm in ch.MembersWithin )
-                {
-                    if(chm is Connection && !intersecting.Contains((Connection)chm))
-                    {
-                        intersecting.Add((Connection)chm);
-                    }
-                }
-            }
-
-            List<Port> toUpdate = new List<Port>();
-            foreach(Connection conn in intersecting)
-            {
-                if (conn.PortA != null)
-                {
-                    toUpdate.Add(conn.PortA);
-                }
-
-                if (conn.PortB != null)
-                {
-                    toUpdate.Add(conn.PortB);
-                }
-            }
-
-            foreach(Port p in toUpdate)
-            {
-                p.Update();
-            }
-
-            foreach(Port p in PortList)
-            {
-                p.Update();
-            }
+            portInterface.UpdateConnections();
             
 
             // if diagonal signals are allowed, then agents should not be bigger than 1 by 1
@@ -125,12 +89,6 @@ namespace CrystalCore.Model.Objects
 
             portInterface.Destroy();
 
-            if(OnPortsDestroyed != null)
-            {
-                OnPortsDestroyed(this, EventArgs.Empty);
-            }
-
-            g.UpdateSignals(new List<Chunk>(toUpdate));
 
         }
 
@@ -159,15 +117,12 @@ namespace CrystalCore.Model.Objects
         // how often do you get to type recombobulate? not often!
         private void RecombobulateSignals()
         {
-         
 
+            throw new NotImplementedException("Rotation isn't done");
             // this will probably work?
             portInterface.Destroy();
 
-            if (OnPortsDestroyed != null)
-            {
-                OnPortsDestroyed(this, EventArgs.Empty);
-            }
+         
 
 
             //portInterface = new PortInterface(Type, this);

@@ -323,7 +323,7 @@ namespace Crystalarium.Main
             WireRules = game.Engine.addRuleset("Wire World");
 
             WireRules.RotateLock = true;
-            WireRules.SignalMaxLength = 1;
+            //WireRules.SignalMaxLength = 100;
             WireRules.DiagonalSignalsAllowed = true;
 
             // Wire

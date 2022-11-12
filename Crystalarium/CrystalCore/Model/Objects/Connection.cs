@@ -139,7 +139,7 @@ namespace CrystalCore.Model.Objects
 
 
         public Connection(Map m, Port from, Port to, int length, CompassPoint direction ) 
-            : base(m, GetBounds(from, length, direction))
+            : base(m, GetBounds(from, to, length, direction))
         {
 
            
@@ -158,35 +158,49 @@ namespace CrystalCore.Model.Objects
           
         }
 
-        private static Rectangle GetBounds(Port A,  int length, CompassPoint from)
+        private static Rectangle GetBounds(Port from, Port to, int length, CompassPoint dirfrom)
         {
-            if (A == null)
+            if (from == null)
             {
                 throw new ArgumentException("first port may not be null!");
             }
 
-            Point a = A.Location;
-           
-             
+          
 
-            Point b = from.ToPoint();
-            b.X *= (length-1);
-            b.Y *= (length-1);
 
-            b += a;
-            if (!from.IsDiagonal())
+            if(dirfrom.IsDiagonal())
             {
-                Direction d = (Direction)from.ToDirection();
-                if (d.IsVertical())
-                {
-                    b.X++;
-                }
-                else
-                {
-                    b.Y++;
-                }
-            }   
-            return Util.Util.RectFromPoints(a, b);
+                return Util.Util.RectFromPoints(from.Location, from.Location + (dirfrom.ToPoint() * new Point(length)));
+            }
+
+
+            Point size = new Point(length, 1);
+            Direction d = (Direction)dirfrom.ToDirection();
+
+            if ( d.IsVertical() )
+            {
+                size = new Point(size.Y, size.X);
+            }
+
+            if(d.IsPositive())
+            {
+                return new Rectangle(from.Location, size);
+            }
+
+            Point start = from.Location;
+            
+            if(d.IsVertical())
+            {
+                start.Y += -size.Y +(to==null?1:0);
+
+            }
+            else
+            {
+                start.X += -size.X + (to == null ? 1 : 0);
+            }
+            return new Rectangle(start, size);
+
+
         }
 
         public override void Destroy()

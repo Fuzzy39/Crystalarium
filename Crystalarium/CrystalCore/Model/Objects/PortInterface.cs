@@ -51,10 +51,55 @@ namespace CrystalCore.Model.Objects
 
             // create ports (what a helpful comment)
             CreatePorts();
-           
 
+           
         }
 
+        internal void UpdateConnections()
+        {
+            // get intersecting connections.
+            List<Connection> intersecting = new List<Connection>();
+            foreach (Chunk ch in parent.ChunksWithin)
+            {
+                foreach (ChunkMember chm in ch.MembersWithin)
+                {
+                    if (chm.Bounds.Intersects(parent.Bounds))
+                    {
+                        if (chm is Connection && !intersecting.Contains((Connection)chm))
+                        {
+                            intersecting.Add((Connection)chm);
+                        }
+                    }
+                }
+            }
+
+            // get ports of those connections
+            List<Port> toUpdate = new List<Port>();
+            foreach (Connection conn in intersecting)
+            {
+                if (conn.PortA != null)
+                {
+                    toUpdate.Add(conn.PortA);
+                }
+
+                if (conn.PortB != null)
+                {
+                    toUpdate.Add(conn.PortB);
+                }
+            }
+
+            // update all ports that require it
+            foreach (Port p in toUpdate)
+            {
+                p.Update();
+            }
+
+            foreach (Port p in PortList)
+            {
+                p.Update();
+            }
+
+        }
 
         // PORT RELATED
         private void CreatePorts()
@@ -146,13 +191,24 @@ namespace CrystalCore.Model.Objects
         public void Destroy()
         {
 
+            List<Port> toUpdate = new List<Port>();
+
             foreach (List<Port> ports in _ports)
             {
                 foreach (Port port in ports)
                 {
+                    if(port.ConnectedTo != null)
+                    {
+                        toUpdate.Add(port.ConnectedTo);
+                    }
                     port.Destroy();
 
                 }
+            }
+
+            foreach (Port p in toUpdate)
+            {
+                p.Update();
             }
 
             _ports.Clear();
