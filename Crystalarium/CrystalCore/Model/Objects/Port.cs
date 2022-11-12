@@ -290,6 +290,10 @@ namespace CrystalCore.Model.Objects
                 throw new InvalidOperationException("Port attempted to transmit before connection was established.");
             }
             transmitting = value;
+            if(ConnectedTo != null)
+            {
+                ConnectedTo.Parent.StatusChanged();
+            }
         }
     }
 }

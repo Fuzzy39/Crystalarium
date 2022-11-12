@@ -93,7 +93,10 @@ namespace CrystalCore.Model.Objects
         }
 
 
-        
+        internal void StatusChanged()
+        {
+            portInterface.StatusChanged();
+        }
 
 
 
