@@ -27,9 +27,8 @@ namespace CrystalCore.Model.Objects
         private Pathfinder pathfinder;
 
 
-
-        public bool Destroyed => ((IDestroyable)_parent).Destroyed;
-
+     
+        
 
         public Agent Parent
         {
@@ -130,9 +129,11 @@ namespace CrystalCore.Model.Objects
             }
         }
 
+        public bool Destroyed => ((IDestroyable)_parent).Destroyed;
+
         internal Port(CompassPoint facing, int ID, Agent parent)
         {
-
+          
             _facing = facing;
             this.ID = ID;
             _parent = parent;
@@ -176,6 +177,7 @@ namespace CrystalCore.Model.Objects
         // tostring
         public override string ToString()
         {
+            
             return "Port: { Location:" + Location + " ID: " + ID + ", Facing: " + _facing + " (ABS):" + AbsoluteFacing + "}";
         }
 
@@ -186,13 +188,21 @@ namespace CrystalCore.Model.Objects
             if(connection!= null)
             {
                 connection.Destroy();
-            }    
+            }
 
+            pathfinder.Destroy();
+            pathfinder = null;
            
+            //  Parent.Map.OnResize -= OnMapResize;
+
         }
 
         public void Update()
         {
+            if(Destroyed)
+            {
+                throw new InvalidOperationException("Can't update me if I'm dead!");
+            }
             Ruleset r = Parent.Type.Ruleset;
             pathfinder.FindPath(r.SignalMinLength, r.SignalMaxLength, connection);
         }

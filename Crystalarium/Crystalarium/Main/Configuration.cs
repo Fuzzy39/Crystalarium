@@ -55,8 +55,8 @@ namespace Crystalarium.Main
 
             // create a ruleset
             CrystalRules = game.Engine.addRuleset("Crystalarium");
-
-
+           
+                
             // define SignalRules
             AgentType t;
             TransformationRule tr;
@@ -323,7 +323,7 @@ namespace Crystalarium.Main
             WireRules = game.Engine.addRuleset("Wire World");
 
             WireRules.RotateLock = true;
-            //WireRules.SignalMaxLength = 100;
+            WireRules.SignalMaxLength = 1;
             WireRules.DiagonalSignalsAllowed = true;
 
             // Wire

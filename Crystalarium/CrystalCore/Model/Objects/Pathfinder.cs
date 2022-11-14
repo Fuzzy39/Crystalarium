@@ -73,7 +73,7 @@ namespace CrystalCore.Model.Objects
 
             // it is! grab the appropriate port.
             if (current != null) { current.Destroy(); }
-            Console.WriteLine("Should be false: "+ port.HasConnection);
+          
             Connection c = new Connection
             (
                 Map, 
@@ -82,12 +82,18 @@ namespace CrystalCore.Model.Objects
                 currentLength, 
                 facing
             );
-            Console.WriteLine("FULLY OPERATIONAL? : " + c);
+          
 
         
 
         }
 
+        internal void Destroy()
+        {
+            port = null;
+            current = null;
+            Map = null;
+        }
 
         private Agent FindTarget(int maxLength, ref Point end)
         {

@@ -55,6 +55,17 @@ namespace CrystalCore.Util
            
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cp"></param>
+        /// <returns>returns true if cp has no negative component</returns>
+        public static bool IsPositive(this CompassPoint cp)
+        {
+            Point p = cp.ToPoint();
+            return p.X > 1 && p.Y > 1;
+        }
+
         public static Direction Opposite(this Direction d)
         {
 

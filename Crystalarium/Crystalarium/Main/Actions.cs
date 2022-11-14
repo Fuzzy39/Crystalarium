@@ -133,7 +133,7 @@ namespace Crystalarium.Main
 
 
             });
-            new Keybind(c, Keystate.OnPress, "place agent", "play", Button.MouseLeft);
+            new Keybind(c, Keystate.Down, "place agent", "play", Button.MouseLeft);
 
 
             c.addAction("remove agent", () =>
@@ -158,7 +158,7 @@ namespace Crystalarium.Main
 
 
             });
-            new Keybind(c, Keystate.OnPress, "remove agent", "play", Button.MouseRight);
+            new Keybind(c, Keystate.Down, "remove agent", "play", Button.MouseRight);
 
 
             c.addAction("rotate", () =>

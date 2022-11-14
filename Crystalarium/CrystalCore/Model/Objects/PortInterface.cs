@@ -1,6 +1,7 @@
 ﻿using CrystalCore.Model.Elements;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -59,11 +60,14 @@ namespace CrystalCore.Model.Objects
         {
             // get intersecting connections.
             List<Connection> intersecting = new List<Connection>();
+            Rectangle bounds = parent.Bounds;
+            bounds.Inflate(1, 1);
+
             foreach (Chunk ch in parent.ChunksWithin)
             {
                 foreach (ChunkMember chm in ch.MembersWithin)
                 {
-                    if (chm.Bounds.Intersects(parent.Bounds))
+                    if (chm.Bounds.Intersects(bounds))
                     {
                         if (chm is Connection && !intersecting.Contains((Connection)chm))
                         {
@@ -77,12 +81,12 @@ namespace CrystalCore.Model.Objects
             List<Port> toUpdate = new List<Port>();
             foreach (Connection conn in intersecting)
             {
-                if (conn.PortA != null)
+                if (conn.PortA != null && !conn.PortA.Destroyed)
                 {
                     toUpdate.Add(conn.PortA);
                 }
 
-                if (conn.PortB != null)
+                if (conn.PortB != null && !conn.PortB.Destroyed)
                 {
                     toUpdate.Add(conn.PortB);
                 }
@@ -100,6 +104,15 @@ namespace CrystalCore.Model.Objects
             }
 
         }
+
+        internal void Rotate()
+        {
+            foreach(Port p in PortList)
+            {
+                p.Update();
+            }
+        }
+
 
         // PORT RELATED
         private void CreatePorts()

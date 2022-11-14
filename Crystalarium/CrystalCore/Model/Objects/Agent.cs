@@ -81,9 +81,6 @@ namespace CrystalCore.Model.Objects
 
         public override void Destroy()
         {
-
-            List<Chunk> toUpdate = new List<Chunk>(ChunksWithin);
-            Map g = Map;
             base.Destroy();
 
 
@@ -121,21 +118,22 @@ namespace CrystalCore.Model.Objects
         private void RecombobulateSignals()
         {
 
-            throw new NotImplementedException("Rotation isn't done");
+            //throw new NotImplementedException("Rotation isn't done");
             // this will probably work?
-            portInterface.Destroy();
+            
 
-         
+            _activeRules.Clear();
+
+            portInterface.Rotate();
 
 
             //portInterface = new PortInterface(Type, this);
 
 
-            
+
 
             //Map.UpdateSignals(ChunksWithin);
 
-            _activeRules.Clear();
             _activeRules.Add(Type.DefaultState);
 
         }

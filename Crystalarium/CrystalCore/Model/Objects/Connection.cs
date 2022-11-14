@@ -165,16 +165,33 @@ namespace CrystalCore.Model.Objects
                 throw new ArgumentException("first port may not be null!");
             }
 
-          
 
+            Point size;
 
-            if(dirfrom.IsDiagonal())
+            if (dirfrom.IsDiagonal())
             {
-                return Util.Util.RectFromPoints(from.Location, from.Location + (dirfrom.ToPoint() * new Point(length)));
+                Point p = dirfrom.ToPoint();
+
+                size = p * new Point(length);
+                size.X = Math.Abs(size.X);
+                size.Y = Math.Abs(size.Y);
+
+                Point loc = from.Location;
+  
+                if(p.X == -1)
+                {
+                    loc.X -= size.X - 1; 
+                }
+                if (p.Y == -1)
+                {
+                    loc.Y -= size.Y - 1;
+                }
+
+                return new Rectangle(loc, size);
             }
 
 
-            Point size = new Point(length, 1);
+            size = new Point(length, 1);
             Direction d = (Direction)dirfrom.ToDirection();
 
             if ( d.IsVertical() )
@@ -198,6 +215,7 @@ namespace CrystalCore.Model.Objects
             {
                 start.X += -size.X + (to == null ? 1 : 0);
             }
+      
             return new Rectangle(start, size);
 
 
