@@ -136,46 +136,36 @@ namespace CrystalCore.Model.Objects
         /// <returns>Null if a new connection must be made, otherwise a conenction already exists.</returns>
         private Connection CheckTarget(Agent target)
         {
-            // if we found no target...
-            if(current == null)
+            
+            // There are a few situations that can occur when the target is null.
+            if(target == null)
             {
-                if (target == null)
+                if (current != null)
                 {
-                    //current.Destroy();
-                    return new Connection
-                        (
-                        Map,
-                        port,
-                        null,
-                        currentLength,
-                        facing
-                        );
+                    // if the current signal was also targeting null, we can agree that everything is the same, and continue without taking action.
+                    if (current.Other(port) == null && currentLength == current.Length)
+                    {
+                        return current;
+                    }
+
+                    // otherwise, we need to destroy the current signal.
+                    current.Destroy();
                 }
-                else
-                {
-                    return null;
-                }
+
+                // create our new null targeted signal.
+                return new Connection
+                       (
+                       Map,
+                       port,
+                       null,
+                       currentLength,
+                       facing
+                       );
             }
 
-
-            if ( current.Other(port) == null && target == null)
+            if (current == null)
             {
-                if (currentLength == current.Length)
-                {
-                    return current;
-                }
-
-                // into the void!
-                current.Destroy();
-                return new Connection
-                    (
-                    Map,
-                    port,
-                    null,
-                    currentLength,
-                    facing
-                    ) ;
-
+                return null;
             }
 
             // if we are connected to the same target that we are calculating now, there's no need to do anything.

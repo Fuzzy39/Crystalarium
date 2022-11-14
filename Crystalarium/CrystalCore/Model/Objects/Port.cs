@@ -18,7 +18,7 @@ namespace CrystalCore.Model.Objects
 
         // context 
         private Agent _parent; // the agent we are part of.
-
+        private Map map;
 
         private Connection connection;
 
@@ -140,6 +140,7 @@ namespace CrystalCore.Model.Objects
             transmitting = 0;
             pathfinder = new Pathfinder(this, parent.Map);
             parent.Map.OnResize += OnMapResize;
+            map = parent.Map;
 
         }
         
@@ -193,7 +194,7 @@ namespace CrystalCore.Model.Objects
             pathfinder.Destroy();
             pathfinder = null;
            
-            //  Parent.Map.OnResize -= OnMapResize;
+            map.OnResize -= OnMapResize;
 
         }
 
@@ -237,8 +238,24 @@ namespace CrystalCore.Model.Objects
             {
                 throw new InvalidOperationException("Port already disconnected, no action needed.");
             }
-
+           
             connection = null;
+        }
+
+        internal void DestroyConnection()
+        {
+            if (connection == null)
+            {
+                throw new InvalidOperationException("No connection, can't destroy.");
+            }
+
+            if (ConnectedTo != null)
+            {
+                throw new InvalidOperationException("A connection cannot be destroyed because it is still connecting two ports.");
+            }
+
+            connection.Destroy();
+            //connection = null;
         }
 
 

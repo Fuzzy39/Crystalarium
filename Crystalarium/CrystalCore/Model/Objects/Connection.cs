@@ -240,25 +240,6 @@ namespace CrystalCore.Model.Objects
 
 
 
-        public void Update()
-        {
-
-            if (portA!= null && portA.Destroyed)
-            {
-                portA = null;
-            }
-
-            if (portB != null && portB.Destroyed)
-            {
-                portB = null;
-            }
-
-            if(PortA == null && PortB == null)
-            {
-                Destroy();
-            }
-
-        }
        
 
        

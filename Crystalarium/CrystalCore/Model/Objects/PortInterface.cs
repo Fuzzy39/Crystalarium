@@ -105,13 +105,6 @@ namespace CrystalCore.Model.Objects
 
         }
 
-        internal void Rotate()
-        {
-            foreach(Port p in PortList)
-            {
-                p.Update();
-            }
-        }
 
 
         // PORT RELATED
@@ -229,7 +222,39 @@ namespace CrystalCore.Model.Objects
         }
 
 
-     
+
+        internal void Rotate()
+        {
+            List<Port> toUpdate = new List<Port>();
+
+            foreach (List<Port> ports in _ports)
+            {
+                foreach (Port port in ports)
+                {
+                    if (port.ConnectedTo != null)
+                    {
+                        toUpdate.Add(port.ConnectedTo);
+                    }
+                    else 
+                    {
+                        port.DestroyConnection();
+                    }
+
+                }
+            }
+
+            foreach (Port p in toUpdate)
+            {
+                p.Update();
+            }
+
+            foreach(Port p in PortList)
+            {
+                  p.Update();
+            }
+
+        }
+
 
         internal void StatusChanged()
         {

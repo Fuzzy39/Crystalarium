@@ -81,10 +81,11 @@ namespace CrystalCore.Model.Objects
 
         public override void Destroy()
         {
+
+
             base.Destroy();
-
-
             portInterface.Destroy();
+           
 
 
         }
@@ -109,18 +110,7 @@ namespace CrystalCore.Model.Objects
 
             base.Rotate(d);
 
-           
-            RecombobulateSignals();
-        }
 
-
-        // how often do you get to type recombobulate? not often!
-        private void RecombobulateSignals()
-        {
-
-            //throw new NotImplementedException("Rotation isn't done");
-            // this will probably work?
-            
 
             _activeRules.Clear();
 
@@ -128,16 +118,10 @@ namespace CrystalCore.Model.Objects
 
 
             //portInterface = new PortInterface(Type, this);
-
-
-
-
             //Map.UpdateSignals(ChunksWithin);
 
             _activeRules.Add(Type.DefaultState);
-
         }
-
 
         public override string ToString()
         {
