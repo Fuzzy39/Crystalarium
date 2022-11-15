@@ -26,12 +26,12 @@ namespace CrystalCore.Model.Objects
         }
 
         /// <summary>
-        /// 
+        /// Check to make sure the existing connection is current, and if not, make a new one.
         /// </summary>
         /// <param name="length">the minimum length of the path</param>
         /// <param name="CurrentPath"></param>
         /// <returns>null if no new connection. connection otherwise</returns>
-        internal void FindPath(int minLength, int maxLength, Connection currentConnection)
+        internal void UpdateConnection(int minLength, int maxLength, Connection currentConnection)
         {
             
             start = port.Location;
@@ -45,46 +45,38 @@ namespace CrystalCore.Model.Objects
             if (p == null)
             {
                 // no connection established. May cause issues?
-                if (current != null) { current.Destroy(); }
-                new Connection
-                (
-                   Map,
-                   port,
-                   null,
-                   1,
-                   facing
-                );
+                CreateConnection(null, 1);
 
                 return;
             }
             currentLength = minLength;
 
+
+            // find a target agent to potentially latch on to, if it exists.
             Point connectTo = (Point)p;
 
             Agent target = FindTarget(maxLength, ref connectTo);
 
-            // check that this target is novel.
-            Connection same = CheckTarget(target);
-            if(same != null)
+
+            
+            if(target == null)
             {
+                if (!SameAsBlank())
+                {
+                    CreateConnection(null, currentLength);
+                    
+                }
                 return;
             }
 
+            Port targetPort = FindPort(target, connectTo, facing.Opposite());
 
-            // it is! grab the appropriate port.
-            if (current != null) { current.Destroy(); }
-          
-            Connection c = new Connection
-            (
-                Map, 
-                port, 
-                FindPort(target, connectTo, facing.Opposite()), 
-                currentLength, 
-                facing
-            );
-          
+            if (!SameTargetPort(target, targetPort))
+            {
+                CreateConnection(targetPort, currentLength);
+            }
 
-        
+         
 
         }
 
@@ -128,57 +120,71 @@ namespace CrystalCore.Model.Objects
             // we should update our length and bounds to reflect that.
             return null;
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns>Null if a new connection must be made, otherwise a conenction already exists.</returns>
-        private Connection CheckTarget(Agent target)
+
+        private void CreateConnection(Port to, int length)
         {
-            
-            // There are a few situations that can occur when the target is null.
-            if(target == null)
+            if (current != null && !current.Destroyed)
             {
-                if (current != null)
-                {
-                    // if the current signal was also targeting null, we can agree that everything is the same, and continue without taking action.
-                    if (current.Other(port) == null && currentLength == current.Length)
-                    {
-                        return current;
-                    }
-
-                    // otherwise, we need to destroy the current signal.
-                    current.Destroy();
-                }
-
-                // create our new null targeted signal.
-                return new Connection
-                       (
-                       Map,
-                       port,
-                       null,
-                       currentLength,
-                       facing
-                       );
+                current.Destroy();
             }
 
-            if (current == null)
-            {
-                return null;
-            }
+            new Connection(Map, port, to, length, facing);
 
-            // if we are connected to the same target that we are calculating now, there's no need to do anything.
-            if (current.Other(port) != null && target == current.Other(port).Parent)
-            {
-                return current;
-            }
-
-            return null;
         }
 
-        
+        /// <summary>
+        /// Returns whether our current connection is the same as our new one (given that we have found no target)
+        /// </summary>
+        /// <returns></returns>
+        private bool SameAsBlank()
+        {
+            if (current != null)
+            {
+                // if the current signal was also targeting null, we can agree that everything is the same, and continue without taking action.
+                if (current.Other(port) == null && currentLength == current.Length)
+                {
+                    return true;
+                }
+            }
 
+         
+            return false;
+        }
+
+        private bool SameTargetPort(Agent targetAgent, Port targetPort)
+        {
+            if(current == null)
+            {
+                return false; // whatever we found, it's new.
+            }
+
+            Port compareAgainst = current.Other(port);
+
+            // our old connection didn't connect to anything, and we have, so we've got something new.
+            if(compareAgainst == null)
+            {
+                return false;
+            }
+
+            Agent agent = compareAgainst.Parent;
+
+            // we aren't connected to the same agent, so we're new.
+            if(targetAgent != agent)
+            {
+                return false;
+            }
+
+            // we arent' connected to the same port, so we're new.
+            if(compareAgainst != targetPort)
+            {
+                return false;
+            }
+
+            return true;
+            
+        }
+
+      
 
         private Point? Travel(Point start, int distance)
         {

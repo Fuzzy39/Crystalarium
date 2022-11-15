@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CrystalCore.Model.Objects;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -92,9 +93,9 @@ namespace CrystalCore.Model.Elements
         {
 
             // how was this not a thing until M6?
-            while(_membersWithin.Count>0)
+            while (_membersWithin.Count > 0)
             {
-                _membersWithin[0].Destroy(); 
+                _membersWithin[0].Destroy();
             }
 
             base.Destroy();

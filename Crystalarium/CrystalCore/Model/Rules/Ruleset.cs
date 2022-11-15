@@ -22,7 +22,7 @@ namespace CrystalCore.Model.Rules
 
         private bool _rotateLock; // whether agents can be rotated or face a direction other than up.
         private bool _diagonalSignalsAllowed; // whether signals are only allowed to face the 4 orthagonal directions. If set to false, no AgentType can be of size greater than 1 x 1.
-
+        private bool _runDefaultStateOnRotation; // whether agents will run their default transformations after they are rotated.
 
         // signals
         private int _beamMinLength;
@@ -50,6 +50,15 @@ namespace CrystalCore.Model.Rules
             }
         }
 
+        public bool RunDefaultStateOnRotation // whether signals are only allowed to face the 4 orthagonal directions. If set to false, no AgentType can be of size greater than 1 x 1.
+        {
+            get => _runDefaultStateOnRotation;
+            set
+            {
+                if (Initialized) { throw new InvalidOperationException("Cannot Modify Ruleset after it has been initialized."); }
+                _runDefaultStateOnRotation = value;
+            }
+        }
 
         // mildly hacky.
         public int SignalMinLength
@@ -96,6 +105,7 @@ namespace CrystalCore.Model.Rules
 
             RotateLock = false;
             DiagonalSignalsAllowed = false;
+            RunDefaultStateOnRotation = true;
 
             SignalMinLength = 1; // defaults, infinite, unbounded beams.
             SignalMaxLength = 0;

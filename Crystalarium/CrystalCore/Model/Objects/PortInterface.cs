@@ -227,21 +227,18 @@ namespace CrystalCore.Model.Objects
         {
             List<Port> toUpdate = new List<Port>();
 
-            foreach (List<Port> ports in _ports)
+            foreach (Port port in PortList)
             {
-                foreach (Port port in ports)
+                
+                if (port.ConnectedTo != null)
                 {
-                    if (port.ConnectedTo != null)
-                    {
-                        toUpdate.Add(port.ConnectedTo);
-                    }
-                    else 
-                    {
-                        port.DestroyConnection();
-                    }
-
+                    toUpdate.Add(port.ConnectedTo);
                 }
+
+                port.DestroyConnection();
+ 
             }
+
 
             foreach (Port p in toUpdate)
             {

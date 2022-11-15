@@ -180,7 +180,15 @@ namespace CrystalCore.View
                     continue;
                 }
 
-                if(!_agentViews.ViewExistsFor(a))
+                AgentView av = (AgentView)(_agentViews.GetViewFor(a));
+                
+                if(av!= null && av.Type != a.Type)
+                {
+                    av.Destroy();
+                    av = null;
+                }
+
+                if (av == null)
                 {
                     // add a new renderer.
                     new AgentView(_parent, a, _agentViews, Parent.CurrentSkin.GetAgentViewConfig(a.Type));

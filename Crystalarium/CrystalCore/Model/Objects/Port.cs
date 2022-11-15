@@ -205,9 +205,15 @@ namespace CrystalCore.Model.Objects
                 throw new InvalidOperationException("Can't update me if I'm dead!");
             }
             Ruleset r = Parent.Type.Ruleset;
-            pathfinder.FindPath(r.SignalMinLength, r.SignalMaxLength, connection);
+            pathfinder.UpdateConnection(r.SignalMinLength, r.SignalMaxLength, connection);
         }
      
+        internal void DestroyConnection()
+        {
+
+            connection.Destroy();
+            connection = null;
+        }
 
         internal void Connect(Connection s)
         {
@@ -240,22 +246,6 @@ namespace CrystalCore.Model.Objects
             }
            
             connection = null;
-        }
-
-        internal void DestroyConnection()
-        {
-            if (connection == null)
-            {
-                throw new InvalidOperationException("No connection, can't destroy.");
-            }
-
-            if (ConnectedTo != null)
-            {
-                throw new InvalidOperationException("A connection cannot be destroyed because it is still connecting two ports.");
-            }
-
-            connection.Destroy();
-            //connection = null;
         }
 
 

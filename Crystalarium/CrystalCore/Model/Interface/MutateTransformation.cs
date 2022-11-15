@@ -51,16 +51,8 @@ namespace CrystalCore.Model.Interface
             }
             Agent a = (Agent)o;
 
-            Map g = a.Map;
-            Direction d = a.Facing;
-            Rectangle bounds = a.Bounds;
-            a.Destroy();
-            Agent b = new Agent(g, bounds.Location, mutateTo, d);
-            if (b == null)
-            {
-                throw new InvalidOperationException("Failed to mutate agent.");
-            }
-            
+            a.Mutate(mutateTo);
+
         }
 
         internal override Transformation Add(Transformation toAdd)

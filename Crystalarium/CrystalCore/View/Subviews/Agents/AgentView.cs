@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Objects;
+using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using CrystalCore.View.Configs;
 using Microsoft.Xna.Framework;
@@ -18,7 +19,10 @@ namespace CrystalCore.View.Subviews.Agents
         private AgentViewConfig config; // the settings for how this agentview will render itself.
         private List<DebugPort> _ports; // the ports that this agentview may render. 
       
-
+        internal AgentType Type
+        {
+            get { return config.AgentType; }
+        }
 
         internal AgentView(GridView v, Agent a, List<Subview> others, AgentViewConfig config) : base(v, a, others)
         {
@@ -31,6 +35,7 @@ namespace CrystalCore.View.Subviews.Agents
 
         protected override void Render(SpriteBatch sb)
         {
+           
 
             // render the thing if we have been set to.
             if (config.DefaultTexture == null)
@@ -57,6 +62,7 @@ namespace CrystalCore.View.Subviews.Agents
                 }
             }
 
+            
         }
 
         /// <summary?

@@ -107,11 +107,26 @@ namespace CrystalCore.View.Subviews
             {
                 if (view.RenderData == gobj)
                 {
+                    
                     return true;
                 }
             }
 
             return false;
+        }
+
+        public static Subview GetViewFor(this List<Subview> views, MapObject gobj)
+        {
+            foreach (Subview view in views)
+            {
+                if (view.RenderData == gobj)
+                {
+
+                    return view;
+                }
+            }
+
+            return null;
         }
     }
 }

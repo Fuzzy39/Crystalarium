@@ -72,8 +72,8 @@ namespace CrystalCore.Model.Objects
 
            // do the default thing.
            _activeRules = new List<TransformationRule>();
-            _activeRules.Add(Type.DefaultState);
-            Execute();
+           _activeRules.Add(Type.DefaultState);
+           Execute();
 
         }
 
@@ -109,19 +109,35 @@ namespace CrystalCore.Model.Objects
             }
 
             base.Rotate(d);
-
-
-
-            _activeRules.Clear();
-
             portInterface.Rotate();
 
+            
 
-            //portInterface = new PortInterface(Type, this);
-            //Map.UpdateSignals(ChunksWithin);
-
-            _activeRules.Add(Type.DefaultState);
+            if (Type.Ruleset.RunDefaultStateOnRotation)
+            {
+                _activeRules.Clear();
+                _activeRules.Add(Type.DefaultState);
+                Execute();
+            }
         }
+
+
+        internal void Mutate(AgentType at)
+        {
+            if (at.Size != Type.Size)
+            {
+                throw new ArgumentException("An agent of type " + Type.Name + " cannot be mutated to type " + at.Name);
+            }
+
+            _type = at;
+
+            // do the default thing.
+            _activeRules = new List<TransformationRule>();
+            _activeRules.Add(Type.DefaultState);
+            Execute();
+        }
+
+
 
         public override string ToString()
         {
@@ -144,6 +160,7 @@ namespace CrystalCore.Model.Objects
 
         private List<TransformationRule> DetermineState()
         {
+            Console.WriteLine(Type.Name);
             List<TransformationRule> toReturn = new List<TransformationRule>();
 
             foreach (TransformationRule state in Type.States)

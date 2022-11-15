@@ -164,7 +164,8 @@ namespace CrystalCore.Model.Objects
             {
                 throw new ArgumentException("first port may not be null!");
             }
-
+            
+            // hideous.
 
             Point size;
 
