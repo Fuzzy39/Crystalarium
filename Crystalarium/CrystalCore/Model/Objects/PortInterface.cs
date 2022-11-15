@@ -203,7 +203,9 @@ namespace CrystalCore.Model.Objects
             {
                 foreach (Port port in ports)
                 {
-                    if(port.ConnectedTo != null)
+                    // we check if the port has a connection because this method could be called while the grid is reseting.
+                    // if it is, connections between chunks will get destroyed, and ports might be put in states where they have no connections.
+                    if(port.HasConnection && port.ConnectedTo != null)
                     {
                         toUpdate.Add(port.ConnectedTo);
                     }

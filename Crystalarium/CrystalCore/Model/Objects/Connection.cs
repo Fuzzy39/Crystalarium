@@ -228,11 +228,11 @@ namespace CrystalCore.Model.Objects
             if(PortA != null)
             {
                 PortA.Disconnect(); // this will only be called when there is another signal ready to displace us. therefore, it is impossible for a port to have no connection this way.
+                
             }
             if(PortB != null)
             {
                 portB.Disconnect();
-
             }
 
             base.Destroy();

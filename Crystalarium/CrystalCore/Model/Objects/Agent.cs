@@ -130,11 +130,12 @@ namespace CrystalCore.Model.Objects
             }
 
             _type = at;
-
+            
             // do the default thing.
             _activeRules = new List<TransformationRule>();
             _activeRules.Add(Type.DefaultState);
-            Execute();
+            RunTransformations();
+            portInterface.StatusChanged();
         }
 
 
@@ -160,7 +161,7 @@ namespace CrystalCore.Model.Objects
 
         private List<TransformationRule> DetermineState()
         {
-            Console.WriteLine(Type.Name);
+          
             List<TransformationRule> toReturn = new List<TransformationRule>();
 
             foreach (TransformationRule state in Type.States)
@@ -237,12 +238,8 @@ namespace CrystalCore.Model.Objects
         /// <param name="a"></param>
         internal void Execute()
         {
-            
-            List<Transformation> transformations = GetTransformations();
-            foreach(Transformation tf in transformations)
-            {
-                tf.Transform(this);
-            }
+
+            RunTransformations();
 
             if(!updatedSignalsThisStep)
             {
@@ -251,6 +248,17 @@ namespace CrystalCore.Model.Objects
 
             updatedSignalsThisStep = false;
 
+        }
+
+        private void RunTransformations()
+        {
+
+            List<Transformation> transformations = GetTransformations();
+            foreach (Transformation tf in transformations)
+            {
+                tf.Transform(this);
+
+            }
         }
 
         internal void Update()

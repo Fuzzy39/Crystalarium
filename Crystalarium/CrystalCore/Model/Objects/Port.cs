@@ -186,11 +186,10 @@ namespace CrystalCore.Model.Objects
         public void Destroy()
         {
             // does nothing?
-            if(connection!= null)
+            if (HasConnection)
             {
-                connection.Destroy();
-            }
-
+                DestroyConnection();
+            }            
             pathfinder.Destroy();
             pathfinder = null;
            
