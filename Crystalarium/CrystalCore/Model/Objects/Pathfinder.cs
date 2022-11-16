@@ -45,7 +45,7 @@ namespace CrystalCore.Model.Objects
             if (p == null)
             {
                 // no connection established. May cause issues?
-                CreateConnection(null, 1);
+                CreateConnection(null, 0);
 
                 return;
             }

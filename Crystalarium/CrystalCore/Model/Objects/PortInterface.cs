@@ -62,6 +62,7 @@ namespace CrystalCore.Model.Objects
             List<Connection> intersecting = new List<Connection>();
             Rectangle bounds = parent.Bounds;
             bounds.Inflate(1, 1);
+            //List < Chunk > chunks = parent.Map.ChunksInBounds(bounds);
 
             foreach (Chunk ch in parent.ChunksWithin)
             {
@@ -204,7 +205,7 @@ namespace CrystalCore.Model.Objects
                 foreach (Port port in ports)
                 {
                     // we check if the port has a connection because this method could be called while the grid is reseting.
-                    // if it is, connections between chunks will get destroyed, and ports might be put in states where they have no connections.
+                    // if it is, connections between chunks will get destroyed, and ports might be put in states w
                     if(port.HasConnection && port.ConnectedTo != null)
                     {
                         toUpdate.Add(port.ConnectedTo);

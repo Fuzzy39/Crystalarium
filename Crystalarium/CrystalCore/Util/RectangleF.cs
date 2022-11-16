@@ -76,6 +76,11 @@ namespace CrystalCore.Util
             get => new Vector2(Width, Height);
         }
 
+        public float Area
+        {
+            get { return Width * Height; }
+        }
+
         public float Top
         {
             get => Y;

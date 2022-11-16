@@ -165,6 +165,11 @@ namespace CrystalCore.Model.Objects
                 throw new ArgumentException("first port may not be null!");
             }
             
+            if(length == 0)
+            {
+                return new Rectangle(from.Location, new Point(1));
+            }
+
             // hideous.
 
             Point size;

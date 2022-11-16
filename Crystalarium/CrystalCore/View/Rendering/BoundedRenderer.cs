@@ -200,7 +200,7 @@ namespace CrystalCore.View.Rendering
             // sanity check.
             foreach (Cut c in toReturn)
             {
-                Debug.Assert(c.ratio >= 0);
+                    Debug.Assert(c.ratio >= 0);
             }
 
             return toReturn;

@@ -323,6 +323,17 @@ namespace CrystalCore.View.Rendering
         internal void RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c, Direction d)
         { 
             // stuff
+            if(bounds.Area < 0)
+            {
+                throw new ArgumentException("A Camera was asked to render a texture with bounds " + bounds + ". Negative size is not acceptable.");
+            }
+
+            if(bounds.Area == 0)
+            {
+                return;
+            }
+
+            
 
             Point pixelCoords = TileToPixelCoords(bounds.Location) - new Point(1);
             Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale)) + new Point(1, 1);

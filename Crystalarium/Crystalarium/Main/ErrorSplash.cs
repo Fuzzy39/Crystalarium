@@ -20,7 +20,7 @@ namespace Crystalarium.Main
         internal ErrorSplash(string errorMessage)
         {
             i = 0f;
-            string[] faces = { ":(", "X(", ":O" };
+            string[] faces = { ":(", "X(", ":O",":/" ,"Darn."};
             random = new Random();
             face = faces[random.Next(faces.Length)];
             this.errorMessage = errorMessage;
