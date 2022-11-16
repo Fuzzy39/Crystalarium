@@ -48,57 +48,6 @@ namespace CrystalCore.Model.Objects
             }
         }
 
-        // how long can this beam get? 0 or lower means limitless.
-        public int MaxLength
-        {
-            get
-            {
-                return _maxLength;
-            }
-
-            set
-            {
-                if (value <= 0)
-                {
-                    _maxLength = 0;
-                    return;
-                }
-
-                if (value < _minLength)
-                {
-                    throw new InvalidOperationException("Maximum beam length cannot be less than minimum.");
-                }
-
-                _maxLength = value;
-
-            }
-
-        }
-
-        public int MinLength
-        {
-            get { return _minLength; }
-
-            set
-            {
-                if (value < 1)
-                {
-                    throw new InvalidOperationException("Maximum beam length cannot be less than one.");
-                }
-
-
-                if (_maxLength != 0 & value > _maxLength)
-                {
-                    throw new InvalidOperationException("Minimum beam length cannot be greater than minimum.");
-                }
-
-                _minLength = value;
-
-            }
-
-        } // how short can it be?
-
-
         internal Port PortA
         {
             get { return portA; }
@@ -155,6 +104,8 @@ namespace CrystalCore.Model.Objects
 
             _length = length;
 
+            Console.WriteLine(this);
+
           
         }
 
@@ -165,10 +116,7 @@ namespace CrystalCore.Model.Objects
                 throw new ArgumentException("first port may not be null!");
             }
             
-            if(length == 0)
-            {
-                return new Rectangle(from.Location, new Point(1));
-            }
+           
 
             // hideous.
 
@@ -222,8 +170,8 @@ namespace CrystalCore.Model.Objects
                 start.X += -size.X + (to == null ? 1 : 0);
             }
       
-            return new Rectangle(start, size);
-
+            Rectangle toReturn = new Rectangle(start, size);
+            return toReturn;
 
         }
 
@@ -245,10 +193,6 @@ namespace CrystalCore.Model.Objects
 
 
 
-
-       
-
-       
         public int Receive(Port p)
         {
             if(p == portA)
@@ -268,7 +212,7 @@ namespace CrystalCore.Model.Objects
 
         public override string ToString()
         {
-            return "Signal: { A:" + (portA==null?"null":PortA.ToString()) + " B: " + (portB == null ? "null" : portB.ToString()) + " Bounds:" + Bounds + "}";
+            return "Signal: { A:" + (portA==null?"null":portA.Location.ToString()) + " B: " + (portB == null ? "null" : portB.Location.ToString()) + " Bounds:" + Bounds + " Length: "+Length+"}";
 
         }
 

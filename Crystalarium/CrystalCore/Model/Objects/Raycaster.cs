@@ -10,7 +10,7 @@ namespace CrystalCore.Model.Objects
     /// <summary>
     /// a pathfinder tries to calculate a connection for a particular port.
     /// </summary>
-    internal class Pathfinder
+    internal class Raycaster
     {
         private Port port;
         private Point start;
@@ -19,7 +19,7 @@ namespace CrystalCore.Model.Objects
         private int currentLength;
         private Map Map;
 
-        internal Pathfinder(Port port, Map map)
+        internal Raycaster(Port port, Map map)
         {
             this.port = port;
             this.Map = map;
@@ -45,7 +45,7 @@ namespace CrystalCore.Model.Objects
             if (p == null)
             {
                 // no connection established. May cause issues?
-                CreateConnection(null, 0);
+                CreateConnection(null, 1);
 
                 return;
             }

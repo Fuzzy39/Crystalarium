@@ -129,10 +129,7 @@ namespace CrystalCore.View.Subviews
 
             Vector2 size = new Vector2(config.SignalWidth, beam.Length);
 
-            if(beam.Length == 0)
-            {
-                size.Y++;
-            }
+         
             if (!hasEnd)
             {
                 // we do not want to go out of the grid if we have no target.

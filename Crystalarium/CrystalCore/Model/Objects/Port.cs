@@ -24,7 +24,7 @@ namespace CrystalCore.Model.Objects
 
         private int transmitting;
 
-        private Pathfinder pathfinder;
+        private Raycaster pathfinder;
 
 
      
@@ -138,7 +138,7 @@ namespace CrystalCore.Model.Objects
             this.ID = ID;
             _parent = parent;
             transmitting = 0;
-            pathfinder = new Pathfinder(this, parent.Map);
+            pathfinder = new Raycaster(this, parent.Map);
             parent.Map.OnResize += OnMapResize;
             map = parent.Map;
 

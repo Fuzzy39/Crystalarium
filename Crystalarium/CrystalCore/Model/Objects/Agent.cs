@@ -59,7 +59,7 @@ namespace CrystalCore.Model.Objects
 
             // create the portinterface
             portInterface = new PortInterface(t, this);
-            portInterface.UpdateConnections();
+            portInterface.OnCreation();
             
 
             // if diagonal signals are allowed, then agents should not be bigger than 1 by 1

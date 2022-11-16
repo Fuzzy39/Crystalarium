@@ -67,6 +67,19 @@ namespace CrystalCore.Model.Rules
             set
             {
                 if (Initialized) { throw new InvalidOperationException("Cannot Modify Ruleset after it has been initialized."); }
+
+
+                if (value < 1)
+                {
+                    throw new InvalidOperationException("Mainimum beam length cannot be less than one.");
+                }
+
+
+                if (_beamMaxLength != 0 & value > _beamMaxLength)
+                {
+                    throw new InvalidOperationException("Minimum beam length cannot be greater than minimum.");
+                }
+
                 _beamMinLength = value;
             }
         }
@@ -77,6 +90,17 @@ namespace CrystalCore.Model.Rules
             set
             {
                 if (Initialized) { throw new InvalidOperationException("Cannot Modify Ruleset after it has been initialized."); }
+                if (value <= 0)
+                {
+                    _beamMaxLength = 0;
+                    return;
+                }
+
+                if (value < _beamMinLength)
+                {
+                    throw new InvalidOperationException("Maximum beam length cannot be less than minimum.");
+                }
+
                 _beamMaxLength = value;
             }
         }

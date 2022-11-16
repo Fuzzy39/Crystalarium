@@ -56,15 +56,15 @@ namespace CrystalCore.Model.Objects
            
         }
 
-        internal void UpdateConnections()
+        internal void OnCreation()
         {
             // get intersecting connections.
             List<Connection> intersecting = new List<Connection>();
             Rectangle bounds = parent.Bounds;
             bounds.Inflate(1, 1);
-            //List < Chunk > chunks = parent.Map.ChunksInBounds(bounds);
+            List < Chunk > chunks = parent.Map.ChunksInBounds(Rectangle.Intersect(bounds, parent.Map.Bounds));
 
-            foreach (Chunk ch in parent.ChunksWithin)
+            foreach (Chunk ch in chunks)
             {
                 foreach (ChunkMember chm in ch.MembersWithin)
                 {
