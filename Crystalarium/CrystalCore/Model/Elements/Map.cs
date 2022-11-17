@@ -19,7 +19,7 @@ namespace CrystalCore.Model.Elements
 
 
         private List<Agent> _agents; // t  he amount of agents in this grid.
-        private int _signals;
+        private int _connections;
         private int _chunks;
 
         internal Grid<Chunk> grid;
@@ -34,7 +34,7 @@ namespace CrystalCore.Model.Elements
 
         public int AgentCount { get => _agents.Count; }
 
-        public int SignalCount { get => _signals; }
+        public int ConnectionCount { get => _connections; }
 
         public int ChunkCount { get => _chunks; }
 
@@ -79,7 +79,7 @@ namespace CrystalCore.Model.Elements
             get
             {
                 // the center tile coords of this grid
-                return grid.Size.ToVector2() * Chunk.SIZE / 2f;
+                return ((grid.Size.ToVector2() * Chunk.SIZE) / 2f)+Bounds.Location.ToVector2();
 
             }
 
@@ -122,17 +122,19 @@ namespace CrystalCore.Model.Elements
             {
                 foreach (Chunk ch in grid.ElementList)
                 {
-                    ch.Destroy();
+                   ch.Destroy();
                 }
 
             }
+
+          
             grid = new Grid<Chunk>(new Chunk(this, new Point(0, 0) ));
 
 
 
             // could be redundant?
             _agents.Clear();
-            _signals = 0;
+            _connections = 0;
             _chunks = 1;
 
         }
@@ -206,7 +208,7 @@ namespace CrystalCore.Model.Elements
 
             if (o is Connection)
             {
-                _signals--;
+                _connections--;
                 return;
             }
 
@@ -227,7 +229,7 @@ namespace CrystalCore.Model.Elements
 
             if (o is Connection)
             {
-                _signals++;
+                _connections++;
                 return;
             }
 

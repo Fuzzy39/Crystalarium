@@ -24,12 +24,13 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 849; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 858; // I like to increment this number every time I run the code after changing it. I don't always though.
+
+        private double frameRate = 60;
 
         
 
         internal Ruleset CurrentRuleset { get; set; }
-
 
 
 
@@ -135,7 +136,8 @@ namespace Crystalarium.Main
             }
             catch (InitializationFailedException e)
             {
-                errorSplash = new ErrorSplash(e.Message+"\n\nIf you are seing this in Milestone 5, it means something has gone deeply wrong.\nThis shouldn't be possible- If you can't even open the game, I've clearly made a mistake.");
+                errorSplash = new ErrorSplash(e.Message);
+                Engine = null;
                 return;
             }
             catch(Exception e)
@@ -143,6 +145,7 @@ namespace Crystalarium.Main
                 errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed during initialization." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
                     "\nA detailed description of the problem is below:\n\n" + e.ToString());
+                Engine = null;
                 return;
             }
 
@@ -237,6 +240,7 @@ namespace Crystalarium.Main
                 errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed while updating the simulation." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
                     "\nA detailed description of the problem is below:\n\n" + e.ToString());
+                Engine = null;
                 return;
             }
 
@@ -248,7 +252,8 @@ namespace Crystalarium.Main
         protected override void Draw(GameTime gameTime)
         {
 
-          
+            frameRate += (((1 / gameTime.ElapsedGameTime.TotalSeconds) - frameRate) * 0.1);
+
 
             // setup
             int width = GraphicsDevice.Viewport.Width;
@@ -277,12 +282,14 @@ namespace Crystalarium.Main
                 errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed while rendering graphics." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
                     "\nA detailed description of the problem is below:\n\n" + e.ToString());
+                Engine = null;
                 spriteBatch.End();
                 return;
             }
 
             // Draw text on top of the game.
-            DrawText(width, height);
+
+            DrawText(width, height, Math.Round(frameRate,1));
 
             if (Engine.Controller.Context == "menu")
             {
@@ -300,7 +307,7 @@ namespace Crystalarium.Main
         }
 
         // draw info on top of the game.
-        private void DrawText(int width, int height)
+        private void DrawText(int width, int height, double frameRate)
         {
 
 
@@ -313,9 +320,9 @@ namespace Crystalarium.Main
             string rules = "Ruleset: " + CurrentRuleset.Name;
 
             // some debug text. We'll clear this out sooner or later...
-
-            spriteBatch.DrawString(Textures.testFont, "Sim Speed: "+Engine.Sim.ActualStepsPS + " Steps/Second Chunks: " 
-                + Map.ChunkCount +" Agents: "+Map.AgentCount+" Signals: "+Map.SignalCount,
+          
+            spriteBatch.DrawString(Textures.testFont, "FPS: "+frameRate+" Sim Speed: "+Engine.Sim.ActualStepsPS + " Steps/Second Chunks: " 
+                + Map.ChunkCount +" Agents: "+Map.AgentCount+" Connections: "+Map.ConnectionCount,
                 new Vector2(10, 10), Color.White);
             spriteBatch.DrawString(Textures.testFont, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Vector2(10, 30), Color.White);
 
@@ -324,7 +331,7 @@ namespace Crystalarium.Main
 
             spriteBatch.DrawString(Textures.testFont, 
                 "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. RMB to delete. R to rotate. Tab to Copy Agent." +
-                "\nQ and E to switch agent types. P to switch rulesets (resets grid). O to toggle port rendering." +
+                "\nQ and E to switch agent types. P to switch rulesets (resets grid). O to toggle debug view." +
                 "\nSpace to toggle simulation. Z for single sim step. Shift/Control to Raise/Lower sim speed.", 
                 new Vector2(10, height - 95), Color.White);
 
@@ -350,11 +357,14 @@ namespace Crystalarium.Main
         // draw the build number, the most important thing!
         private void EndDraw(int height)
         {
-            spriteBatch.DrawString(Textures.testFont, "Milestone 5, Build " + BUILD, new Vector2(10, height - 25), Color.White);
+            spriteBatch.DrawString(Textures.testFont, "Milestone 6, Build " + BUILD, new Vector2(10, height - 25), Color.White);
             spriteBatch.End();
         }
 
 
     }
+
+
+   
 }
  

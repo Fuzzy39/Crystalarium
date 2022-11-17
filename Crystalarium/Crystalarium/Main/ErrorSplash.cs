@@ -23,6 +23,13 @@ namespace Crystalarium.Main
             string[] faces = { ":(", "X(", ":O",":/" ,":|","!?"};
             random = new Random();
             face = faces[random.Next(faces.Length)];
+            
+            // a little easter egg, just for people who see it crash a lot (me).
+            if(random.NextDouble()<.02)
+            {
+                face = "Straight from the Chaos Realms!";
+            }
+
             this.errorMessage = errorMessage;
             Console.WriteLine(errorMessage);
         }

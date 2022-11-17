@@ -104,7 +104,7 @@ namespace Crystalarium.Main
             c.addAction("grow right", () => game.Map.ExpandGrid(Direction.right));
             new Keybind(c, Keystate.OnPress, "grow right", "play", Button.K);
 
-            c.addAction("toggle debug ports", () => game.view.DoDebugPortRendering = !game.view.DoDebugPortRendering);
+            c.addAction("toggle debug ports", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
             new Keybind(c, Keystate.OnPress, "toggle debug ports", "play", Button.O);
 
             c.addAction("place agent", () =>

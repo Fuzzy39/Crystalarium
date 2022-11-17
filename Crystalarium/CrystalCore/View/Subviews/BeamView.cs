@@ -19,6 +19,13 @@ namespace CrystalCore.View.Subviews
 
         private SignalViewConfig config;
 
+        private enum ChannelState
+        {
+            Unbounded,
+            Bounded,
+            Active
+        }
+
 
         public SignalView(GridView v, Connection b, List<Subview> others, SignalViewConfig config) : base(v, b, others)
         {
@@ -89,32 +96,57 @@ namespace CrystalCore.View.Subviews
         private void RenderChannel(SpriteBatch sb, Direction facing, Direction absFacing, bool hasEnd, int value)
         {
 
-            RectangleF renderBounds = new RectangleF(CalcLoc(absFacing, hasEnd), CalcSize(facing, hasEnd));
+            ChannelState cs = DetermineState(value, hasEnd);
+
+            // slightly jank.
+            if (cs == ChannelState.Active || renderTarget.DoDebugRendering)
+            {
+                RectangleF renderBounds = new RectangleF(CalcLoc(absFacing, hasEnd), CalcSize(facing, hasEnd));
 
 
 
-            renderBounds = RenderFull(renderBounds, facing);
+                renderBounds = RenderFull(renderBounds, facing);
 
 
 
-                renderTarget.Camera.RenderTexture(sb, config.SignalTexture, renderBounds, DetermineColor(value, hasEnd), facing);
+                renderTarget.Camera.RenderTexture(sb, config.SignalTexture, renderBounds, DetermineColor(cs), facing);
+            }
         }
 
-        private Color DetermineColor(int value, bool hasEnd)
+
+
+        private ChannelState DetermineState(int value, bool hasEnd)
         {
-            if (value != 0)
+             if (value != 0)
             {
-                return config.Color;
+                return ChannelState.Active;
             }
 
             if (!hasEnd)
             {
-                return Color.Black;
+                return ChannelState.Unbounded;
             }
 
 
-            return Color.DimGray;
-           
+            return ChannelState.Bounded;
+        }
+
+        private Color DetermineColor(ChannelState cs)
+        {
+            switch (cs)
+            {
+                case ChannelState.Unbounded:
+                    return Color.Black;
+                case ChannelState.Bounded:
+                    return Color.DimGray;
+
+                case ChannelState.Active:
+                    return config.Color;
+            }
+
+            return Color.Magenta;
+            
+
         }
 
         /// <summary>

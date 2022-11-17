@@ -48,7 +48,7 @@ namespace CrystalCore.View.Subviews.Agents
             renderTarget.Camera.RenderTexture(sb, config.DefaultTexture, ShrinkBorders(), config.Color, ((Agent)RenderData).Facing);
 
             // debug port rendering
-            if (renderTarget.DoDebugPortRendering)
+            if (renderTarget.DoDebugRendering)
             {
                 if (_ports == null)
                 {

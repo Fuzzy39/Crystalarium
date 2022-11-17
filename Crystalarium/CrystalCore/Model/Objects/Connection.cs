@@ -15,9 +15,6 @@ namespace CrystalCore.Model.Objects
         private Port portA;
         private Port portB;
 
-
-        private int _maxLength = 0;
-        private int _minLength = 1;
         private int _length = 0;
 
         public int Length { get => _length; }
@@ -104,7 +101,7 @@ namespace CrystalCore.Model.Objects
 
             _length = length;
 
-            Console.WriteLine(this);
+           
 
           
         }
@@ -212,7 +209,7 @@ namespace CrystalCore.Model.Objects
 
         public override string ToString()
         {
-            return "Signal: { A:" + (portA==null?"null":portA.Location.ToString()) + " B: " + (portB == null ? "null" : portB.Location.ToString()) + " Bounds:" + Bounds + " Length: "+Length+"}";
+            return "Connection: { A:" + (portA==null?"null":portA.Location.ToString()) + " B: " + (portB == null ? "null" : portB.Location.ToString()) + " Bounds:" + Bounds + " Length: "+Length+"}";
 
         }
 

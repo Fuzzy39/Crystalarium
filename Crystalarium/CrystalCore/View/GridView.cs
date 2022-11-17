@@ -42,7 +42,7 @@ namespace CrystalCore.View
 
         private bool _doAgentRendering; // whether a gridview with this skin renders agents and signals.
         public bool AllowMultipleGhosts { get; set; } // can this gridview contain multiple ghosts, or just one?
-        public bool DoDebugPortRendering { get; set; } // should agents render their debug ports?
+        public bool DoDebugRendering { get; set; } // should agents render their debug ports and signals?
 
         // Properties
         public Rectangle PixelBounds
@@ -158,7 +158,7 @@ namespace CrystalCore.View
             // Rendering options.
             DoAgentRendering = true;
             AllowMultipleGhosts = false;
-            DoDebugPortRendering = false;
+            DoDebugRendering = false;
 
             _viewCastTarget = null;
             
@@ -237,8 +237,9 @@ namespace CrystalCore.View
             }
             catch
             {
-                Console.WriteLine("Camera is out of bounds. Resetting position.");
-                _camera.Position = new Vector2(Map.Bounds.Width/2f, Map.Bounds.Height/2f);
+
+                _camera.Position = Map.Center;
+                Console.WriteLine("Camera is out of bounds. Resetting position to "+_camera.Position);
             }
         }
 

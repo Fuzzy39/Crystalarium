@@ -70,6 +70,11 @@ namespace CrystalCore.Model.Elements
         {
             Chunk c = g.getChunkAtCoords(p);
 
+            if(c == null)
+            {
+                return null;
+            }
+
             foreach (ChunkMember cm in c.MembersWithin)
             {
                 if (!(cm is Agent))
@@ -160,8 +165,9 @@ namespace CrystalCore.Model.Elements
             // get and return that chunk.
             Chunk toReturn = g.grid.Elements[chunkCoord.X][chunkCoord.Y];
 
+
             // it's possible this doesn't work. If that's true, I'd like to know.
-            Debug.Assert(toReturn.Bounds.Contains(Coords));
+            Debug.Assert(toReturn.Bounds.Contains(Coords) || toReturn.Destroyed);
 
             return toReturn;
 
