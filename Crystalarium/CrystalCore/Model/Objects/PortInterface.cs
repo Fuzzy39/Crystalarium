@@ -195,7 +195,7 @@ namespace CrystalCore.Model.Objects
             }
         }
 
-        public void Destroy()
+        internal void Destroy()
         {
 
             List<Port> toUpdate = new List<Port>();

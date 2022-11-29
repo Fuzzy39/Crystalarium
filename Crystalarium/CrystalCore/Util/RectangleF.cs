@@ -145,7 +145,7 @@ namespace CrystalCore.Util
             // this hurts my brain.
             return this.Right >= rect.Left
                  & this.Left <= rect.Right
-                 & this.Top <= rect.Bottom
+                 & this.Top <= rect.Bottom      
                  & this.Bottom >= rect.Top;
 
         }
