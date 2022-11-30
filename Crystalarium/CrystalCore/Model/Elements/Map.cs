@@ -48,15 +48,12 @@ namespace CrystalCore.Model.Elements
             get => _ruleset;
             set
             {
-                if (value == _ruleset)
-                {
-                    return;
-                }
+                _ruleset = value;
 
                 Reset();
 
 
-                _ruleset = value;
+                
 
             }
         }

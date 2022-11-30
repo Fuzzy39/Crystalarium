@@ -37,6 +37,32 @@ namespace CrystalCore.Model.Elements.Tests
         }
 
 
+        [TestMethod()]
+        public void SaveLoadChunkNoResetTest()
+        {
+            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67));
+
+            Ruleset r = e.addRuleset("dummy");
+
+            e.Initialize();
+
+            Map m = e.addGrid(r);
+
+
+
+
+            // act
+            m.ExpandToFit(new Rectangle(-1, -1, 20, 20));
+
+            e.saveManager.Save("TestingSave.xml", m);
+
+            m.ExpandGrid(Util.Direction.down);
+
+            e.saveManager.Load("TestingSave.xml", m);
+
+
+            Assert.IsTrue(m.Bounds.Equals(new Rectangle(-16, -16, 48, 48)));
+        }
 
 
         // tests for entities, agents, etc

@@ -25,7 +25,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 871; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 872; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         private double frameRate = 60;
 
@@ -163,7 +163,7 @@ namespace Crystalarium.Main
             // create a test grid, and do some test things to it.
             Map = Engine.addGrid(CurrentRuleset);
 
-
+            Map.OnReset += actions.OnMapReset;
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
 
@@ -337,7 +337,8 @@ namespace Crystalarium.Main
             spriteBatch.DrawString(Textures.testFont, 
                 "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. RMB to delete. R to rotate. Tab to Copy Agent." +
                 "\nQ and E to switch agent types. P to switch rulesets (resets grid). O to toggle debug view." +
-                "\nSpace to toggle simulation. Z for single sim step. Shift/Control to Raise/Lower sim speed.", 
+                "\nSpace to toggle simulation. Z for single sim step. Shift/Control to Raise/Lower sim speed."+
+                "\nCtrl + S to save. Ctrl + O to open.", 
                 new Vector2(10, height - 95), Color.White);
 
         }

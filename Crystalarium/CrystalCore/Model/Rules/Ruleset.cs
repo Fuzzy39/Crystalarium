@@ -157,6 +157,11 @@ namespace CrystalCore.Model.Rules
             return _agentTypes[_agentTypes.Count - 1];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>The Agent Type, or null if it does not exist</returns>
         public AgentType GetAgentType(string name)
         {
             foreach (AgentType at in _agentTypes)

@@ -266,6 +266,7 @@ namespace CrystalCore.View
         public void Reset()
         {
             Manager.Reset();
+            Camera.Position = _map.Center;
         }
     }
 }

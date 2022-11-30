@@ -59,10 +59,17 @@ namespace Crystalarium.Main
             SetupController();
 
             CurrentType = game.CurrentRuleset.AgentTypes[0];
+
+           
        
         }
 
-      
+       internal void OnMapReset(object sender, EventArgs e)
+        {
+
+            game.CurrentRuleset = game.Map.Ruleset;
+            CurrentType = game.CurrentRuleset.AgentTypes[0];
+        }
 
        
 
@@ -395,8 +402,7 @@ namespace Crystalarium.Main
                 try
                 {
                     game.Engine.saveManager.Load("TestSave.XML", game.Map);
-                    game.CurrentRuleset = game.Map.Ruleset;
-                    CurrentType = game.CurrentRuleset.AgentTypes[0];
+                  
                 }
                 catch(MapLoadException e)
                 {
@@ -415,15 +421,10 @@ namespace Crystalarium.Main
             List<Ruleset> rulesets = game.Engine.Rulesets;
             if(rulesets.Count>i)
             {
-                if (rulesets[i] == game.CurrentRuleset)
-                {
-                    game.Map.Reset();
-                }
-                else
-                {
-                    game.CurrentRuleset = rulesets[i];
-                    game.Map.Ruleset = game.CurrentRuleset;
-                }
+                
+                game.CurrentRuleset = rulesets[i];
+                game.Map.Ruleset = game.CurrentRuleset;
+                
 
                 CurrentType = game.CurrentRuleset.AgentTypes[0];
                 c.Context = "play";
