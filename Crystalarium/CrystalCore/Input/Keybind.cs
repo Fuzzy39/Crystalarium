@@ -31,6 +31,7 @@ namespace CrystalCore.Input
 
         public bool DisableOnSuperset { get; set; }
 
+        public int SupersetCount { get { return supersets.Count; } }
 
         // properites
         public List<Button> buttons
@@ -129,7 +130,7 @@ namespace CrystalCore.Input
         // does this keybind have every key that we do?
         private bool isSuperset(Keybind k)
         {
-            if(k._requiredContext!= _requiredContext)
+            if( _requiredContext!=null && k._requiredContext!=null && !k._requiredContext.Equals(_requiredContext))
             {
                 return false;
             }
@@ -192,7 +193,7 @@ namespace CrystalCore.Input
             foreach (Keybind k in supersets)
             {
 
-                if (k.Triggered(ih))
+                if (k.ButtonsDown(ih))
                 {
                     // we do not need to run, another keybind is taking priority
                     return false;

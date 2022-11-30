@@ -1,6 +1,7 @@
 ﻿using CrystalCore;
 using CrystalCore.Model.Elements;
 using CrystalCore.Model.Rules;
+using CrystalCore.Util;
 using CrystalCore.View;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,7 +25,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 858; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 871; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         private double frameRate = 60;
 
@@ -42,7 +43,7 @@ namespace Crystalarium.Main
         private Actions actions; // this sets up our user interaction.
         internal Configuration Configuration{get; private set;}
 
-        private ErrorSplash errorSplash = null;
+       internal ErrorSplash errorSplash = null;
 
         public CrystalGame()
         {
@@ -85,6 +86,10 @@ namespace Crystalarium.Main
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
 
+            if(errorSplash != null)
+            {
+                return;
+            }
 
             view.Destroy();
             view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);

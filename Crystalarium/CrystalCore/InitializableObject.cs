@@ -24,20 +24,4 @@ namespace CrystalCore
         
     }
 
-    public class InitializationFailedException : Exception
-    {
-        public InitializationFailedException()
-        {
-        }
-
-        public InitializationFailedException(string message)
-            : base(message)
-        {
-        }
-
-        public InitializationFailedException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
 }

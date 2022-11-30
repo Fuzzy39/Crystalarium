@@ -28,10 +28,12 @@ namespace CrystalCore.Model.Elements
 
         private Ruleset _ruleset; // the ruleset this grid is following.
 
-        private MapSaver saveManager;
+      
 
         public event EventHandler OnReset;
         public event EventHandler OnResize;
+
+    
 
         public int AgentCount { get => _agents.Count; }
 
@@ -55,6 +57,7 @@ namespace CrystalCore.Model.Elements
 
 
                 _ruleset = value;
+
             }
         }
 
@@ -101,7 +104,7 @@ namespace CrystalCore.Model.Elements
 
             Reset();
 
-            saveManager = new MapSaver(this);
+     
 
 
         }

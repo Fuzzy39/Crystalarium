@@ -1,6 +1,6 @@
 ﻿// namespace
 using CrystalCore.Model.Language;
-
+using CrystalCore.Util;
 using System;
 using System.Collections.Generic;
 using System.Text;

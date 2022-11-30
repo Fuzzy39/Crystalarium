@@ -9,13 +9,17 @@ using System.Text;
 using CrystalCore.View.Configs;
 using CrystalCore.Model.Rules;
 using CrystalCore.Model.Elements;
+using CrystalCore.Util;
 
 namespace CrystalCore
 {
+
+
+
     // A central access point for setting up, drawing, and updating.
     public class Engine:InitializableObject
     {
-
+        private MapSaver _saver;
         private SimulationManager _sim;
         private Controller _controller;
     
@@ -31,7 +35,10 @@ namespace CrystalCore
         {
             get => _sim;
         }
-
+        public MapSaver saveManager
+        {
+            get => _saver;
+        }
         public Controller Controller
         {
             get => _controller;
@@ -57,6 +64,8 @@ namespace CrystalCore
 
             _skinSets = new List<SkinSet>();
             _rulesets = new List<Ruleset>();
+
+            _saver = new MapSaver(this);
 
      
             

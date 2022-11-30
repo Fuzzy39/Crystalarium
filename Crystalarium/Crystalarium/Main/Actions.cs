@@ -384,6 +384,29 @@ namespace Crystalarium.Main
             });
             new Keybind(c, Keystate.OnPress, "sim slower", "play", Button.LeftControl);
 
+
+
+            c.addAction("save", () => { game.Engine.saveManager.Save("TestSave.XML", game.Map); });
+            new Keybind(c, Keystate.OnPress, "save", "play", Button.LeftControl, Button.S);
+
+            c.addAction("load", () => 
+            {
+
+                try
+                {
+                    game.Engine.saveManager.Load("TestSave.XML", game.Map);
+                    game.CurrentRuleset = game.Map.Ruleset;
+                    CurrentType = game.CurrentRuleset.AgentTypes[0];
+                }
+                catch(MapLoadException e)
+                {
+                    game.errorSplash = new ErrorSplash("Crystalrium couldn't load the specified save file.\nReason: " + e.Message);
+                }
+
+
+            });
+            new Keybind(c, Keystate.OnPress, "load", "play", Button.LeftControl, Button.O);
+
         }
 
         private void SwitchRuleset(int i)

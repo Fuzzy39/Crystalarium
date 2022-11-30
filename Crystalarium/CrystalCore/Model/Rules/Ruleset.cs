@@ -1,7 +1,7 @@
 ﻿// Namespace
 
 using CrystalCore.Model.Language;
-
+using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
