@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Text;
 using CrystalCore.Model.Rules;
 using Microsoft.Xna.Framework;
+using CrystalCore.Model.Objects;
+using CrystalCore.Util;
 
 namespace CrystalCore.Model.Elements.Tests
 {
@@ -65,7 +67,35 @@ namespace CrystalCore.Model.Elements.Tests
         }
 
 
-        // tests for entities, agents, etc
+        [TestMethod()]
+        public void SaveLoadAgentTest()
+        {
+            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67));
+
+            Ruleset r = e.addRuleset("dummy");
+
+            AgentType at = r.CreateType( "agent", new Point(1));
+
+            e.Initialize();
+
+            Map m = e.addGrid(r);
+
+
+
+
+            // act
+            new Agent(m, new Point(3, 4), at, Util.Direction.left);
+
+            e.saveManager.Save("TestingSave.xml", m);
+
+            m.Reset();
+
+            e.saveManager.Load("TestingSave.xml", m);
+
+
+            Assert.IsTrue(m.AgentAt(new Point(3,4)).Type == at);
+            Assert.IsTrue(m.AgentAt(new Point(3, 4)).Facing == Direction.left);
+        }
 
     }
 }

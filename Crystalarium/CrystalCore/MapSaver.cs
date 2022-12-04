@@ -253,7 +253,7 @@ namespace CrystalCore
                 throw new MapLoadException("No Agent of type '"+type+"' exists in ruleset '"+m.Ruleset.Name+"'.");
             }
 
-            Console.WriteLine("After type: " + reader.Name);
+       
             Point loc = LoadPoint(reader, "Location");
 
             if(!reader.ReadToFollowing("Direction"))
@@ -267,7 +267,6 @@ namespace CrystalCore
                 throw new MapLoadException("Malformed agent direction.");
             }
 
-            Console.WriteLine("loc: " + loc + "\ndir " + d + " type: " + type.Name);
             new Agent(m, loc, type, d);
 
 
