@@ -11,6 +11,7 @@ using CrystalCore.View.Configs;
 using CrystalCore.Model;
 using CrystalCore.Model.Rules;
 using CrystalCore.Model.Elements;
+using System.IO;
 
 namespace Crystalarium.Main
 {
@@ -59,10 +60,17 @@ namespace Crystalarium.Main
             SetupController();
 
             CurrentType = game.CurrentRuleset.AgentTypes[0];
+
+           
        
         }
 
-      
+       internal void OnMapReset(object sender, EventArgs e)
+        {
+
+            game.CurrentRuleset = game.Map.Ruleset;
+            CurrentType = game.CurrentRuleset.AgentTypes[0];
+        }
 
        
 
@@ -73,6 +81,24 @@ namespace Crystalarium.Main
         {
             c.Context = "play";
 
+            SetupViewInteraction();
+
+            SetupMapInteraction();
+
+            SetupSimInteraction();
+
+            SetupAgentSelection();
+
+            SetupMenuInteraction();
+          
+
+
+        }
+
+
+
+        private void SetupViewInteraction()
+        {
             // test code.
             float camSpeed = 1.2f;
 
@@ -93,7 +119,46 @@ namespace Crystalarium.Main
             c.addAction("right", () => game.view.Camera.AddVelocity(camSpeed, Direction.right));
             new Keybind(c, Keystate.Down, "right", "play", Button.D);
 
+            // panning
 
+            c.addAction("start pan", () =>
+            {
+                Point pixelCoords = game.view.LocalizeCoords(Mouse.GetState().Position);
+
+
+                panOrigin = pixelCoords;
+                panPos = game.view.Camera.Position;
+
+
+            });
+            new Keybind(c, Keystate.OnPress, "start pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
+
+
+            c.addAction("pan", () =>
+            {
+
+
+                Point pixelCoords = game.view.LocalizeCoords(Mouse.GetState().Position);
+                Vector2 mousePos = game.view.Camera.PixelToTileCoords(pixelCoords);
+                Vector2 originPos = game.view.Camera.PixelToTileCoords(panOrigin);
+
+                game.view.Camera.Position = panPos + (originPos - mousePos);
+
+
+
+
+            });
+            new Keybind(c, Keystate.Down, "pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
+
+            c.addAction("toggle debug ports", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
+            new Keybind(c, Keystate.OnPress, "toggle debug ports", "play", Button.O);
+
+
+        }
+
+
+        private void SetupMapInteraction()
+        {
             // grow the game.Grid!
             c.addAction("grow up", () => game.Map.ExpandGrid(Direction.up));
             new Keybind(c, Keystate.OnPress, "grow up", "play", Button.U);
@@ -103,9 +168,6 @@ namespace Crystalarium.Main
             new Keybind(c, Keystate.OnPress, "grow left", "play", Button.H);
             c.addAction("grow right", () => game.Map.ExpandGrid(Direction.right));
             new Keybind(c, Keystate.OnPress, "grow right", "play", Button.K);
-
-            c.addAction("toggle debug ports", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
-            new Keybind(c, Keystate.OnPress, "toggle debug ports", "play", Button.O);
 
             c.addAction("place agent", () =>
             {
@@ -180,165 +242,12 @@ namespace Crystalarium.Main
             });
             new Keybind(c, Keystate.OnPress, "rotate", "play", Button.R);
 
-
-            c.addAction("pipette", () =>
-            {
-                Point clickCoords = GetMousePos();
-
-                Agent a = game.Map.getAgentAtPos(clickCoords);
-                if (a == null)
-                {
-                    return;
-                }
-
-
-                CurrentType = a.Type;
-                Rotation = a.Facing;
-
-
-            });
-            new Keybind(c, Keystate.OnPress, "pipette", "play", Button.Tab);
-
-
-            c.addAction("start pan", () =>
-            {
-                Point pixelCoords = game.view.LocalizeCoords(Mouse.GetState().Position);
-
-
-                panOrigin = pixelCoords;
-                panPos = game.view.Camera.Position;
-
-
-            });
-            new Keybind(c, Keystate.OnPress, "start pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
-
-
-            c.addAction("pan", () =>
-            {
-
-
-                Point pixelCoords = game.view.LocalizeCoords(Mouse.GetState().Position);
-                Vector2 mousePos = game.view.Camera.PixelToTileCoords(pixelCoords);
-                Vector2 originPos = game.view.Camera.PixelToTileCoords(panOrigin);
-
-                game.view.Camera.Position = panPos + (originPos - mousePos);
+        }
 
 
 
-
-            });
-            new Keybind(c, Keystate.Down, "pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
-
-
-            c.addAction("next agent", () =>
-            {
-                List<AgentType> types = game.CurrentRuleset.AgentTypes;
-
-                int i = types.IndexOf(CurrentType);
-
-                i++;
-                if (i >= types.Count)
-                {
-                    i = 0;
-                }
-
-                CurrentType = types[i];
-
-            });
-            new Keybind(c, Keystate.OnPress, "next agent", "play", Button.E);
-
-            c.addAction("prev agent", () =>
-            {
-                List<AgentType> types = game.CurrentRuleset.AgentTypes;
-                int i = types.IndexOf(CurrentType);
-
-                i--;
-                if (i < 0)
-                {
-                    i = types.Count - 1;
-                }
-
-                CurrentType = types[i];
-
-            });
-            new Keybind(c, Keystate.OnPress, "prev agent", "play", Button.Q);
-
-
-            c.addAction("swap context", () =>
-            {
-                if (c.Context == "play")
-                {
-                    c.Context = "menu";
-
-                }
-                else
-                {
-                    c.Context = "play";
-                }
-
-                // triggers a reset.
-                //game.Grid.Ruleset = game.CurrentRuleset;
-                //CurrentType = game.CurrentRuleset.AgentTypes[0];
-
-            });
-            new Keybind(c, Keystate.OnPress, "swap context", Button.P);
-
-            c.addAction("ruleset 1", () => SwitchRuleset(0) );
-            new Keybind(c, Keystate.OnPress, "ruleset 1","menu", Button.D1);
-
-            c.addAction("ruleset 2", () => SwitchRuleset(1));
-            new Keybind(c, Keystate.OnPress, "ruleset 2", "menu", Button.D2);
-
-            c.addAction("ruleset 3", () => SwitchRuleset(2));
-            new Keybind(c, Keystate.OnPress, "ruleset 3", "menu", Button.D3);
-
-            c.addAction("ruleset 4", () => SwitchRuleset(3));
-            new Keybind(c, Keystate.OnPress, "ruleset 4", "menu", Button.D4);
-
-            c.addAction("ruleset 5", () => SwitchRuleset(4));
-            new Keybind(c, Keystate.OnPress, "ruleset 5", "menu", Button.D5);
-
-            c.addAction("ruleset 6", () => SwitchRuleset(5));
-            new Keybind(c, Keystate.OnPress, "ruleset 6", "menu", Button.D6);
-
-            c.addAction("ruleset 7", () => SwitchRuleset(6));
-            new Keybind(c, Keystate.OnPress, "ruleset 7", "menu", Button.D7);
-
-            c.addAction("ruleset 8", () => SwitchRuleset(7));
-            new Keybind(c, Keystate.OnPress, "ruleset 8", "menu", Button.D8);
-
-            c.addAction("ruleset 9", () => SwitchRuleset(8));
-            new Keybind(c, Keystate.OnPress, "ruleset 9", "menu", Button.D9);
-
-            // agents
-            c.addAction("agent 1", () => SwitchAgent(0));
-            new Keybind(c, Keystate.OnPress, "agent 1", "play", Button.D1);
-
-            c.addAction("agent 2", () => SwitchAgent(1));
-            new Keybind(c, Keystate.OnPress, "agent 2", "play", Button.D2);
-
-            c.addAction("agent 3", () => SwitchAgent(2));
-            new Keybind(c, Keystate.OnPress, "agent 3", "play", Button.D3);
-
-            c.addAction("agent 4", () => SwitchAgent(3));
-            new Keybind(c, Keystate.OnPress, "agent 4", "play", Button.D4);
-
-            c.addAction("agent 5", () => SwitchAgent(4));
-            new Keybind(c, Keystate.OnPress, "agent 5", "play", Button.D5);
-
-            c.addAction("agent 6", () => SwitchAgent(5));
-            new Keybind(c, Keystate.OnPress, "agent 6", "play", Button.D6);
-
-            c.addAction("agent 7", () => SwitchAgent(6));
-            new Keybind(c, Keystate.OnPress, "agent 7", "play", Button.D7);
-
-            c.addAction("agent 8", () => SwitchAgent(7));
-            new Keybind(c, Keystate.OnPress, "agent 8", "play", Button.D8);
-
-            c.addAction("agent 9", () => SwitchAgent(8));
-            new Keybind(c, Keystate.OnPress, "agent 9", "play", Button.D9);
-
-
+        private void SetupSimInteraction()
+        {
             c.addAction("toggle sim", () =>
             {
                 game.Engine.Sim.Paused = !game.Engine.Sim.Paused;
@@ -376,59 +285,254 @@ namespace Crystalarium.Main
 
                 // no need to step if unpaused.
                 SimulationManager sim = game.Engine.Sim;
-                if(sim.TargetStepsPS>10)
+                if (sim.TargetStepsPS > 10)
                 {
                     sim.TargetStepsPS -= 10;
                 }
 
             });
             new Keybind(c, Keystate.OnPress, "sim slower", "play", Button.LeftControl);
+        }
+
+        private void SetupAgentSelection()
+        {
+            c.addAction("pipette", () =>
+            {
+                Point clickCoords = GetMousePos();
+
+                Agent a = game.Map.getAgentAtPos(clickCoords);
+                if (a == null)
+                {
+                    return;
+                }
+
+
+                CurrentType = a.Type;
+                Rotation = a.Facing;
+
+
+            });
+            new Keybind(c, Keystate.OnPress, "pipette", "play", Button.Tab);
 
 
 
-            c.addAction("save", () => { game.Engine.saveManager.Save("TestSave.XML", game.Map); });
-            new Keybind(c, Keystate.OnPress, "save", "play", Button.LeftControl, Button.S);
 
-            c.addAction("load", () => 
+
+            c.addAction("next agent", () =>
+            {
+                List<AgentType> types = game.CurrentRuleset.AgentTypes;
+
+                int i = types.IndexOf(CurrentType);
+
+                i++;
+                if (i >= types.Count)
+                {
+                    i = 0;
+                }
+
+                CurrentType = types[i];
+
+            });
+            new Keybind(c, Keystate.OnPress, "next agent", "play", Button.E);
+
+            c.addAction("prev agent", () =>
+            {
+                List<AgentType> types = game.CurrentRuleset.AgentTypes;
+                int i = types.IndexOf(CurrentType);
+
+                i--;
+                if (i < 0)
+                {
+                    i = types.Count - 1;
+                }
+
+                CurrentType = types[i];
+
+            });
+            new Keybind(c, Keystate.OnPress, "prev agent", "play", Button.Q);
+
+            // agents
+            c.addAction("agent 1", () => SwitchAgent(0));
+            new Keybind(c, Keystate.OnPress, "agent 1", "play", Button.D1);
+
+            c.addAction("agent 2", () => SwitchAgent(1));
+            new Keybind(c, Keystate.OnPress, "agent 2", "play", Button.D2);
+
+            c.addAction("agent 3", () => SwitchAgent(2));
+            new Keybind(c, Keystate.OnPress, "agent 3", "play", Button.D3);
+
+            c.addAction("agent 4", () => SwitchAgent(3));
+            new Keybind(c, Keystate.OnPress, "agent 4", "play", Button.D4);
+
+            c.addAction("agent 5", () => SwitchAgent(4));
+            new Keybind(c, Keystate.OnPress, "agent 5", "play", Button.D5);
+
+            c.addAction("agent 6", () => SwitchAgent(5));
+            new Keybind(c, Keystate.OnPress, "agent 6", "play", Button.D6);
+
+            c.addAction("agent 7", () => SwitchAgent(6));
+            new Keybind(c, Keystate.OnPress, "agent 7", "play", Button.D7);
+
+            c.addAction("agent 8", () => SwitchAgent(7));
+            new Keybind(c, Keystate.OnPress, "agent 8", "play", Button.D8);
+
+            c.addAction("agent 9", () => SwitchAgent(8));
+            new Keybind(c, Keystate.OnPress, "agent 9", "play", Button.D9);
+        }
+
+
+        private void SetupMenuInteraction()
+        {
+
+
+
+      
+
+            c.addAction("open ruleset menu", () =>
+            {
+               if(c.Context.Equals("play"))
+               {
+                    c.Context = "menu";
+                    game.currentMenu = game.RulesetMenu;
+               }
+               else
+               {
+                    c.Context = "play";
+                    game.currentMenu = null;
+               }
+               
+
+            });
+            new Keybind(c, Keystate.OnPress, "open ruleset menu", Button.P);
+
+
+            c.addAction("close", () =>
             {
 
-                try
+                if(c.Context.Equals("menu"))
                 {
-                    game.Engine.saveManager.Load("TestSave.XML", game.Map);
-                    game.CurrentRuleset = game.Map.Ruleset;
-                    CurrentType = game.CurrentRuleset.AgentTypes[0];
+                    c.Context = "play";
+                    game.currentMenu = null;
+                    return;
                 }
-                catch(MapLoadException e)
-                {
-                    game.errorSplash = new ErrorSplash("Crystalrium couldn't load the specified save file.\nReason: " + e.Message);
-                }
+
+                game.Exit();
+
+            });
+            new Keybind(c, Keystate.OnPress, "close", Button.Escape);
+
+
+            c.addAction("menu action 1", () => MenuAction(0));
+            new Keybind(c, Keystate.OnPress, "menu action 1", "menu", Button.D1);
+
+            c.addAction("menu action 2", () => MenuAction(1));
+            new Keybind(c, Keystate.OnPress, "menu action 2", "menu", Button.D2);
+
+            c.addAction("menu action 3", () => MenuAction(2));
+            new Keybind(c, Keystate.OnPress, "menu action 3", "menu", Button.D3);
+
+            c.addAction("menu action 4", () => MenuAction(3));
+            new Keybind(c, Keystate.OnPress, "menu action 4", "menu", Button.D4);
+
+            c.addAction("menu action 5", () => MenuAction(4));
+            new Keybind(c, Keystate.OnPress, "menu action 5", "menu", Button.D5);
+
+            c.addAction("menu action 6", () => MenuAction(5));
+            new Keybind(c, Keystate.OnPress, "menu action 6", "menu", Button.D6);
+
+            c.addAction("menu action 7", () => MenuAction(6));
+            new Keybind(c, Keystate.OnPress, "menu action 7", "menu", Button.D7);
+
+            c.addAction("menu action 8", () => MenuAction(7));
+            new Keybind(c, Keystate.OnPress, "menu action 8", "menu", Button.D8);
+
+            c.addAction("menu action 9", () => MenuAction(8));
+            new Keybind(c, Keystate.OnPress, "menu action 9", "menu", Button.D9);
+
+
+
+
+
+
+
+
+            c.addAction("save", () => 
+            {
+                
+                
+                game.currentMenu = game.SaveMenu;
+                c.Context = "menu";
+            
+            });
+            new Keybind(c, Keystate.OnPress, "save", "play", Button.LeftControl, Button.S);
+
+            c.addAction("load", () =>
+            {
+
+           
+
+                game.currentMenu = game.LoadMenu;
+                c.Context = "menu";
 
 
             });
             new Keybind(c, Keystate.OnPress, "load", "play", Button.LeftControl, Button.O);
+        }
 
+
+
+        private void MenuAction(int i)
+        {
+            if(game.currentMenu==game.RulesetMenu)
+            {
+                SwitchRuleset(i);
+                return;
+            }
+
+            string path =Path.Combine("Saves", (i + 1) + ".xml");
+
+
+            if (game.currentMenu == game.SaveMenu)
+            {
+                game.Engine.saveManager.Save(path, game.Map);
+                c.Context = "play";
+                game.currentMenu = null;
+                return;
+            }
+
+            // must be loading.
+            if(!File.Exists(path))
+            {
+                return;
+            }
+
+            try
+            {
+                game.Engine.saveManager.Load(path, game.Map);
+
+            }
+            catch (MapLoadException e)
+            {
+                game.errorSplash = new ErrorSplash("Crystalrium couldn't load the specified save file.\nReason: " + e.Message);
+            }
+
+            c.Context = "play";
+            game.currentMenu = null;
         }
 
         private void SwitchRuleset(int i)
         {
-          
             List<Ruleset> rulesets = game.Engine.Rulesets;
-            if(rulesets.Count>i)
+            if (rulesets.Count > i)
             {
-                if (rulesets[i] == game.CurrentRuleset)
-                {
-                    game.Map.Reset();
-                }
-                else
-                {
-                    game.CurrentRuleset = rulesets[i];
-                    game.Map.Ruleset = game.CurrentRuleset;
-                }
+
+                game.CurrentRuleset = rulesets[i];
+                game.Map.Ruleset = game.CurrentRuleset;
+
 
                 CurrentType = game.CurrentRuleset.AgentTypes[0];
                 c.Context = "play";
             }
-            // do nothing if it's not valid.
         }
 
         private void SwitchAgent(int i)

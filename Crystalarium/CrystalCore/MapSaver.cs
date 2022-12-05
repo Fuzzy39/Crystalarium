@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Elements;
+using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
@@ -46,7 +47,17 @@ namespace CrystalCore
                     WritePoint(writer, m.grid.Size, "ChunkSize");
                 
                     writer.WriteEndElement();
-                writer.WriteEndElement();
+
+                    writer.WriteStartElement("Agents");
+                        List<Agent> agents = m.AgentsWithin(m.Bounds);
+
+                        foreach(Agent a in agents)
+                        {
+                            WriteAgent(writer, a);
+                        }
+                    writer.WriteEndElement();
+
+            writer.WriteEndElement();
             }
 
         }
@@ -66,6 +77,21 @@ namespace CrystalCore
             writer.WriteEndElement();
         }
 
+        private void WriteAgent(XmlWriter writer, Agent a)
+        {
+            writer.WriteStartElement("Agent");
+            writer.WriteStartElement("Type");
+            writer.WriteValue(a.Type.Name);
+            writer.WriteEndElement();
+            WritePoint(writer, a.Bounds.Location, "Location");
+            writer.WriteStartElement("Direction");
+            writer.WriteString(a.Facing.ToString());
+            writer.WriteEndElement();
+            writer.WriteEndElement(); 
+
+        }
+
+
         public void Load(string path, Map m)
         {
             XmlReaderSettings settings = new XmlReaderSettings();
@@ -82,15 +108,10 @@ namespace CrystalCore
                 using (XmlReader reader = XmlReader.Create(new FileStream(path, FileMode.Open), settings))
                 {
                     reader.Read();
-                   
-                    if(!reader.ReadToNextSibling("Map"))
-                    {
-                        throw new MapLoadException("This file does not appear to be a save file. Could not find map.");
-                    }
 
-                    
+                    reader.ReadStartElement("Map");                    
 
-                    if(!reader.ReadToDescendant("Ruleset"))
+                    if(!reader.Name.Equals("Ruleset"))
                     {
                         throw new MapLoadException("Could not Find the Ruleset of this Save file.");
                     }
@@ -99,10 +120,12 @@ namespace CrystalCore
                     // get the ruleset.
                     m.Ruleset = GetRuleset(ruleName);
 
+                    
 
                     LoadGeometry(reader, m);
-
-                   
+                    reader.Read();
+                    reader.Read();
+                    LoadAgents(reader, m);
 
 
                 }
@@ -132,11 +155,8 @@ namespace CrystalCore
 
         private void LoadGeometry(XmlReader reader, Map m)
         {
-            
-            if (!reader.Name.Equals("Geometry"))
-            {
-                throw new MapLoadException("Could not Find the Geometry of this Save file.");
-            }
+
+            reader.ReadStartElement("Geometry");
 
             try
             {
@@ -156,11 +176,13 @@ namespace CrystalCore
 
         private Point LoadPoint(XmlReader reader, string name)
         {
-            if(!reader.ReadToFollowing(name))
+            if (!reader.Name.Equals(name))
             {
-                throw new MapLoadException("Could not find point '"+name+"'.");
+                if (!reader.ReadToFollowing(name))
+                {
+                    throw new MapLoadException("Could not find point '" + name + "'.");
+                }
             }
-
             Point toReturn =new Point(0);
             reader.Read();
 
@@ -181,6 +203,70 @@ namespace CrystalCore
             return toReturn;
         }
         
+        private void LoadAgents(XmlReader bigReader, Map m )
+        {
+            
+            if (!bigReader.Name.Equals("Agents"))
+            {
+                throw new MapLoadException("Could not find the agent listing for this map");
+            }
+
+            XmlReader reader = bigReader.ReadSubtree();
+            try
+            {
+
+                while (LoadAgent(reader, m));
+               
+                
+            }
+            catch(MapLoadException e)
+            {
+                throw new MapLoadException("Could not load agents.\n" + e.Message);
+            }
+        }
+
+        private bool LoadAgent(XmlReader reader, Map m)
+        {
+            if(!reader.ReadToFollowing("Agent"))
+            {
+                return false;
+            }
+
+            if(!reader.ReadToFollowing("Type"))
+            {
+                throw new MapLoadException("Could not find expected agent type.");
+            }
+            string typeS = reader.ReadElementContentAsString();
+            AgentType type = m.Ruleset.GetAgentType(typeS);
+            if (type == null)
+            {
+                throw new MapLoadException("No Agent of type '"+type+"' exists in ruleset '"+m.Ruleset.Name+"'.");
+            }
+
+       
+            Point loc = LoadPoint(reader, "Location");
+
+            if(!reader.ReadToFollowing("Direction"))
+            {
+                throw new MapLoadException("Malformed Agent. No direction");
+            }
+            string dir = reader.ReadElementContentAsString();
+            Direction d;
+            if(!Enum.TryParse<Direction>(dir, out d))
+            {
+                throw new MapLoadException("Malformed agent direction.");
+            }
+
+            new Agent(m, loc, type, d);
+
+
+            return true;
+            
+        }
+
+
+       
+
 
     }
 }

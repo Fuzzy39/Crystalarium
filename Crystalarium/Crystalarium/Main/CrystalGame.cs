@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.IO;
 
 namespace Crystalarium.Main
 {
@@ -25,7 +26,7 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 871; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 881; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         private double frameRate = 60;
 
@@ -43,7 +44,12 @@ namespace Crystalarium.Main
         private Actions actions; // this sets up our user interaction.
         internal Configuration Configuration{get; private set;}
 
-       internal ErrorSplash errorSplash = null;
+        internal ErrorSplash errorSplash = null;
+        internal Menu currentMenu = null;
+
+        internal Menu RulesetMenu { get; private set; }
+        internal Menu SaveMenu { get; private set; }
+        internal Menu LoadMenu { get; private set; }
 
         public CrystalGame()
         {
@@ -62,7 +68,7 @@ namespace Crystalarium.Main
             _graphics.PreferredBackBufferHeight = 720;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
 
-            // DELETE BEFORE RELEASING M6
+         
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
 
@@ -71,7 +77,41 @@ namespace Crystalarium.Main
             // create the basics.
             Engine = new Engine(TargetElapsedTime);
 
+            // create the folder for saves, if it does not exist.
+            if(!Directory.Exists("Saves"))
+            {
+                Directory.CreateDirectory("Saves");
+            }
 
+
+            // Create menus
+            RulesetMenu = new Menu("Switch Ruleset?", 
+                (int i) => { return "switch to ruleset '" + Engine.Rulesets[i - 1].Name + "'"; },
+                (int i) => { return false; },
+                (int i) => { return Engine.Rulesets.Count < i; });
+
+            SaveMenu = new Menu("Save Map",
+                (int i) =>
+                {
+                    string path = Path.Combine("Saves", i + ".xml");
+                    return "save in slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB)") : "Empty)");
+
+                },
+                (int i) => { return false; },
+                 (int i) => { return false; }
+                );
+
+
+            LoadMenu = new Menu("Load Map",
+                (int i) =>
+                {
+                    string path = Path.Combine("Saves", i + ".xml");
+                    return "load from slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB)") : "Empty)");
+
+                },
+                (int i) => { return false; },
+                (int i) => { return !File.Exists(Path.Combine("Saves", i + ".xml")); }
+                );
 
             base.Initialize();
 
@@ -163,7 +203,7 @@ namespace Crystalarium.Main
             // create a test grid, and do some test things to it.
             Map = Engine.addGrid(CurrentRuleset);
 
-
+            Map.OnReset += actions.OnMapReset;
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
 
@@ -205,9 +245,8 @@ namespace Crystalarium.Main
 
 
 
-            // provided by monogame. Escape closes the program. I suppose it can stay for now.
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+       
+               
 
             if (errorSplash != null)
             {
@@ -301,6 +340,7 @@ namespace Crystalarium.Main
                 DrawMenu(width, height);    
             }
 
+            
             EndDraw(height);
 
 
@@ -337,8 +377,9 @@ namespace Crystalarium.Main
             spriteBatch.DrawString(Textures.testFont, 
                 "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. RMB to delete. R to rotate. Tab to Copy Agent." +
                 "\nQ and E to switch agent types. P to switch rulesets (resets grid). O to toggle debug view." +
-                "\nSpace to toggle simulation. Z for single sim step. Shift/Control to Raise/Lower sim speed.", 
-                new Vector2(10, height - 95), Color.White);
+                "\nSpace to toggle simulation. Z for single sim step. Shift/Control to Raise/Lower sim speed."+
+                "\nCtrl + S to save. Ctrl + O to open.", 
+                new Vector2(10, height - 110), Color.White);
 
         }
 
@@ -346,18 +387,13 @@ namespace Crystalarium.Main
         private void DrawMenu(int width, int height)
         {
             spriteBatch.Draw(Textures.pixel, new Rectangle(0, 0, width, height), new Color(0, 0, 0, 180));
-            spriteBatch.DrawString(Textures.testFont, "Switch Ruleset?", new Vector2(100, 100), Color.White, 0f, new Vector2(), 1.5f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(Textures.testFont, "Press P to return to game.", new Vector2(120, 150), Color.White);
+            currentMenu.Draw(spriteBatch);
 
-            for (int i = 1; i <= 9; i++)
-            {
-                if (Engine.Rulesets.Count < i)
-                {
-                    break;
-                }
-                spriteBatch.DrawString(Textures.testFont, "Press " + i + " to switch to ruleset '" + Engine.Rulesets[i - 1].Name + "'.", new Vector2(120, 150 + (25 * i)), Color.White);
-            }
         }
+
+
+       
+
 
         // draw the build number, the most important thing!
         private void EndDraw(int height)
