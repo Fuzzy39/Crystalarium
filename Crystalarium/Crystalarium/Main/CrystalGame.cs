@@ -26,7 +26,9 @@ namespace Crystalarium.Main
 
         internal Engine Engine { get; private set; } // the 'engine'
 
+
         private const int BUILD = 881; // I like to increment this number every time I run the code after changing it. I don't always though.
+
 
         private double frameRate = 60;
 
@@ -379,6 +381,7 @@ namespace Crystalarium.Main
                 "\nQ and E to switch agent types. P to switch rulesets (resets grid). O to toggle debug view." +
                 "\nSpace to toggle simulation. Z for single sim step. Shift/Control to Raise/Lower sim speed."+
                 "\nCtrl + S to save. Ctrl + O to open.", 
+
                 new Vector2(10, height - 110), Color.White);
 
         }

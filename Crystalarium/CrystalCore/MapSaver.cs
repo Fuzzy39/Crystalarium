@@ -205,7 +205,7 @@ namespace CrystalCore
         
         private void LoadAgents(XmlReader bigReader, Map m )
         {
-            
+
             if (!bigReader.Name.Equals("Agents"))
             {
                 throw new MapLoadException("Could not find the agent listing for this map");
@@ -215,9 +215,9 @@ namespace CrystalCore
             try
             {
 
+
                 while (LoadAgent(reader, m));
-               
-                
+
             }
             catch(MapLoadException e)
             {
@@ -263,9 +263,6 @@ namespace CrystalCore
             return true;
             
         }
-
-
-       
 
 
     }
