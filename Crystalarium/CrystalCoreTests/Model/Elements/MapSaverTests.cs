@@ -93,8 +93,8 @@ namespace CrystalCore.Model.Elements.Tests
             e.saveManager.Load("TestingSave.xml", m);
 
 
-            Assert.IsTrue(m.AgentAt(new Point(3,4)).Type == at);
-            Assert.IsTrue(m.AgentAt(new Point(3, 4)).Facing == Direction.left);
+            Assert.IsTrue(m.getAgentAtPos(new Point(3,4)).Type == at);
+            Assert.IsTrue(m.getAgentAtPos(new Point(3, 4)).Facing == Direction.left);
         }
 
     }

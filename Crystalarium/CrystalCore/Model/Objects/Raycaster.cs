@@ -95,7 +95,7 @@ namespace CrystalCore.Model.Objects
             while (nextEnd != null)
             {
                 end = (Point)nextEnd;
-                Agent target = Map.AgentAt(end);
+                Agent target = Map.getAgentAtPos(end);
 
                 // We found a target!
                 if (target != null)

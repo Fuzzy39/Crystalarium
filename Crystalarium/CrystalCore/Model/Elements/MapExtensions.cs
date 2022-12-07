@@ -66,30 +66,6 @@ namespace CrystalCore.Model.Elements
             return null;
         }
 
-        public static Agent AgentAt(this Map g, Point p)
-        {
-            Chunk c = g.getChunkAtCoords(p);
-
-            if(c == null)
-            {
-                return null;
-            }
-
-            foreach (ChunkMember cm in c.MembersWithin)
-            {
-                if (!(cm is Agent))
-                {
-                    continue;
-                }
-
-                if (cm.Bounds.Contains(p))
-                {
-                    return (Agent)cm;
-                }
-            }
-
-            return null;
-        }
 
 
 
