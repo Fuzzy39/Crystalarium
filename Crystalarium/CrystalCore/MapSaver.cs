@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
-using System.Xml.Schema;
 
 namespace CrystalCore
 {
@@ -30,8 +29,10 @@ namespace CrystalCore
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
 
-            using (XmlWriter writer = XmlWriter.Create(path, settings))
+            using (XmlHelper xml = new XmlHelper(path, writing: true))
             {
+
+                XmlWriter writer = xml.Writer;
 
                 writer.WriteStartElement("Map");
 
@@ -43,8 +44,8 @@ namespace CrystalCore
 
                     writer.WriteStartElement("Geometry");
 
-                    WritePoint(writer, m.grid.Origin, "ChunkOrigin");
-                    WritePoint(writer, m.grid.Size, "ChunkSize");
+                    xml.WritePoint( m.grid.Origin);
+                    xml.WritePoint(m.grid.Size);
                 
                     writer.WriteEndElement();
 
@@ -53,44 +54,81 @@ namespace CrystalCore
 
                         foreach(Agent a in agents)
                         {
-                            WriteAgent(writer, a);
+                            WriteAgent(xml, a);
                         }
                     writer.WriteEndElement();
 
-            writer.WriteEndElement();
+                writer.WriteEndElement();
             }
 
         }
 
-        private void WritePoint(XmlWriter writer, Point p, string name )
+        
+
+        private void WriteAgent(XmlHelper xml, Agent a)
         {
-            writer.WriteStartElement(name);
-            
-            writer.WriteStartElement("X");
-            writer.WriteValue(p.X);
-            writer.WriteEndElement();
+           
+            xml.Writer.WriteStartElement("Agent");
 
-            writer.WriteStartElement("Y");
-            writer.WriteValue(p.Y);
-            writer.WriteEndElement();
+            xml.Writer.WriteStartElement("Type");
+            xml.Writer.WriteValue(a.Type.Name);
+            xml.Writer.WriteEndElement();
 
-            writer.WriteEndElement();
-        }
+            xml.WritePoint(a.Bounds.Location);
+            xml.WriteDirection(a.Facing);
 
-        private void WriteAgent(XmlWriter writer, Agent a)
-        {
-            writer.WriteStartElement("Agent");
-            writer.WriteStartElement("Type");
-            writer.WriteValue(a.Type.Name);
-            writer.WriteEndElement();
-            WritePoint(writer, a.Bounds.Location, "Location");
-            writer.WriteStartElement("Direction");
-            writer.WriteString(a.Facing.ToString());
-            writer.WriteEndElement();
-            writer.WriteEndElement(); 
+            WriteTransmissions(xml, a.Ports);
+            xml.Writer.WriteEndElement(); 
 
         }
 
+
+        private void WriteTransmissions(XmlHelper xml, List<List<Port>> ports)
+        {
+            xml.Writer.WriteStartElement("Transmissions");
+                
+            for(int i = 0; i<ports.Count; i++)
+            {
+               
+                List < Port > portList = ports[i];
+
+                for (int j = 0; j<portList.Count; j++)
+                {
+                    Port port = portList[j];
+
+                    if (port.TransmittingValue!=0)
+                    {
+                        WriteTransmission(xml, new PortTransmission(port.TransmittingValue, j, (CompassPoint)i));
+                    }
+                }
+
+            }
+
+            xml.Writer.WriteEndElement();
+
+        }
+
+        private void WriteTransmission(XmlHelper xml, PortTransmission pt)
+        {
+            xml.Writer.WriteStartElement("Transmission");
+
+            xml.Writer.WriteStartElement("Value");
+            xml.Writer.WriteValue(pt.value);
+            xml.Writer.WriteEndElement();
+
+            xml.Writer.WriteStartElement("Facing");
+            xml.Writer.WriteValue((int)pt.portID.Facing);
+            xml.Writer.WriteEndElement();
+
+            xml.Writer.WriteStartElement("ID");
+            xml.Writer.WriteValue(pt.portID.ID);
+            xml.Writer.WriteEndElement();
+
+            xml.Writer.WriteEndElement();
+
+
+
+        }
 
         public void Load(string path, Map m)
         {
@@ -105,27 +143,23 @@ namespace CrystalCore
             try
             {
 
-                using (XmlReader reader = XmlReader.Create(new FileStream(path, FileMode.Open), settings))
+                using (XmlHelper xml = new XmlHelper(path, writing: false))
                 {
-                    reader.Read();
+                    xml.Reader.Read();
 
-                    reader.ReadStartElement("Map");                    
+                    xml.Reader.ReadStartElement("Map");
 
-                    if(!reader.Name.Equals("Ruleset"))
-                    {
-                        throw new MapLoadException("Could not Find the Ruleset of this Save file.");
-                    }
-                    string ruleName = reader.ReadElementContentAsString();
+                    xml.VerifyElementToRead("Ruleset");
+                    string ruleName = xml.Reader.ReadElementContentAsString();
 
                     // get the ruleset.
                     m.Ruleset = GetRuleset(ruleName);
 
-                    
 
-                    LoadGeometry(reader, m);
-                    reader.Read();
-                    reader.Read();
-                    LoadAgents(reader, m);
+
+                    LoadGeometry(xml, m);
+                    
+                    LoadAgents(xml, m);
 
 
                 }
@@ -153,114 +187,79 @@ namespace CrystalCore
             throw new MapLoadException("Ruleset: '"+ruleName+"' Does not exist.");
         }
 
-        private void LoadGeometry(XmlReader reader, Map m)
+        private void LoadGeometry(XmlHelper xml, Map m)
         {
 
-            reader.ReadStartElement("Geometry");
+          
 
             try
             {
-                Point origin = LoadPoint(reader, "ChunkOrigin");
-                Point size = LoadPoint(reader, "ChunkSize");
+
+                xml.Reader.ReadStartElement("Geometry");
+
+                Point origin = xml.ReadPoint();
+                Point size = xml.ReadPoint();
+
                 origin *= new Point(Chunk.SIZE);
                 size *= new Point(Chunk.SIZE);
-
                 m.ExpandToFit(new Rectangle(origin, size));
 
+                xml.Reader.ReadEndElement();
             }
             catch(MapLoadException e)
             {
-                throw new MapLoadException("Could not Find the Geometry of this Save file.\n"+e.Message);
+                throw new MapLoadException("Could not find the Geometry of this save file.\n"+e.Message);
             }
         }
 
-        private Point LoadPoint(XmlReader reader, string name)
-        {
-            if (!reader.Name.Equals(name))
-            {
-                if (!reader.ReadToFollowing(name))
-                {
-                    throw new MapLoadException("Could not find point '" + name + "'.");
-                }
-            }
-            Point toReturn =new Point(0);
-            reader.Read();
-
-            if (!reader.Name.Equals("X"))
-            {
-                throw new MapLoadException("Malformed point '" + name + "'.");
-            }
-
-            toReturn.X = reader.ReadElementContentAsInt();
-
-            if (!reader.Name.Equals("Y"))
-            {
-                throw new MapLoadException("Malformed point '" + name + "'.");
-            }
-
-            toReturn.Y = reader.ReadElementContentAsInt();
-
-            return toReturn;
-        }
+     
         
-        private void LoadAgents(XmlReader bigReader, Map m )
+        private void LoadAgents(XmlHelper xml, Map m )
         {
 
-            if (!bigReader.Name.Equals("Agents"))
-            {
-                throw new MapLoadException("Could not find the agent listing for this map");
-            }
 
-            XmlReader reader = bigReader.ReadSubtree();
+            xml.Reader.ReadStartElement("Agents");
+
+            //XmlReader reader = bigReader.ReadSubtree();
+
+
             try
             {
-
-
-                while (LoadAgent(reader, m));
+                while (xml.Reader.NodeType == XmlNodeType.Element)
+                {
+                    LoadAgent(xml, m);
+                }
 
             }
             catch(MapLoadException e)
             {
-                throw new MapLoadException("Could not load agents.\n" + e.Message);
+                throw new MapLoadException("Could not load an agent in this save file.\n" + e.Message);
             }
+            
         }
 
-        private bool LoadAgent(XmlReader reader, Map m)
+        private void LoadAgent(XmlHelper xml, Map m)
         {
-            if(!reader.ReadToFollowing("Agent"))
-            {
-                return false;
-            }
+            
+            xml.Reader.ReadStartElement("Agent");
 
-            if(!reader.ReadToFollowing("Type"))
-            {
-                throw new MapLoadException("Could not find expected agent type.");
-            }
-            string typeS = reader.ReadElementContentAsString();
-            AgentType type = m.Ruleset.GetAgentType(typeS);
+
+            xml.VerifyElementToRead("Type");
+            string typeString = xml.Reader.ReadElementContentAsString();
+            AgentType type = m.Ruleset.GetAgentType(typeString);
+
             if (type == null)
             {
-                throw new MapLoadException("No Agent of type '"+type+"' exists in ruleset '"+m.Ruleset.Name+"'.");
+                throw new MapLoadException("Error at "+xml.FormattedReaderPosition+" of save file: No Agent of type '"+type+"' exists in ruleset '"+m.Ruleset.Name+"'.");
             }
 
-       
-            Point loc = LoadPoint(reader, "Location");
+            Point loc = xml.ReadPoint();
 
-            if(!reader.ReadToFollowing("Direction"))
-            {
-                throw new MapLoadException("Malformed Agent. No direction");
-            }
-            string dir = reader.ReadElementContentAsString();
-            Direction d;
-            if(!Enum.TryParse<Direction>(dir, out d))
-            {
-                throw new MapLoadException("Malformed agent direction.");
-            }
+            Direction d = xml.ReadDirection();
 
             new Agent(m, loc, type, d);
 
-
-            return true;
+            xml.Reader.ReadEndElement();
             
         }
 
