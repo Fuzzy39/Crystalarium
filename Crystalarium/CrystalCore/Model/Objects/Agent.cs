@@ -261,6 +261,7 @@ namespace CrystalCore.Model.Objects
             }
         }
 
+
         internal void Update()
         {
             if(!portInterface.StatusHadChanged)

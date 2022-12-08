@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Elements;
+using CrystalCore.Model.Interface;
 using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
@@ -257,10 +258,56 @@ namespace CrystalCore
 
             Direction d = xml.ReadDirection();
 
-            new Agent(m, loc, type, d);
+            Agent a = new Agent(m, loc, type, d);
+
+            LoadTransmissions(xml, a);
 
             xml.Reader.ReadEndElement();
             
+        }
+
+        private void LoadTransmissions(XmlHelper xml, Agent a)
+        {
+            xml.Reader.ReadStartElement("Transmissions");
+
+            List<PortTransmission> transmissions = new List<PortTransmission>();    
+
+            while (xml.Reader.NodeType == XmlNodeType.Element)
+            {
+                transmissions.Add(LoadTransmission(xml));
+            }
+
+            SignalTransformation trans = new SignalTransformation(transmissions.ToArray());
+            trans.Transform(a);
+
+            if (xml.Reader.Name.Equals("Transmissions"))
+            {
+
+                xml.Reader.ReadEndElement();
+            }
+
+        }
+
+        private PortTransmission LoadTransmission(XmlHelper xml)
+        {
+            xml.Reader.ReadStartElement("Transmission");
+
+          
+
+            xml.VerifyElementToRead("Value");
+            int value = xml.Reader.ReadElementContentAsInt();
+
+
+            xml.VerifyElementToRead("Facing");
+            CompassPoint facing = (CompassPoint)xml.Reader.ReadElementContentAsInt();
+
+            xml.VerifyElementToRead("ID");
+            int id = xml.Reader.ReadElementContentAsInt();
+
+           
+            xml.Reader.ReadEndElement();
+
+            return new PortTransmission(value, id, facing);
         }
 
 
