@@ -133,13 +133,6 @@ namespace CrystalCore
 
         public void Load(string path, Map m)
         {
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.CloseInput = true;
-            settings.IgnoreComments = true;
-            settings.IgnoreWhitespace = true;
-            settings.ValidationType = ValidationType.Schema;
-
-          
 
             try
             {
