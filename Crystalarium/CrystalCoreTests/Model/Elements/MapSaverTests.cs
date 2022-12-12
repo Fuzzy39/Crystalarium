@@ -34,7 +34,7 @@ namespace CrystalCore.Model.Elements.Tests
 
             e.saveManager.Load("TestingSave.xml", m);
 
-         
+
             Assert.IsTrue(m.Bounds.Equals(new Rectangle(-16, -16, 48, 48)));
         }
 
@@ -74,7 +74,7 @@ namespace CrystalCore.Model.Elements.Tests
 
             Ruleset r = e.addRuleset("dummy");
 
-            AgentType at = r.CreateType( "agent", new Point(1));
+            AgentType at = r.CreateType("agent", new Point(1));
 
             e.Initialize();
 
@@ -93,7 +93,7 @@ namespace CrystalCore.Model.Elements.Tests
             e.saveManager.Load("TestingSave.xml", m);
 
 
-            Assert.IsTrue(m.getAgentAtPos(new Point(3,4)).Type == at);
+            Assert.IsTrue(m.getAgentAtPos(new Point(3, 4)).Type == at);
             Assert.IsTrue(m.getAgentAtPos(new Point(3, 4)).Facing == Direction.left);
         }
 
