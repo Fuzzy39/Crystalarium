@@ -18,6 +18,7 @@ namespace CrystalCore
     public class MapSaver
     {
 
+        private const int FORMAT_VERSION = 0;
         private Engine engine;
         internal MapSaver(Engine e)
         {
@@ -36,6 +37,7 @@ namespace CrystalCore
                 XmlWriter writer = xml.Writer;
 
                 writer.WriteStartElement("Map");
+                writer.WriteAttributeString("FormatVersion", FORMAT_VERSION.ToString());
 
                     writer.WriteStartElement("Ruleset");
 
@@ -134,14 +136,20 @@ namespace CrystalCore
         public void Load(string path, Map m)
         {
 
+            int version = -1;
             try
             {
-
+               
                 using (XmlHelper xml = new XmlHelper(path, writing: false))
                 {
                     xml.Reader.Read();
 
                     xml.Reader.ReadStartElement("Map");
+
+                    if (xml.Reader.AttributeCount > 0)
+                    {
+                        int.TryParse(xml.Reader.GetAttribute(0), out version);
+                    }
 
                     xml.VerifyElementToRead("Ruleset");
                     string ruleName = xml.Reader.ReadElementContentAsString();
@@ -158,9 +166,20 @@ namespace CrystalCore
 
                 }
             }
-            catch (XmlException e)
+            catch (Exception e) when (e is XmlException || e is MapLoadException)
             {
-                throw new MapLoadException(e.Message);
+                string tothrow = e.Message;
+                
+                if(version == -1 )
+                {
+                    tothrow = "NOTE: could not identify save file format version.\n"+tothrow;
+                }
+                else if( version != FORMAT_VERSION)
+                {
+                    tothrow = "NOTE: this file was created with format version " + version + ", and the current format version is " + FORMAT_VERSION + ".\n"+tothrow;
+                }
+
+                throw new MapLoadException(tothrow);
             }
 
             
@@ -200,7 +219,11 @@ namespace CrystalCore
 
                 xml.Reader.ReadEndElement();
             }
-            catch(MapLoadException e)
+            catch (XmlException e)
+            {
+                throw new MapLoadException("Could not find the Geometry of this save file.\n" + e.Message);
+            }
+            catch (MapLoadException e)
             {
                 throw new MapLoadException("Could not find the Geometry of this save file.\n"+e.Message);
             }
@@ -225,7 +248,11 @@ namespace CrystalCore
                 }
 
             }
-            catch(MapLoadException e)
+            catch (XmlException e)
+            {
+                throw new MapLoadException("Could not load an agent in this save file.\n" + e.Message);
+            }
+            catch (MapLoadException e )
             {
                 throw new MapLoadException("Could not load an agent in this save file.\n" + e.Message);
             }
@@ -234,6 +261,7 @@ namespace CrystalCore
 
         private void LoadAgent(XmlHelper xml, Map m)
         {
+            
             
             xml.Reader.ReadStartElement("Agent");
 

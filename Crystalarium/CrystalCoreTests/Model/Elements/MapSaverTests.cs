@@ -97,5 +97,7 @@ namespace CrystalCore.Model.Elements.Tests
             Assert.IsTrue(m.getAgentAtPos(new Point(3, 4)).Facing == Direction.left);
         }
 
+
     }//you'll never find me!!!!
+
 }
