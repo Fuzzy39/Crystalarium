@@ -71,7 +71,7 @@ namespace CrystalCore
            
             xml.Writer.WriteStartElement("Agent");
 
-            xml.Writer.WriteStartElement("Type");
+            xml.Writer.WriteStartElement("Type");    
             xml.Writer.WriteValue(a.Type.Name);
             xml.Writer.WriteEndElement();
 

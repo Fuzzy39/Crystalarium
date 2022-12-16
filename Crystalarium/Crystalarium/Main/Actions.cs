@@ -131,7 +131,7 @@ namespace Crystalarium.Main
 
 
             });
-            new Keybind(c, Keystate.OnPress, "start pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
+            new Keybind(c, Keystate.OnPress, "start pan", "play", Button.Y) { DisableOnSuperset = false };
 
 
             c.addAction("pan", () =>
@@ -142,13 +142,36 @@ namespace Crystalarium.Main
                 Vector2 mousePos = game.view.Camera.PixelToTileCoords(pixelCoords);
                 Vector2 originPos = game.view.Camera.PixelToTileCoords(panOrigin);
 
-                game.view.Camera.Position = panPos + (originPos - mousePos);
+                Vector2 pos = panPos + (originPos - mousePos);
+                if(!game.Map.Bounds.Contains(pos))
+                {
+                    if(pos.Y> game.Map.Bounds.Bottom)
+                    {
+                        panOrigin.Y = game.view.Camera.TileToPixelCoords(new Vector2( game.Map.Bounds.Bottom)).Y;
+                    }
+                        
+                    if( pos.Y < game.Map.Bounds.Top)
+                    {
+                        panOrigin.Y = game.view.Camera.TileToPixelCoords(new Vector2(game.Map.Bounds.Top)).Y;
+                    }
 
+                    if (pos.X > game.Map.Bounds.Right)
+                    {
+                        panOrigin.X = game.view.Camera.TileToPixelCoords(new Vector2(game.Map.Bounds.Right)).X;
+                    }
+
+                    if (pos.X < game.Map.Bounds.Left)
+                    {
+                        panOrigin.X = game.view.Camera.TileToPixelCoords(new Vector2(game.Map.Bounds.Left)).X;
+                    }
+                }
+
+                game.view.Camera.Position = pos;
 
 
 
             });
-            new Keybind(c, Keystate.Down, "pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
+            new Keybind(c, Keystate.Down, "pan", "play", Button.Y) { DisableOnSuperset = false };
 
             c.addAction("toggle debug ports", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
             new Keybind(c, Keystate.OnPress, "toggle debug ports", "play", Button.O);
