@@ -181,7 +181,7 @@ namespace CrystalCore.View.Rendering
 
             // default scale values
             _minScale = 10;
-            _maxScale = 50;
+            _maxScale = 100;
 
             // set the 'camera' to reasonable values
             _scale = (_minScale + _maxScale) / 2.0;

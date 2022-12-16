@@ -131,47 +131,48 @@ namespace Crystalarium.Main
 
 
             });
-            new Keybind(c, Keystate.OnPress, "start pan", "play", Button.Y) { DisableOnSuperset = false };
+            new Keybind(c, Keystate.OnPress, "start pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
 
 
             c.addAction("pan", () =>
             {
 
+              
 
+
+                // the position, in pixels relative to the primary camera, where the mouse is.
                 Point pixelCoords = game.view.LocalizeCoords(Mouse.GetState().Position);
+                
+                // the position, in tiles, where the mouse is.
                 Vector2 mousePos = game.view.Camera.PixelToTileCoords(pixelCoords);
+
+                // the position, in tiles, where the pan started.
                 Vector2 originPos = game.view.Camera.PixelToTileCoords(panOrigin);
 
+
                 Vector2 pos = panPos + (originPos - mousePos);
-                if(!game.Map.Bounds.Contains(pos))
+
+
+                if (!game.Map.Bounds.Contains(pos))
                 {
-                    if(pos.Y> game.Map.Bounds.Bottom)
-                    {
-                        panOrigin.Y = game.view.Camera.TileToPixelCoords(new Vector2( game.Map.Bounds.Bottom)).Y;
-                    }
-                        
-                    if( pos.Y < game.Map.Bounds.Top)
-                    {
-                        panOrigin.Y = game.view.Camera.TileToPixelCoords(new Vector2(game.Map.Bounds.Top)).Y;
-                    }
+                    originPos = originPos - DistanceFrom(pos, game.Map.Bounds);
+                    panOrigin = game.view.Camera.TileToPixelCoords(originPos);
 
-                    if (pos.X > game.Map.Bounds.Right)
-                    {
-                        panOrigin.X = game.view.Camera.TileToPixelCoords(new Vector2(game.Map.Bounds.Right)).X;
-                    }
-
-                    if (pos.X < game.Map.Bounds.Left)
-                    {
-                        panOrigin.X = game.view.Camera.TileToPixelCoords(new Vector2(game.Map.Bounds.Left)).X;
-                    }
+                    // redo calculation
+                    pos = panPos + (originPos - mousePos);
                 }
+
 
                 game.view.Camera.Position = pos;
 
 
 
+
+
+
+
             });
-            new Keybind(c, Keystate.Down, "pan", "play", Button.Y) { DisableOnSuperset = false };
+            new Keybind(c, Keystate.Down, "pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
 
             c.addAction("toggle debug ports", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
             new Keybind(c, Keystate.OnPress, "toggle debug ports", "play", Button.O);
@@ -301,7 +302,7 @@ namespace Crystalarium.Main
 
 
             });
-            new Keybind(c, Keystate.OnPress, "sim faster", "play", Button.LeftShift);
+            new Keybind(c, Keystate.OnPress, "sim faster", "play", Button.C);
 
             c.addAction("sim slower", () =>
             {
@@ -314,7 +315,7 @@ namespace Crystalarium.Main
                 }
 
             });
-            new Keybind(c, Keystate.OnPress, "sim slower", "play", Button.LeftControl);
+            new Keybind(c, Keystate.OnPress, "sim slower", "play", Button.X);
         }
 
         private void SetupAgentSelection()
@@ -575,6 +576,33 @@ namespace Crystalarium.Main
 
             clickCoords.Floor();
             return clickCoords.ToPoint();
+
+        }
+
+        private Vector2 DistanceFrom(Vector2 vect, Rectangle rect)
+        {
+            Vector2 toReturn = new Vector2(0);
+            if(vect.Y<rect.Top)
+            {
+                toReturn.Y = vect.Y-rect.Top;
+            }
+
+            if (vect.Y > rect.Bottom)
+            {
+                toReturn.Y = vect.Y - rect.Bottom;
+            }
+
+            if (vect.X < rect.Left)
+            {
+                toReturn.X = vect.X - rect.Left;
+            }
+
+            if(vect.X > rect.Right)
+            {
+                toReturn.X = vect.X - rect.Right;
+            }
+
+            return toReturn;
 
         }
 

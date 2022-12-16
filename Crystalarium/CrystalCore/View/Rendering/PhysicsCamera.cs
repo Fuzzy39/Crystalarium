@@ -22,7 +22,7 @@ namespace CrystalCore.View.Rendering
         private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions. (in pixels/frame)
         private const float FRICTION = .05f; // the rate which camera velocity is reduced, as a ratio of velocity lost per frame.
         private const float MIN_FRICTION = .3f; // the minimum amount of friction that can be applied, if the camera is in motion, in pixels/frame.
-        private const float MAX_SPEED = 10f; // the maximum velocity per dimension of the camera in pixels/frame.
+        private const float MAX_SPEED = 15f; // the maximum velocity per dimension of the camera in pixels/frame.
 
         
 
