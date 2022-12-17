@@ -16,13 +16,13 @@ namespace CrystalCore.Input.Tests
 
             Controller c = e.Controller;
 
-            c.addAction("dummy", () => { });
+            c.AddAction("dummy", () => { });
 
             Keybind a =new Keybind(c, Keystate.Down, "dummy", Button.A);
 
             Keybind b = new Keybind(c, Keystate.Down, "dummy", Button.A, Button.B);
 
-            Assert.IsTrue(a.SupersetCount == 1);
+            Assert.IsTrue(a.Supersets.Count == 1);
 
 
         }

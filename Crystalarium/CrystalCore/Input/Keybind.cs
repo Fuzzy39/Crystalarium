@@ -31,7 +31,7 @@ namespace CrystalCore.Input
 
         public bool DisableOnSuperset { get; set; }
 
-        public int SupersetCount { get { return supersets.Count; } }
+   
 
         // properites
         public List<Button> buttons
@@ -60,12 +60,42 @@ namespace CrystalCore.Input
         }
 
 
+        public List<Keybind> Supersets
+        {
+            get
+            {
+                // how have I never thought of this before?
+                return new List<Keybind>(supersets);
+            }
+        }
+
+        public bool HasConflicts
+        {
+            get
+            {
+                if (!DisableOnSuperset)
+                {
+                    return false;
+                }
+
+                foreach(Keybind kb in supersets)
+                {
+                    if(kb.supersets.Contains(this))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
         // probably make a constructor or something.
         public Keybind(Controller c, Keystate state, string action, params Button[] buttons)
         {
 
             // and the action
-            _action = c.getAction(action);
+            _action = c.GetAction(action);
             if(_action == null)
             {
                 throw new ArgumentException("Unkown Action '" + action + "'.");
@@ -89,7 +119,7 @@ namespace CrystalCore.Input
 
             // don't forget to set the controller!
             _controller = c;
-            c.addKeybind(this); // also sets our supersets
+            c.AddKeybind(this); // also sets our supersets
 
             // context
             _requiredContext = "";
@@ -149,7 +179,7 @@ namespace CrystalCore.Input
 
         public void Destroy()
         {
-            _controller.removeKeybind(this);
+            _controller.RemoveKeybind(this);
         }
 
         internal void Update(InputHandler ih)
@@ -265,9 +295,9 @@ namespace CrystalCore.Input
             string buttons = "";
             foreach( Button b in _buttons)
             {
-                buttons +="," + b; 
+                buttons +=", " + b; 
             }
-            return "Keybind { \"" + action.name + "\" " +  buttons+ "}";
+            return "Keybind { \"" + action.name + "\" " +  buttons+ " }";
         }
     }
 }

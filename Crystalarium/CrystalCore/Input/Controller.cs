@@ -58,8 +58,24 @@ namespace CrystalCore.Input
 
         }
 
+        public List<Keybind> ConflictingKeybinds()
+        {
+            List<Keybind> toReturn = new List<Keybind>();
 
-        public void addAction(string name, Act action)
+            foreach(Keybind kb in Keybinds)
+            {
+                if(kb.HasConflicts)
+                {
+                    toReturn.Add(kb);
+                }
+            }
+
+            return toReturn;
+
+        }
+
+
+        public void AddAction(string name, Act action)
         {
 
             foreach(Action a in _actions)
@@ -75,7 +91,7 @@ namespace CrystalCore.Input
         }
 
 
-        internal Action getAction(string name)
+        internal Action GetAction(string name)
         {
             foreach (Action a in _actions)
             {
@@ -88,7 +104,7 @@ namespace CrystalCore.Input
             return null;
         }
 
-        internal void addKeybind(Keybind k)
+        internal void AddKeybind(Keybind k)
         {
             _keybinds.Add(k);
             
@@ -100,7 +116,7 @@ namespace CrystalCore.Input
             }
         }
 
-        internal void removeKeybind(Keybind k)
+        internal void RemoveKeybind(Keybind k)
         {
             _keybinds.Remove(k);
            

@@ -61,6 +61,8 @@ namespace Crystalarium.Main
 
             CurrentType = game.CurrentRuleset.AgentTypes[0];
 
+            game.Engine.ReportKeybindConflicts();
+
            
        
         }
@@ -103,25 +105,25 @@ namespace Crystalarium.Main
             float camSpeed = 1.2f;
 
             // camera up
-            c.addAction("up", () => game.view.Camera.AddVelocity(camSpeed, Direction.up));
+            c.AddAction("up", () => game.view.Camera.AddVelocity(camSpeed, Direction.up));
             new Keybind(c, Keystate.Down, "up", "play", Button.W);
 
 
             // camera down
-            c.addAction("down", () => game.view.Camera.AddVelocity(camSpeed, Direction.down));
+            c.AddAction("down", () => game.view.Camera.AddVelocity(camSpeed, Direction.down));
             new Keybind(c, Keystate.Down, "down", "play", Button.S);
 
             // camera left
-            c.addAction("left", () => game.view.Camera.AddVelocity(camSpeed, Direction.left));
+            c.AddAction("left", () => game.view.Camera.AddVelocity(camSpeed, Direction.left));
             new Keybind(c, Keystate.Down, "left", "play", Button.A);
 
             // camera right
-            c.addAction("right", () => game.view.Camera.AddVelocity(camSpeed, Direction.right));
+            c.AddAction("right", () => game.view.Camera.AddVelocity(camSpeed, Direction.right));
             new Keybind(c, Keystate.Down, "right", "play", Button.D);
 
             // panning
 
-            c.addAction("start pan", () =>
+            c.AddAction("start pan", () =>
             {
                 Point pixelCoords = game.view.LocalizeCoords(Mouse.GetState().Position);
 
@@ -134,7 +136,7 @@ namespace Crystalarium.Main
             new Keybind(c, Keystate.OnPress, "start pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
 
 
-            c.addAction("pan", () =>
+            c.AddAction("pan", () =>
             {
 
               
@@ -174,7 +176,7 @@ namespace Crystalarium.Main
             });
             new Keybind(c, Keystate.Down, "pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
 
-            c.addAction("toggle debug ports", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
+            c.AddAction("toggle debug ports", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
             new Keybind(c, Keystate.OnPress, "toggle debug ports", "play", Button.O);
 
 
@@ -184,16 +186,16 @@ namespace Crystalarium.Main
         private void SetupMapInteraction()
         {
             // grow the game.Grid!
-            c.addAction("grow up", () => game.Map.ExpandGrid(Direction.up));
+            c.AddAction("grow up", () => game.Map.ExpandGrid(Direction.up));
             new Keybind(c, Keystate.OnPress, "grow up", "play", Button.U);
-            c.addAction("grow down", () => game.Map.ExpandGrid(Direction.down));
+            c.AddAction("grow down", () => game.Map.ExpandGrid(Direction.down));
             new Keybind(c, Keystate.OnPress, "grow down", "play", Button.J);
-            c.addAction("grow left", () => game.Map.ExpandGrid(Direction.left));
+            c.AddAction("grow left", () => game.Map.ExpandGrid(Direction.left));
             new Keybind(c, Keystate.OnPress, "grow left", "play", Button.H);
-            c.addAction("grow right", () => game.Map.ExpandGrid(Direction.right));
+            c.AddAction("grow right", () => game.Map.ExpandGrid(Direction.right));
             new Keybind(c, Keystate.OnPress, "grow right", "play", Button.K);
 
-            c.addAction("place agent", () =>
+            c.AddAction("place agent", () =>
             {
 
                 Point clickCoords = GetMousePos();
@@ -222,7 +224,7 @@ namespace Crystalarium.Main
             new Keybind(c, Keystate.Down, "place agent", "play", Button.MouseLeft);
 
 
-            c.addAction("remove agent", () =>
+            c.AddAction("remove agent", () =>
             {
                 Point clickCoords = GetMousePos();
                 Agent toRemove = null;
@@ -247,7 +249,7 @@ namespace Crystalarium.Main
             new Keybind(c, Keystate.Down, "remove agent", "play", Button.MouseRight);
 
 
-            c.addAction("rotate", () =>
+            c.AddAction("rotate", () =>
             {
                 Point clickCoords = GetMousePos();
 
@@ -272,7 +274,7 @@ namespace Crystalarium.Main
 
         private void SetupSimInteraction()
         {
-            c.addAction("toggle sim", () =>
+            c.AddAction("toggle sim", () =>
             {
                 game.Engine.Sim.Paused = !game.Engine.Sim.Paused;
 
@@ -281,7 +283,7 @@ namespace Crystalarium.Main
             new Keybind(c, Keystate.OnPress, "toggle sim", "play", Button.Space);
 
 
-            c.addAction("sim step", () =>
+            c.AddAction("sim step", () =>
             {
 
                 // no need to step if unpaused.
@@ -291,7 +293,7 @@ namespace Crystalarium.Main
             });
             new Keybind(c, Keystate.OnPress, "sim step", "play", Button.Z);
 
-            c.addAction("sim faster", () =>
+            c.AddAction("sim faster", () =>
             {
 
                 SimulationManager sim = game.Engine.Sim;
@@ -304,7 +306,7 @@ namespace Crystalarium.Main
             });
             new Keybind(c, Keystate.OnPress, "sim faster", "play", Button.C);
 
-            c.addAction("sim slower", () =>
+            c.AddAction("sim slower", () =>
             {
 
                 // no need to step if unpaused.
@@ -320,7 +322,7 @@ namespace Crystalarium.Main
 
         private void SetupAgentSelection()
         {
-            c.addAction("pipette", () =>
+            c.AddAction("pipette", () =>
             {
                 Point clickCoords = GetMousePos();
 
@@ -342,7 +344,7 @@ namespace Crystalarium.Main
 
 
 
-            c.addAction("next agent", () =>
+            c.AddAction("next agent", () =>
             {
                 List<AgentType> types = game.CurrentRuleset.AgentTypes;
 
@@ -359,7 +361,7 @@ namespace Crystalarium.Main
             });
             new Keybind(c, Keystate.OnPress, "next agent", "play", Button.E);
 
-            c.addAction("prev agent", () =>
+            c.AddAction("prev agent", () =>
             {
                 List<AgentType> types = game.CurrentRuleset.AgentTypes;
                 int i = types.IndexOf(CurrentType);
@@ -376,31 +378,31 @@ namespace Crystalarium.Main
             new Keybind(c, Keystate.OnPress, "prev agent", "play", Button.Q);
 
             // agents
-            c.addAction("agent 1", () => SwitchAgent(0));
+            c.AddAction("agent 1", () => SwitchAgent(0));
             new Keybind(c, Keystate.OnPress, "agent 1", "play", Button.D1);
 
-            c.addAction("agent 2", () => SwitchAgent(1));
+            c.AddAction("agent 2", () => SwitchAgent(1));
             new Keybind(c, Keystate.OnPress, "agent 2", "play", Button.D2);
 
-            c.addAction("agent 3", () => SwitchAgent(2));
+            c.AddAction("agent 3", () => SwitchAgent(2));
             new Keybind(c, Keystate.OnPress, "agent 3", "play", Button.D3);
 
-            c.addAction("agent 4", () => SwitchAgent(3));
+            c.AddAction("agent 4", () => SwitchAgent(3));
             new Keybind(c, Keystate.OnPress, "agent 4", "play", Button.D4);
 
-            c.addAction("agent 5", () => SwitchAgent(4));
+            c.AddAction("agent 5", () => SwitchAgent(4));
             new Keybind(c, Keystate.OnPress, "agent 5", "play", Button.D5);
 
-            c.addAction("agent 6", () => SwitchAgent(5));
+            c.AddAction("agent 6", () => SwitchAgent(5));
             new Keybind(c, Keystate.OnPress, "agent 6", "play", Button.D6);
 
-            c.addAction("agent 7", () => SwitchAgent(6));
+            c.AddAction("agent 7", () => SwitchAgent(6));
             new Keybind(c, Keystate.OnPress, "agent 7", "play", Button.D7);
 
-            c.addAction("agent 8", () => SwitchAgent(7));
+            c.AddAction("agent 8", () => SwitchAgent(7));
             new Keybind(c, Keystate.OnPress, "agent 8", "play", Button.D8);
 
-            c.addAction("agent 9", () => SwitchAgent(8));
+            c.AddAction("agent 9", () => SwitchAgent(8));
             new Keybind(c, Keystate.OnPress, "agent 9", "play", Button.D9);
         }
 
@@ -412,7 +414,7 @@ namespace Crystalarium.Main
 
       
 
-            c.addAction("open ruleset menu", () =>
+            c.AddAction("open ruleset menu", () =>
             {
                if(c.Context.Equals("play"))
                {
@@ -430,7 +432,7 @@ namespace Crystalarium.Main
             new Keybind(c, Keystate.OnPress, "open ruleset menu", Button.P);
 
 
-            c.addAction("close", () =>
+            c.AddAction("close", () =>
             {
 
                 if(c.Context.Equals("menu"))
@@ -446,31 +448,31 @@ namespace Crystalarium.Main
             new Keybind(c, Keystate.OnPress, "close", Button.Escape);
 
 
-            c.addAction("menu action 1", () => MenuAction(0));
+            c.AddAction("menu action 1", () => MenuAction(0));
             new Keybind(c, Keystate.OnPress, "menu action 1", "menu", Button.D1);
 
-            c.addAction("menu action 2", () => MenuAction(1));
+            c.AddAction("menu action 2", () => MenuAction(1));
             new Keybind(c, Keystate.OnPress, "menu action 2", "menu", Button.D2);
 
-            c.addAction("menu action 3", () => MenuAction(2));
+            c.AddAction("menu action 3", () => MenuAction(2));
             new Keybind(c, Keystate.OnPress, "menu action 3", "menu", Button.D3);
 
-            c.addAction("menu action 4", () => MenuAction(3));
+            c.AddAction("menu action 4", () => MenuAction(3));
             new Keybind(c, Keystate.OnPress, "menu action 4", "menu", Button.D4);
 
-            c.addAction("menu action 5", () => MenuAction(4));
+            c.AddAction("menu action 5", () => MenuAction(4));
             new Keybind(c, Keystate.OnPress, "menu action 5", "menu", Button.D5);
 
-            c.addAction("menu action 6", () => MenuAction(5));
+            c.AddAction("menu action 6", () => MenuAction(5));
             new Keybind(c, Keystate.OnPress, "menu action 6", "menu", Button.D6);
 
-            c.addAction("menu action 7", () => MenuAction(6));
+            c.AddAction("menu action 7", () => MenuAction(6));
             new Keybind(c, Keystate.OnPress, "menu action 7", "menu", Button.D7);
 
-            c.addAction("menu action 8", () => MenuAction(7));
+            c.AddAction("menu action 8", () => MenuAction(7));
             new Keybind(c, Keystate.OnPress, "menu action 8", "menu", Button.D8);
 
-            c.addAction("menu action 9", () => MenuAction(8));
+            c.AddAction("menu action 9", () => MenuAction(8));
             new Keybind(c, Keystate.OnPress, "menu action 9", "menu", Button.D9);
 
 
@@ -480,7 +482,7 @@ namespace Crystalarium.Main
 
 
 
-            c.addAction("save", () => 
+            c.AddAction("save", () => 
             {
                 
                 
@@ -490,7 +492,7 @@ namespace Crystalarium.Main
             });
             new Keybind(c, Keystate.OnPress, "save", "play", Button.LeftControl, Button.S);
 
-            c.addAction("load", () =>
+            c.AddAction("load", () =>
             {
 
            

@@ -91,8 +91,29 @@ namespace CrystalCore
                
                 throw new InitializationFailedException("Crystalarium's Engine was given an invalid setup configuration, and cannot initialize.\nDetailed description of the problem:" + Util.Util.Indent(e.Message));
             }
-   
+
             base.Initialize();
+
+
+
+        }
+
+
+        public void ReportKeybindConflicts()
+        {
+
+            List<Keybind> conflicts = Controller.ConflictingKeybinds();
+
+            if (conflicts.Count==0)
+            {
+                return;
+            }
+
+            Console.WriteLine("Warning! The following keybinds are conflicted, and will not trigger.");
+            foreach (Keybind kb in conflicts)
+            {
+                Console.WriteLine(kb);
+            }
         }
 
         // manual ways to create gridviews
