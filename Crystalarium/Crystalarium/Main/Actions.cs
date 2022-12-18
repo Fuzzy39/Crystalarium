@@ -133,7 +133,7 @@ namespace Crystalarium.Main
 
 
             });
-            new Keybind(c, Keystate.OnPress, "start pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
+            new Keybind(c, Keystate.OnPress, "start pan", "play", Button.MouseMiddle);
 
 
             c.AddAction("pan", () =>
@@ -170,14 +170,14 @@ namespace Crystalarium.Main
 
 
 
-
+               
 
 
             });
-            new Keybind(c, Keystate.Down, "pan", "play", Button.MouseMiddle) { DisableOnSuperset = false };
+            new Keybind(c, Keystate.Down, "pan", "play", Button.MouseMiddle);
 
             c.AddAction("toggle debug ports", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
-            new Keybind(c, Keystate.OnPress, "toggle debug ports", "play", Button.O);
+            new Keybind(c, Keystate.OnPress, "toggle debug ports", "play", Button.OemTilde);
 
 
         }
@@ -186,14 +186,14 @@ namespace Crystalarium.Main
         private void SetupMapInteraction()
         {
             // grow the game.Grid!
-            c.AddAction("grow up", () => game.Map.ExpandGrid(Direction.up));
+            /*c.AddAction("grow up", () => game.Map.ExpandGrid(Direction.up));
             new Keybind(c, Keystate.OnPress, "grow up", "play", Button.U);
             c.AddAction("grow down", () => game.Map.ExpandGrid(Direction.down));
             new Keybind(c, Keystate.OnPress, "grow down", "play", Button.J);
             c.AddAction("grow left", () => game.Map.ExpandGrid(Direction.left));
             new Keybind(c, Keystate.OnPress, "grow left", "play", Button.H);
             c.AddAction("grow right", () => game.Map.ExpandGrid(Direction.right));
-            new Keybind(c, Keystate.OnPress, "grow right", "play", Button.K);
+            new Keybind(c, Keystate.OnPress, "grow right", "play", Button.K);*/
 
             c.AddAction("place agent", () =>
             {
@@ -202,22 +202,26 @@ namespace Crystalarium.Main
                 Agent toRemove = null;
 
                 // remove all agents on this tile (there should only be one once things are working properly)
-                while (true)
+
+                toRemove = game.Map.getAgentAtPos(clickCoords);
+                if (toRemove != null)
                 {
-
-                    toRemove = game.Map.getAgentAtPos(clickCoords);
-                    if (toRemove == null)
-                    {
-                        break;
-                    }
-
                     toRemove.Destroy();
+
                 }
 
+                // create agent
                 if (Entity.IsValidLocation(game.Map, new Rectangle(clickCoords, CurrentType.Size), Rotation))
                 {
                     new Agent(game.Map, clickCoords, CurrentType, Rotation);
                 }
+
+                // grow grid
+              
+                Point b = clickCoords - new Point(Chunk.SIZE);
+
+                game.Map.ExpandToFit(new Rectangle(b, new Point(Chunk.SIZE*2)));
+                
 
 
             });
@@ -295,7 +299,7 @@ namespace Crystalarium.Main
 
             c.AddAction("sim faster", () =>
             {
-
+                    
                 SimulationManager sim = game.Engine.Sim;
                 if (sim.TargetStepsPS < 100)
                 {

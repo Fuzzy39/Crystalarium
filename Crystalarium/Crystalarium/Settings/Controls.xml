@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Controls>
+	
+	<!--Mostly Camera Controls-->
+	<View>
+		
+		<CamUp>    W </CamUp>
+		<CamDown>  S </CamDown>
+		<CamLeft>  A </CamLeft>
+		<CamRight> D </CamRight>
+
+		<!-- these controls should probably be the same -->
+		<StartPan> MouseMiddle </StartPan>
+		<Pan>      MouseMiddle </Pan>
+
+		<!-- For the most part, this fills the screen with garbage -->
+		<ToggleDebugView> OemTilde </ToggleDebugView>
+		
+	</View>
+
+	<!--Controls to change the map-->
+	<Map>
+
+		<!--controls for manipulating agents. -->
+		<PlaceAgent>  MouseLeft </PlaceAgent>
+		<RemoveAgent> MouseRight </RemoveAgent>
+		<RotateAgent> R </RotateAgent>
+		
+	</Map>
+
+	<!-- Controls to set simulation speed -->
+	<Simulation>
+		
+		<!-- Pause/Unpause the simulation. -->
+		<ToggleSim> Space </ToggleSim>
+		
+		<!-- Perform a single simulation step while paused. -->
+		<SimStep> Z </SimStep>
+		
+		<!-- Change the running speed of the simulation. -->
+		<DecreaseSimSpeed> X </DecreaseSimSpeed>
+		<IncreaseSimSpeed> C </IncreaseSimSpeed>
+	
+		
+	</Simulation>
+
+	<!-- Controls for agent selection and menus -->
+	<Other>
+		
+		<!-- Copies the agent being hovered over. -->
+		<Pipette>Tab</Pipette>
+
+		<!-- Look through the list of agent types. -->
+		<NextAgent> E </NextAgent>
+		<PrevAgent> Q </PrevAgent>
+
+		<!-- Opens the 'Change Ruleset?' Menu, and closes menus -->
+		<OpenRulesetMenu> P </OpenRulesetMenu>
+		
+		<!-- Closes a menu if one is open, and closes the game otherwise. -->
+		<Close> Escape </Close>
+		
+	</Other>
+	
+</Controls>

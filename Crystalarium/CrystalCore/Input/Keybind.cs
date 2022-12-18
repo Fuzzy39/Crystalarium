@@ -140,6 +140,12 @@ namespace CrystalCore.Input
         internal void UpdateSupersets()
         {
             supersets.Clear();
+            if(!DisableOnSuperset)
+            {
+                return;
+            }
+
+
             foreach(Keybind k in _controller.Keybinds)
             {
                 if(k==this)
@@ -161,6 +167,11 @@ namespace CrystalCore.Input
         private bool isSuperset(Keybind k)
         {
             if( _requiredContext!=null && k._requiredContext!=null && !k._requiredContext.Equals(_requiredContext))
+            {
+                return false;
+            }
+
+            if(k._trigger != _trigger)
             {
                 return false;
             }

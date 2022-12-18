@@ -27,7 +27,7 @@ namespace Crystalarium.Main
         internal Engine Engine { get; private set; } // the 'engine'
 
 
-        private const int BUILD = 899; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 900; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         private double frameRate = 60;
@@ -85,8 +85,12 @@ namespace Crystalarium.Main
                 Directory.CreateDirectory("Saves");
             }
 
+                
 
-            // Create menus
+            // Create menus ( this feels like a very ugly hack)
+            // well, what is ui structure but a bunch of data definitions and hooks into actual code?
+            // this will be expanded on in the future, I bet.
+
             RulesetMenu = new Menu("Switch Ruleset?", 
                 (int i) => { return "switch to ruleset '" + Engine.Rulesets[i - 1].Name + "'"; },
                 (int i) => { return false; },
