@@ -15,7 +15,7 @@ namespace CrystalCore.Input
 
         //keybinds
         private List<Keybind> _keybinds;
-        private List<Action> _actions;
+        private List<Control> _controls;
 
         // context system
         private string _context;
@@ -25,12 +25,7 @@ namespace CrystalCore.Input
 
         public List<Keybind> Keybinds
         {
-            get => _keybinds;
-        }
-
-        internal List<Action> Actions
-        {
-            get => _actions;
+            get => new List<Keybind>( _keybinds);
         }
 
 
@@ -46,13 +41,13 @@ namespace CrystalCore.Input
         }
 
 
-        internal Controller()
+        public Controller()
         {
             ih = new InputHandler();
          
 
             _keybinds = new List<Keybind>();
-            _actions = new List<Action>();
+            _controls = new List<Control>();
 
             _context = "";
 
@@ -75,27 +70,29 @@ namespace CrystalCore.Input
         }
 
 
-        public void AddAction(string name, Act action)
+        public Control CreateControl(string name, Keystate ks)
         {
 
-            foreach(Action a in _actions)
+            foreach(Control a in _controls)
             {
-                if(a.name==name)
+                if(a.Name==name)
                 {
                     throw new InvalidOperationException();
                 }
             }
 
-            _actions.Add(new Action(name, this, action));
+            Control c = new Control(this, name, ks);
+            _controls.Add(c);
+            return c;
             
         }
 
 
-        internal Action GetAction(string name)
+        public Control GetAction(string name)
         {
-            foreach (Action a in _actions)
+            foreach (Control a in _controls)
             {
-                if (a.name == name)
+                if (a.Name == name)
                 {
                     return a;
                 }
@@ -104,16 +101,20 @@ namespace CrystalCore.Input
             return null;
         }
 
-        internal void AddKeybind(Keybind k)
+        public Keybind BindControl(Control c, params Button[] buttons)
         {
+            Keybind k = new Keybind(this, c, buttons);
+
             _keybinds.Add(k);
             
             foreach (Keybind kb in Keybinds)
             {
-               
+              
 
                 kb.UpdateSupersets();
             }
+
+            return k;
         }
 
         internal void RemoveKeybind(Keybind k)

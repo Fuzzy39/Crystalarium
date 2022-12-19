@@ -16,14 +16,12 @@ namespace CrystalCore.Input
 
 
         // relevant objects
-        private Controller _controller; // the controller that this keybind belongs to.
-        private Action _action; // the action that this keybind
+        private Controller _controller;
+        private Control _action; // the control that this keybind triggers
 
         // triggering condition
         private List<Button> _buttons; // the buttons reqired to trigger this keybind
-        private Keystate _trigger; // the state the buttons need to be in to trigger this keybind.
-        private string _requiredContext; // the context required for this keybind to trigger. if "", any context.
-       
+
 
         // other variables
         private bool triggeredLastUpdate; // whether this keybind was triggered last update.
@@ -40,24 +38,20 @@ namespace CrystalCore.Input
             set => _buttons = value;
         }
 
-        public Keystate trigger
+        public Keystate Trigger
         {
-            get => _trigger;
-            set => _trigger = value;
+            get => _action.keystate;
+          
         }
 
-        public Controller controller
-        {
-            get => _controller;
-
-        }
+      
 
 
-        internal Action action
+        internal Control action
         {
             get => _action;
-            set => action = value;
         }
+
 
 
         public List<Keybind> Supersets
@@ -68,6 +62,7 @@ namespace CrystalCore.Input
                 return new List<Keybind>(supersets);
             }
         }
+
 
         public bool HasConflicts
         {
@@ -91,50 +86,36 @@ namespace CrystalCore.Input
         }
 
         // probably make a constructor or something.
-        public Keybind(Controller c, Keystate state, string action, params Button[] buttons)
+        internal Keybind(Controller c, Control control, params Button[] buttons)
         {
 
+            _controller = c;
             // and the action
-            _action = c.GetAction(action);
+            _action = control;
             if(_action == null)
             {
                 throw new ArgumentException("Unkown Action '" + action + "'.");
             }
 
             // set up the triggered state.
-            _trigger = state;
             triggeredLastUpdate = false;
-            
 
-            _buttons = new List<Button>();
 
-            foreach(Button b in buttons)
-            {
-                _buttons.Add(b);
-            }
+            _buttons = new List<Button>(buttons);
 
 
             // set up our list of supersets before we update them.
             supersets = new List<Keybind>();
 
             // don't forget to set the controller!
-            _controller = c;
-            c.AddKeybind(this); // also sets our supersets
-
-            // context
-            _requiredContext = "";
+         
+           // c.AddKeybind(this); // also sets our supersets
 
             DisableOnSuperset = true;
 
         }
 
-        public Keybind(Controller c, Keystate state, string action, string requiredContext, params Button[] buttons)
-            : this(c, state, action, buttons)
-        {
-            _requiredContext = requiredContext;
-
-
-        }
+        
 
 
         internal void UpdateSupersets()
@@ -166,12 +147,8 @@ namespace CrystalCore.Input
         // does this keybind have every key that we do?
         private bool isSuperset(Keybind k)
         {
-            if( _requiredContext!=null && k._requiredContext!=null && !k._requiredContext.Equals(_requiredContext))
-            {
-                return false;
-            }
 
-            if(k._trigger != _trigger)
+            if(k.Trigger != Trigger)
             {
                 return false;
             }
@@ -218,11 +195,7 @@ namespace CrystalCore.Input
 
             // we need to check the context, as well.
 
-            // an empty string is treated as an 'any context' requirement
-            if(_requiredContext!="" & _requiredContext != controller.Context)
-            {
-                return false;
-            }
+         
 
             if(!DisableOnSuperset)
             {
@@ -256,7 +229,7 @@ namespace CrystalCore.Input
 
             bool down = ButtonsDown(ih);
 
-            switch (_trigger)
+            switch (Trigger)
             {
                 
                 case Keystate.Down:
@@ -308,7 +281,7 @@ namespace CrystalCore.Input
             {
                 buttons +=", " + b; 
             }
-            return "Keybind { \"" + action.name + "\" " +  buttons+ " }";
+            return "Keybind { \"" + action.Name + "\" " +  buttons+ " }";
         }
     }
 }

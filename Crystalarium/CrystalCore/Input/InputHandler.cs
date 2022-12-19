@@ -85,7 +85,7 @@ namespace CrystalCore.Input
             ButtonState prev;
             if (prevKeyState.IsKeyDown((Keys)((int)b)))
             {
-                prev = ButtonState.Pressed;
+                prev = ButtonState.Pressed;//this is one of the three comments in this file
             }
             else
             {

@@ -101,25 +101,28 @@ namespace Crystalarium.Main
 
         private void SetupViewInteraction()
         {
-            // test code.
+
             float camSpeed = 1.2f;
+            Control con;
 
-            // camera up
-            c.AddAction("up", () => game.view.Camera.AddVelocity(camSpeed, Direction.up));
-            new Keybind(c, Keystate.Down, "up", "play", Button.W);
+            // camera controls
+            con = c.CreateControl("CamUp", Keystate.Down);
+            con.AddAction("play", () => game.view.Camera.AddVelocity(camSpeed, Direction.up));
+            c.BindControl(con, Button.W);
 
+            con = c.CreateControl("CamDown", Keystate.Down);
+            con.AddAction("play", () => game.view.Camera.AddVelocity(camSpeed, Direction.down));
+            c.BindControl(con, Button.S);
 
-            // camera down
-            c.AddAction("down", () => game.view.Camera.AddVelocity(camSpeed, Direction.down));
-            new Keybind(c, Keystate.Down, "down", "play", Button.S);
+            con = c.CreateControl("CamLeft", Keystate.Down);
+            con.AddAction("play", () => game.view.Camera.AddVelocity(camSpeed, Direction.left));
+            c.BindControl(con, Button.A);
 
-            // camera left
-            c.AddAction("left", () => game.view.Camera.AddVelocity(camSpeed, Direction.left));
-            new Keybind(c, Keystate.Down, "left", "play", Button.A);
+            con = c.CreateControl("CamRight", Keystate.Down);
+            con.AddAction("play", () => game.view.Camera.AddVelocity(camSpeed, Direction.right));
+            c.BindControl(con, Button.D);
 
-            // camera right
-            c.AddAction("right", () => game.view.Camera.AddVelocity(camSpeed, Direction.right));
-            new Keybind(c, Keystate.Down, "right", "play", Button.D);
+        
 
             // panning
 
