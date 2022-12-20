@@ -30,4 +30,9 @@
   <ItemGroup>
     <ProjectReference Include="..\CrystalCore\CrystalCore.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Settings\Controls.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

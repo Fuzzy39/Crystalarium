@@ -2,65 +2,72 @@
 
 <Controls>
 	
-	<!--Mostly Camera Controls-->
-	<View>
-		
-		<CamUp>    W </CamUp>
-		<CamDown>  S </CamDown>
-		<CamLeft>  A </CamLeft>
-		<CamRight> D </CamRight>
+	<!--Camera/View Controls-->
 
-		<!-- these controls should probably be the same -->
-		<StartPan> MouseMiddle </StartPan>
-		<Pan>      MouseMiddle </Pan>
+	<CamUp>    W </CamUp>
+	<CamDown>  S </CamDown>
+	<CamLeft>  A </CamLeft>
+	<CamRight> D </CamRight>
 
-		<!-- For the most part, this fills the screen with garbage -->
-		<ToggleDebugView> OemTilde </ToggleDebugView>
+	<CamUp>    Up </CamUp>
+	<CamDown>  Down </CamDown>
+	<CamLeft>  Left </CamLeft>
+	<CamRight> Right </CamRight>
 		
-	</View>
+
+	<!-- these controls should probably be the same -->
+	<StartPan> MouseMiddle </StartPan>
+	<Pan>      MouseMiddle </Pan>
+
+	<!-- For the most part, this fills the screen with garbage -->
+	<ToggleDebugView> OemTilde </ToggleDebugView>
+		
+
+	
 
 	<!--Controls to change the map-->
-	<Map>
 
-		<!--controls for manipulating agents. -->
-		<PlaceAgent>  MouseLeft </PlaceAgent>
-		<RemoveAgent> MouseRight </RemoveAgent>
-		<RotateAgent> R </RotateAgent>
+	<!--controls for manipulating agents. -->
+	<PlaceAgent>  MouseLeft </PlaceAgent>
+	<RemoveAgent> MouseRight </RemoveAgent>
+	<RotateAgent> R </RotateAgent>
 		
-	</Map>
+
 
 	<!-- Controls to set simulation speed -->
-	<Simulation>
 		
-		<!-- Pause/Unpause the simulation. -->
-		<ToggleSim> Space </ToggleSim>
+	<!-- Pause/Unpause the simulation. -->
+	<ToggleSim> Space </ToggleSim>
 		
-		<!-- Perform a single simulation step while paused. -->
-		<SimStep> Z </SimStep>
+	<!-- Perform a single simulation step while paused. -->
+	<SimStep> Z </SimStep>
 		
-		<!-- Change the running speed of the simulation. -->
-		<DecreaseSimSpeed> X </DecreaseSimSpeed>
-		<IncreaseSimSpeed> C </IncreaseSimSpeed>
+	<!-- Change the running speed of the simulation. -->
+	<DecreaseSimSpeed> X </DecreaseSimSpeed>
+	<IncreaseSimSpeed> C </IncreaseSimSpeed>
 	
 		
-	</Simulation>
+
 
 	<!-- Controls for agent selection and menus -->
-	<Other>
-		
-		<!-- Copies the agent being hovered over. -->
-		<Pipette>Tab</Pipette>
 
-		<!-- Look through the list of agent types. -->
-		<NextAgent> E </NextAgent>
-		<PrevAgent> Q </PrevAgent>
+	<!-- Copies the agent being hovered over. -->
+	<Pipette>Tab</Pipette>
 
-		<!-- Opens the 'Change Ruleset?' Menu, and closes menus -->
-		<OpenRulesetMenu> P </OpenRulesetMenu>
+	<!-- Look through the list of agent types. -->
+	<NextAgent> E </NextAgent>
+	<PrevAgent> Q </PrevAgent>
+
+	<!-- Opens the 'Change Ruleset?' Menu, and closes menus -->
+	<OpenRulesetMenu> P </OpenRulesetMenu>
 		
-		<!-- Closes a menu if one is open, and closes the game otherwise. -->
-		<Close> Escape </Close>
+	<!-- Closes a menu if one is open, and closes the game otherwise. -->
+	<Close> Escape </Close>
+
+	<!--Open the Save/Load File menus-->
+	<Save> LeftControl, S</Save>
+	<Load> LeftControl, O</Load>
 		
-	</Other>
+
 	
 </Controls>

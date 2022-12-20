@@ -12,12 +12,12 @@ namespace CrystalCore.Util
     /// XmlHelper serves as a wrapper to XML reader and writer to add aditional functionality, which hopefully is helpful.
     /// when reading an element, the functions in xmlhelper expect the reader to be exactly on that element.
     /// </summary>
-    internal class XmlHelper : IDisposable
+    public class XmlHelper : IDisposable
     {
         private bool disposedValue;
 
-        internal XmlWriter Writer { private set; get; }
-        internal XmlReader Reader { private set; get; }
+        public XmlWriter Writer { private set; get; }
+        public XmlReader Reader { private set; get; }
 
         public Point ReaderPosition
         {

@@ -22,12 +22,15 @@ namespace CrystalCore.Input
                 this.context = context;
             }
 
-            public void Act(string context)
+            public bool Act(string context)
             {
-                if(this.context == null || context.Equals(this.context))
+                if(this.context == "" || context.Equals(this.context))
                 {
                     action();
+                    return true;
                 }
+
+                return false;
             }
         }
 
@@ -62,17 +65,47 @@ namespace CrystalCore.Input
             _keystate = ks;
             _actions = new List<ContextualAction>();
         }
-
-        public void AddAction(string context, Action act)
+        
+        // method chaining is a thing!
+        // neat.
+        public Control AddAction(string context, Action act)
         {
             _actions.Add(new ContextualAction(act, context));
+            return this;
+        }
+
+        public Control Bind(params Button[] buttons)
+        {
+            _controller.BindControl(this, buttons);
+            return this;
+        }
+
+        /// <summary>
+        /// Unbinds all keybinds
+        /// </summary>
+        /// <returns></returns>
+        public Control Unbind()
+        {
+            foreach(Keybind kb in _controller.Keybinds)
+            {
+                if (kb.action == this)
+                {
+                    kb.Destroy();
+                }
+            }
+
+            return this;
+
         }
 
         internal void Trigger()
         {
             foreach(ContextualAction a in _actions)
             {
-                a.Act(controller.Context);
+                if(a.Act(controller.Context))
+                {
+                    return;
+                }
             }
         }
 

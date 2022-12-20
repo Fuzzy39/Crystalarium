@@ -12,6 +12,7 @@ using CrystalCore.Model;
 using CrystalCore.Model.Rules;
 using CrystalCore.Model.Elements;
 using System.IO;
+using System.Xml;
 
 namespace Crystalarium.Main
 {
@@ -92,188 +93,223 @@ namespace Crystalarium.Main
             SetupAgentSelection();
 
             SetupMenuInteraction();
-          
 
+            ReadBindings();
 
         }
 
+        private void ReadBindings()
+        {
+
+            try
+            {
+
+                using (XmlHelper xml = new XmlHelper(Path.Combine("Settings", "Controls.xml"), writing: false))
+                {
+                    xml.Reader.Read();
+
+                    xml.Reader.ReadStartElement("Controls");
+
+                    // xml.Reader.ReadStartElement();
+
+                    while (xml.Reader.NodeType != XmlNodeType.EndElement)
+                    { 
+
+                        //xml.Reader.Read();
+                        string s = xml.Reader.Name;
+                        Control con = c.GetAction(s);
+
+                        if (con == null) { throw new XmlException("invalid Element at " + xml.FormattedReaderPosition + "."); }
+                        
+
+                        s = xml.Reader.ReadElementContentAsString();
+
+                        string[] strings = s.Split(',');
+                        Button[] buttons = new Button[strings.Length];
+
+                        int index = 0;
+                        foreach (string i in strings)
+                        {
+                            string j = i.Trim();
+                            if (!Enum.TryParse(j, out buttons[index]))
+                            {
+                                throw new XmlException("invalid button '" + j + "' at " + xml.FormattedReaderPosition + ".");
+                            }
+
+                            index++;
+                        }
+
+                        con.Bind(buttons);
+                
+
+                    }
+
+                }
+            }
+            catch (XmlException e)
+            {
+
+
+                throw new XmlException("Crystalarium Could not find its keybind file, or there was an error in parsing it.\n" + e.Message);
+            }
+        }
 
 
         private void SetupViewInteraction()
         {
 
-            float camSpeed = 1.2f;
-            Control con;
 
             // camera controls
-            con = c.CreateControl("CamUp", Keystate.Down);
-            con.AddAction("play", () => game.view.Camera.AddVelocity(camSpeed, Direction.up));
-            c.BindControl(con, Button.W);
+            c.CreateControl("CamUp", Keystate.Down)
+                .AddAction("play", () => MoveCamera(Direction.up));
 
-            con = c.CreateControl("CamDown", Keystate.Down);
-            con.AddAction("play", () => game.view.Camera.AddVelocity(camSpeed, Direction.down));
-            c.BindControl(con, Button.S);
 
-            con = c.CreateControl("CamLeft", Keystate.Down);
-            con.AddAction("play", () => game.view.Camera.AddVelocity(camSpeed, Direction.left));
-            c.BindControl(con, Button.A);
 
-            con = c.CreateControl("CamRight", Keystate.Down);
-            con.AddAction("play", () => game.view.Camera.AddVelocity(camSpeed, Direction.right));
-            c.BindControl(con, Button.D);
+            c.CreateControl("CamDown", Keystate.Down)
+                .AddAction("play", () => MoveCamera(Direction.down));
 
-        
+
+            c.CreateControl("CamLeft", Keystate.Down)
+                .AddAction("play", () => MoveCamera(Direction.left))
+               ;
+
+            c.CreateControl("CamRight", Keystate.Down)
+                .AddAction("play", () => MoveCamera(Direction.right));
+
+
+
 
             // panning
 
-            c.AddAction("start pan", () =>
-            {
-                Point pixelCoords = game.view.LocalizeCoords(Mouse.GetState().Position);
-
-
-                panOrigin = pixelCoords;
-                panPos = game.view.Camera.Position;
-
-
-            });
-            new Keybind(c, Keystate.OnPress, "start pan", "play", Button.MouseMiddle);
-
-
-            c.AddAction("pan", () =>
-            {
-
-              
-
-
-                // the position, in pixels relative to the primary camera, where the mouse is.
-                Point pixelCoords = game.view.LocalizeCoords(Mouse.GetState().Position);
-                
-                // the position, in tiles, where the mouse is.
-                Vector2 mousePos = game.view.Camera.PixelToTileCoords(pixelCoords);
-
-                // the position, in tiles, where the pan started.
-                Vector2 originPos = game.view.Camera.PixelToTileCoords(panOrigin);
-
-
-                Vector2 pos = panPos + (originPos - mousePos);
-
-
-                if (!game.Map.Bounds.Contains(pos))
+            c.CreateControl("StartPan", Keystate.OnPress)
+                .AddAction("play", () =>
                 {
-                    originPos = originPos - DistanceFrom(pos, game.Map.Bounds);
-                    panOrigin = game.view.Camera.TileToPixelCoords(originPos);
-
-                    // redo calculation
-                    pos = panPos + (originPos - mousePos);
-                }
+                    Point pixelCoords = game.view.LocalizeCoords(Mouse.GetState().Position);
 
 
-                game.view.Camera.Position = pos;
+                    panOrigin = pixelCoords;
+                    panPos = game.view.Camera.Position;
 
+
+                });
 
 
 
-               
+
+            c.CreateControl("Pan", Keystate.Down)
+                .AddAction("play", () =>
+                {
+                    // the position, in pixels relative to the primary camera, where the mouse is.
+                    Point pixelCoords = game.view.LocalizeCoords(Mouse.GetState().Position);
+
+                    // the position, in tiles, where the mouse is.
+                    Vector2 mousePos = game.view.Camera.PixelToTileCoords(pixelCoords);
+
+                    // the position, in tiles, where the pan started.
+                    Vector2 originPos = game.view.Camera.PixelToTileCoords(panOrigin);
 
 
-            });
-            new Keybind(c, Keystate.Down, "pan", "play", Button.MouseMiddle);
-
-            c.AddAction("toggle debug ports", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
-            new Keybind(c, Keystate.OnPress, "toggle debug ports", "play", Button.OemTilde);
+                    Vector2 pos = panPos + (originPos - mousePos);
 
 
+                    if (!game.Map.Bounds.Contains(pos))
+                    {
+                        originPos = originPos - DistanceFrom(pos, game.Map.Bounds);
+                        panOrigin = game.view.Camera.TileToPixelCoords(originPos);
+
+                        // redo calculation
+                        pos = panPos + (originPos - mousePos);
+                    }
+
+
+                    game.view.Camera.Position = pos;
+
+                });
+
+
+            c.CreateControl("ToggleDebugView", Keystate.OnPress)
+                .AddAction("play", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
+
+            
         }
 
 
         private void SetupMapInteraction()
         {
-            // grow the game.Grid!
-            /*c.AddAction("grow up", () => game.Map.ExpandGrid(Direction.up));
-            new Keybind(c, Keystate.OnPress, "grow up", "play", Button.U);
-            c.AddAction("grow down", () => game.Map.ExpandGrid(Direction.down));
-            new Keybind(c, Keystate.OnPress, "grow down", "play", Button.J);
-            c.AddAction("grow left", () => game.Map.ExpandGrid(Direction.left));
-            new Keybind(c, Keystate.OnPress, "grow left", "play", Button.H);
-            c.AddAction("grow right", () => game.Map.ExpandGrid(Direction.right));
-            new Keybind(c, Keystate.OnPress, "grow right", "play", Button.K);*/
 
-            c.AddAction("place agent", () =>
-            {
 
-                Point clickCoords = GetMousePos();
-                Agent toRemove = null;
-
-                // remove all agents on this tile (there should only be one once things are working properly)
-
-                toRemove = game.Map.getAgentAtPos(clickCoords);
-                if (toRemove != null)
+            c.CreateControl("PlaceAgent", Keystate.Down)
+                .AddAction("play", () =>
                 {
-                    toRemove.Destroy();
 
-                }
+                    Point clickCoords = GetMousePos();
+                    Agent toRemove = null;
 
-                // create agent
-                if (Entity.IsValidLocation(game.Map, new Rectangle(clickCoords, CurrentType.Size), Rotation))
-                {
-                    new Agent(game.Map, clickCoords, CurrentType, Rotation);
-                }
-
-                // grow grid
-              
-                Point b = clickCoords - new Point(Chunk.SIZE);
-
-                game.Map.ExpandToFit(new Rectangle(b, new Point(Chunk.SIZE*2)));
-                
-
-
-            });
-            new Keybind(c, Keystate.Down, "place agent", "play", Button.MouseLeft);
-
-
-            c.AddAction("remove agent", () =>
-            {
-                Point clickCoords = GetMousePos();
-                Agent toRemove = null;
-
-                // remove all agents on this tile (there should only be one once things are working properly)
-                while (true)
-                {
+                    // remove all agents on this tile (there should only be one once things are working properly)
 
                     toRemove = game.Map.getAgentAtPos(clickCoords);
-                    if (toRemove == null)
+                    if (toRemove != null)
                     {
-                        break;
+                        toRemove.Destroy();
+
                     }
 
-                    toRemove.Destroy();
-                }
+                    // create agent
+                    if (Entity.IsValidLocation(game.Map, new Rectangle(clickCoords, CurrentType.Size), Rotation))
+                    {
+                        new Agent(game.Map, clickCoords, CurrentType, Rotation);
+                    }
+
+                    // grow grid
+
+                    Point b = clickCoords - new Point(Chunk.SIZE);
+
+                    game.Map.ExpandToFit(new Rectangle(b, new Point(Chunk.SIZE * 2)));
+
+                });
 
 
-
-
-            });
-            new Keybind(c, Keystate.Down, "remove agent", "play", Button.MouseRight);
-
-
-            c.AddAction("rotate", () =>
-            {
-                Point clickCoords = GetMousePos();
-
-                Agent a = game.Map.getAgentAtPos(clickCoords);
-                if (a == null)
+            c.CreateControl("RemoveAgent", Keystate.Down)
+                .AddAction("play", () =>
                 {
-                    Rotation = Rotation.Rotate(RotationalDirection.cw);
-                    return;
-                }
+                    Point clickCoords = GetMousePos();
+                    Agent toRemove = null;
+
+                    // remove all agents on this tile (there should only be one once things are working properly)
+                    while (true)
+                    {
+
+                        toRemove = game.Map.getAgentAtPos(clickCoords);
+                        if (toRemove == null)
+                        {
+                            break;
+                        }
+
+                        toRemove.Destroy();
+                    }
+
+                });
 
 
-                a.Rotate(RotationalDirection.cw);
-                Rotation = a.Facing;
+
+            c.CreateControl("RotateAgent", Keystate.OnPress)
+                .AddAction("play", () =>
+                {
+                    Point clickCoords = GetMousePos();
+
+                    Agent a = game.Map.getAgentAtPos(clickCoords);
+                    if (a == null)
+                    {
+                        Rotation = Rotation.Rotate(RotationalDirection.cw);
+                        return;
+                    }
 
 
-            });
-            new Keybind(c, Keystate.OnPress, "rotate", "play", Button.R);
+                    a.Rotate(RotationalDirection.cw);
+                    Rotation = a.Facing;
+
+
+                });
 
         }
 
@@ -281,136 +317,104 @@ namespace Crystalarium.Main
 
         private void SetupSimInteraction()
         {
-            c.AddAction("toggle sim", () =>
-            {
-                game.Engine.Sim.Paused = !game.Engine.Sim.Paused;
-
-
-            });
-            new Keybind(c, Keystate.OnPress, "toggle sim", "play", Button.Space);
-
-
-            c.AddAction("sim step", () =>
-            {
-
-                // no need to step if unpaused.
-                if (game.Engine.Sim.Paused) { game.Engine.Sim.Step(); }
-
-
-            });
-            new Keybind(c, Keystate.OnPress, "sim step", "play", Button.Z);
-
-            c.AddAction("sim faster", () =>
-            {
-                    
-                SimulationManager sim = game.Engine.Sim;
-                if (sim.TargetStepsPS < 100)
+            c.CreateControl("ToggleSim", Keystate.OnPress)
+                .AddAction("play", () =>
                 {
-                    sim.TargetStepsPS += 10;
-                }
+                    game.Engine.Sim.Paused = !game.Engine.Sim.Paused;
+                });
 
 
-            });
-            new Keybind(c, Keystate.OnPress, "sim faster", "play", Button.C);
-
-            c.AddAction("sim slower", () =>
-            {
-
-                // no need to step if unpaused.
-                SimulationManager sim = game.Engine.Sim;
-                if (sim.TargetStepsPS > 10)
+            c.CreateControl("SimStep", Keystate.OnPress)
+                .AddAction("play", () =>
                 {
-                    sim.TargetStepsPS -= 10;
-                }
+                    // no need to step if unpaused.
+                    if (game.Engine.Sim.Paused) { game.Engine.Sim.Step(); }
+                });
 
-            });
-            new Keybind(c, Keystate.OnPress, "sim slower", "play", Button.X);
+            c.CreateControl("IncreaseSimSpeed", Keystate.OnPress)
+                .AddAction("play", () =>
+                {
+
+                    SimulationManager sim = game.Engine.Sim;
+                    if (sim.TargetStepsPS < 100)
+                    {
+                        sim.TargetStepsPS += 10;
+                    }
+
+                });
+
+            c.CreateControl("DecreaseSimSpeed", Keystate.OnPress)
+                .AddAction("play", () =>
+                {
+
+                    // no need to step if unpaused.
+                    SimulationManager sim = game.Engine.Sim;
+                    if (sim.TargetStepsPS > 10)
+                    {
+                        sim.TargetStepsPS -= 10;
+                    }
+
+                });
         }
 
         private void SetupAgentSelection()
         {
-            c.AddAction("pipette", () =>
-            {
-                Point clickCoords = GetMousePos();
-
-                Agent a = game.Map.getAgentAtPos(clickCoords);
-                if (a == null)
+            c.CreateControl("Pipette", Keystate.OnPress)
+               .AddAction("play", () =>
                 {
-                    return;
-                }
+                    Point clickCoords = GetMousePos();
+
+                    Agent a = game.Map.getAgentAtPos(clickCoords);
+                    if (a == null)
+                    {
+                        return;
+                    }
 
 
-                CurrentType = a.Type;
-                Rotation = a.Facing;
+                    CurrentType = a.Type;
+                    Rotation = a.Facing;
+
+                });
 
 
-            });
-            new Keybind(c, Keystate.OnPress, "pipette", "play", Button.Tab);
-
-
-
-
-
-            c.AddAction("next agent", () =>
-            {
-                List<AgentType> types = game.CurrentRuleset.AgentTypes;
-
-                int i = types.IndexOf(CurrentType);
-
-                i++;
-                if (i >= types.Count)
+            c.CreateControl("NextAgent", Keystate.OnPress)
+                .AddAction("play", () =>
                 {
-                    i = 0;
-                }
+                    List<AgentType> types = game.CurrentRuleset.AgentTypes;
 
-                CurrentType = types[i];
+                    int i = types.IndexOf(CurrentType);
 
-            });
-            new Keybind(c, Keystate.OnPress, "next agent", "play", Button.E);
+                    i++;
+                    if (i >= types.Count)
+                    {
+                        i = 0;
+                    }
 
-            c.AddAction("prev agent", () =>
-            {
-                List<AgentType> types = game.CurrentRuleset.AgentTypes;
-                int i = types.IndexOf(CurrentType);
+                    CurrentType = types[i];
 
-                i--;
-                if (i < 0)
+                });
+
+            c.CreateControl("PrevAgent", Keystate.OnPress)
+                .AddAction("play", () =>
                 {
-                    i = types.Count - 1;
-                }
+                    List<AgentType> types = game.CurrentRuleset.AgentTypes;
+                    int i = types.IndexOf(CurrentType);
 
-                CurrentType = types[i];
+                    i--;
+                    if (i < 0)
+                    {
+                        i = types.Count - 1;
+                    }
 
-            });
-            new Keybind(c, Keystate.OnPress, "prev agent", "play", Button.Q);
+                    CurrentType = types[i];
 
-            // agents
-            c.AddAction("agent 1", () => SwitchAgent(0));
-            new Keybind(c, Keystate.OnPress, "agent 1", "play", Button.D1);
+                });
 
-            c.AddAction("agent 2", () => SwitchAgent(1));
-            new Keybind(c, Keystate.OnPress, "agent 2", "play", Button.D2);
 
-            c.AddAction("agent 3", () => SwitchAgent(2));
-            new Keybind(c, Keystate.OnPress, "agent 3", "play", Button.D3);
+            
 
-            c.AddAction("agent 4", () => SwitchAgent(3));
-            new Keybind(c, Keystate.OnPress, "agent 4", "play", Button.D4);
 
-            c.AddAction("agent 5", () => SwitchAgent(4));
-            new Keybind(c, Keystate.OnPress, "agent 5", "play", Button.D5);
 
-            c.AddAction("agent 6", () => SwitchAgent(5));
-            new Keybind(c, Keystate.OnPress, "agent 6", "play", Button.D6);
-
-            c.AddAction("agent 7", () => SwitchAgent(6));
-            new Keybind(c, Keystate.OnPress, "agent 7", "play", Button.D7);
-
-            c.AddAction("agent 8", () => SwitchAgent(7));
-            new Keybind(c, Keystate.OnPress, "agent 8", "play", Button.D8);
-
-            c.AddAction("agent 9", () => SwitchAgent(8));
-            new Keybind(c, Keystate.OnPress, "agent 9", "play", Button.D9);
         }
 
 
@@ -419,99 +423,106 @@ namespace Crystalarium.Main
 
 
 
-      
 
-            c.AddAction("open ruleset menu", () =>
-            {
-               if(c.Context.Equals("play"))
-               {
+
+            c.CreateControl("OpenRulesetMenu", Keystate.OnPress)
+               .AddAction("play", () =>
+                {
+
                     c.Context = "menu";
                     game.currentMenu = game.RulesetMenu;
-               }
-               else
-               {
-                    c.Context = "play";
-                    game.currentMenu = null;
-               }
-               
-
-            });
-            new Keybind(c, Keystate.OnPress, "open ruleset menu", Button.P);
-
-
-            c.AddAction("close", () =>
-            {
-
-                if(c.Context.Equals("menu"))
+                })
+               .AddAction("menu", () =>
                 {
                     c.Context = "play";
                     game.currentMenu = null;
-                    return;
-                }
+                });
 
-                game.Exit();
-
-            });
-            new Keybind(c, Keystate.OnPress, "close", Button.Escape);
-
-
-            c.AddAction("menu action 1", () => MenuAction(0));
-            new Keybind(c, Keystate.OnPress, "menu action 1", "menu", Button.D1);
-
-            c.AddAction("menu action 2", () => MenuAction(1));
-            new Keybind(c, Keystate.OnPress, "menu action 2", "menu", Button.D2);
-
-            c.AddAction("menu action 3", () => MenuAction(2));
-            new Keybind(c, Keystate.OnPress, "menu action 3", "menu", Button.D3);
-
-            c.AddAction("menu action 4", () => MenuAction(3));
-            new Keybind(c, Keystate.OnPress, "menu action 4", "menu", Button.D4);
-
-            c.AddAction("menu action 5", () => MenuAction(4));
-            new Keybind(c, Keystate.OnPress, "menu action 5", "menu", Button.D5);
-
-            c.AddAction("menu action 6", () => MenuAction(5));
-            new Keybind(c, Keystate.OnPress, "menu action 6", "menu", Button.D6);
-
-            c.AddAction("menu action 7", () => MenuAction(6));
-            new Keybind(c, Keystate.OnPress, "menu action 7", "menu", Button.D7);
-
-            c.AddAction("menu action 8", () => MenuAction(7));
-            new Keybind(c, Keystate.OnPress, "menu action 8", "menu", Button.D8);
-
-            c.AddAction("menu action 9", () => MenuAction(8));
-            new Keybind(c, Keystate.OnPress, "menu action 9", "menu", Button.D9);
+            c.CreateControl("Close", Keystate.OnPress)
+                .AddAction("play", () =>
+                {
+                    game.Exit();
+                })
+                .AddAction("menu", () =>
+                {
+                    c.Context = "play";
+                    game.currentMenu = null;
+                });
 
 
 
+            c.CreateControl("Save", Keystate.OnPress)
+                .AddAction("", () =>
+                {
+                    game.currentMenu = game.SaveMenu;
+                    c.Context = "menu";
+
+                });
+
+            c.CreateControl("Load", Keystate.OnPress)
+                 .AddAction("", () =>
+                 {
+                     game.currentMenu = game.LoadMenu;
+                     c.Context = "menu";
+
+                 });
+
+            c.CreateControl("MenuAction1", Keystate.OnPress)
+                .AddAction("play", () => SwitchAgent(0))
+                .AddAction("menu", () => MenuAction(0))
+                .Bind(Button.D1);
+
+            c.CreateControl("MenuAction2", Keystate.OnPress)
+                .AddAction("play", () => SwitchAgent(1))
+                .AddAction("menu", () => MenuAction(1))
+                .Bind(Button.D2);
+
+            c.CreateControl("MenuAction3", Keystate.OnPress)
+                .AddAction("play", () => SwitchAgent(2))
+                .AddAction("menu", () => MenuAction(2))
+                .Bind(Button.D3);
+
+            c.CreateControl("MenuAction4", Keystate.OnPress)
+                .AddAction("play", () => SwitchAgent(3))
+                .AddAction("menu", () => MenuAction(3))
+                .Bind(Button.D4);
+
+            c.CreateControl("MenuAction5", Keystate.OnPress)
+                .AddAction("play", () => SwitchAgent(4))
+                .AddAction("menu", () => MenuAction(4))
+                .Bind(Button.D5);
+
+            c.CreateControl("MenuAction6", Keystate.OnPress)
+                .AddAction("play", () => SwitchAgent(5))
+                .AddAction("menu", () => MenuAction(5))
+                .Bind(Button.D6);
+
+            c.CreateControl("MenuAction7", Keystate.OnPress)
+                .AddAction("play", () => SwitchAgent(6))
+                .AddAction("menu", () => MenuAction(6))
+                .Bind(Button.D7);
+
+            c.CreateControl("MenuAction8", Keystate.OnPress)
+                .AddAction("play", () => SwitchAgent(7))
+                .AddAction("menu", () => MenuAction(7))
+                .Bind(Button.D8);
+
+            c.CreateControl("MenuAction9", Keystate.OnPress)
+                .AddAction("play", () => SwitchAgent(8))
+                .AddAction("menu", () => MenuAction(8))
+                .Bind(Button.D9);
 
 
 
 
-
-            c.AddAction("save", () => 
-            {
-                
-                
-                game.currentMenu = game.SaveMenu;
-                c.Context = "menu";
-            
-            });
-            new Keybind(c, Keystate.OnPress, "save", "play", Button.LeftControl, Button.S);
-
-            c.AddAction("load", () =>
-            {
-
-           
-
-                game.currentMenu = game.LoadMenu;
-                c.Context = "menu";
-
-
-            });
-            new Keybind(c, Keystate.OnPress, "load", "play", Button.LeftControl, Button.O);
         }
 
+        private void MoveCamera(Direction d) 
+        {
+
+            float camSpeed = 1.2f; // I guess this is acceleration
+            game.view.Camera.AddVelocity(camSpeed, d); 
+        }
 
 
         private void MenuAction(int i)
