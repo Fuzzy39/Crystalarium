@@ -1,4 +1,5 @@
 ﻿using CrystalCore;
+using CrystalCore.Input;
 using CrystalCore.Model.Elements;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
@@ -27,7 +28,7 @@ namespace Crystalarium.Main
         internal Engine Engine { get; private set; } // the 'engine'
 
 
-        private const int BUILD = 911; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 918; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         private double frameRate = 60;
@@ -52,6 +53,8 @@ namespace Crystalarium.Main
         internal Menu RulesetMenu { get; private set; }
         internal Menu SaveMenu { get; private set; }
         internal Menu LoadMenu { get; private set; }
+
+        internal Menu InstructionsMenu { get; private set; }
 
         public CrystalGame()
         {
@@ -92,7 +95,7 @@ namespace Crystalarium.Main
             // this will be expanded on in the future, I bet.
 
             RulesetMenu = new Menu("Switch Ruleset?", 
-                (int i) => { return "switch to ruleset '" + Engine.Rulesets[i - 1].Name + "'"; },
+                (int i) => { return "Press " + i + " to " + "switch to ruleset '" + Engine.Rulesets[i - 1].Name + "'."; },
                 (int i) => { return false; },
                 (int i) => { return Engine.Rulesets.Count < i; });
 
@@ -100,7 +103,7 @@ namespace Crystalarium.Main
                 (int i) =>
                 {
                     string path = Path.Combine("Saves", i + ".xml");
-                    return "save in slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB)") : "Empty)");
+                    return "Press " + i + " to " + "save in slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB).") : "Empty).");
 
                 },
                 (int i) => { return false; },
@@ -112,12 +115,41 @@ namespace Crystalarium.Main
                 (int i) =>
                 {
                     string path = Path.Combine("Saves", i + ".xml");
-                    return "load from slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB)") : "Empty)");
+                    return "Press " + i + " to " + "load from slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB).") : "Empty).");
 
                 },
                 (int i) => { return false; },
                 (int i) => { return !File.Exists(Path.Combine("Saves", i + ".xml")); }
                 );
+
+            InstructionsMenu = new Menu("Controls",
+             (int i) =>
+             {
+                 Controller c = Engine.Controller;
+                 return "These are Crystalarium's Controls. They can be edited in Settings/Controls.xml." +
+
+                 "\n\nCamera: Move: " + c.GetAction("CamUp").FirstKeybindAsString() + c.GetAction("CamLeft").FirstKeybindAsString()
+                 + c.GetAction("CamDown").FirstKeybindAsString() + c.GetAction("CamRight").FirstKeybindAsString()
+                 + ". Zoom: Scrollwheel. Pan: " + c.GetAction("Pan").FirstKeybindAsString()
+                 + ". Toggle Debug View: " + c.GetAction("ToggleDebugView").FirstKeybindAsString() +
+
+                 ".\nInteract: Place: " + c.GetAction("PlaceAgent").FirstKeybindAsString() + ". Remove: "
+                 + c.GetAction("RemoveAgent").FirstKeybindAsString() + ". Rotate: " + c.GetAction("RotateAgent").FirstKeybindAsString() +
+                 ".\nSelect Agents: Previous/Next Agent: " + c.GetAction("PrevAgent").FirstKeybindAsString() + ", " + c.GetAction("NextAgent").FirstKeybindAsString() +
+                 ". Select: Number keys. Pipette: " + c.GetAction("Pipette").FirstKeybindAsString() + "." +
+
+                 "\nSimulation: Pause/Unpause: " + c.GetAction("ToggleSim").FirstKeybindAsString() +
+                 ". Single Step: " + c.GetAction("SimStep").FirstKeybindAsString() + ". Decrease/Increase Speed: " +
+                 c.GetAction("DecreaseSimSpeed").FirstKeybindAsString() + ", " + c.GetAction("IncreaseSimSpeed").FirstKeybindAsString() +
+
+                 ".\nOther: Switch Ruleset: " + c.GetAction("OpenRulesetMenu").FirstKeybindAsString() + ". Save: " + c.GetAction("Save").FirstKeybindAsString() +
+                 ". Load: " + c.GetAction("Load").FirstKeybindAsString()+".";
+               
+
+             },
+             (int i) => { return i > 1; },
+             (int i) => { return false; }
+             );
 
             base.Initialize();
 
@@ -380,13 +412,10 @@ namespace Crystalarium.Main
        
 
 
-            spriteBatch.DrawString(Textures.testFont, 
-                "WASD or MMB to pan. Scroll to zoom. UHJK to grow the map. LMB to place agent. RMB to delete. R to rotate. Tab to Copy Agent." +
-                "\nQ and E to switch agent types. P to switch rulesets (resets grid). O to toggle debug view." +
-                "\nSpace to toggle simulation. Z for single sim step. C/X to Raise/Lower sim speed."+
-                "\nCtrl + S to save. Ctrl + O to open.", 
+            spriteBatch.DrawString(Textures.testFont,
+                "Press "+Engine.Controller.GetAction("Instructions").FirstKeybindAsString()+" For instructions.", 
 
-                new Vector2(10, height - 110), Color.White);
+                new Vector2(10, height - 45), Color.White);
 
         }
 
@@ -405,7 +434,7 @@ namespace Crystalarium.Main
         // draw the build number, the most important thing!
         private void EndDraw(int height)
         {
-            spriteBatch.DrawString(Textures.testFont, "Milestone 6, Build " + BUILD, new Vector2(10, height - 25), Color.White);
+            spriteBatch.DrawString(Textures.testFont, "Milestone 7, Build " + BUILD, new Vector2(10, height - 25), Color.White);
             spriteBatch.End();
         }
 

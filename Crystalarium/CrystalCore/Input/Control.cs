@@ -98,6 +98,28 @@ namespace CrystalCore.Input
 
         }
 
+        public Keybind FirstKeybind()
+        {
+            foreach(Keybind kb in _controller.Keybinds)
+            {
+                if(kb.action == this)
+                {
+                    return kb;
+                }
+            }
+            return null;
+        }
+
+        public string FirstKeybindAsString()
+        {
+            Keybind kb = FirstKeybind();
+            if (kb == null)
+            {
+                return "None";
+            }
+
+            return kb.KeysAsString();
+        }
         internal void Trigger()
         {
             foreach(ContextualAction a in _actions)

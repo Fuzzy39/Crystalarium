@@ -67,7 +67,7 @@
 	<!--Open the Save/Load File menus-->
 	<Save> LeftControl, S</Save>
 	<Load> LeftControl, O</Load>
-		
 
+	<Instructions>I</Instructions>
 	
 </Controls>

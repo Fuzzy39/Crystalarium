@@ -467,6 +467,27 @@ namespace Crystalarium.Main
 
                  });
 
+
+            c.CreateControl("Instructions", Keystate.OnPress)
+                 .AddAction("play", () =>
+                 {
+                     game.currentMenu = game.InstructionsMenu;
+                     c.Context = "menu";
+
+                 })
+                 .AddAction("menu", () =>
+                 {
+                     if(game.currentMenu == game.InstructionsMenu)
+                     {
+                         c.Context = "play";
+                         game.currentMenu=null;
+                     }
+
+                     game.currentMenu = game.InstructionsMenu;
+
+
+                 });
+
             c.CreateControl("MenuAction1", Keystate.OnPress)
                 .AddAction("play", () => SwitchAgent(0))
                 .AddAction("menu", () => MenuAction(0))

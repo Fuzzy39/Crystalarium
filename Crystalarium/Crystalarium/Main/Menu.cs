@@ -42,7 +42,7 @@ namespace Crystalarium.Main
                     continue;
                 }
 
-                sb.DrawString(Textures.testFont, "Press " + i + " to "+createMenuText(i)+".", new Vector2(120, 150 + (25 * spacing)), Color.White);
+                sb.DrawString(Textures.testFont,createMenuText(i), new Vector2(120, 150 + (25 * spacing)), Color.White);
                 spacing++;
             }
         }

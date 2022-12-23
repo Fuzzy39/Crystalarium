@@ -283,6 +283,16 @@ namespace CrystalCore.Input
             }
             return "Keybind { \"" + action.Name + "\" " +  buttons+ " }";
         }
+
+        public string KeysAsString()
+        {
+            string s = "";
+            foreach (Button b in _buttons)
+            {
+                s += b+" + ";
+            }
+            return s.Substring(0, s.Length - 3);
+        }
     }
 }
 
