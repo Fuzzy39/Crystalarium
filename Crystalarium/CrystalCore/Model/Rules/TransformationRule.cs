@@ -8,8 +8,7 @@ using System.Text;
 namespace CrystalCore.Model.Rules
 {
     /// <summary>
-    /// An agent State is a state that an agent of a particular type can be in. it has conditions for the agent to meet to be in the state, as well as transformations
-    /// that describe what an agent does while in the state.
+    /// A TransformationRule describes a series of Transformations that happen to an agent if it satisfies certain requirements (a boolean Expression).
     /// </summary>
     public class TransformationRule
     {

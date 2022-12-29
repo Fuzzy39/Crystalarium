@@ -79,11 +79,11 @@ namespace Crystalarium.Main
             // ############### Emitter #####################
             t = CrystalRules.CreateType("emitter", new Point(1, 1));
 
-            t.States.Add(new TransformationRule());
+            t.Rules.Add(new TransformationRule());
             // condition: active ports > 0
-            t.States[0].Requirements = null;
+            t.Rules[0].Requirements = null;
             // transmit on all sides
-            t.States[0].Transformations.Add(new SignalTransformation(1, up));
+            t.Rules[0].Transformations.Add(new SignalTransformation(1, up));
 
             // ############### PRISM #####################
             t = CrystalRules.CreateType("prism", new Point(1, 1));
@@ -91,7 +91,7 @@ namespace Crystalarium.Main
 
             // top rule
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = ReceivingOnSide(Direction.up);
        
@@ -100,7 +100,7 @@ namespace Crystalarium.Main
 
             // right rule
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = ReceivingOnSide(Direction.right);
            
@@ -110,7 +110,7 @@ namespace Crystalarium.Main
 
             // bottom rule
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = ReceivingOnSide(Direction.down);
 
@@ -119,7 +119,7 @@ namespace Crystalarium.Main
 
             // left rule
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = ReceivingOnSide(Direction.left);
 
@@ -134,22 +134,22 @@ namespace Crystalarium.Main
 
             // shaped like \
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
             tr.Requirements = new Condition(new PortValueOperand(left), greaterThan, Zero());
             tr.Transformations.Add(new SignalTransformation(1, down));
 
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
             tr.Requirements = new Condition(new PortValueOperand(down), greaterThan, Zero());
             tr.Transformations.Add(new SignalTransformation(1, left));
 
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
             tr.Requirements = new Condition(new PortValueOperand(up), greaterThan, Zero());
             tr.Transformations.Add(new SignalTransformation(1, right));
 
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = new Condition(new PortValueOperand(right), greaterThan, Zero());
             tr.Transformations.Add(new SignalTransformation(1, up));
@@ -159,7 +159,7 @@ namespace Crystalarium.Main
 
 
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
            
 
@@ -182,7 +182,7 @@ namespace Crystalarium.Main
 
             // Up
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = new Condition
             (
@@ -207,14 +207,14 @@ namespace Crystalarium.Main
 
             // if we are reciving a particular signal, follow through.
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = new Condition(new PortValueOperand(up), greaterThan, Zero());
             tr.Transformations.Add(new SignalTransformation(1, down));
 
 
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = new Condition(new PortValueOperand(down), greaterThan, Zero());
             tr.Transformations.Add(new SignalTransformation(1, up));
@@ -237,10 +237,10 @@ namespace Crystalarium.Main
 
 
 
-            t.States.Add(new TransformationRule());
+            t.Rules.Add(new TransformationRule());
             // not gate
             // Condition (left>0)||(right>0)||(down>0)
-            t.States[0].Requirements = new Condition
+            t.Rules[0].Requirements = new Condition
             (
                 new Condition
                 (
@@ -254,7 +254,7 @@ namespace Crystalarium.Main
 
 
             // transmit on all sides
-            t.States[0].Transformations.Add(new SignalTransformation(1,  up));
+            t.Rules[0].Transformations.Add(new SignalTransformation(1,  up));
 
           
 
@@ -266,7 +266,7 @@ namespace Crystalarium.Main
 
             // top rule
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = ReceivingOnSide(Direction.up);
 
@@ -275,7 +275,7 @@ namespace Crystalarium.Main
 
             // right rule
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = ReceivingOnSide(Direction.right);
 
@@ -285,7 +285,7 @@ namespace Crystalarium.Main
 
             // bottom rule
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = ReceivingOnSide(Direction.down);
 
@@ -294,7 +294,7 @@ namespace Crystalarium.Main
 
             // left rule
             tr = new TransformationRule();
-            t.States.Add(tr);
+            t.Rules.Add(tr);
 
             tr.Requirements = ReceivingOnSide(Direction.left);
 
@@ -329,9 +329,9 @@ namespace Crystalarium.Main
             // Wire
             t = WireRules.CreateType("wire", new Point(1, 1));
             AgentType wire = t;
-            t.States.Add(new TransformationRule());
+            t.Rules.Add(new TransformationRule());
             // condition: active ports > 0
-            t.States[0].Requirements = new Condition
+            t.Rules[0].Requirements = new Condition
                 (
                     new Condition(new ThresholdOperand(1), greaterThan, Zero()),
                     and,    
@@ -342,8 +342,8 @@ namespace Crystalarium.Main
             // Electron tail
             t = WireRules.CreateType("electron tail", new Point(1, 1));
             AgentType electronTail = t;
-            t.States.Add(new TransformationRule());
-            t.States[0].Requirements = null;
+            t.Rules.Add(new TransformationRule());
+            t.Rules[0].Requirements = null;
        
 
             // Electron Head
@@ -353,14 +353,14 @@ namespace Crystalarium.Main
               new PortID(0, CompassPoint.northwest), new PortID(0, CompassPoint.northeast),
               new PortID(0, CompassPoint.southwest), new PortID(0, CompassPoint.southeast)));
 
-            t.States.Add(new TransformationRule());
-            t.States[0].Requirements = null;
+            t.Rules.Add(new TransformationRule());
+            t.Rules[0].Requirements = null;
          
 
             // describe everything's mutations
-            wire.States[0].Transformations.Add(new MutateTransformation(electronHead));
-            electronTail.States[0].Transformations.Add(new MutateTransformation(wire));
-            electronHead.States[0].Transformations.Add(new MutateTransformation(electronTail));
+            wire.Rules[0].Transformations.Add(new MutateTransformation(electronHead));
+            electronTail.Rules[0].Transformations.Add(new MutateTransformation(wire));
+            electronHead.Rules[0].Transformations.Add(new MutateTransformation(electronTail));
 
         }
 

@@ -300,12 +300,14 @@ namespace CrystalCore
 
             SignalTransformation trans = new SignalTransformation(transmissions.ToArray());
             trans.Transform(a);
+            a.ResetWithoutUpdate();
 
             if (xml.Reader.Name.Equals("Transmissions"))
             {
 
                 xml.Reader.ReadEndElement();
             }
+
 
         }
 

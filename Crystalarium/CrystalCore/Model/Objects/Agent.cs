@@ -136,6 +136,7 @@ namespace CrystalCore.Model.Objects
             _activeRules.Add(Type.DefaultState);
             RunTransformations();
             portInterface.StatusChanged();
+            
         }
 
 
@@ -164,7 +165,7 @@ namespace CrystalCore.Model.Objects
           
             List<TransformationRule> toReturn = new List<TransformationRule>();
 
-            foreach (TransformationRule state in Type.States)
+            foreach (TransformationRule state in Type.Rules)
             {
                 
                 // check if we meet the requirements
@@ -271,6 +272,11 @@ namespace CrystalCore.Model.Objects
            
             Execute();
 
+        }
+
+        internal void ResetWithoutUpdate()
+        {
+            updatedSignalsThisStep = false; 
         }
 
         internal void OnlyTransmitOn(PortTransmission[] pts)

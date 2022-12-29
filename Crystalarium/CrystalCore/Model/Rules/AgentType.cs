@@ -54,7 +54,7 @@ namespace CrystalCore.Model.Rules
             get => _defaultState;
         }
 
-        public List<TransformationRule> States
+        public List<TransformationRule> Rules
         {
             get
             {

@@ -7,6 +7,8 @@ using CrystalCore.Model.Rules;
 using Microsoft.Xna.Framework;
 using CrystalCore.Model.Objects;
 using CrystalCore.Util;
+using CrystalCore.Model.Interface;
+using CrystalCore.Model.Language;
 
 namespace CrystalCore.Model.Elements.Tests
 {
@@ -98,6 +100,8 @@ namespace CrystalCore.Model.Elements.Tests
         }
 
 
-    }//you'll never find me!!!!
+
+
+        }//you'll never find me!!!!
 
 }
