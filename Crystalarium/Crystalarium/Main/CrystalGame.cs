@@ -28,7 +28,7 @@ namespace Crystalarium.Main
         internal Engine Engine { get; private set; } // the 'engine'
 
 
-        private const int BUILD = 918; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 923; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         private double frameRate = 60;
@@ -231,6 +231,7 @@ namespace Crystalarium.Main
                 Engine = null;
                 return;
             }
+       
 
             Engine.Sim.TargetStepsPS = 10; 
 
@@ -249,7 +250,7 @@ namespace Crystalarium.Main
 
             // create a couple test viewports.
             view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
-
+            //view.Camera.MinScale = 1;
             // prevent the camera from leaving the world.
             view.bindCamera();
 

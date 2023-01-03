@@ -80,30 +80,21 @@ namespace CrystalCore
             xml.WritePoint(a.Bounds.Location);
             xml.WriteDirection(a.Facing);
 
-            WriteTransmissions(xml, a.Ports);
+            WriteTransmissions(xml, a.PortList);
             xml.Writer.WriteEndElement(); 
 
         }
 
 
-        private void WriteTransmissions(XmlHelper xml, List<List<Port>> ports)
+        private void WriteTransmissions(XmlHelper xml, List<Port> ports)
         {
             xml.Writer.WriteStartElement("Transmissions");
                 
             for(int i = 0; i<ports.Count; i++)
             {
                
-                List < Port > portList = ports[i];
-
-                for (int j = 0; j<portList.Count; j++)
-                {
-                    Port port = portList[j];
-
-                    if (port.TransmittingValue!=0)
-                    {
-                        WriteTransmission(xml, new PortTransmission(port.TransmittingValue, j, (CompassPoint)i));
-                    }
-                }
+                Port port = ports[i];
+                WriteTransmission(xml, new PortTransmission(port.TransmittingValue, port.ID, port.Facing));    
 
             }
 
@@ -298,9 +289,14 @@ namespace CrystalCore
                 transmissions.Add(LoadTransmission(xml));
             }
 
-            SignalTransformation trans = new SignalTransformation(transmissions.ToArray());
-            trans.Transform(a);
-            a.ResetWithoutUpdate();
+            
+            foreach(PortTransmission trans in transmissions)
+            {
+                Port p = a.GetPort(trans.portID);
+                p.Transmit(trans.value);
+            }
+        
+            
 
             if (xml.Reader.Name.Equals("Transmissions"))
             {

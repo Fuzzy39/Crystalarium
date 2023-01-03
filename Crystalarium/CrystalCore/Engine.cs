@@ -72,7 +72,7 @@ namespace CrystalCore
 
         }
 
-        public void Initialize() 
+        public override void Initialize() 
         {
             try 
             { 
@@ -84,12 +84,21 @@ namespace CrystalCore
                 foreach(SkinSet ss in _skinSets)
                 {
                     ss.Initialize();
+                    // check that a skin exists for every ruleset.
+                    foreach (Ruleset rs in Rulesets)
+                    {
+                        if(ss.GetSkin(rs)==null)
+                        {
+                            throw new InitializationFailedException("The skinset '"+ss.Name+"' is missing a skin for ruleset '" + rs.Name + "'.");
+                        }
+                    }
                 }
             }
             catch(InitializationFailedException e)
             {
                
-                throw new InitializationFailedException("Crystalarium's Engine was given an invalid setup configuration, and cannot initialize.\nDetailed description of the problem:" + Util.Util.Indent(e.Message));
+                throw new InitializationFailedException("Crystalarium's Engine was given an invalid setup configuration, and cannot initialize.\nDetailed description of the problem:" 
+                    + MiscUtil.Indent(e.Message));
             }
 
             base.Initialize();
@@ -149,7 +158,7 @@ namespace CrystalCore
             {
                 throw new InvalidOperationException("CrystalCore has already been Initialized. No more modifications may be done to SkinSets.");
             }
-            SkinSet skinSet = new SkinSet(name, this);
+            SkinSet skinSet = new SkinSet(name);
             _skinSets.Add(skinSet);
             return skinSet;
         }

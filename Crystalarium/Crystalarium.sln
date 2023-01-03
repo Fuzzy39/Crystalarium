@@ -7,7 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crystalarium", "Crystalariu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrystalCore", "CrystalCore\CrystalCore.csproj", "{200F5258-9975-407F-8D62-94DF988CE301}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalCoreTests", "CrystalCoreTests\CrystalCoreTests.csproj", "{6EABCAD7-97E7-43F2-9DEF-23624BC99EAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrystalCoreTests", "CrystalCoreTests\CrystalCoreTests.csproj", "{6EABCAD7-97E7-43F2-9DEF-23624BC99EAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalCore.Model", "CrystalCore.Model\CrystalCore.Model.csproj", "{7C3C59AD-C106-47F8-BB70-3CC0A2D1E3B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalCore.View", "CrystalCore.View\CrystalCore.View.csproj", "{583DC08A-2741-4799-B1F7-DB6C49EFE463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalCore.Util", "CrystalCore.Util\CrystalCore.Util.csproj", "{4FF20C24-3EE8-4FB1-A5C8-CE4E0CCC2A0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +33,18 @@ Global
 		{6EABCAD7-97E7-43F2-9DEF-23624BC99EAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EABCAD7-97E7-43F2-9DEF-23624BC99EAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EABCAD7-97E7-43F2-9DEF-23624BC99EAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C3C59AD-C106-47F8-BB70-3CC0A2D1E3B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C3C59AD-C106-47F8-BB70-3CC0A2D1E3B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C3C59AD-C106-47F8-BB70-3CC0A2D1E3B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C3C59AD-C106-47F8-BB70-3CC0A2D1E3B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{583DC08A-2741-4799-B1F7-DB6C49EFE463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{583DC08A-2741-4799-B1F7-DB6C49EFE463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{583DC08A-2741-4799-B1F7-DB6C49EFE463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{583DC08A-2741-4799-B1F7-DB6C49EFE463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FF20C24-3EE8-4FB1-A5C8-CE4E0CCC2A0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FF20C24-3EE8-4FB1-A5C8-CE4E0CCC2A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FF20C24-3EE8-4FB1-A5C8-CE4E0CCC2A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FF20C24-3EE8-4FB1-A5C8-CE4E0CCC2A0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
