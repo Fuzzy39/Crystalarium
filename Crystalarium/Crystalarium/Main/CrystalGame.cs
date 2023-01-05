@@ -270,7 +270,8 @@ namespace Crystalarium.Main
             minimap.Border.Width = 2;
 
             // Set the camera of the minimap.
-            minimap.Camera.MinScale = 1;
+            minimap.Camera.MaxScale = 30;
+            minimap.Camera.MinScale = 3;
 
             // to make it a minimap!
             minimap.ViewCastTarget = view; // note that this must be done after view has been initialized.
@@ -299,7 +300,7 @@ namespace Crystalarium.Main
                 view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
                 view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
 
-                // create ghosts.
+                    // create ghosts.
                 view.CreateGhost(actions.CurrentType, actions.GetMousePos(), actions.Rotation);
             }
             else
@@ -310,7 +311,7 @@ namespace Crystalarium.Main
 
             // minimap positions
             minimap.Camera.Position = view.Camera.Position;
-            minimap.Camera.Zoom = view.Camera.Zoom / 12;
+            minimap.Camera.Zoom = view.Camera.Zoom;
 
 
 

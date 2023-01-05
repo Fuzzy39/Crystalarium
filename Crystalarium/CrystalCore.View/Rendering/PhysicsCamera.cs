@@ -20,7 +20,7 @@ namespace CrystalCore.View.Rendering
         // 'Camera' controls
        
         private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions. (in pixels/frame)
-        private const float FRICTION = .05f; // the rate which camera velocity is reduced, as a ratio of velocity lost per frame.
+        private Vector3 friction = new Vector3(.05f, .05f, .000f); // the rate which camera velocity is reduced, as a ratio of velocity lost per frame.
         private const float MIN_FRICTION = .3f; // the minimum amount of friction that can be applied, if the camera is in motion, in pixels/frame.
         private const float MAX_SPEED = 15f; // the maximum velocity per dimension of the camera in pixels/frame.
 
@@ -68,21 +68,34 @@ namespace CrystalCore.View.Rendering
                 int MaxArea = MaxScale * MaxScale;
                 int MinArea = MinScale * MinScale;
 
+                // lerp between area and zoom
                 // scale where 0 is min and 1 is max. .5 is average of min and max.
-                float linearScale = (float)( ( (float)_scale*_scale ) - MinArea ) / ((float)MaxArea-MinArea);
+                //float linearScale = (float)( ( (float)_scale*_scale ) - MinArea ) / ((float)MaxArea-MinArea);
+                float cons = 100f/ ((float)MaxScale - MinScale);
+                float zoom =  ((float)_scale - MinScale)*cons ;
+                if (MaxScale > 50) 
+                    Console.WriteLine("get: " + zoom);
 
-                return linearScale* 100f;
+                return zoom;
+                //return linearScale* 100f;
             }
             set
             {
                 if (value < 0) { value = 0; VelZ = 0; }
                 if (value > 100) { value = 100; VelZ = 0; }
+              
 
                 int MaxArea = MaxScale * MaxScale;
                 int MinArea = MinScale * MinScale;
 
-                _scale = MathF.Sqrt( (value/ 100f)*(MaxArea - MinArea)+MinArea);
-                //Console.WriteLine(Zoom +", "+_scale);
+                // lerp between area and zoom
+                //_scale = MathF.Sqrt( (value/ 100f)*(MaxArea - MinArea)+MinArea);
+
+                _scale = MathHelper.Lerp(MinScale, MaxScale, value / 100f);
+
+                if (MaxScale > 50)
+                    Console.WriteLine("Set: " + value +" Scale: "+_scale);
+
 
             }
         }   
@@ -178,12 +191,13 @@ namespace CrystalCore.View.Rendering
 
 
             UpdatePosition();
+          
             UpdateZoom(Zoom + Velocity.Z);
 
             // Apply friction.
-            _velocity.X = ApplyFriction(Velocity.X);
-            _velocity.Y = ApplyFriction(Velocity.Y);
-            _velocity.Z = ApplyFriction(Velocity.Z);
+            _velocity.X = ApplyFriction(Velocity.X, friction.X);
+            _velocity.Y = ApplyFriction(Velocity.Y, friction.Y);
+            _velocity.Z = ApplyFriction(Velocity.Z, friction.Z);
 
 
         }
@@ -214,15 +228,15 @@ namespace CrystalCore.View.Rendering
         }
 
 
-        private float ApplyFriction(float before) 
+        private float ApplyFriction(float before, float frict) 
         { 
-            if(MathF.Abs(FRICTION*before) < MIN_FRICTION)
+            if(MathF.Abs(frict*before) < MIN_FRICTION)
             {
                 
                 return MiscUtil.Reduce(before, MIN_FRICTION);
             }
 
-            return MiscUtil.Reduce(before, before * FRICTION);
+            return MiscUtil.Reduce(before, before * frict);
         }
 
 
