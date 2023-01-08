@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using CrystalCore.View.Configs;
 using CrystalCore.Model.Elements;
+using CrystalCore.Util.Graphics;
 
 namespace CrystalCore.View.Subviews.Agents
 {

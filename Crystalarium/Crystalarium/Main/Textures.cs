@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using CrystalCore.Util.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,7 +35,8 @@ namespace Crystalarium.Main
         public static Texture2D viewboxBG;
 
 
-        public static SpriteFont testFont; // arial I think
+        public static SpriteFont testFont;
+        public static FontFamily Consolas;
 
     }
 }

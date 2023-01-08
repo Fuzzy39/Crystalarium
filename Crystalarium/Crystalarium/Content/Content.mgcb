@@ -109,13 +109,6 @@
 /processorParam:TextureFormat=Color
 /build:AltChunkGrid.png
 
-#begin Calibri.spritefont
-/importer:FontDescriptionImporter
-/processor:LocalizedFontProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Calibri.spritefont;testFont.spritefont
-
 #begin ChunkGrid.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -127,6 +120,55 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ChunkGrid.png
+
+#begin Consolas 6.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Consolas 6.spritefont;Consolas6.spritefont
+
+#begin Consolas100.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Consolas100.spritefont
+
+#begin Consolas12.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Consolas12.spritefont
+
+#begin Consolas18.spritefont
+/importer:FontDescriptionImporter
+/processor:LocalizedFontProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Consolas18.spritefont
+
+#begin Consolas200.spritefont
+/importer:FontDescriptionImporter
+/processor:LocalizedFontProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Consolas200.spritefont
+
+#begin Consolas24.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Consolas24.spritefont
+
+#begin Consolas48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Consolas48.spritefont
 
 #begin pixel.bmp
 /importer:TextureImporter

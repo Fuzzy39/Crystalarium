@@ -73,8 +73,7 @@ namespace CrystalCore.View.Rendering
                 //float linearScale = (float)( ( (float)_scale*_scale ) - MinArea ) / ((float)MaxArea-MinArea);
                 float cons = 100f/ ((float)MaxScale - MinScale);
                 float zoom =  ((float)_scale - MinScale)*cons ;
-                if (MaxScale > 50) 
-                    Console.WriteLine("get: " + zoom);
+             
 
                 return zoom;
                 //return linearScale* 100f;
@@ -93,8 +92,7 @@ namespace CrystalCore.View.Rendering
 
                 _scale = MathHelper.Lerp(MinScale, MaxScale, value / 100f);
 
-                if (MaxScale > 50)
-                    Console.WriteLine("Set: " + value +" Scale: "+_scale);
+              
 
 
             }

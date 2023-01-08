@@ -3,6 +3,7 @@ using CrystalCore.Input;
 using CrystalCore.Model.Elements;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
+using CrystalCore.Util.Graphics;
 using CrystalCore.View;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,7 +29,7 @@ namespace Crystalarium.Main
         internal Engine Engine { get; private set; } // the 'engine'
 
 
-        private const int BUILD = 923; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 929; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         private double frameRate = 60;
@@ -90,66 +91,7 @@ namespace Crystalarium.Main
 
                 
 
-            // Create menus ( this feels like a very ugly hack)
-            // well, what is ui structure but a bunch of data definitions and hooks into actual code?
-            // this will be expanded on in the future, I bet.
-
-            RulesetMenu = new Menu("Switch Ruleset?", 
-                (int i) => { return "Press " + i + " to " + "switch to ruleset '" + Engine.Rulesets[i - 1].Name + "'."; },
-                (int i) => { return false; },
-                (int i) => { return Engine.Rulesets.Count < i; });
-
-            SaveMenu = new Menu("Save Map",
-                (int i) =>
-                {
-                    string path = Path.Combine("Saves", i + ".xml");
-                    return "Press " + i + " to " + "save in slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB).") : "Empty).");
-
-                },
-                (int i) => { return false; },
-                 (int i) => { return false; }
-                );
-
-
-            LoadMenu = new Menu("Load Map",
-                (int i) =>
-                {
-                    string path = Path.Combine("Saves", i + ".xml");
-                    return "Press " + i + " to " + "load from slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB).") : "Empty).");
-
-                },
-                (int i) => { return false; },
-                (int i) => { return !File.Exists(Path.Combine("Saves", i + ".xml")); }
-                );
-
-            InstructionsMenu = new Menu("Controls",
-             (int i) =>
-             {
-                 Controller c = Engine.Controller;
-                 return "These are Crystalarium's Controls. They can be edited in Settings/Controls.xml." +
-
-                 "\n\nCamera: Move: " + c.GetAction("CamUp").FirstKeybindAsString() + c.GetAction("CamLeft").FirstKeybindAsString()
-                 + c.GetAction("CamDown").FirstKeybindAsString() + c.GetAction("CamRight").FirstKeybindAsString()
-                 + ". Zoom: Scrollwheel. Pan: " + c.GetAction("Pan").FirstKeybindAsString()
-                 + ". Toggle Debug View: " + c.GetAction("ToggleDebugView").FirstKeybindAsString() +
-
-                 ".\nInteract: Place: " + c.GetAction("PlaceAgent").FirstKeybindAsString() + ". Remove: "
-                 + c.GetAction("RemoveAgent").FirstKeybindAsString() + ". Rotate: " + c.GetAction("RotateAgent").FirstKeybindAsString() +
-                 ".\nSelect Agents: Previous/Next Agent: " + c.GetAction("PrevAgent").FirstKeybindAsString() + ", " + c.GetAction("NextAgent").FirstKeybindAsString() +
-                 ". Select: Number keys. Pipette: " + c.GetAction("Pipette").FirstKeybindAsString() + "." +
-
-                 "\nSimulation: Pause/Unpause: " + c.GetAction("ToggleSim").FirstKeybindAsString() +
-                 ". Single Step: " + c.GetAction("SimStep").FirstKeybindAsString() + ". Decrease/Increase Speed: " +
-                 c.GetAction("DecreaseSimSpeed").FirstKeybindAsString() + ", " + c.GetAction("IncreaseSimSpeed").FirstKeybindAsString() +
-
-                 ".\nOther: Switch Ruleset: " + c.GetAction("OpenRulesetMenu").FirstKeybindAsString() + ". Save: " + c.GetAction("Save").FirstKeybindAsString() +
-                 ". Load: " + c.GetAction("Load").FirstKeybindAsString()+".";
-               
-
-             },
-             (int i) => { return i > 1; },
-             (int i) => { return false; }
-             );
+           
 
             base.Initialize();
 
@@ -189,7 +131,17 @@ namespace Crystalarium.Main
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // initialize fonts
-            Textures.testFont = Content.Load<SpriteFont>("testFont");
+            Textures.testFont = Content.Load<SpriteFont>("Consolas12");
+            Textures.Consolas = new FontFamily(
+                new SpriteFont[]{
+                //Content.Load<SpriteFont>("Consolas6"),
+               // Content.Load<SpriteFont>("Consolas12"),
+                // Content.Load<SpriteFont>("Consolas18"),
+               // Content.Load<SpriteFont>("Consolas24"),
+                Content.Load<SpriteFont>("Consolas48"),
+                //Content.Load<SpriteFont>("Consolas100"),
+                Content.Load<SpriteFont>("Consolas200")
+                });
 
             // textures.
             Textures.pixel = Content.Load<Texture2D>("pixel");
@@ -238,6 +190,75 @@ namespace Crystalarium.Main
             // setup our interaction related code and register it with the engine.
             actions = new Actions(Engine.Controller, this);
 
+            // Create menus ( this feels like a very ugly hack)
+            // well, what is ui structure but a bunch of data definitions and hooks into actual code?
+            // this will be expanded on in the future, I bet.
+
+            RulesetMenu = new Menu("Switch Ruleset?",
+                  "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
+                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
+
+                (int i) => { return "Press " + i + " to " + "switch to ruleset '" + Engine.Rulesets[i - 1].Name + "'."; },
+                (int i) => { return false; },
+                (int i) => { return Engine.Rulesets.Count < i; });
+
+            SaveMenu = new Menu("Save Map",
+                 "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
+                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
+                (int i) =>
+                {
+                    string path = Path.Combine("Saves", i + ".xml");
+                    return "Press " + i + " to " + "save in slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB).") : "Empty).");
+
+                },
+                (int i) => { return false; },
+                 (int i) => { return false; }
+                );
+
+
+            LoadMenu = new Menu("Load Map",
+                 "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
+                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
+                (int i) =>
+                {
+                    string path = Path.Combine("Saves", i + ".xml");
+                    return "Press " + i + " to " + "load from slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB).") : "Empty).");
+
+                },
+                (int i) => { return false; },
+                (int i) => { return !File.Exists(Path.Combine("Saves", i + ".xml")); }
+                );
+
+            InstructionsMenu = new Menu("Controls",
+                "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
+                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
+             (int i) =>
+             {
+                 Controller c = Engine.Controller;
+                 return "These are Crystalarium's Controls. They can be edited in Settings/Controls.xml." +
+
+                 "\n\nCamera: Move: " + c.GetAction("CamUp").FirstKeybindAsString() + c.GetAction("CamLeft").FirstKeybindAsString()
+                 + c.GetAction("CamDown").FirstKeybindAsString() + c.GetAction("CamRight").FirstKeybindAsString()
+                 + ". Zoom: Scrollwheel. Pan: " + c.GetAction("Pan").FirstKeybindAsString()
+                 + ". Toggle Debug View: " + c.GetAction("ToggleDebugView").FirstKeybindAsString() +
+
+                 ".\nInteract: Place: " + c.GetAction("PlaceAgent").FirstKeybindAsString() + ". Remove: "
+                 + c.GetAction("RemoveAgent").FirstKeybindAsString() + ". Rotate: " + c.GetAction("RotateAgent").FirstKeybindAsString() +
+                 ".\nSelect Agents: Previous/Next Agent: " + c.GetAction("PrevAgent").FirstKeybindAsString() + ", " + c.GetAction("NextAgent").FirstKeybindAsString() +
+                 ". Select: Number keys. Pipette: " + c.GetAction("Pipette").FirstKeybindAsString() + "." +
+
+                 "\nSimulation: Pause/Unpause: " + c.GetAction("ToggleSim").FirstKeybindAsString() +
+                 ". Single Step: " + c.GetAction("SimStep").FirstKeybindAsString() + ". Decrease/Increase Speed: " +
+                 c.GetAction("DecreaseSimSpeed").FirstKeybindAsString() + ", " + c.GetAction("IncreaseSimSpeed").FirstKeybindAsString() +
+
+                 ".\nOther: Switch Ruleset: " + c.GetAction("OpenRulesetMenu").FirstKeybindAsString() + ". Save: " + c.GetAction("Save").FirstKeybindAsString() +
+                 ". Load: " + c.GetAction("Load").FirstKeybindAsString() + ".";
+
+
+             },
+             (int i) => { return i > 1; },
+             (int i) => { return false; }
+             );
 
             // create a test grid, and do some test things to it.
             Map = Engine.addGrid(CurrentRuleset);
@@ -270,8 +291,8 @@ namespace Crystalarium.Main
             minimap.Border.Width = 2;
 
             // Set the camera of the minimap.
-            minimap.Camera.MaxScale = 30;
-            minimap.Camera.MinScale = 3;
+            minimap.Camera.MaxScale = 15;
+            minimap.Camera.MinScale = 1;
 
             // to make it a minimap!
             minimap.ViewCastTarget = view; // note that this must be done after view has been initialized.
@@ -333,9 +354,11 @@ namespace Crystalarium.Main
           
         }
 
+    
         protected override void Draw(GameTime gameTime)
         {
 
+           
             frameRate += (((1 / gameTime.ElapsedGameTime.TotalSeconds) - frameRate) * 0.1);
 
 
@@ -430,12 +453,16 @@ namespace Crystalarium.Main
         }
 
 
-       
 
+        float i = 0f;
 
         // draw the build number, the most important thing!
         private void EndDraw(int height)
         {
+            i += 0.01f;
+            float theight = ((MathF.Sin(i) + 1) * 100) + 20;
+           
+            Textures.Consolas.Draw(spriteBatch, "Test Text! WOO!", theight, new Vector2(100, 100), Color.White);
             spriteBatch.DrawString(Textures.testFont, "Milestone 7, Build " + BUILD, new Vector2(10, height - 25), Color.White);
             spriteBatch.End();
         }
