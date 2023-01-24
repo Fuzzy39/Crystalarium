@@ -72,7 +72,7 @@ namespace CrystalCore
 
         }
 
-        public override void Initialize() 
+        public void Initialize() 
         {
             try 
             { 

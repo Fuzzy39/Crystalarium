@@ -45,15 +45,15 @@ namespace Crystalarium.Main
 
             // print the error message.
             
-            DrawString(sb, new Vector2(50, 50),face, 2.5f);
-            DrawString(sb, new Vector2(50, 130), errorMessage,.75f);
+            DrawString(sb, new Vector2(50, 50),face, 55f);
+            DrawString(sb, new Vector2(50, 130), errorMessage,16.5f);
 
             i += .005f;
         }
 
         private void DrawString(SpriteBatch sb, Vector2 pos, string s, float scale)
         {
-            sb.DrawString(Textures.testFont, s, pos, Color.White, 0f, new Vector2(), scale, SpriteEffects.None, 0);
+            Textures.Consolas.Draw(sb, s, scale, pos, Color.White);
         }
 
         private void DrawString(SpriteBatch sb, Vector2 pos, string s)

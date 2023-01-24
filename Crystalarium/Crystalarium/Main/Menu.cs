@@ -28,8 +28,8 @@ namespace Crystalarium.Main
 
         internal void Draw(SpriteBatch sb)
         {
-            sb.DrawString(Textures.testFont, Title, new Vector2(100, 100), Color.White, 0f, new Vector2(), 1.5f, SpriteEffects.None, 0);
-            sb.DrawString(Textures.testFont, returnMsg, new Vector2(120, 150), Color.White);
+            Textures.Consolas.Draw(sb, Title, 33, new Vector2(100, 100), Color.White);
+            Textures.Consolas.Draw(sb, returnMsg, 22, new Vector2(120, 150), Color.White);
 
             int spacing = 1;
             for (int i = 1; i <= 9; i++)
@@ -44,7 +44,7 @@ namespace Crystalarium.Main
                     continue;
                 }
 
-                sb.DrawString(Textures.testFont,createMenuText(i), new Vector2(120, 150 + (25 * spacing)), Color.White);
+                Textures.Consolas.Draw(sb, createMenuText(i), 22, new Vector2(120, 150 + (25 * spacing)), Color.White);
                 spacing++;
             }
         }

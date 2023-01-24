@@ -195,7 +195,7 @@ namespace Crystalarium.Main
 
 
 
-
+            
             c.CreateControl("Pan", Keystate.Down)
                 .AddAction("play", () =>
                 {

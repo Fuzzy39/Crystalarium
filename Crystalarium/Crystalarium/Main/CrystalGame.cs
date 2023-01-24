@@ -25,11 +25,11 @@ namespace Crystalarium.Main
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
-
+            
         internal Engine Engine { get; private set; } // the 'engine'
 
 
-        private const int BUILD = 929; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 932; // I like to increment this number every time I run the code after changing it. I don't always though.
 
 
         private double frameRate = 60;
@@ -429,18 +429,18 @@ namespace Crystalarium.Main
 
             // some debug text. We'll clear this out sooner or later...
           
-            spriteBatch.DrawString(Textures.testFont, "FPS: "+frameRate+" Sim Speed: "+Engine.Sim.ActualStepsPS + " Steps/Second Chunks: " 
-                + Map.ChunkCount +" Agents: "+Map.AgentCount+" Connections: "+Map.ConnectionCount,
+            Textures.Consolas.Draw(spriteBatch, "FPS: "+frameRate+" Sim Speed: "+Engine.Sim.ActualStepsPS + " Steps/Second Chunks: " 
+                + Map.ChunkCount +" Agents: "+Map.AgentCount+" Connections: "+Map.ConnectionCount, 22,
                 new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(Textures.testFont, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Vector2(10, 30), Color.White);
+            Textures.Consolas.Draw(spriteBatch, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, 22, new Vector2(10, 30), Color.White);
 
        
 
 
-            spriteBatch.DrawString(Textures.testFont,
+            Textures.Consolas.Draw(spriteBatch,
                 "Press "+Engine.Controller.GetAction("Instructions").FirstKeybindAsString()+" For instructions.", 
-
-                new Vector2(10, height - 45), Color.White);
+                22,
+                new Vector2(10, height - 50), Color.White);
 
         }
 
@@ -454,16 +454,13 @@ namespace Crystalarium.Main
 
 
 
-        float i = 0f;
+      
 
         // draw the build number, the most important thing!
         private void EndDraw(int height)
         {
-            i += 0.01f;
-            float theight = ((MathF.Sin(i) + 1) * 100) + 20;
-           
-            Textures.Consolas.Draw(spriteBatch, "Test Text! WOO!", theight, new Vector2(100, 100), Color.White);
-            spriteBatch.DrawString(Textures.testFont, "Milestone 7, Build " + BUILD, new Vector2(10, height - 25), Color.White);
+          
+            Textures.Consolas.Draw(spriteBatch, "Milestone 7, Build " + BUILD, 22, new Vector2(10, height - 25), Color.White);
             spriteBatch.End();
         }
 
