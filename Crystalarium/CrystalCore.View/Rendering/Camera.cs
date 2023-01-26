@@ -21,7 +21,7 @@ namespace CrystalCore.View.Rendering
         /// <summary>
         /// The  <see cref="BoundedRenderer">BoundedRenderer</see> this Camera uses to render textures. It also contains this Camera's pixel bounds.
         /// </summary>
-        private BoundedRenderer renderer;
+        private IRenderer renderer;
 
         /// <summary>
         /// the number of pixels that currently represent one tile in gridspace.
