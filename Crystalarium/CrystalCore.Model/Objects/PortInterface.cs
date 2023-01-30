@@ -253,6 +253,8 @@ namespace CrystalCore.Model.Objects
                   p.Update();
             }
 
+
+            statusChanged = true;
         }
 
 
