@@ -165,7 +165,7 @@ namespace CrystalCore.View.Rendering
 
         // Constructors
 
-        internal PhysicsCamera(Rectangle pixelBoundry) : base(pixelBoundry)
+        internal PhysicsCamera( Rectangle pixelBoundry) : base( pixelBoundry)
         {
 
 

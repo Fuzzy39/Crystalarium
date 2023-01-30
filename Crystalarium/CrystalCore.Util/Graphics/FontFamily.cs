@@ -42,6 +42,7 @@ namespace CrystalCore.Util.Graphics
 
 
             int i = 0;
+
             // determine which of our fonts is closest to the desired height.
             foreach (SpriteFont sf in fonts)
             {
@@ -50,14 +51,12 @@ namespace CrystalCore.Util.Graphics
                 if (fontHeight>=height)
                 {
                     font = sf;
-                    Console.WriteLine(i);
+                 
                     break;
 
                 }
                 i++;
             }
-
-
 
 
             if(font == null)

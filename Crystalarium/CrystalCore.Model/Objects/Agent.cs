@@ -18,7 +18,7 @@ namespace CrystalCore.Model.Objects
 
         protected List<TransformationRule> _activeRules;
     
-        private PortInterface portInterface;
+        private PortManager portInterface;
 
         private bool updatedSignalsThisStep;
         // properties 
@@ -58,7 +58,7 @@ namespace CrystalCore.Model.Objects
             _type = t;
 
             // create the portinterface
-            portInterface = new PortInterface(t, this);
+            portInterface = new PortManager(t, this);
             portInterface.OnCreation();
             
 
@@ -119,8 +119,6 @@ namespace CrystalCore.Model.Objects
                 _activeRules.Add(Type.DefaultState);
                 Execute();
             }
-
-            
         }
 
 

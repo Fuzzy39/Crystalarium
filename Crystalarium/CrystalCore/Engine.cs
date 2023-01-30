@@ -126,18 +126,18 @@ namespace CrystalCore
         }
 
         // manual ways to create gridviews
-        public GridView addView(Map g, int x, int y, int width, int height, SkinSet skinSet)
+        public GridView addView(GraphicsDevice gd, Map g, int x, int y, int width, int height, SkinSet skinSet)
         {
-            return addView(g,new Point(x,y), new Point(width,height), skinSet);
+            return addView(gd, g,new Point(x,y), new Point(width,height), skinSet);
         }
 
-        public GridView addView(Map g, Point location, Point size, SkinSet skinSet)
+        public GridView addView(GraphicsDevice gd, Map g, Point location, Point size, SkinSet skinSet)
         {
             if(!Initialized)
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before gridviews can be created. call Engine.Initialize().");
             }
-            return new GridView(_viewports, g, location, size, skinSet);
+            return new GridView(_viewports, gd, g, location, size, skinSet);
         }
 
         public Map addGrid( Ruleset r)

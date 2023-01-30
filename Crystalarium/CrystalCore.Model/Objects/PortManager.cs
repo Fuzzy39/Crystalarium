@@ -11,7 +11,7 @@ namespace CrystalCore.Model.Objects
     /// <summary>
     ///  A port interface deals with all the dirty work of managing ports that an agent doesn't want to do.
     /// </summary>
-    internal class PortInterface
+    internal class PortManager
     {
 
 
@@ -43,7 +43,7 @@ namespace CrystalCore.Model.Objects
         internal bool StatusHadChanged {  get { return statusHadChanged; } }
 
 
-        internal PortInterface(AgentType at, Agent parent)
+        internal PortManager(AgentType at, Agent parent)
         {
             statusChanged = true; // this is true at initialization so the agent can do things of it's own accord when it is created
 

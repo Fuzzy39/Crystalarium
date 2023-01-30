@@ -262,9 +262,7 @@ namespace Crystalarium.Main
 
                     // grow grid
 
-                    Point b = clickCoords - new Point(Chunk.SIZE);
-
-                    game.Map.ExpandToFit(new Rectangle(b, new Point(Chunk.SIZE * 2)));
+                    game.Map.ExpandToFit(new Rectangle(clickCoords.X, clickCoords.Y, 0,0));
 
                 });
 

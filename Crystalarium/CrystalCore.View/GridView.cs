@@ -35,6 +35,7 @@ namespace CrystalCore.View
         private Map _map; // the grid that this GridView is rendering.
         private Border _border; // the border of this Gridview (which exists, whether it is being rendered or not)
         private PhysicsCamera _camera; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
+        private RenderTarget2D _target; // the target this gridview is rendered to.
         private SubviewManager _subviewManager; // our subview manager, who kindly takes after our subviews.
         private SkinSet _skinSet; // Our Current Skinset, which defines any graphical settings for anything we could possibly render.
 
@@ -93,7 +94,7 @@ namespace CrystalCore.View
             }
 
         }
-
+            
 
         public GridView ViewCastTarget
         {
@@ -134,7 +135,7 @@ namespace CrystalCore.View
 
 
         // create the viewport
-        public GridView(List<GridView> container, Map g, Point pos, Point dimensions, SkinSet skinSet)
+        public GridView(List<GridView> container, GraphicsDevice gd, Map g, Point pos, Point dimensions, SkinSet skinSet)
         {
             // initialize from parameters
             _map = g;
@@ -161,14 +162,24 @@ namespace CrystalCore.View
             DoDebugRendering = false;
 
             _viewCastTarget = null;
-            
+
+            _target = new RenderTarget2D
+            (
+                gd,
+                PixelBounds.Width,
+                PixelBounds.Height,
+                false,
+                gd.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24
+            );
+
 
 
         }
 
         // an alternate viewport constructor, without points.
-        internal GridView(List<GridView> container, Map g, int x, int y, int width, int height, SkinSet skinSet)
-            : this(container, g, new Point(x, y), new Point(width, height), skinSet) { }
+        internal GridView(List<GridView> container, GraphicsDevice gd, Map g, int x, int y, int width, int height, SkinSet skinSet)
+            : this(container, gd, g, new Point(x, y), new Point(width, height), skinSet) { }
 
 
         public void Destroy()
@@ -192,6 +203,16 @@ namespace CrystalCore.View
 
         public void Draw(SpriteBatch sb)
         {
+            sb.End();
+
+            sb.GraphicsDevice.SetRenderTarget(_target);
+            sb.GraphicsDevice.Clear(Color.Magenta);
+
+            // no, I don't know what these settings do.
+            // could look it up...
+            sb.Begin();
+
+
             // draw the background.
             DrawBackground(sb);
 
@@ -200,7 +221,14 @@ namespace CrystalCore.View
 
             // draw the viewport if in debug mode.
             DrawOtherGridView(sb);
+            sb.End();
 
+
+            sb.GraphicsDevice.SetRenderTarget(null);
+
+            sb.Begin();
+
+            sb.Draw(_target, PixelBounds, Color.White);
 
             // finally, draw the border.
             _border.Draw(sb);

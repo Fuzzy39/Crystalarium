@@ -175,10 +175,10 @@ namespace CrystalCore.View.Rendering
         /// 
         /// </summary>
         /// <param name="pixelBoundry">The Bounds in pixels relative to the top left corner of the game window.</param>
-        internal Camera(Rectangle pixelBoundry)
+        internal Camera( Rectangle pixelBoundry)
         {
 
-            renderer = new BoundedRenderer(pixelBoundry);
+            renderer = new BoundedRenderer( pixelBoundry);
 
             // default scale values
             _minScale = 10;

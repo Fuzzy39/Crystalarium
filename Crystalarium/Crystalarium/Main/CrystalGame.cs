@@ -28,17 +28,11 @@ namespace Crystalarium.Main
             
         internal Engine Engine { get; private set; } // the 'engine'
 
-
-        private const int BUILD = 933; // I like to increment this number every time I run the code after changing it. I don't always though.
-
+        private const int BUILD = 939; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         private double frameRate = 60;
 
-        
-
         internal Ruleset CurrentRuleset { get; set; }
-
-
 
         internal GridView view { get; private set; } // the primary view
         private GridView minimap; // the minimap
@@ -112,14 +106,14 @@ namespace Crystalarium.Main
             }
 
             view.Destroy();
-            view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
+            view = Engine.addView(spriteBatch.GraphicsDevice, Map, 0, 0, width, height, Configuration.DefaultSkin);
 
             // prevent the camera from leaving the world.
             view.bindCamera();
 
 
-            minimap.Destroy();
-            SetupMinimap(width);
+           // minimap.Destroy();
+            //SetupMinimap(width);
 
            
 
@@ -270,21 +264,21 @@ namespace Crystalarium.Main
 
 
             // create a couple test viewports.
-            view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
+            view = Engine.addView(spriteBatch.GraphicsDevice, Map, 0, 0, width, height, Configuration.DefaultSkin);
             //view.Camera.MinScale = 1;
             // prevent the camera from leaving the world.
             view.bindCamera();
 
 
             // setup the minimap.
-            SetupMinimap(width);
+            //SetupMinimap(width);
             
 
         }
 
         private void SetupMinimap(int width)
         {
-            minimap = Engine.addView(Map, width - 250, 0, 250, 250, Configuration.MiniMapSkin);
+            minimap = Engine.addView(spriteBatch.GraphicsDevice, Map, width - 250, 0, 250, 250, Configuration.MiniMapSkin);
 
             // setup borders
             minimap.Border.SetTextures(Textures.pixel, Textures.pixel);
@@ -331,8 +325,8 @@ namespace Crystalarium.Main
             }
 
             // minimap positions
-            minimap.Camera.Position = view.Camera.Position;
-            minimap.Camera.Zoom = view.Camera.Zoom;
+           // minimap.Camera.Position = view.Camera.Position;
+           //minimap.Camera.Zoom = view.Camera.Zoom;
 
 
 
