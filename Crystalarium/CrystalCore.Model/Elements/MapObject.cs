@@ -71,7 +71,7 @@ namespace CrystalCore.Model.Elements
 
             // our grid should be notified when we are destroyed.
             OnCreate += m.OnObjectCreated;
-            OnCreate(this, null);
+            OnCreate(this, new EventArgs());
 
             OnDestroy += m.OnObjectDestroyed;
 

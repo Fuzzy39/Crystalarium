@@ -116,7 +116,8 @@ namespace CrystalCore.Model.Elements
         {
             if(OnReset != null)
             {
-                OnReset(this, null);
+                OnReset(this, new EventArgs());
+                
             }
            
 
@@ -194,7 +195,7 @@ namespace CrystalCore.Model.Elements
 
             if (OnResize != null)
             {
-                OnResize(this, null);
+                OnResize(this, new EventArgs());
             }
         }
 

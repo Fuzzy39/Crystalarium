@@ -208,8 +208,7 @@ namespace CrystalCore.View
             sb.GraphicsDevice.SetRenderTarget(_target);
             sb.GraphicsDevice.Clear(Color.Magenta);
 
-            // no, I don't know what these settings do.
-            // could look it up...
+        
             sb.Begin();
 
 
@@ -272,17 +271,15 @@ namespace CrystalCore.View
         }
 
 
-        public void bindCamera()
+        public void SetCameraBound(bool bound)
         {
 
-            Camera.Position = _map.Center; // we want to prevent a crash, if the camera is in an invalid position when it is bound.
-            Camera.IsBound = true;
+            if (bound)
+            {
+                Camera.Position = _map.Center; // we want to prevent a crash, if the camera is in an invalid position when it is bound.
+            }
+            Camera.IsBound = bound;
 
-        }
-
-        public void unbindCamera()
-        {
-            Camera.IsBound = false;
         }
         
         public void OnGridReset(Object sender, EventArgs e)
