@@ -35,7 +35,7 @@ namespace CrystalCore.View
         private Map _map; // the grid that this GridView is rendering.
         private Border _border; // the border of this Gridview (which exists, whether it is being rendered or not)
         private PhysicsCamera _camera; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
-        private RenderTarget2D _target; // the target this gridview is rendered to.
+        //private RenderTarget2D _target; // the target this gridview is rendered to.
         private SubviewManager _subviewManager; // our subview manager, who kindly takes after our subviews.
         private SkinSet _skinSet; // Our Current Skinset, which defines any graphical settings for anything we could possibly render.
 
@@ -163,7 +163,7 @@ namespace CrystalCore.View
 
             _viewCastTarget = null;
 
-            _target = new RenderTarget2D
+            /*_target = new RenderTarget2D
             (
                 gd,
                 PixelBounds.Width,
@@ -171,7 +171,7 @@ namespace CrystalCore.View
                 false,
                 gd.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24
-            );
+            );*/
 
 
 
@@ -203,14 +203,14 @@ namespace CrystalCore.View
 
         public void Draw(SpriteBatch sb)
         {
-            sb.End();
+            //sb.End();
 
-            sb.GraphicsDevice.SetRenderTarget(_target);
-            sb.GraphicsDevice.Clear(Color.Magenta);
+            //sb.GraphicsDevice.SetRenderTarget(_target);
+            //sb.GraphicsDevice.Clear(Color.Magenta);
 
             // no, I don't know what these settings do.
             // could look it up...
-            sb.Begin();
+            //sb.Begin();
 
 
             // draw the background.
@@ -221,14 +221,14 @@ namespace CrystalCore.View
 
             // draw the viewport if in debug mode.
             DrawOtherGridView(sb);
-            sb.End();
+            //sb.End();
 
 
-            sb.GraphicsDevice.SetRenderTarget(null);
+            //sb.GraphicsDevice.SetRenderTarget(null);
 
-            sb.Begin();
+            //sb.Begin();
 
-            sb.Draw(_target, PixelBounds, Color.White);
+            //sb.Draw(_target, PixelBounds, Color.White);
 
             // finally, draw the border.
             _border.Draw(sb);

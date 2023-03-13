@@ -28,7 +28,7 @@ namespace Crystalarium.Main
             
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 939; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 940; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         private double frameRate = 60;
 
@@ -112,8 +112,8 @@ namespace Crystalarium.Main
             view.bindCamera();
 
 
-           // minimap.Destroy();
-            //SetupMinimap(width);
+            minimap.Destroy();
+            SetupMinimap(width);
 
            
 
@@ -271,7 +271,7 @@ namespace Crystalarium.Main
 
 
             // setup the minimap.
-            //SetupMinimap(width);
+            SetupMinimap(width);
             
 
         }
@@ -325,8 +325,8 @@ namespace Crystalarium.Main
             }
 
             // minimap positions
-           // minimap.Camera.Position = view.Camera.Position;
-           //minimap.Camera.Zoom = view.Camera.Zoom;
+                minimap.Camera.Position = view.Camera.Position;
+            minimap.Camera.Zoom = view.Camera.Zoom;
 
 
 
@@ -361,6 +361,7 @@ namespace Crystalarium.Main
             int height = GraphicsDevice.Viewport.Height;
 
             spriteBatch.Begin();
+          
 
             if (errorSplash != null)
             {
@@ -370,7 +371,7 @@ namespace Crystalarium.Main
             }
 
             // make everything a flat color.
-            GraphicsDevice.Clear(new Color(70, 70, 70));
+            GraphicsDevice.Clear(new     Color(70, 70, 70));
 
 
             // tru to draw the game

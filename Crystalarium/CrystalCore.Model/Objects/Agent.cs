@@ -160,7 +160,7 @@ namespace CrystalCore.Model.Objects
         
 
 
-        private List<TransformationRule> DetermineState()
+        private List<TransformationRule> DetermineState() //Indiana
         {
           
             List<TransformationRule> toReturn = new List<TransformationRule>();

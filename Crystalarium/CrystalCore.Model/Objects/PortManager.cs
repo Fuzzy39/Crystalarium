@@ -71,7 +71,7 @@ namespace CrystalCore.Model.Objects
                     if (chm.Bounds.Intersects(bounds))
                     {
                         if (chm is Connection && !intersecting.Contains((Connection)chm))
-                        {
+                        {   
                             intersecting.Add((Connection)chm);
                         }
                     }
