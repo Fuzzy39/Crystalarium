@@ -109,7 +109,7 @@ namespace Crystalarium.Main
             view = Engine.addView(spriteBatch.GraphicsDevice, Map, 0, 0, width, height, Configuration.DefaultSkin);
 
             // prevent the camera from leaving the world.
-            view.bindCamera();
+            view.SetCameraBound(true);
 
 
             minimap.Destroy();
@@ -267,7 +267,7 @@ namespace Crystalarium.Main
             view = Engine.addView(spriteBatch.GraphicsDevice, Map, 0, 0, width, height, Configuration.DefaultSkin);
             //view.Camera.MinScale = 1;
             // prevent the camera from leaving the world.
-            view.bindCamera();
+            view.SetCameraBound(true);
 
 
             // setup the minimap.

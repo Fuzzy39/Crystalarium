@@ -59,7 +59,12 @@ namespace CrystalCore.View.Rendering
         public bool IsBound
         {
             get => _isBound;
-            internal set => _isBound = value;
+            internal set
+            {
+               
+                _isBound = value;
+            }
+            
         }
 
         /// <summary>

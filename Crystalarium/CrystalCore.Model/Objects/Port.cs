@@ -20,7 +20,7 @@ namespace CrystalCore.Model.Objects
         private Agent _parent; // the agent we are part of.
         private Map map;
 
-        private Connection connection;
+        private Connection? connection;
 
         private int transmitting;
 
@@ -65,11 +65,15 @@ namespace CrystalCore.Model.Objects
                 return connection != null;
             }
         }
-
-        public Port ConnectedTo
+            
+        public Port? ConnectedTo
         {
             get
             {
+                if(connection == null)
+                {
+                    return null;
+                }
                 return connection.Other(this);
             }
         }
@@ -103,9 +107,10 @@ namespace CrystalCore.Model.Objects
                             return anchor + new Point(_parent.Bounds.Width - 1, 0);
                         case CompassPoint.southeast:
                             return anchor - new Point(1) + _parent.Bounds.Size;
-
+                        
 
                     }
+                    throw new InvalidOperationException("Failed to interpret compass direction to location.");
 
                 }
 
@@ -152,8 +157,14 @@ namespace CrystalCore.Model.Objects
 
         }
         
-        private void OnMapResize(object sender, EventArgs e)
+        private void OnMapResize(object? sender, EventArgs e)
         {
+
+            if(sender == null)
+            {
+                throw new ArgumentNullException("map was null...");
+            }
+
             // frankly, we no longer care.
             if(Destroyed)
             {
@@ -211,13 +222,23 @@ namespace CrystalCore.Model.Objects
             {
                 throw new InvalidOperationException("Can't update me if I'm dead!");
             }
+
+
+
             Ruleset r = Parent.Type.Ruleset;
+            
+
+            // this warning is probably a sign that this stuff is not implemented super well...
             pathfinder.UpdateConnection(r.SignalMinLength, r.SignalMaxLength, connection);
         }
      
         internal void DestroyConnection()
         {
-
+            if(connection == null)
+            {
+                return;
+            }
+            
             connection.Destroy();
             connection = null;
         }
