@@ -299,6 +299,29 @@ namespace CrystalCore.Util
 
             return true;
         }
+
+        /// <summary>
+        /// Returns the angle a compsspoint represents in radians, where North is zero and clockwise is positive.
+        /// </summary>
+        /// <param name="cp"></param>
+        /// <returns></returns>
+        public static float ToRadians(this CompassPoint cp)
+        {
+            float toReturn = 0;
+            foreach( int i in Enum.GetValues<CompassPoint>() )
+            {
+                CompassPoint point = (CompassPoint)i;
+
+                if (point == cp)
+                {
+                    return toReturn;
+                }
+
+                toReturn += MathF.PI / 4f;
+            }
+
+            throw new InvalidOperationException("This should neer happen - this method done borked");
+        }
     }
 
  

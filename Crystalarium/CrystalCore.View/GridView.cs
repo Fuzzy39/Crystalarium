@@ -231,7 +231,7 @@ namespace CrystalCore.View
             //sb.Draw(_target, PixelBounds, Color.White);
 
             // finally, draw the border.
-            _border.Draw(sb);
+            _border.Draw(sb);   
         }
 
 
