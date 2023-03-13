@@ -13,7 +13,7 @@ namespace CrystalCore.View.Rendering
     /// A Bounded renderer renders things within a boundry.
     /// Images which are partly outside of this boundry are cropped to fit. 
     /// </summary>
-    internal class BoundedRenderer: IRenderer
+    internal class BoundedRenderer
     {
         /// <summary>
         ///   The pixel coordinates of the window that this BoundedRenderer will render within.
