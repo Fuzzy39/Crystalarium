@@ -15,7 +15,7 @@ namespace CrystalCore.View.Core
     /// <summary>
     /// An IRenderer represents an object that draws textures.
     /// </summary>
-    internal interface IRenderer
+    public interface IRenderer
     {
 
         /// <summary>

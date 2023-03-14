@@ -5,6 +5,7 @@ using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View;
+using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -348,7 +349,8 @@ namespace Crystalarium.Main
           
         }
 
-    
+
+        float i = 0;
         protected override void Draw(GameTime gameTime)
         {
 
@@ -356,11 +358,15 @@ namespace Crystalarium.Main
             frameRate += (((1 / gameTime.ElapsedGameTime.TotalSeconds) - frameRate) * 0.1);
 
 
+            IRenderer rend = new BasicRenderer(spriteBatch);
+
             // setup
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
 
             spriteBatch.Begin();
+
+           
           
 
             if (errorSplash != null)
@@ -398,9 +404,11 @@ namespace Crystalarium.Main
                 DrawMenu(width, height);    
             }
 
-            
-            EndDraw(height);
+            i += .01f;
+            rend.Draw(Textures.testSquare, new Rectangle(0, 0, 300, 300), Color.White, i);
 
+            EndDraw(height);
+            
 
            
             base.Draw(gameTime);
