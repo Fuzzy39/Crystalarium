@@ -41,6 +41,36 @@ namespace CrystalCore.Util
         }
 
 
+        public static float PickGreatest(params float[] nums)
+        {
+
+            float toReturn = nums[0];
+            foreach (float num in nums)
+            {
+                if(num> toReturn)
+                {
+                    toReturn = num;
+                }
+            }
+
+            return toReturn;
+        }
+
+        public static float PickLeast(params float[] nums)
+        {
+
+            float toReturn = nums[0];
+            foreach (float num in nums)
+            {
+                if (num < toReturn)
+                {
+                    toReturn = num;
+                }
+            }
+
+            return toReturn;
+        }
+
         // create a rectangle with points a and b as its corners.
         public static Rectangle RectFromPoints(Point a, Point b)
         {

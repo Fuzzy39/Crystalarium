@@ -189,6 +189,11 @@ namespace Crystalarium.Main
             // well, what is ui structure but a bunch of data definitions and hooks into actual code?
             // this will be expanded on in the future, I bet.
 
+            // all of this is actually hideous
+            // horrible
+            // I despise looking at this
+
+
             RulesetMenu = new Menu("Switch Ruleset?",
                   "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
                 " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
@@ -227,7 +232,7 @@ namespace Crystalarium.Main
             InstructionsMenu = new Menu("Controls",
                 "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
                 " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
-             (int i) =>
+             (int i) => // mostly this part, ew
              {
                  Controller c = Engine.Controller;
                  return "These are Crystalarium's Controls. They can be edited in Settings/Controls.xml." +
