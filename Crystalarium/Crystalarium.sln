@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrystalCore.View", "Crystal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrystalCore.Util", "CrystalCore.Util\CrystalCore.Util.csproj", "{4FF20C24-3EE8-4FB1-A5C8-CE4E0CCC2A0A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalCore.UtilTests", "CrystalCore.UtilTests\CrystalCore.UtilTests.csproj", "{9B929944-6D01-417D-8C78-1BAE76AE98C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{4FF20C24-3EE8-4FB1-A5C8-CE4E0CCC2A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FF20C24-3EE8-4FB1-A5C8-CE4E0CCC2A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FF20C24-3EE8-4FB1-A5C8-CE4E0CCC2A0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B929944-6D01-417D-8C78-1BAE76AE98C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B929944-6D01-417D-8C78-1BAE76AE98C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B929944-6D01-417D-8C78-1BAE76AE98C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B929944-6D01-417D-8C78-1BAE76AE98C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

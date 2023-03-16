@@ -23,35 +23,17 @@ namespace CrystalCore.View.Core
             spriteBatch = sb;
         }
 
-        public void Draw(Texture2D texture, RectangleF destination, Color color, float rotation)
+        public void Draw(Texture2D texture, RotatedRect destination, Color color)
         {
 
-            // we assume spritebatch has been begun if we are being called.
-            // note:
-            // rotation: radians clockeise
-            // destination: position is the highest and lefrmost part of the texture (may go outside of texture) after rotation
-            //      size is before rotation.
+           
 
-
-
-            Point size = destination.Size.ToPoint();
-            Vector2 origin = new Vector2(texture.Width/ 2f, texture.Height / 2f);
-            Vector2 pos = destination.TopLeft;
-
-            float multiplier = (MathF.Sqrt(2) / 2 - .5f);
-
-            Vector2 mults = multiplier * destination.Size;
-
-            Vector2 newPos = new(pos.X+ size.X/2f + MathF.Abs(MathF.Sin(rotation*2f)*mults.X),
-                            pos.Y+size.Y/2f + MathF.Abs(MathF.Sin(rotation * 2f) * mults.Y) );
-
-          
 
             spriteBatch.Draw(
                 texture, 
-                new Rectangle(newPos.ToPoint(), size), 
-                null, color, rotation, 
-                origin,
+                destination.AsRectangle, 
+                null, color, destination.Rotation, 
+                new(0),
                 SpriteEffects.None, 0f
             );
 

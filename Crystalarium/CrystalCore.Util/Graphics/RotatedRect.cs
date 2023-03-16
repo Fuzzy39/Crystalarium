@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CrystalCore.Util.Graphics
 {
-    internal class RotatedRect
+    public class RotatedRect
     {
 
         // A rotated rectangle is a rectangleF that can be rotated, I guess?
@@ -25,11 +25,27 @@ namespace CrystalCore.Util.Graphics
         ///  The clockwise Rotation in radians, about the top left corner
         ///  Should be between -pi and pi.
         /// </summary>
-        private float Rotation { get; set; }
+        public float Rotation { get; private set; }
 
         private Vector2 DistFromLoc(float dist, float rot)
         {
             return new(X + MathF.Cos(rot) * dist, Y + MathF.Sin(rot) * dist);
+        }
+
+        public RectangleF AsRectangleF
+        {
+            get
+            {
+                return new RectangleF(X, Y, Width, Height);
+            }
+        }
+
+        public Rectangle AsRectangle
+        {
+            get
+            {
+                return AsRectangleF.toRectangle();
+            }
         }
 
         public Vector2 TopLeft
@@ -150,12 +166,12 @@ namespace CrystalCore.Util.Graphics
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="location"> the location of the location origin of this rectangle.</param>
+        /// <param name="location"> the physiscal location of the location origin of this rectangle.</param>
         /// <param name="size"> the width and height of this rectangle </param>
         /// <param name="locationOrigin">the point on the rectangle where location is defined, from 0,0 (top left) to 1,1 (bottom right)</param>
         /// <param name="rotation">the angle, in radians, that this rectangle is rotated around from rotation origin. </param>
         /// <param name="rotationOrigin">The point on the rectangle that is rotated about, from 0,0 (top left) to 1,1 (bottom right) </param>
-        public RotatedRect( Vector2 location, Vector2 size, Vector2 locationOrigin, float rotation, Vector2 rotationOrigin)
+        public RotatedRect( Vector2 location, Vector2 size, float rotation, Vector2 rotationOrigin)
         {
 
             Rotation = MathHelper.WrapAngle(rotation);
@@ -166,22 +182,51 @@ namespace CrystalCore.Util.Graphics
 
             // we need to get the location, now.
 
-            // step 1: convert location origin into real units relative to the rotation origin in a rectangle oriented reference frame
+            // step 1: convert location origin into real units in a rectangle oriented reference frame
 
             // what have I gotten myself into?
 
-            Vector2 locAway = rotationOrigin - locationOrigin;
-            locAway *= size;
+            rotationOrigin *= size;
+            Vector2 locationOrigin = new(0);
 
+            // step 2: rotate location origin about rotation origin
+            locationOrigin -= rotationOrigin;
+            locationOrigin.X = locationOrigin.X * MathF.Cos(Rotation) - locationOrigin.Y * MathF.Sin(Rotation);
+            locationOrigin.Y = locationOrigin.Y *MathF.Cos(Rotation) + locationOrigin.X *MathF.Sin(Rotation);
+            locationOrigin += rotationOrigin;
 
-            // convert origins to real units
-            // find the distance between locorg and rotorg
-            //use the law of sines to find the distance 
-
-            // we know the poi
+            // step 3: translate origin to position
+            location -= locationOrigin;
+            X = location.X;
+            Y = location.Y;
             
-
+            
         }
+
+
+        // valid rotation values are between 0 and pi/2. MAKE IT SO.
+
+        public static RotatedRect FromBoundingLocation(Vector2 BoundingLocation, Vector2 size, float rotation)
+        {
+            rotation = MathHelper.WrapAngle(rotation);
+
+            Vector2 loc = rotation switch
+            {
+                < -MathF.PI / 2f => new(BoundingLocation.X, 
+                                        BoundingLocation.Y + MathF.Sin(rotation) * size.X),
+
+                < 0 => new(BoundingLocation.X + MathF.Sin(rotation) * size.X, 
+                           BoundingLocation.Y + size.Y),
+
+                < MathF.PI / 2f => new(BoundingLocation.X + size.X, 
+                                       BoundingLocation.Y + MathF.Cos(rotation) * size.Y),
+
+                _ => new(BoundingLocation.X + MathF.Cos(rotation) * size.Y, 
+                         BoundingLocation.Y),
+            };
+
+            return new RotatedRect(loc, size, rotation, new(0));
+        }   
 
 
     }

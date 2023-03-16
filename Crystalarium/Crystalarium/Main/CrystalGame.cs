@@ -410,7 +410,7 @@ namespace Crystalarium.Main
             }
 
             i += .01f;
-            rend.Draw(Textures.testSquare, new Rectangle(0, 0, 300, 300), Color.White, i);
+            rend.Draw(Textures.testSquare, RotatedRect.FromBoundingLocation(new(0),new(300), i), Color.White);
 
             EndDraw(height);
             
