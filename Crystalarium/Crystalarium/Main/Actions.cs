@@ -245,7 +245,6 @@ namespace Crystalarium.Main
                     Point clickCoords = GetMousePos();
                     Agent toRemove = null;
 
-                    // remove all agents on this tile (there should only be one once things are working properly)
 
                     toRemove = game.Map.getAgentAtPos(clickCoords);
                     if (toRemove != null)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.MathF;
 
 namespace CrystalCore.Util.Graphics
 {
@@ -56,6 +57,9 @@ namespace CrystalCore.Util.Graphics
             }
         }
 
+        // These properties have not been tested, so I opted to comment them out.
+        // if you need them, make sure they work, first.
+        /*
         public Vector2 TopRight
         {
             get
@@ -144,7 +148,7 @@ namespace CrystalCore.Util.Graphics
                 return new RectangleF(X1,Y1, X2- X1, Y2 - Y1);
 
             }
-        }
+        }*/
 
 
 
@@ -187,16 +191,18 @@ namespace CrystalCore.Util.Graphics
             // what have I gotten myself into?
 
             rotationOrigin *= size;
-            Vector2 locationOrigin = new(0);
+
+         
 
             // step 2: rotate location origin about rotation origin
-            locationOrigin -= rotationOrigin;
-            locationOrigin.X = locationOrigin.X * MathF.Cos(Rotation) - locationOrigin.Y * MathF.Sin(Rotation);
-            locationOrigin.Y = locationOrigin.Y *MathF.Cos(Rotation) + locationOrigin.X *MathF.Sin(Rotation);
-            locationOrigin += rotationOrigin;
+            location -= rotationOrigin;
+            Vector2 oldLoc = location;
+            location.X = oldLoc.X * MathF.Cos(Rotation) - oldLoc.Y * MathF.Sin(Rotation);
+            location.Y = oldLoc.Y *MathF.Cos(Rotation) + oldLoc.X *MathF.Sin(Rotation);
+            location += rotationOrigin;
 
             // step 3: translate origin to position
-            location -= locationOrigin;
+            
             X = location.X;
             Y = location.Y;
             
@@ -210,24 +216,49 @@ namespace CrystalCore.Util.Graphics
         {
             rotation = MathHelper.WrapAngle(rotation);
 
+            float w = size.X;
+            float h = size.Y;
+
+
             Vector2 loc = rotation switch
             {
-                < -MathF.PI / 2f => new(BoundingLocation.X, 
-                                        BoundingLocation.Y + MathF.Sin(rotation) * size.X),
 
-                < 0 => new(BoundingLocation.X + MathF.Sin(rotation) * size.X, 
-                           BoundingLocation.Y + size.Y),
+                // How does this math work?
+                // I made a desmos graph for it
+                // did a bunch of geometry on a sheet of paper
+                // just trust it
+                // unless it doesn't work
+                // then idk, good luck I guess
 
-                < MathF.PI / 2f => new(BoundingLocation.X + size.X, 
-                                       BoundingLocation.Y + MathF.Cos(rotation) * size.Y),
+                < -MathF.PI / 2f => new(BoundingLocation.X + (w*Cos(rotation+PI)), 
+                                        BoundingLocation.Y + w*Sin(rotation+PI) + h*Cos(rotation +PI)),
 
-                _ => new(BoundingLocation.X + MathF.Cos(rotation) * size.Y, 
-                         BoundingLocation.Y),
+
+                < 0 => new(BoundingLocation.X, 
+                           BoundingLocation.Y + w*Sin(-rotation)),
+
+                < MathF.PI / 2f => new(BoundingLocation.X + h * Sin(rotation), 
+                                       BoundingLocation.Y ),
+
+                _ => new(BoundingLocation.X + w * Cos(PI-rotation) + h * Sin(PI-rotation), 
+                         BoundingLocation.Y + h * Cos(PI-rotation)),
             };
 
-            return new RotatedRect(loc, size, rotation, new(0));
-        }   
+            RotatedRect toReturn = new RotatedRect(loc, size, 0f, new(0));
+            toReturn.Rotation = rotation;
+            return toReturn;
+        }
 
+
+
+
+        // yeah, can't easily describe what this does
+
+        private static float BumpFunction(float dist, float other, float theta)
+        {
+            float mult = (MathF.Sqrt(dist*dist + other*other)) - dist;
+            return MathF.Abs(mult * MathF.Sin(2 * theta)) + dist;
+        }
 
     }
 }
