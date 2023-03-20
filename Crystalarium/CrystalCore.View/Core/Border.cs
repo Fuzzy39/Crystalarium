@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrystalCore.View
+namespace CrystalCore.View.Core
 {
     public class Border
     {
@@ -21,19 +21,19 @@ namespace CrystalCore.View
         private Color _color;
 
         private GridView parent;
-  
+
 
 
         public int Width
         {
             get => _width;
-            set { _width = (value < 0) ? 0 : value;  }
+            set { _width = value < 0 ? 0 : value; }
         }
 
         public Color Color
         {
             get => _color;
-            set { _color=value; }
+            set { _color = value; }
         }
 
 
@@ -53,8 +53,8 @@ namespace CrystalCore.View
             _color = Color.White;
 
             // params
-            this.parent= parent;
-            
+            this.parent = parent;
+
         }
 
         internal void Draw(SpriteBatch sb)
@@ -79,7 +79,7 @@ namespace CrystalCore.View
 
             // top side.
             pos = new Point(parent.PixelBounds.X, parent.PixelBounds.Y);
-            size = new Point(parent.PixelBounds.Width,Width);
+            size = new Point(parent.PixelBounds.Width, Width);
             DrawSingleBorder(sb, pos, size);
 
             // bottom side.
@@ -87,12 +87,12 @@ namespace CrystalCore.View
             DrawSingleBorder(sb, pos, size);
 
             // left side.
-            pos = new Point(parent.PixelBounds.X, parent.PixelBounds.Y) ;
-            size = new Point(Width, parent.PixelBounds.Height );
+            pos = new Point(parent.PixelBounds.X, parent.PixelBounds.Y);
+            size = new Point(Width, parent.PixelBounds.Height);
             DrawSingleBorder(sb, pos, size);
 
             //right side.
-            pos = new Point(parent.PixelBounds.X + parent.PixelBounds.Width-Width, parent.PixelBounds.Y);
+            pos = new Point(parent.PixelBounds.X + parent.PixelBounds.Width - Width, parent.PixelBounds.Y);
             DrawSingleBorder(sb, pos, size);
 
         }
@@ -101,7 +101,7 @@ namespace CrystalCore.View
         // draws one border of the viewport, given appropriate values.
         private void DrawSingleBorder(SpriteBatch sb, Point pos, Point size)
         {
-            
+
 
             sb.Draw(
                 _sideTexture,

@@ -142,7 +142,7 @@ namespace CrystalCore.Util.Graphics
         public bool Intersects(RectangleF rect)
         {
 
-            // this hurts my brain.
+            // this hurts my brain, despite not being very complicated.
             return Right >= rect.Left
                  & Left <= rect.Right
                  & Top <= rect.Bottom

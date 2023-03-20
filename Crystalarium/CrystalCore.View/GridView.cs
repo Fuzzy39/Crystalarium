@@ -2,6 +2,7 @@
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using CrystalCore.View.Configs;
+using CrystalCore.View.Core;
 using CrystalCore.View.Rendering;
 using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework;

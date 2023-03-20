@@ -44,6 +44,9 @@ namespace Crystalarium.Main
         internal Configuration Configuration{get; private set;}
 
         internal ErrorSplash errorSplash = null;
+
+
+
         internal Menu currentMenu = null;
 
         internal Menu RulesetMenu { get; private set; }
@@ -355,15 +358,11 @@ namespace Crystalarium.Main
         }
 
 
-        float i = 0;
         protected override void Draw(GameTime gameTime)
         {
 
            
             frameRate += (((1 / gameTime.ElapsedGameTime.TotalSeconds) - frameRate) * 0.1);
-
-
-            IRenderer rend = new BasicRenderer(spriteBatch);
 
             // setup
             int width = GraphicsDevice.Viewport.Width;
@@ -409,8 +408,7 @@ namespace Crystalarium.Main
                 DrawMenu(width, height);    
             }
 
-            i += .02f;
-            rend.Draw(Textures.testSquare, RotatedRect.FromBoundingLocation(new(0),new(300,150), i), Color.White);
+
 
             EndDraw(height);
             

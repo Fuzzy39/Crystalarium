@@ -13,7 +13,7 @@ namespace CrystalCore.View.Core
     /// A Basic Renderer accomplishes the tasks of a renderer with a spritebatch.
     /// No bells and whistles. Just adds a layer of abstraction above the spritebatch.
     /// </summary>
-    public class BasicRenderer: IRenderer
+    public class BasicRenderer: IBatchRenderer
     {
 
         private SpriteBatch spriteBatch;
@@ -47,6 +47,16 @@ namespace CrystalCore.View.Core
         public void DrawString(FontFamily font, string text, Point position, float height, Color color)
         {
             this.DrawString(font, text, position.ToVector2(), height, color);
+        }
+
+        void IBatchRenderer.begin()
+        {
+            spriteBatch.Begin();
+        }
+
+        void IBatchRenderer.end()
+        {
+            spriteBatch.End();
         }
     }
 }

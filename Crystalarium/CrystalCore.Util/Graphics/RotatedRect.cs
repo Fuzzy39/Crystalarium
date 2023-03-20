@@ -59,7 +59,7 @@ namespace CrystalCore.Util.Graphics
 
         // These properties have not been tested, so I opted to comment them out.
         // if you need them, make sure they work, first.
-        /*
+        
         public Vector2 TopRight
         {
             get
@@ -148,7 +148,7 @@ namespace CrystalCore.Util.Graphics
                 return new RectangleF(X1,Y1, X2- X1, Y2 - Y1);
 
             }
-        }*/
+        }
 
 
 
