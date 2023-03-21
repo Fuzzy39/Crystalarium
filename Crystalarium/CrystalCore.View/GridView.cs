@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace CrystalCore.View
 {
-    public class GridView
+    public class GridView : IRenderable
     {
         /* A GridView represents an area that renders a grid.   
          * 
@@ -136,7 +136,7 @@ namespace CrystalCore.View
 
 
         // create the viewport
-        public GridView(List<GridView> container, GraphicsDevice gd, Map g, Point pos, Point dimensions, SkinSet skinSet)
+        public GridView(List<GridView> container, Map g, Point pos, Point dimensions, SkinSet skinSet)
         {
             // initialize from parameters
             _map = g;
@@ -164,23 +164,13 @@ namespace CrystalCore.View
 
             _viewCastTarget = null;
 
-            /*_target = new RenderTarget2D
-            (
-                gd,
-                PixelBounds.Width,
-                PixelBounds.Height,
-                false,
-                gd.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24
-            );*/
-
 
 
         }
 
         // an alternate viewport constructor, without points.
-        internal GridView(List<GridView> container, GraphicsDevice gd, Map g, int x, int y, int width, int height, SkinSet skinSet)
-            : this(container, gd, g, new Point(x, y), new Point(width, height), skinSet) { }
+        internal GridView(List<GridView> container, Map g, int x, int y, int width, int height, SkinSet skinSet)
+            : this(container, g, new Point(x, y), new Point(width, height), skinSet) { }
 
 
         public void Destroy()
@@ -202,7 +192,7 @@ namespace CrystalCore.View
 
 
 
-        public void Draw(SpriteBatch sb)
+        public void Draw(IRenderer rend)
         {
             //sb.End();
 
@@ -215,13 +205,13 @@ namespace CrystalCore.View
 
 
             // draw the background.
-            DrawBackground(sb);
+            DrawBackground(rend);
 
             // Update our subview manager and have it render its subviews.
-            _subviewManager.Draw(sb);
+            _subviewManager.Draw(rend);
 
             // draw the viewport if in debug mode.
-            DrawOtherGridView(sb);
+            DrawOtherGridView(rend);
             //sb.End();
 
 
@@ -232,20 +222,21 @@ namespace CrystalCore.View
             //sb.Draw(_target, PixelBounds, Color.White);
 
             // finally, draw the border.
-            _border.Draw(sb);   
+            _border.Draw(rend);   
         }
 
 
-        private void DrawBackground(SpriteBatch sb)
+        private void DrawBackground(IRenderer rend)
         {
             // do not draw the background if no background is set.
             if (CurrentSkin.GridViewBG == null)
                 return;
 
-            sb.Draw(CurrentSkin.GridViewBG, _pixelBounds, CurrentSkin.GridViewBGColor);
+            rend.Draw(CurrentSkin.GridViewBG, _pixelBounds, CurrentSkin.GridViewBGColor);
+           
         }
 
-        private void DrawOtherGridView(SpriteBatch sb)
+        private void DrawOtherGridView(IRenderer rend)
         {
             if (ViewCastTarget == null)
             {

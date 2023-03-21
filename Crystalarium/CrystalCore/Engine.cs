@@ -10,18 +10,25 @@ using CrystalCore.View.Configs;
 using CrystalCore.Model.Rules;
 using CrystalCore.Model.Elements;
 using CrystalCore.Util;
+using CrystalCore.View.Core;
 
 namespace CrystalCore
 {
 
 
 
-    // A central access point for setting up, drawing, and updating.
+    /// <summary>
+    /// A central access point for setting up, drawing, and updating.
+    /// </summary>
     public class Engine:InitializableObject
     {
+
+        // objects that we have one of
         private MapSaver _saver;
         private SimulationManager _sim;
         private Controller _controller;
+        private IBatchRenderer _primaryRenderer;
+
     
        
       
@@ -35,13 +42,20 @@ namespace CrystalCore
         {
             get => _sim;
         }
+
         public MapSaver saveManager
         {
             get => _saver;
         }
+
         public Controller Controller
         {
             get => _controller;
+        }
+
+        public IRenderer Renderer
+        {
+            get => _primaryRenderer;
         }
 
         public List<Ruleset> Rulesets
@@ -53,11 +67,16 @@ namespace CrystalCore
 
 
 
-        public Engine(TimeSpan timeBetweenFrames)
+        public Engine(TimeSpan timeBetweenFrames, SpriteBatch sb)
         {
             _sim = new SimulationManager(timeBetweenFrames.TotalSeconds);
             
             _controller = new Controller();
+
+            _saver = new MapSaver(this);
+
+            _primaryRenderer = new BasicRenderer(sb);
+
 
             _viewports = new List<GridView>();
             _grids = new List<Map>();
@@ -65,14 +84,14 @@ namespace CrystalCore
             _skinSets = new List<SkinSet>();
             _rulesets = new List<Ruleset>();
 
-            _saver = new MapSaver(this);
+           
 
      
             
 
         }
 
-        public void Initialize() 
+        public override void Initialize() 
         {
             try 
             { 
@@ -126,18 +145,19 @@ namespace CrystalCore
         }
 
         // manual ways to create gridviews
-        public GridView addView(GraphicsDevice gd, Map g, int x, int y, int width, int height, SkinSet skinSet)
+        public GridView addView( Map g, int x, int y, int width, int height, SkinSet skinSet)
         {
-            return addView(gd, g,new Point(x,y), new Point(width,height), skinSet);
+            return addView(g,new Point(x,y), new Point(width,height), skinSet);
         }
 
-        public GridView addView(GraphicsDevice gd, Map g, Point location, Point size, SkinSet skinSet)
+
+        public GridView addView( Map g, Point location, Point size, SkinSet skinSet)
         {
             if(!Initialized)
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before gridviews can be created. call Engine.Initialize().");
             }
-            return new GridView(_viewports, gd, g, location, size, skinSet);
+            return new GridView(_viewports, g, location, size, skinSet);
         }
 
         public Map addGrid( Ruleset r)
@@ -198,14 +218,19 @@ namespace CrystalCore
 
         }
 
-
-        public void Draw(SpriteBatch sb)
+        /// <summary>
+        /// NOTE TO FUTURE SELF: Once UI exists, merge both draw functions and make the renderer inaccessable from 'user' code.
+        /// </summary>
+        /// <param name="sb"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void StartDraw(SpriteBatch sb)
         {
             if (!Initialized)
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before it can be drawn. Call Engine.Initialize().");
             }
-           
+
+            _primaryRenderer.Begin();
             
             // draw viewports
             foreach (GridView v in _viewports)
@@ -213,6 +238,12 @@ namespace CrystalCore
                 v.Draw(sb);
             }
            
+        }
+
+
+        public void EndDraw()
+        {
+            _primaryRenderer.End();
         }
     }
 }

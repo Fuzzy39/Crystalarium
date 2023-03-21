@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CrystalCore.View.Core
 {
-    public class Border
+    public class Border : IRenderable
     {
 
         // the border class represents the borders around a viewbox 
@@ -57,14 +57,14 @@ namespace CrystalCore.View.Core
 
         }
 
-        internal void Draw(SpriteBatch sb)
+        internal void Draw(IRenderer rend)
         {
-            drawBorders(sb);
-            drawCorners(sb);
+            drawBorders(rend);
+            drawCorners(rend);
         }
 
 
-        private void drawBorders(SpriteBatch sb)
+        private void drawBorders(IRenderer rend)
         {
             if (_sideTexture == null || Width < 1)
             {
@@ -80,43 +80,33 @@ namespace CrystalCore.View.Core
             // top side.
             pos = new Point(parent.PixelBounds.X, parent.PixelBounds.Y);
             size = new Point(parent.PixelBounds.Width, Width);
-            DrawSingleBorder(sb, pos, size);
+            DrawSingleBorder(rend, pos, size);
 
             // bottom side.
             pos = new Point(parent.PixelBounds.X, parent.PixelBounds.Y + parent.PixelBounds.Height);
-            DrawSingleBorder(sb, pos, size);
+            DrawSingleBorder(rend, pos, size);
 
             // left side.
             pos = new Point(parent.PixelBounds.X, parent.PixelBounds.Y);
             size = new Point(Width, parent.PixelBounds.Height);
-            DrawSingleBorder(sb, pos, size);
+            DrawSingleBorder(rend, pos, size);
 
             //right side.
             pos = new Point(parent.PixelBounds.X + parent.PixelBounds.Width - Width, parent.PixelBounds.Y);
-            DrawSingleBorder(sb, pos, size);
+            DrawSingleBorder(rend, pos, size);
 
         }
 
 
         // draws one border of the viewport, given appropriate values.
-        private void DrawSingleBorder(SpriteBatch sb, Point pos, Point size)
+        private void DrawSingleBorder(IRenderer rend, Point pos, Point size)
         {
 
-
-            sb.Draw(
-                _sideTexture,
-                new Rectangle(pos, size),
-                null,
-                _color,
-                0f,
-                new Vector2(0, 0),
-                new SpriteEffects(),
-                1f
-            );
-
+            rend.Draw(_sideTexture, new Rectangle(pos, size), _color);
+           
         }
 
-        private void drawCorners(SpriteBatch sb)
+        private void drawCorners(IRenderer rend)
         {
 
             // do not draw corners if we don't have corners to draw.
@@ -137,11 +127,7 @@ namespace CrystalCore.View.Core
                 for (int yCounter = 0; yCounter < 2; yCounter++, y += parent.PixelBounds.Height - Width)
                 {
 
-                    sb.Draw(
-                        _cornerTexture,
-                        new Rectangle(x, y, Width, Width),
-                        _color
-                    );
+                    rend.Draw(_cornerTexture, new Rectangle(x, y, Width, Width), _color);
 
                 }
             }

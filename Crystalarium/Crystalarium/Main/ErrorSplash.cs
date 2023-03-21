@@ -16,9 +16,11 @@ namespace Crystalarium.Main
         private string errorMessage;
         Random random;
         private string face;
+        private SpriteBatch sb;
 
-        internal ErrorSplash(string errorMessage)
+        internal ErrorSplash(string errorMessage, SpriteBatch sb)
         {
+            this.sb = sb;
             i = 0f;
             string[] faces = { ":(", "X(", ":O",":/" ,":|","!?"};
             random = new Random();
@@ -35,8 +37,10 @@ namespace Crystalarium.Main
         }
 
 
-        internal void Draw(SpriteBatch sb, GraphicsDevice gd)
+        internal void Draw( GraphicsDevice gd)
         {
+           
+
             // make everything a flat color.
             int r = (int)((MathF.Sin(i) + 1) * 100);
             int g = (int)((MathF.Sin(i + 2) + 1) * 100);
@@ -44,11 +48,16 @@ namespace Crystalarium.Main
             gd.Clear(new Color(r, g, b));
 
             // print the error message.
-            
+            sb.Begin();
             DrawString(sb, new Vector2(50, 50),face, 55f);
             DrawString(sb, new Vector2(50, 130), errorMessage,16.5f);
 
             i += .005f;
+
+            sb.End();
+
+
+
         }
 
         private void DrawString(SpriteBatch sb, Vector2 pos, string s, float scale)

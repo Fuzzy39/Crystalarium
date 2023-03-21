@@ -49,12 +49,12 @@ namespace CrystalCore.View.Core
             this.DrawString(font, text, position.ToVector2(), height, color);
         }
 
-        void IBatchRenderer.begin()
+        void IBatchRenderer.Begin()
         {
             spriteBatch.Begin();
         }
 
-        void IBatchRenderer.end()
+        void IBatchRenderer.End()
         {
             spriteBatch.End();
         }

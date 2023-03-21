@@ -18,7 +18,7 @@ namespace CrystalCore.Model.Elements.Tests
         [TestMethod()]
         public void SaveLoadChunkTest()
         {
-            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67));
+            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67), null);
 
             Ruleset r = e.addRuleset("dummy");
 
@@ -44,7 +44,7 @@ namespace CrystalCore.Model.Elements.Tests
         [TestMethod()]
         public void SaveLoadChunkNoResetTest()
         {
-            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67));
+            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67), null);
 
             Ruleset r = e.addRuleset("dummy");
 
@@ -72,7 +72,7 @@ namespace CrystalCore.Model.Elements.Tests
         [TestMethod()]
         public void SaveLoadAgentTest()
         {
-            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67));
+            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67), null);
 
             Ruleset r = e.addRuleset("dummy");
 

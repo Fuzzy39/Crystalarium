@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CrystalCore.View.Core
 {
-    internal interface IDrawable
+    public interface IRenderable
     {
         public void Draw(IRenderer renderer);
 

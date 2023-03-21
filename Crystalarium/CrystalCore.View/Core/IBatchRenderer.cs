@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CrystalCore.View.Core
 {
-    internal interface IBatchRenderer : IRenderer
+    public interface IBatchRenderer : IRenderer
     {
 
-        internal void begin();
-        internal void end();
+        public void Begin();
+        public void End();
 
     }
 }

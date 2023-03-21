@@ -35,7 +35,7 @@ namespace CrystalCore.View.Subviews
 
             renderTarget.Camera.RenderTexture(sb, config.ChunkBackground, RenderData.Bounds, determineColor());
 
-
+                
         }
 
 

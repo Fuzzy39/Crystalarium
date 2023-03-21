@@ -25,11 +25,11 @@ namespace Crystalarium.Main
          */
 
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch spriteBatch;
+
             
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 954; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 956; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         private double frameRate = 60;
 
@@ -77,12 +77,8 @@ namespace Crystalarium.Main
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
 
 
-
-            // create the basics.
-            Engine = new Engine(TargetElapsedTime);
-
             // create the folder for saves, if it does not exist.
-            if(!Directory.Exists("Saves"))
+            if (!Directory.Exists("Saves"))
             {
                 Directory.CreateDirectory("Saves");
             }
@@ -110,7 +106,7 @@ namespace Crystalarium.Main
             }
 
             view.Destroy();
-            view = Engine.addView(spriteBatch.GraphicsDevice, Map, 0, 0, width, height, Configuration.DefaultSkin);
+            view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
 
             // prevent the camera from leaving the world.
             view.SetCameraBound(true);
@@ -126,7 +122,10 @@ namespace Crystalarium.Main
         protected override void LoadContent()
         {
 
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+           
+
+           
+
 
             // initialize fonts
             Textures.testFont = Content.Load<SpriteFont>("Consolas12");
@@ -161,6 +160,11 @@ namespace Crystalarium.Main
 
 
 
+
+            // create the engine
+            Engine = new Engine(TargetElapsedTime, new SpriteBatch(GraphicsDevice));
+
+
             try
             {
                 // setup the engine's configuration.
@@ -169,7 +173,7 @@ namespace Crystalarium.Main
             }
             catch (InitializationFailedException e)
             {
-                errorSplash = new ErrorSplash(e.Message);
+                errorSplash = new ErrorSplash(e.Message, new SpriteBatch(GraphicsDevice));
                 Engine = null;
                 return;
             }
@@ -177,10 +181,12 @@ namespace Crystalarium.Main
             {
                 errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed during initialization." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
-                    "\nA detailed description of the problem is below:\n\n" + e.ToString());
+                    "\nA detailed description of the problem is below:\n\n" + e.ToString(), new SpriteBatch(GraphicsDevice));
                 Engine = null;
                 return;
             }
+
+
        
 
             Engine.Sim.TargetStepsPS = 10; 
@@ -273,7 +279,7 @@ namespace Crystalarium.Main
 
 
             // create a couple test viewports.
-            view = Engine.addView(spriteBatch.GraphicsDevice, Map, 0, 0, width, height, Configuration.DefaultSkin);
+            view = Engine.addView( Map, 0, 0, width, height, Configuration.DefaultSkin);
             //view.Camera.MinScale = 1;
             // prevent the camera from leaving the world.
             view.SetCameraBound(true);
@@ -287,7 +293,7 @@ namespace Crystalarium.Main
 
         private void SetupMinimap(int width)
         {
-            minimap = Engine.addView(spriteBatch.GraphicsDevice, Map, width - 250, 0, 250, 250, Configuration.MiniMapSkin);
+            minimap = Engine.addView( Map, width - 250, 0, 250, 250, Configuration.MiniMapSkin);
 
             // setup borders
             minimap.Border.SetTextures(Textures.pixel, Textures.pixel);
@@ -308,9 +314,6 @@ namespace Crystalarium.Main
         {
 
 
-
-       
-               
 
             if (errorSplash != null)
             {
@@ -347,7 +350,7 @@ namespace Crystalarium.Main
             {
                 errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed while updating the simulation." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
-                    "\nA detailed description of the problem is below:\n\n" + e.ToString());
+                    "\nA detailed description of the problem is below:\n\n" + e.ToString(), new SpriteBatch(GraphicsDevice));
                 Engine = null;
                 return;
             }
@@ -368,36 +371,39 @@ namespace Crystalarium.Main
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
 
-            spriteBatch.Begin();
 
-           
-          
+
+
 
             if (errorSplash != null)
             {
-                errorSplash.Draw(spriteBatch, GraphicsDevice);
+                
+                errorSplash.Draw(GraphicsDevice);
                 EndDraw(height);
+               
                 return;
             }
 
+
             // make everything a flat color.
-            GraphicsDevice.Clear(new     Color(70, 70, 70));
+            GraphicsDevice.Clear(new Color(70, 70, 70));
 
 
             // tru to draw the game
             try
             {
-                Engine.Draw(spriteBatch);
+                Engine.StartDraw();
             }
             catch (Exception e)
             {
                 errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed while rendering graphics." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
-                    "\nA detailed description of the problem is below:\n\n" + e.ToString());
+                    "\nA detailed description of the problem is below:\n\n" + e.ToString(), new SpriteBatch(GraphicsDevice));
+                Engine.EndDraw();
                 Engine = null;
-                spriteBatch.End();
                 return;
             }
+
 
             // Draw text on top of the game.
 
@@ -408,16 +414,17 @@ namespace Crystalarium.Main
                 DrawMenu(width, height);    
             }
 
-
-
             EndDraw(height);
-            
 
-           
             base.Draw(gameTime);
 
         
 
+        }
+
+        private void DrawString(string s, Vector2 pos)
+        {
+            Engine.Renderer.DrawString(Textures.Consolas, s, pos, 22, Color.White);
         }
 
         // draw info on top of the game.
@@ -435,26 +442,21 @@ namespace Crystalarium.Main
 
             // some debug text. We'll clear this out sooner or later...
           
-            Textures.Consolas.Draw(spriteBatch, "FPS: "+frameRate+" Sim Speed: "+Engine.Sim.ActualStepsPS + " Steps/Second Chunks: " 
-                + Map.ChunkCount +" Agents: "+Map.AgentCount+" Connections: "+Map.ConnectionCount, 22,
-                new Vector2(10, 10), Color.White);
-            Textures.Consolas.Draw(spriteBatch, "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, 22, new Vector2(10, 30), Color.White);
+      
+            DrawString( "FPS: "+frameRate+" Sim Speed: "+Engine.Sim.ActualStepsPS + " Steps/Second Chunks: " 
+                + Map.ChunkCount +" Agents: "+Map.AgentCount+" Connections: "+Map.ConnectionCount, new (10, 10));
 
-       
+            DrawString( "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new(10, 30));
 
-
-            Textures.Consolas.Draw(spriteBatch,
-                "Press "+Engine.Controller.GetAction("Instructions").FirstKeybindAsString()+" For instructions.", 
-                22,
-                new Vector2(10, height - 50), Color.White);
+            DrawString( "Press "+Engine.Controller.GetAction("Instructions").FirstKeybindAsString()+" For instructions.", new (10, height - 50));
 
         }
 
         //draw the crude menu for switching rulesets.
         private void DrawMenu(int width, int height)
-        {
-            spriteBatch.Draw(Textures.pixel, new Rectangle(0, 0, width, height), new Color(0, 0, 0, 180));
-            currentMenu.Draw(spriteBatch);
+        { 
+            Engine.Renderer.Draw(Textures.pixel, new(new(0), new(width, height),0,new()), new Color(0,0,0,180) );
+            currentMenu.Draw();
 
         }
 
@@ -466,8 +468,15 @@ namespace Crystalarium.Main
         private void EndDraw(int height)
         {
           
-            Textures.Consolas.Draw(spriteBatch, "Milestone 7, Build " + BUILD, 22, new Vector2(10, height - 25), Color.White);
-            spriteBatch.End();
+            DrawString( "Milestone 7, Build " + BUILD, new (10, height - 25));
+            if (Engine != null)
+            {
+                Engine.EndDraw();
+                return;
+            }
+
+        
+            
         }
 
 

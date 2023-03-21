@@ -28,7 +28,7 @@ namespace CrystalCore.Model.Elements.Tests
         public void ResetTest()
         {
 
-            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67));
+            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67), null);
             Ruleset r = e.addRuleset("rule");
             e.Initialize();
             Map m = e.addGrid(r);

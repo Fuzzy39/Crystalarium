@@ -30,9 +30,20 @@ namespace CrystalCore.View.Core
         public void Draw(Texture2D texture, RotatedRect position, Color color);
 
 
+        public void Draw(Texture2D texture, RectangleF position, Color color)
+        {
+            Draw(texture, new RotatedRect(position.Location, position.Size, 0, new(0)), color);
+        }
+
+        public void Draw(Texture2D texture, Rectangle position, Color color)
+        {
+            Draw(texture, new RectangleF(position), color);
+        }
+
+
 
         // primary method
-       
+
 
 
         /// <summary>

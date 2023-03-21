@@ -12,7 +12,7 @@ namespace CrystalCore.Input.Tests
         [TestMethod()]
         public void KeybindSupersetTest()
         {
-            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67));
+            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67), null);
 
             Controller c = e.Controller;
 

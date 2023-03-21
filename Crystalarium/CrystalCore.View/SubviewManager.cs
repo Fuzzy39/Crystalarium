@@ -1,5 +1,6 @@
 ﻿using CrystalCore.Model.Elements;
 using CrystalCore.Model.Objects;
+using CrystalCore.View.Core;
 using CrystalCore.View.Subviews;
 using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace CrystalCore.View
 {
-    internal class SubviewManager
+    internal class SubviewManager : IRenderable
     {
         /*
          *  An integral part of a gridview, the Subview manager is responsible for updating the list of subviews and rendering them when commanded. 
@@ -91,11 +92,11 @@ namespace CrystalCore.View
         }
 
 
-        internal void Draw( SpriteBatch sb)
+        internal void Draw(IRenderer rend)
         {
             // first update the chunk list and draw chunks.
             AddChunks();
-            DrawObjects(sb, _chunkViews);
+            DrawObjects(rend, _chunkViews);
             
             // do the same with agents.
             if (Parent.DoAgentRendering)
@@ -103,13 +104,13 @@ namespace CrystalCore.View
                 AddAgents();
                 foreach(AgentView av in _agentViews)
                 {
-                    av.DrawBackground(sb);
+                    av.DrawBackground(rend);
                 }
 
                 AddSignals();
-                DrawObjects(sb, _beamViews);
+                DrawObjects(rend, _beamViews);
 
-                DrawObjects(sb, _agentViews);
+                DrawObjects(rend, _agentViews);
 
 
                
@@ -117,7 +118,7 @@ namespace CrystalCore.View
 
 
             }
-            DrawGhosts(sb);
+            DrawGhosts(rend);
 
         }
 
@@ -225,7 +226,7 @@ namespace CrystalCore.View
         }
 
 
-        private void DrawObjects(SpriteBatch sb, List<Subview> list)
+        private void DrawObjects(IRenderer rend, List<Subview> list)
         {
             // render them
             for (int i = 0; i < list.Count;)
@@ -235,16 +236,16 @@ namespace CrystalCore.View
 
 
                 // repeat the previous index if this renderer was destroyed.
-                if (r.Draw(sb))
+                if (r.Draw(rend))
                     i++;
             }
         }
 
-        private void DrawGhosts( SpriteBatch sb)
+        private void DrawGhosts( IRenderer rend)
         {
             foreach(AgentGhost gh in _ghosts)
             {
-                gh.Draw(sb);
+                gh.Draw(rend);
             }
         }
 

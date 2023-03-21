@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CrystalCore.View.Core;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace Crystalarium.Main
 {
     delegate string CreateMenuText(int index);
     delegate bool indexDecision(int index);
-    internal class Menu
+    internal class Menu : IRenderable
     {
 
         public string Title { get; set; }
@@ -26,10 +27,11 @@ namespace Crystalarium.Main
             this.shouldSkip = shouldSkip;
         }
 
-        internal void Draw(SpriteBatch sb)
+        public void Draw(IRenderer renderer)
         {
-            Textures.Consolas.Draw(sb, Title, 33, new Vector2(100, 100), Color.White);
-            Textures.Consolas.Draw(sb, returnMsg, 22, new Vector2(120, 150), Color.White);
+            renderer.DrawString(Textures.Consolas, Title, new Point(100), 33, Color.White);
+            renderer.DrawString(Textures.Consolas, returnMsg, new Point(120, 150), 22, Color.White);
+   
 
             int spacing = 1;
             for (int i = 1; i <= 9; i++)
@@ -43,8 +45,7 @@ namespace Crystalarium.Main
                 {
                     continue;
                 }
-
-                Textures.Consolas.Draw(sb, createMenuText(i), 22, new Vector2(120, 150 + (25 * spacing)), Color.White);
+                renderer.DrawString(Textures.Consolas, createMenuText(i), new Vector2(120, 150 + (25 * spacing)), 22, Color.White);
                 spacing++;
             }
         }
