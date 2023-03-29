@@ -1,6 +1,7 @@
 ﻿
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
+using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,7 +14,7 @@ namespace CrystalCore.View.Rendering
     /// The Camera Class renders images in a coordinate space.
     /// the camera's position in this coordinate space as well as the scale the space is rendered at can be freely changed.
     /// </summary>
-    public class Camera 
+    public class Camera : IRenderer
     {
 
 
@@ -180,10 +181,10 @@ namespace CrystalCore.View.Rendering
         /// 
         /// </summary>
         /// <param name="pixelBoundry">The Bounds in pixels relative to the top left corner of the game window.</param>
-        internal Camera( Rectangle pixelBoundry)
+        internal Camera( Rectangle pixelBoundry, IRenderer rend)
         {
 
-            renderer = new BoundedRenderer( pixelBoundry);
+            renderer = new BoundedRenderer( pixelBoundry, rend);
 
             // default scale values
             _minScale = 10;
@@ -306,49 +307,45 @@ namespace CrystalCore.View.Rendering
                 (float)(renderer.PixelBoundry.Height / Scale));
         }
 
-       
-        //Rendering stuff
-        // is this too many overloads? idk
-      
-        internal void RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c)
-        {
-            RenderTexture(sb, texture, new RectangleF(bounds), c, Direction.up);
-        }
 
-        internal void RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle bounds, Color c, Direction d)
+        public void Draw(Texture2D texture, RotatedRect rect, Rectangle source, Color c)
         {
-            RenderTexture(sb, texture, new RectangleF(bounds), c, d);
-        }
 
-        internal void RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c)
-        {
-            RenderTexture(sb, texture, bounds, c, Direction.up);
-        }
+            if(texture.Width!= source.Width || texture.Height!= source.Height)
+            {
+                throw new NotImplementedException("Wait for render target!");
+            }
 
-            // bounds of object to render in tilespace
-        internal void RenderTexture(SpriteBatch sb, Texture2D texture, RectangleF bounds, Color c, Direction d)
-        { 
-            // stuff
-            if(bounds.Area < 0)
+            RectangleF bounds = rect.AsRectangleF;
+            if (bounds.Area < 0)
             {
                 throw new ArgumentException("A Camera was asked to render a texture with bounds " + bounds + ". Negative size is not acceptable.");
             }
 
-            if(bounds.Area == 0)
+            if (bounds.Area == 0)
             {
                 return;
             }
 
+            Console.WriteLine(rect.BoundingBox);
+
+            Point pixelCoords = TileToPixelCoords(rect.BoundingBox.Location) - new Point(1);
+            Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale)) + new Point(1, 1);
+
             
 
-            Point pixelCoords = TileToPixelCoords(bounds.Location) - new Point(1);
-            Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale)) + new Point(1, 1);
-        
-
-            renderer.RenderTexture(sb, texture, new Rectangle(pixelCoords, pixelSize), c, d);
+            renderer.RenderTexture( texture, new Rectangle(pixelCoords, pixelSize), c, DirectionUtil.FromRadians(rect.Rotation));
 
         }
 
+     
 
+        // whatever, I'll fix this in a bit, once we have rendertargets
+        public void DrawString(FontFamily font, string text, Vector2 position, float height, Color color)
+        {
+            throw new NotImplementedException();
+        }
+
+       
     }
 }

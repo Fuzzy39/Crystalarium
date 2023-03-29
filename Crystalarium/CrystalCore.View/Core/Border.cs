@@ -57,10 +57,11 @@ namespace CrystalCore.View.Core
 
         }
 
-        internal void Draw(IRenderer rend)
+        public bool Draw(IRenderer rend)
         {
             drawBorders(rend);
             drawCorners(rend);
+            return true;
         }
 
 

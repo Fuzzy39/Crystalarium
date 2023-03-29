@@ -1,5 +1,6 @@
 ﻿using CrystalCore.Model.Elements;
 using CrystalCore.View.Configs;
+using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -25,7 +26,7 @@ namespace CrystalCore.View.Subviews
 
         }
 
-        protected override void Render(SpriteBatch sb)
+        protected override void Render(IRenderer rend)
         {
 
             if (config.ChunkBackground == null)
@@ -33,8 +34,8 @@ namespace CrystalCore.View.Subviews
                 throw new InvalidOperationException("RenderConfig not supplied with required texture.");
             }
 
-            renderTarget.Camera.RenderTexture(sb, config.ChunkBackground, RenderData.Bounds, determineColor());
 
+            rend.Draw(config.ChunkBackground, RenderData.Bounds, determineColor());
                 
         }
 

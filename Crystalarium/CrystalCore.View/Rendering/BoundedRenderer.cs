@@ -1,5 +1,6 @@
 ﻿using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
+using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,6 +13,7 @@ namespace CrystalCore.View.Rendering
     /// <summary>
     /// A Bounded renderer renders things within a boundry.
     /// Images which are partly outside of this boundry are cropped to fit. 
+    /// This class is not an *actual* renderer, and is going to be destroyed shortly, probably.
     /// </summary>
     internal class BoundedRenderer
     {
@@ -19,6 +21,8 @@ namespace CrystalCore.View.Rendering
         ///   The pixel coordinates of the window that this BoundedRenderer will render within.
         /// </summary>
         private Rectangle _pixelBoundry;
+
+        private IRenderer _rend;
         
         /// <summary>
         ///   The pixel coordinates of the window that this BoundedRenderer will render within.
@@ -32,9 +36,10 @@ namespace CrystalCore.View.Rendering
         ///  Create a new BoundedRender with the specified pixel bounds.
         /// </summary>
         /// <param name="pixelBoundry"> The pixel coordinates of the window that this BoundedRenderer will render within. </param>
-        public BoundedRenderer(Rectangle pixelBoundry)
+        public BoundedRenderer(Rectangle pixelBoundry, IRenderer rend)
         {
             _pixelBoundry = pixelBoundry;
+            _rend = rend;
         }
 
     
@@ -47,8 +52,11 @@ namespace CrystalCore.View.Rendering
         /// <param name="pixelBounds">The area in pixels that the image is to be rendered, relative to the location of this renderer's bounds.</param>
         /// <param name="c">The color the texture will be rendered with.</param>
         /// <param name="d">The direction this texture will be facing, with up being the default orientation.</param>
-        public void RenderTexture(SpriteBatch sb, Texture2D texture, Rectangle pixelBounds, Color c, Direction d)
+        public void RenderTexture(Texture2D texture, Rectangle pixelBounds, Color c, Direction d)
         {
+
+            _rend.Draw(texture, pixelBounds, c);
+            return;
 
             // if the image is outside of our bounds, don't even bother.
             if (!ToAbsCoords(pixelBounds).Intersects(_pixelBoundry))
@@ -66,16 +74,15 @@ namespace CrystalCore.View.Rendering
             Rectangle actualDestBounds = AdjustDestBounds(finalDestBounds, d);
 
             // draw the actual thing
-            sb.Draw(
+       
+            _rend.Draw(
                     texture,
-                    actualDestBounds,
+                    new(actualDestBounds, d.ToRadians(), new(0f)),
                     sourceBounds,
-                    c,
-                    d.ToRadians(),
-                    new Vector2(0),
-                    SpriteEffects.None,
-                    0f
+                    c
             );
+
+                
 
         }
 

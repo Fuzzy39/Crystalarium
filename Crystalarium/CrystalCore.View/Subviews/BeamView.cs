@@ -2,6 +2,7 @@
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
+using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -41,7 +42,7 @@ namespace CrystalCore.View.Subviews
 
        
 
-        protected override void Render(SpriteBatch sb)
+        protected override void Render(IRenderer rend)
         {
             if (config.SignalTexture == null)
             {
@@ -49,15 +50,15 @@ namespace CrystalCore.View.Subviews
 
             }
 
-            RenderFromA(sb);
-            RenderFromB(sb);
+            RenderFromA(rend);
+            RenderFromB(rend);
 
            
 
         }
 
 
-        private void RenderFromA(SpriteBatch sb)
+        private void RenderFromA(IRenderer rend)
         {
 
             Connection beam = (Connection)_renderData;
@@ -72,10 +73,10 @@ namespace CrystalCore.View.Subviews
 
             bool hasEnd = beam.End != null;
             int value = beam.FromA;
-            RenderChannel(sb, facing, absfacing, hasEnd, value);
+            RenderChannel(rend, facing, absfacing, hasEnd, value);
         }
 
-        private void RenderFromB(SpriteBatch sb)
+        private void RenderFromB(IRenderer rend)
         {
 
             Connection beam = (Connection)_renderData;
@@ -90,11 +91,11 @@ namespace CrystalCore.View.Subviews
 
             bool hasEnd = beam.End != null;
             int value = beam.FromB;
-            RenderChannel(sb, facing, absfacing, hasEnd, value);
+            RenderChannel(rend, facing, absfacing, hasEnd, value);
         }
 
 
-        private void RenderChannel(SpriteBatch sb, Direction facing, Direction absFacing, bool hasEnd, int value)
+        private void RenderChannel(IRenderer rend, Direction facing, Direction absFacing, bool hasEnd, int value)
         {
 
             ChannelState cs = DetermineState(value, hasEnd);
@@ -108,9 +109,9 @@ namespace CrystalCore.View.Subviews
 
                 renderBounds = RenderFull(renderBounds, facing);
 
-
-
-                renderTarget.Camera.RenderTexture(sb, config.SignalTexture, renderBounds, DetermineColor(cs), facing);
+                rend.Draw(config.SignalTexture, 
+                    new RotatedRect(renderBounds, facing), 
+                    DetermineColor(cs));
             }
         }
 

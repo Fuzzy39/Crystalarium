@@ -1,6 +1,7 @@
 ﻿using CrystalCore.Model.Objects;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
+using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,7 +13,7 @@ namespace CrystalCore.View.Subviews.Agents
     /// <summary>
     /// A Debug port renders a port on an agent very simply, for debugging purposes.
     /// </summary>
-    internal class DebugPort : ViewObject
+    internal class DebugPort : IRenderable
     {
 
         private Texture2D background;
@@ -31,7 +32,7 @@ namespace CrystalCore.View.Subviews.Agents
             get => _parent;
         }
 
-        public DebugPort(Texture2D background, Port port, AgentView parent) : base(parent.RenderTarget)
+        public DebugPort(Texture2D background, Port port, AgentView parent)
         {
             this.background = background;
             _port = port;
@@ -39,11 +40,11 @@ namespace CrystalCore.View.Subviews.Agents
         }
 
 
-        internal override bool Draw(SpriteBatch sb)
+        public bool Draw(IRenderer rend)
         {
             RectangleF bounds = DetermineBounds();
             Color c = DetermineColor();
-            renderTarget.Camera.RenderTexture(sb, background, bounds, c);
+            rend.Draw(background, bounds, c);
             return true;
 
         }

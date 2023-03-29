@@ -1,8 +1,10 @@
-﻿using CrystalCore.Model.Objects;
+﻿using CrystalCore.Model.Elements;
+using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
+using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -34,7 +36,7 @@ namespace CrystalCore.View.Subviews.Agents
         }
 
 
-        protected override void Render(SpriteBatch sb)
+        protected override void Render(IRenderer rend)
         {
            
 
@@ -46,7 +48,10 @@ namespace CrystalCore.View.Subviews.Agents
 
 
             // render the Agent.
-            renderTarget.Camera.RenderTexture(sb, config.DefaultTexture, ShrinkBorders(), config.Color, ((Agent)RenderData).Facing);
+
+            RotatedRect pos = new(ShrinkBorders(), ((Entity)RenderData).Facing);
+
+            rend.Draw(config.DefaultTexture, pos, config.Color);
 
             // debug port rendering
             if (renderTarget.DoDebugRendering)
@@ -58,7 +63,7 @@ namespace CrystalCore.View.Subviews.Agents
 
                 foreach (DebugPort dp in _ports)
                 {
-                    dp.Draw(sb);
+                    dp.Draw(rend);
 
                 }
             }
@@ -70,7 +75,7 @@ namespace CrystalCore.View.Subviews.Agents
         /// This method, made especially for agents, is weird, and maybe should be generalized...
         /// </summary>
         /// <param name="sb"></param>
-        internal void DrawBackground(SpriteBatch sb)
+        internal void DrawBackground(IRenderer rend)
         {
             // render the background.
             if (config.Background == null)
@@ -91,8 +96,8 @@ namespace CrystalCore.View.Subviews.Agents
                 facing = ((Agent)RenderData).Facing;
             }
 
-
-            renderTarget.Camera.RenderTexture(sb, config.Background, bounds, config.BackgroundColor, facing);
+            RotatedRect pos = new(bounds, facing);
+            rend.Draw(config.Background, pos, config.BackgroundColor);
         }
 
 

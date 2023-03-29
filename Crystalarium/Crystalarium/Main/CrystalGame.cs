@@ -29,9 +29,10 @@ namespace Crystalarium.Main
             
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 956; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 962; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         private double frameRate = 60;
+        private bool minimapEnabled = false;
 
         internal Ruleset CurrentRuleset { get; set; }
 
@@ -43,9 +44,9 @@ namespace Crystalarium.Main
         private Actions actions; // this sets up our user interaction.
         internal Configuration Configuration{get; private set;}
 
-        internal ErrorSplash errorSplash = null;
+        private ErrorSplash errorSplash = null;
 
-
+            
 
         internal Menu currentMenu = null;
 
@@ -100,7 +101,7 @@ namespace Crystalarium.Main
             int width = GraphicsDevice.Viewport.Width;
             int height = GraphicsDevice.Viewport.Height;
 
-            if(errorSplash != null)
+            if (errorSplash != null)
             {
                 return;
             }
@@ -111,9 +112,11 @@ namespace Crystalarium.Main
             // prevent the camera from leaving the world.
             view.SetCameraBound(true);
 
-
-            minimap.Destroy();
-            SetupMinimap(width);
+            if (minimapEnabled)
+            {
+                minimap.Destroy();
+                SetupMinimap(width);
+            }
 
            
 
@@ -122,9 +125,9 @@ namespace Crystalarium.Main
         protected override void LoadContent()
         {
 
-           
 
-           
+
+
 
 
             // initialize fonts
@@ -169,7 +172,7 @@ namespace Crystalarium.Main
             {
                 // setup the engine's configuration.
                 Configuration = new Configuration(this);
-                
+
             }
             catch (InitializationFailedException e)
             {
@@ -177,19 +180,19 @@ namespace Crystalarium.Main
                 Engine = null;
                 return;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed during initialization." +
+                SetErrorSplash("Crystalarium's engine unexpectedly crashed during initialization." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
-                    "\nA detailed description of the problem is below:\n\n" + e.ToString(), new SpriteBatch(GraphicsDevice));
+                    "\nA detailed description of the problem is below:\n\n" + e.ToString());
                 Engine = null;
                 return;
             }
 
 
-       
 
-            Engine.Sim.TargetStepsPS = 10; 
+
+            Engine.Sim.TargetStepsPS = 10;
 
             // setup our interaction related code and register it with the engine.
             actions = new Actions(Engine.Controller, this);
@@ -279,15 +282,17 @@ namespace Crystalarium.Main
 
 
             // create a couple test viewports.
-            view = Engine.addView( Map, 0, 0, width, height, Configuration.DefaultSkin);
+            view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
             //view.Camera.MinScale = 1;
             // prevent the camera from leaving the world.
             view.SetCameraBound(true);
 
 
             // setup the minimap.
-            SetupMinimap(width);
-            
+            if (minimapEnabled)
+            {
+                SetupMinimap(width);
+            }
 
         }
 
@@ -337,8 +342,11 @@ namespace Crystalarium.Main
             }
 
             // minimap positions
+            if (minimapEnabled)
+            {
                 minimap.Camera.Position = view.Camera.Position;
-            minimap.Camera.Zoom = view.Camera.Zoom;
+                minimap.Camera.Zoom = view.Camera.Zoom;
+            }
 
 
 
@@ -348,9 +356,9 @@ namespace Crystalarium.Main
             }
             catch (Exception e)
             {
-                errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed while updating the simulation." +
+                SetErrorSplash("Crystalarium's engine unexpectedly crashed while updating the simulation." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
-                    "\nA detailed description of the problem is below:\n\n" + e.ToString(), new SpriteBatch(GraphicsDevice));
+                    "\nA detailed description of the problem is below:\n\n" + e.ToString());
                 Engine = null;
                 return;
             }
@@ -396,9 +404,9 @@ namespace Crystalarium.Main
             }
             catch (Exception e)
             {
-                errorSplash = new ErrorSplash("Crystalarium's engine unexpectedly crashed while rendering graphics." +
+                SetErrorSplash("Crystalarium's engine unexpectedly crashed while rendering graphics." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
-                    "\nA detailed description of the problem is below:\n\n" + e.ToString(), new SpriteBatch(GraphicsDevice));
+                    "\nA detailed description of the problem is below:\n\n" + e.ToString());
                 Engine.EndDraw();
                 Engine = null;
                 return;
@@ -414,12 +422,22 @@ namespace Crystalarium.Main
                 DrawMenu(width, height);    
             }
 
+            i += .01f;
+            Engine.Renderer.Draw(Textures.testSquare, new RotatedRect(new(300), new(300), i, new(.5f)), Color.White);
             EndDraw(height);
 
             base.Draw(gameTime);
 
         
 
+        }
+
+
+        float i = 0;
+
+        internal void SetErrorSplash(string s)
+        {
+            errorSplash = new ErrorSplash(s, new SpriteBatch(GraphicsDevice));
         }
 
         private void DrawString(string s, Vector2 pos)
@@ -455,12 +473,12 @@ namespace Crystalarium.Main
         //draw the crude menu for switching rulesets.
         private void DrawMenu(int width, int height)
         { 
-            Engine.Renderer.Draw(Textures.pixel, new(new(0), new(width, height),0,new()), new Color(0,0,0,180) );
-            currentMenu.Draw();
+            Engine.Renderer.Draw(Textures.pixel, new RotatedRect( new(0), new (width,height), 0, new() ), new Color(0,0,0,180) );
+            currentMenu.Draw(Engine.Renderer);
 
         }
 
-
+            
 
       
 

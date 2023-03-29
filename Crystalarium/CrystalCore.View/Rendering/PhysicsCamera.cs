@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CrystalCore.Model;
 using CrystalCore.Util;
+using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -165,7 +166,7 @@ namespace CrystalCore.View.Rendering
 
         // Constructors
 
-        internal PhysicsCamera( Rectangle pixelBoundry) : base( pixelBoundry)
+        internal PhysicsCamera( Rectangle pixelBoundry, IRenderer rend) : base( pixelBoundry, rend)
         {
 
 

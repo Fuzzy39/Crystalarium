@@ -57,17 +57,6 @@ namespace CrystalCore.Util.Graphics
             }
         }
 
-        // These properties have not been tested, so I opted to comment them out.
-        // if you need them, make sure they work, first.
-        
-        public Vector2 TopRight
-        {
-            get
-            {
-                return DistFromLoc(Width, Rotation);
-            }
-        }
-
         public Vector2 TopCenter
         {
 
@@ -77,6 +66,41 @@ namespace CrystalCore.Util.Graphics
             }
         }
 
+        public Vector2 TopRight
+        {
+            get
+            {
+                return DistFromLoc(Width, Rotation);
+            }
+        }
+
+
+
+        public Vector2 CenterLeft
+        {
+            get
+            {
+                return PositionOfSizeRelativePoint(0, .5f);
+            }
+        }
+
+        public Vector2 Center
+        {
+            get
+            {
+                return PositionOfSizeRelativePoint(.5f, .5f);
+            }
+        }
+
+        public Vector2 CenterRight
+        {
+            get
+            {
+                return PositionOfSizeRelativePoint(1, .5f);
+            }
+        }
+
+
 
         public Vector2 BottomLeft
         {
@@ -85,28 +109,6 @@ namespace CrystalCore.Util.Graphics
                 return DistFromLoc(Height, Rotation - (MathF.PI / 2f));
             }
         }
-
-        public Vector2 CenterLeft
-        {
-            get
-            {
-                return DistFromLoc(Height, Rotation - (MathF.PI / 2f));
-            }
-        }
-
-        public Vector2 BottomRight
-        {
-            get
-            {
-                float dist = MathF.Sqrt(Height*Height+Width*Width);
-
-                float rot = Rotation-MathF.Atan(Height / Width);
-
-                return DistFromLoc(dist, rot);
-            }
-        }
-
-
 
         public Vector2 BottomCenter
         {
@@ -123,17 +125,24 @@ namespace CrystalCore.Util.Graphics
             }
         }
 
-        public Vector2 Center
+
+
+        public Vector2 BottomRight
         {
             get
             {
-                float dist = MathF.Sqrt(Height * Height / 4f + Width * Width / 4f);
+                float dist = MathF.Sqrt(Height*Height+Width*Width);
 
-                float rot = Rotation - MathF.Atan(Height / Width);
+                float rot = Rotation-MathF.Atan(Height / Width);
 
                 return DistFromLoc(dist, rot);
             }
         }
+
+
+
+  
+      
 
         public RectangleF BoundingBox
         {
@@ -150,6 +159,19 @@ namespace CrystalCore.Util.Graphics
             }
         }
 
+
+        private Vector2 PositionOfSizeRelativePoint(float x, float y)
+        {
+            float OwnX = x * Width;
+            float OwnY = y * Height;
+
+            // do a bit of trig
+            float realX = Cos(Rotation) * OwnX + Sin(Rotation) * OwnY;
+            float realY = Sin(Rotation) * OwnX + Cos(Rotation) * OwnY;
+
+            return new Vector2(realX,realY);
+
+        }
 
 
         public void SetBoundingBoxLocation(Vector2 newLoc)
@@ -191,6 +213,7 @@ namespace CrystalCore.Util.Graphics
             // what have I gotten myself into?
 
             rotationOrigin *= size;
+            rotationOrigin += location;
 
          
 
@@ -208,6 +231,25 @@ namespace CrystalCore.Util.Graphics
             
             
         }
+
+        public RotatedRect(RectangleF rect, float rotation, Vector2 origin):this(rect.Location, rect.Size, rotation, origin)
+        {
+        }
+
+        public RotatedRect(Rectangle rect, float rotation, Vector2 origin) : this(new RectangleF(rect), rotation, origin)
+        {
+        }
+
+        public RotatedRect(RectangleF rect, Direction d): this(rect, d.ToRadians(), new(.5f))
+        {
+
+        }
+
+        public RotatedRect(Rectangle rect, Direction d) : this(rect, d.ToRadians(), new(.5f))
+        {
+
+        }
+
 
 
         // valid rotation values are between 0 and pi/2. MAKE IT SO.
@@ -251,14 +293,6 @@ namespace CrystalCore.Util.Graphics
 
 
 
-
-        // yeah, can't easily describe what this does
-
-        private static float BumpFunction(float dist, float other, float theta)
-        {
-            float mult = (MathF.Sqrt(dist*dist + other*other)) - dist;
-            return MathF.Abs(mult * MathF.Sin(2 * theta)) + dist;
-        }
 
     }
 }

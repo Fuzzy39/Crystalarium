@@ -92,7 +92,7 @@ namespace CrystalCore.View
         }
 
 
-        internal void Draw(IRenderer rend)
+        public bool Draw(IRenderer rend)
         {
             // first update the chunk list and draw chunks.
             AddChunks();
@@ -119,6 +119,8 @@ namespace CrystalCore.View
 
             }
             DrawGhosts(rend);
+
+            return true;
 
         }
 

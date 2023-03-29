@@ -157,7 +157,7 @@ namespace CrystalCore
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before gridviews can be created. call Engine.Initialize().");
             }
-            return new GridView(_viewports, g, location, size, skinSet);
+            return new GridView(_primaryRenderer, _viewports, g, location, size, skinSet);
         }
 
         public Map addGrid( Ruleset r)
@@ -223,7 +223,7 @@ namespace CrystalCore
         /// </summary>
         /// <param name="sb"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public void StartDraw(SpriteBatch sb)
+        public void StartDraw()
         {
             if (!Initialized)
             {
@@ -235,8 +235,8 @@ namespace CrystalCore
             // draw viewports
             foreach (GridView v in _viewports)
             {
-                v.Draw(sb);
-            }
+                v.Draw(_primaryRenderer);
+            }   
            
         }
 

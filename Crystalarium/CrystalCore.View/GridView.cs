@@ -136,7 +136,7 @@ namespace CrystalCore.View
 
 
         // create the viewport
-        public GridView(List<GridView> container, Map g, Point pos, Point dimensions, SkinSet skinSet)
+        public GridView(IRenderer rend, List<GridView> container, Map g, Point pos, Point dimensions, SkinSet skinSet)
         {
             // initialize from parameters
             _map = g;
@@ -146,7 +146,7 @@ namespace CrystalCore.View
             this.container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
 
-            _camera = new PhysicsCamera(PixelBounds);
+            _camera = new PhysicsCamera(PixelBounds, rend);
 
             _subviewManager = new SubviewManager(this);
 
@@ -169,8 +169,8 @@ namespace CrystalCore.View
         }
 
         // an alternate viewport constructor, without points.
-        internal GridView(List<GridView> container, Map g, int x, int y, int width, int height, SkinSet skinSet)
-            : this(container, g, new Point(x, y), new Point(width, height), skinSet) { }
+        internal GridView(IRenderer rend, List<GridView> container, Map g, int x, int y, int width, int height, SkinSet skinSet)
+            : this(rend, container, g, new Point(x, y), new Point(width, height), skinSet) { }
 
 
         public void Destroy()
@@ -187,12 +187,12 @@ namespace CrystalCore.View
         public void CreateGhost( AgentType t, Point loc, Direction facing)
         {
             AgentViewConfig conf =CurrentSkin.GetAgentViewConfig(t);
-            Manager.AddGhost(new AgentGhost(this, conf, loc, facing));
+            Manager.AddGhost(new AgentGhost(Map, conf, loc, facing));
         }
 
 
 
-        public void Draw(IRenderer rend)
+        public bool Draw(IRenderer rend)
         {
             //sb.End();
 
@@ -208,10 +208,10 @@ namespace CrystalCore.View
             DrawBackground(rend);
 
             // Update our subview manager and have it render its subviews.
-            _subviewManager.Draw(rend);
+            _subviewManager.Draw(Camera);
 
             // draw the viewport if in debug mode.
-            DrawOtherGridView(rend);
+            DrawOtherGridView(Camera);
             //sb.End();
 
 
@@ -222,7 +222,10 @@ namespace CrystalCore.View
             //sb.Draw(_target, PixelBounds, Color.White);
 
             // finally, draw the border.
-            _border.Draw(rend);   
+            _border.Draw(rend);
+
+            return true;
+           
         }
 
 
@@ -243,10 +246,13 @@ namespace CrystalCore.View
                 return;
             }
 
-            _camera.RenderTexture(sb, SkinSet.ViewCastOverlay,
+          
+            // this cast is annoying, but whatever
+            ((IRenderer)_camera).Draw(
+                SkinSet.ViewCastOverlay, 
                 ViewCastTarget.Camera.TileBounds(),
-                new Color(.2f, .2f, .2f, .001f));
-
+                new Color(.2f, .2f, .2f, .001f)
+            );
         }
 
         public void Update()

@@ -33,6 +33,35 @@ namespace CrystalCore.Util
 
     public static class DirectionUtil
     {
+
+        public static Direction FromRadians(float rad)
+        {
+            rad = MathHelper.WrapAngle(rad);
+
+            if(rad< -Math.PI * .75f)
+            {
+                return Direction.down;
+            }
+
+            if(rad < -Math.PI * .25f)
+            {
+                return Direction.left;
+            }
+
+            if(rad < Math.PI * .25f)
+            {
+                return Direction.up;
+            }
+
+            if(rad < Math.PI *.75f)
+            {
+                return Direction.right;
+            }
+
+            return Direction.down;
+        }
+
+            
         public static bool IsVertical(this Direction d)
         {
             if (d == Direction.up || d == Direction.down)

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using CrystalCore.Model;
 using CrystalCore.Model.Elements;
+using CrystalCore.View.Core;
+using CrystalCore.View.Rendering;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace CrystalCore.View.Subviews
@@ -10,10 +12,11 @@ namespace CrystalCore.View.Subviews
     /// <summary>
     ///   A Subview renders a piece of the whole grid. 
     /// </summary>
-    internal abstract class Subview : ViewObject
+    internal abstract class Subview : IRenderable
     {
 
         protected MapObject _renderData; // the thing we view
+        protected GridView renderTarget;
         private List<Subview> others; // I forget what this is for...
 
         internal MapObject RenderData
@@ -22,7 +25,7 @@ namespace CrystalCore.View.Subviews
         }
 
 
-        protected Subview(GridView v, MapObject o, List<Subview> others) : base(v)
+        protected Subview(GridView v, MapObject o, List<Subview> others)
         {
             // check that we don't already exist
             foreach (Subview r in others)
@@ -34,6 +37,7 @@ namespace CrystalCore.View.Subviews
             }
             this.others = others;
             _renderData = o;
+            renderTarget = v;
 
             // add ourselves to the list of renderers.
             others.Add(this);
@@ -56,7 +60,7 @@ namespace CrystalCore.View.Subviews
         /// <param name="sb"></param>
         /// <returns>whether drawing was successful. Subview is destroyed if false. </returns>
 
-        internal override bool Draw(SpriteBatch sb)
+        public bool Draw(IRenderer rend)
         {
             // probably don't kill anybody.
             // we might have to kill ourselves, if we aren't rendering anything.
@@ -70,7 +74,7 @@ namespace CrystalCore.View.Subviews
             if (renderTarget.Camera.TileBounds().Intersects(_renderData.Bounds))
             {
 
-                Render(sb);
+                Render(rend);
                 return true;
             }
             else
@@ -87,7 +91,7 @@ namespace CrystalCore.View.Subviews
         /// Subclasses of Subview use this method to do the actual drawing.
         /// </summary>
         /// <param name="sb"></param>
-        protected abstract void Render(SpriteBatch sb);
+        protected abstract void Render(IRenderer rend);
 
 
     }

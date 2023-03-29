@@ -27,7 +27,7 @@ namespace Crystalarium.Main
             this.shouldSkip = shouldSkip;
         }
 
-        public void Draw(IRenderer renderer)
+        public bool Draw(IRenderer renderer)
         {
             renderer.DrawString(Textures.Consolas, Title, new Point(100), 33, Color.White);
             renderer.DrawString(Textures.Consolas, returnMsg, new Point(120, 150), 22, Color.White);
@@ -48,7 +48,12 @@ namespace Crystalarium.Main
                 renderer.DrawString(Textures.Consolas, createMenuText(i), new Vector2(120, 150 + (25 * spacing)), 22, Color.White);
                 spacing++;
             }
+
+            return true;
+
         }
+
+
 
     }
 }

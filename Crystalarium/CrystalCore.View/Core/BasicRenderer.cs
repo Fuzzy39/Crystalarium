@@ -23,7 +23,7 @@ namespace CrystalCore.View.Core
             spriteBatch = sb;
         }
 
-        public void Draw(Texture2D texture, RotatedRect destination, Color color)
+        public void Draw(Texture2D texture, RotatedRect destination, Rectangle source, Color color)
         {
 
            
@@ -32,7 +32,9 @@ namespace CrystalCore.View.Core
             spriteBatch.Draw(
                 texture, 
                 destination.AsRectangle, 
-                null, color, destination.Rotation, 
+                source,
+                color, 
+                destination.Rotation, 
                 new(0),
                 SpriteEffects.None, 0f
             );
@@ -42,11 +44,6 @@ namespace CrystalCore.View.Core
         public void DrawString(FontFamily font, string text, Vector2 position, float height, Color color)
         {  
             font.Draw(spriteBatch, text, height, position, color);
-        }
-
-        public void DrawString(FontFamily font, string text, Point position, float height, Color color)
-        {
-            this.DrawString(font, text, position.ToVector2(), height, color);
         }
 
         void IBatchRenderer.Begin()

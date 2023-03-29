@@ -7,38 +7,45 @@ using System.Text;
 using CrystalCore.View.Configs;
 using CrystalCore.Model.Elements;
 using CrystalCore.Util.Graphics;
+using CrystalCore.View.Core;
 
 namespace CrystalCore.View.Subviews.Agents
 {
-    internal class AgentGhost : ViewObject
+    internal class AgentGhost : IRenderable
     {
         public Rectangle Bounds { get; set; } // the tile bounds of this ghost
         public Direction Facing { get; set; } // the direction this ghost is facing
 
         private AgentViewConfig config; // the type of agent this ghost descends from.
 
+        private Map map;
 
-
-        public AgentGhost(GridView v, AgentViewConfig conf, Point location, Direction facing) : base(v)
+        public AgentGhost(Map m, AgentViewConfig conf, Point location, Direction facing)
         {
             this.config = conf; // we use this template to figure out how to render ourselves.
             Bounds = new Rectangle(location, config.AgentType.GetSize(facing));
             Facing = facing;
+            map = m;
 
         }
 
-        internal override bool Draw(SpriteBatch sb)
+        public bool Draw(IRenderer renderer)
         {
-
             // preform shrinkage in this slightly nasty one liner.
             float shrink = config.Shrinkage;
             RectangleF realBounds = new RectangleF(Bounds).Inflate(-shrink, -shrink);
 
             // render the ghost.
-            renderTarget.Camera.RenderTexture(sb, config.DefaultTexture, realBounds, DetermineColor(), Facing);
+            renderer.Draw
+            (
+                config.DefaultTexture,
+                new RotatedRect(realBounds, Facing.ToRadians(), new(0)),
+                DetermineColor()
+            );
 
             return true;
         }
+    
 
 
         private Color DetermineColor()
@@ -46,7 +53,7 @@ namespace CrystalCore.View.Subviews.Agents
             Color c;
 
             // get the color of the agent. if the agent cannot be placed, make it red, instead.
-            if (Entity.IsValidLocation(renderTarget.Map, Bounds, Facing))
+            if (Entity.IsValidLocation(map, Bounds, Facing))
             {
                 // these ought to be exposed better.
                 c = config.Color; //Color.Green;
@@ -60,5 +67,7 @@ namespace CrystalCore.View.Subviews.Agents
             // make the color whiteish and transparent.
             return new Color(Color.Lerp(Color.White, c, .5f), .05f);
         }
+
+       
     }
 }
