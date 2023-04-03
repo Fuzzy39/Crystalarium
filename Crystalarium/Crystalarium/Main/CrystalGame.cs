@@ -29,10 +29,10 @@ namespace Crystalarium.Main
             
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 965; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 971; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         private double frameRate = 60;
-        private bool minimapEnabled = false;
+        private bool minimapEnabled = true; // setting false is useful for testing graphics stuff.
 
         internal Ruleset CurrentRuleset { get; set; }
 
@@ -422,8 +422,6 @@ namespace Crystalarium.Main
                 DrawMenu(width, height);    
             }
 
-            i += .01f;
-            //Engine.Renderer.Draw(Textures.testSquare, new RotatedRect(new(300), new(300), MathF.PI/2f, new(0)), Color.White);
             EndDraw(height);
 
             base.Draw(gameTime);
@@ -433,7 +431,7 @@ namespace Crystalarium.Main
         }
 
 
-        float i = 0;
+
 
         internal void SetErrorSplash(string s)
         {

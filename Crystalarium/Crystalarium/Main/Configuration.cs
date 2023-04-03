@@ -425,7 +425,7 @@ namespace Crystalarium.Main
             beams.AgentConfigs.Add(conf);
 
             // beams
-            beams.SignalConfig.SignalTexture = Textures.emitter;
+            beams.SignalConfig.SignalTexture = Textures.pixel;
             beams.SignalConfig.Color = new Color(230, 230, 150);
 
             // chunks

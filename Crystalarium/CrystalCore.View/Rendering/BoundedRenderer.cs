@@ -55,10 +55,6 @@ namespace CrystalCore.View.Rendering
         public void RenderTexture(Texture2D texture, Rectangle pixelBounds, Color c, Direction d)
         {
 
-         
-            _rend.Draw(texture, new RectangleF(pixelBounds), d, c);
-            return;
-
             // if the image is outside of our bounds, don't even bother.
             if (!ToAbsCoords(pixelBounds).Intersects(_pixelBoundry))
             {
