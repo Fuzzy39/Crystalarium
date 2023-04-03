@@ -327,7 +327,7 @@ namespace CrystalCore.View.Rendering
                 return;
             }
 
-            Console.WriteLine(rect.BoundingBox);
+            //Console.WriteLine(rect.BoundingBox);
 
             Point pixelCoords = TileToPixelCoords(rect.BoundingBox.Location) - new Point(1);
             Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale)) + new Point(1, 1);

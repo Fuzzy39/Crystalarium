@@ -53,7 +53,7 @@ namespace CrystalCore.Util.Graphics
         {
             get
             {
-                return new(X, Y);
+                return PositionOfSizeRelativePoint(0, 0);
             }
         }
 
@@ -62,7 +62,7 @@ namespace CrystalCore.Util.Graphics
 
             get
             {
-                return DistFromLoc(Width / 2f, Rotation);
+                return PositionOfSizeRelativePoint(.5f, 0f);
             }
         }
 
@@ -70,7 +70,7 @@ namespace CrystalCore.Util.Graphics
         {
             get
             {
-                return DistFromLoc(Width, Rotation);
+                return PositionOfSizeRelativePoint(1f, 0f);
             }
         }
 
@@ -106,7 +106,7 @@ namespace CrystalCore.Util.Graphics
         {
             get
             {
-                return DistFromLoc(Height, Rotation - (MathF.PI / 2f));
+                return PositionOfSizeRelativePoint(0, 1);
             }
         }
 
@@ -114,14 +114,7 @@ namespace CrystalCore.Util.Graphics
         {
             get
             {
-
-                float Xdisplacement = Width / 2f;
-
-                float dist = MathF.Sqrt(Height * Height + Xdisplacement * Xdisplacement);
-
-                float rot = Rotation - MathF.Atan(Height / Xdisplacement);
-
-                return DistFromLoc(dist, rot);
+                return PositionOfSizeRelativePoint(.5f, 1f);
             }
         }
 
@@ -131,11 +124,7 @@ namespace CrystalCore.Util.Graphics
         {
             get
             {
-                float dist = MathF.Sqrt(Height*Height+Width*Width);
-
-                float rot = Rotation-MathF.Atan(Height / Width);
-
-                return DistFromLoc(dist, rot);
+                return PositionOfSizeRelativePoint(1f, 1f);
             }
         }
 
@@ -166,10 +155,10 @@ namespace CrystalCore.Util.Graphics
             float OwnY = y * Height;
 
             // do a bit of trig
-            float realX = Cos(Rotation) * OwnX + Sin(Rotation) * OwnY;
+            float realX = Cos(-Rotation) * OwnX + Sin(-Rotation) * OwnY;
             float realY = Sin(Rotation) * OwnX + Cos(Rotation) * OwnY;
 
-            return new Vector2(realX,realY);
+            return new Vector2(realX+X,realY+Y);
 
         }
 

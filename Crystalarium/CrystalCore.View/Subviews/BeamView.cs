@@ -123,7 +123,7 @@ namespace CrystalCore.View.Subviews
             {
                 return ChannelState.Active;
             }
-
+             
             if (!hasEnd)
             {
                 return ChannelState.Unbounded;

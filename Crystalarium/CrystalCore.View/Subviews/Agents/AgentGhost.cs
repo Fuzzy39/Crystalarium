@@ -39,7 +39,7 @@ namespace CrystalCore.View.Subviews.Agents
             renderer.Draw
             (
                 config.DefaultTexture,
-                new RotatedRect(realBounds, Facing.ToRadians(), new(0)),
+                new RotatedRect(realBounds, Facing),
                 DetermineColor()
             );
 
