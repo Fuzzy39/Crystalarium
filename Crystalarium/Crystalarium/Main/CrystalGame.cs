@@ -165,7 +165,7 @@ namespace Crystalarium.Main
 
 
             // create the engine
-            Engine = new Engine(TargetElapsedTime, new SpriteBatch(GraphicsDevice));
+            Engine = new Engine(TargetElapsedTime, GraphicsDevice);
 
 
             try
@@ -376,8 +376,8 @@ namespace Crystalarium.Main
             frameRate += (((1 / gameTime.ElapsedGameTime.TotalSeconds) - frameRate) * 0.1);
 
             // setup
-            int width = GraphicsDevice.Viewport.Width;
-            int height = GraphicsDevice.Viewport.Height;
+            int width = (int)ScaledRenderer.Width;
+            int height = (int)ScaledRenderer.Height;
 
 
 

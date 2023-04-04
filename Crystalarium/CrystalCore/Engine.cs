@@ -67,7 +67,7 @@ namespace CrystalCore
 
 
 
-        public Engine(TimeSpan timeBetweenFrames, SpriteBatch sb)
+        public Engine(TimeSpan timeBetweenFrames, GraphicsDevice gd)
         {
             _sim = new SimulationManager(timeBetweenFrames.TotalSeconds);
             
@@ -75,7 +75,7 @@ namespace CrystalCore
 
             _saver = new MapSaver(this);
 
-            _primaryRenderer = new BasicRenderer(sb);
+            _primaryRenderer = new ScaledRenderer(gd);
 
 
             _viewports = new List<GridView>();
