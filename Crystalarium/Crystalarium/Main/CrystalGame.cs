@@ -32,7 +32,7 @@ namespace Crystalarium.Main
         private const int BUILD = 971; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         private double frameRate = 60;
-        private bool minimapEnabled = true; // setting false is useful for testing graphics stuff.
+        private bool minimapEnabled = false; // setting false is useful for testing graphics stuff.
 
         internal Ruleset CurrentRuleset { get; set; }
 
@@ -106,11 +106,11 @@ namespace Crystalarium.Main
                 return;
             }
 
-            view.Destroy();
-            view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
+            //view.Destroy();
+           // view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
 
             // prevent the camera from leaving the world.
-            view.SetCameraBound(true);
+            //view.SetCameraBound(true);
 
             if (minimapEnabled)
             {
@@ -185,7 +185,7 @@ namespace Crystalarium.Main
                 SetErrorSplash("Crystalarium's engine unexpectedly crashed during initialization." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
                     "\nA detailed description of the problem is below:\n\n" + e.ToString());
-                Engine = null;
+                //Engine = null;
                 return;
             }
 
@@ -282,10 +282,10 @@ namespace Crystalarium.Main
 
 
             // create a couple test viewports.
-            view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
+            //view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
             //view.Camera.MinScale = 1;
             // prevent the camera from leaving the world.
-            view.SetCameraBound(true);
+            //view.SetCameraBound(true);
 
 
             // setup the minimap.
@@ -327,7 +327,7 @@ namespace Crystalarium.Main
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
 
-            if (Engine.Controller.Context == "play")
+            /*if (Engine.Controller.Context == "play")
             {
                 view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
                 view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
@@ -339,7 +339,7 @@ namespace Crystalarium.Main
             {
                 // stop the camera
                 view.Camera.Velocity = new Vector3(0);
-            }
+            }*/
 
             // minimap positions
             if (minimapEnabled)
@@ -359,7 +359,7 @@ namespace Crystalarium.Main
                 SetErrorSplash("Crystalarium's engine unexpectedly crashed while updating the simulation." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
                     "\nA detailed description of the problem is below:\n\n" + e.ToString());
-                Engine = null;
+                //Engine = null;
                 return;
             }
 
@@ -379,7 +379,9 @@ namespace Crystalarium.Main
             int width = (int)ScaledRenderer.Width;
             int height = (int)ScaledRenderer.Height;
 
+            
 
+            
 
 
 
@@ -387,7 +389,7 @@ namespace Crystalarium.Main
             {
                 
                 errorSplash.Draw(GraphicsDevice);
-                EndDraw(height);
+                //EndDraw(height);
                
                 return;
             }
@@ -397,7 +399,7 @@ namespace Crystalarium.Main
             GraphicsDevice.Clear(new Color(70, 70, 70));
 
 
-            // tru to draw the game
+            // try to draw the game
             try
             {
                 Engine.StartDraw();
@@ -408,11 +410,14 @@ namespace Crystalarium.Main
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
                     "\nA detailed description of the problem is below:\n\n" + e.ToString());
                 Engine.EndDraw();
-                Engine = null;
+                //Engine = null;
                 return;
             }
 
+            Engine.Renderer.Draw(Textures.testSquare, new Rectangle(0, 0, 800, 900), Color.White);
+            Engine.EndDraw();
 
+            /*
             // Draw text on top of the game.
 
             DrawText(width, height, Math.Round(frameRate,1));
@@ -425,7 +430,7 @@ namespace Crystalarium.Main
             EndDraw(height);
 
             base.Draw(gameTime);
-
+            */
         
 
         }
@@ -485,11 +490,10 @@ namespace Crystalarium.Main
         {
           
             DrawString( "Milestone 7, Build " + BUILD, new (10, height - 25));
-            if (Engine != null)
-            {
-                Engine.EndDraw();
-                return;
-            }
+            
+            Engine.EndDraw();
+            return;
+            
 
         
             
