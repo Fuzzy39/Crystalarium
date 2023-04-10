@@ -34,6 +34,8 @@ namespace CrystalCore.Input
             get => Mouse.GetState().ScrollWheelValue - _prevMouseState.ScrollWheelValue;
         }
 
+        
+
         public string Context
         {
             get => _context;

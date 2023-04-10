@@ -13,6 +13,7 @@ using CrystalCore.Model.Rules;
 using CrystalCore.Model.Elements;
 using System.IO;
 using System.Xml;
+using CrystalCore.View.Core;
 
 namespace Crystalarium.Main
 {
@@ -603,16 +604,23 @@ namespace Crystalarium.Main
             {
                 CurrentType = game.CurrentRuleset.AgentTypes[i];   
             }
-        }
+        }   
 
         // returns the position of the mouse in tilespace relative to the maingame.view.
         internal Point GetMousePos()
         {
-            Point pixelCoords = game.view.LocalizeCoords(Mouse.GetState().Position);
+            // crude patch. Fix, someday?
+          
+            Vector2 virtualPixelCoords = ((ScaledRenderer)game.Engine.Renderer).ToVirtualResolution( Mouse.GetState().Position.ToVector2() );
+
+            Point pixelCoords = game.view.LocalizeCoords(virtualPixelCoords.ToPoint());
+
+            Console.WriteLine(Mouse.GetState().Position + "  "+pixelCoords);
 
             Vector2 clickCoords = game.view.Camera.PixelToTileCoords(pixelCoords);
 
             clickCoords.Floor();
+          
             return clickCoords.ToPoint();
 
         }

@@ -230,7 +230,7 @@ namespace CrystalCore.View
 
 
         private void DrawBackground(IRenderer rend)
-        {
+            {
             // do not draw the background if no background is set.
             if (CurrentSkin.GridViewBG == null)
                 return;

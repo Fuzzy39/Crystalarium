@@ -54,10 +54,10 @@ namespace CrystalCore.View.Core
 
      
             Vector2 size = new(position.Width, position.Height);
-            size = scale(size);
+            size = ToRealResolution(size);
 
             RotatedRect real = RotatedRect.FromBoundingLocation
-                (scale(position.BoundingBox.Location), size, position.Rotation);
+                (ToRealResolution(position.BoundingBox.Location), size, position.Rotation);
 
             base.Draw(texture, real, sourceRect, color);
 
@@ -68,15 +68,29 @@ namespace CrystalCore.View.Core
         {
             // won't work super well at different aspect ratios but I don't think there's a ton I can do about it.
             height = ScaleY(height);
+            position = ToRealResolution(position);
             base.DrawString(font, text, position, height, color);
         }
 
- 
 
-        private Vector2 scale(Vector2 toScale)
+        public Vector2 ToVirtualResolution(Vector2 realRes)
         {
-            return new(ScaleX(toScale.X), ScaleY(toScale.Y));
+
+            realRes.X *= internalResolution.X;
+            realRes.X /= windowResolution.X;
+
+            realRes.Y *= internalResolution.Y;
+            realRes.Y /= windowResolution.Y;
+
+            return realRes;
+
         }
+
+        private Vector2 ToRealResolution(Vector2 virtRes)
+        {
+            return new(ScaleX(virtRes.X), ScaleY(virtRes.Y));
+        }
+
         private float ScaleX(float x)
         {
             x/=internalResolution.X;

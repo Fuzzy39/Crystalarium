@@ -29,10 +29,10 @@ namespace Crystalarium.Main
             
         internal Engine Engine { get; private set; } // the 'engine'
 
-        private const int BUILD = 971; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 988; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         private double frameRate = 60;
-        private bool minimapEnabled = false; // setting false is useful for testing graphics stuff.
+        private bool minimapEnabled = true; // setting false is useful for testing graphics stuff.
 
         internal Ruleset CurrentRuleset { get; set; }
 
@@ -84,13 +84,11 @@ namespace Crystalarium.Main
                 Directory.CreateDirectory("Saves");
             }
 
-                
-
-           
 
             base.Initialize();
 
         }
+
 
         public void OnResize(object sender, EventArgs e)
         {
@@ -98,48 +96,20 @@ namespace Crystalarium.Main
             _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
 
             _graphics.ApplyChanges();
-            int width = GraphicsDevice.Viewport.Width;
-            int height = GraphicsDevice.Viewport.Height;
-
-            if (errorSplash != null)
-            {
-                return;
-            }
-
-            //view.Destroy();
-           // view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
-
-            // prevent the camera from leaving the world.
-            //view.SetCameraBound(true);
-
-            if (minimapEnabled)
-            {
-                minimap.Destroy();
-                SetupMinimap(width);
-            }
-
-           
-
         }
+
+
+
 
         protected override void LoadContent()
         {
-
-
-
-
 
 
             // initialize fonts
             Textures.testFont = Content.Load<SpriteFont>("Consolas12");
             Textures.Consolas = new FontFamily(
                 new SpriteFont[]{
-                //Content.Load<SpriteFont>("Consolas6"),
-               // Content.Load<SpriteFont>("Consolas12"),
-                // Content.Load<SpriteFont>("Consolas18"),
-               // Content.Load<SpriteFont>("Consolas24"),
                 Content.Load<SpriteFont>("Consolas48"),
-                //Content.Load<SpriteFont>("Consolas100"),
                 Content.Load<SpriteFont>("Consolas200")
                 });
 
@@ -160,8 +130,6 @@ namespace Crystalarium.Main
             Textures.notGate = Content.Load<Texture2D>("Agents/notgate");
             Textures.prism = Content.Load<Texture2D>("Agents/prism");
             Textures.stopper = Content.Load<Texture2D>("Agents/stopper");
-
-
 
 
             // create the engine
@@ -276,16 +244,16 @@ namespace Crystalarium.Main
             Map = Engine.addGrid(CurrentRuleset);
 
             Map.OnReset += actions.OnMapReset;
-            int width = GraphicsDevice.Viewport.Width;
-            int height = GraphicsDevice.Viewport.Height;
+            int width = (int)ScaledRenderer.Width;
+            int height = (int)ScaledRenderer.Height;
 
 
 
             // create a couple test viewports.
-            //view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
-            //view.Camera.MinScale = 1;
-            // prevent the camera from leaving the world.
-            //view.SetCameraBound(true);
+            view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
+            view.Camera.MinScale = 12;
+            //prevent the camera from leaving the world.
+            view.SetCameraBound(true);
 
 
             // setup the minimap.
@@ -293,7 +261,7 @@ namespace Crystalarium.Main
             {
                 SetupMinimap(width);
             }
-
+            
         }
 
         private void SetupMinimap(int width)
@@ -327,7 +295,7 @@ namespace Crystalarium.Main
 
             // this is temporary code, meant to demonstrate a viewport's capabilities.
 
-            /*if (Engine.Controller.Context == "play")
+            if (Engine.Controller.Context == "play")
             {
                 view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
                 view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
@@ -339,7 +307,7 @@ namespace Crystalarium.Main
             {
                 // stop the camera
                 view.Camera.Velocity = new Vector3(0);
-            }*/
+            }
 
             // minimap positions
             if (minimapEnabled)
@@ -414,10 +382,8 @@ namespace Crystalarium.Main
                 return;
             }
 
-            Engine.Renderer.Draw(Textures.testSquare, new Rectangle(0, 0, 800, 900), Color.White);
-            Engine.EndDraw();
-
-            /*
+                
+  
             // Draw text on top of the game.
 
             DrawText(width, height, Math.Round(frameRate,1));
@@ -430,7 +396,7 @@ namespace Crystalarium.Main
             EndDraw(height);
 
             base.Draw(gameTime);
-            */
+            
         
 
         }
@@ -488,7 +454,7 @@ namespace Crystalarium.Main
         // draw the build number, the most important thing!
         private void EndDraw(int height)
         {
-          
+
             DrawString( "Milestone 7, Build " + BUILD, new (10, height - 25));
             
             Engine.EndDraw();
