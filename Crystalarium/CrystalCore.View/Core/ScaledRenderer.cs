@@ -52,9 +52,27 @@ namespace CrystalCore.View.Core
         {
             // I somehow have a hunch that this math won't work right the first time...
 
-     
-            Vector2 size = new(position.Width, position.Height);
-            size = ToRealResolution(size);
+
+            Vector2 size;
+            float rot = position.Rotation;
+            if((rot < -PI/2f) || (rot>0 && rot<=PI/2f))
+            {
+                // when a rectangle is rotated a certain ammount, height and width should be scaled as opposities
+                // this code ought to be a seperate method but whatever.    
+                size  = new(position.Height, position.Width);
+                size = ToRealResolution(size);
+                float x, y;
+                size.Deconstruct(out y, out x);
+                size = new(x, y);
+
+            }
+            else
+            {
+                size = new(position.Width, position.Height);
+                size = ToRealResolution(size);
+            }
+
+                
 
             RotatedRect real = RotatedRect.FromBoundingLocation
                 (ToRealResolution(position.BoundingBox.Location), size, position.Rotation);
