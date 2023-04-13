@@ -31,7 +31,7 @@ namespace Crystalarium.Main
 
         private const int BUILD = 988; // I like to increment this number every time I run the code after changing it. I don't always though.
 
-        private double frameRate = 60;
+       
         private bool minimapEnabled = true; // setting false is useful for testing graphics stuff.
 
         internal Ruleset CurrentRuleset { get; set; }
@@ -340,16 +340,6 @@ namespace Crystalarium.Main
         protected override void Draw(GameTime gameTime)
         {
 
-           
-            frameRate += (((1 / gameTime.ElapsedGameTime.TotalSeconds) - frameRate) * 0.1);
-
-            // setup
-            int width = (int)ScaledRenderer.Width;
-            int height = (int)ScaledRenderer.Height;
-
-            
-
-            
 
 
 
@@ -373,7 +363,7 @@ namespace Crystalarium.Main
                 Engine.StartDraw();
             }
             catch (Exception e)
-            {
+                
                 SetErrorSplash("Crystalarium's engine unexpectedly crashed while rendering graphics." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
                     "\nA detailed description of the problem is below:\n\n" + e.ToString());
@@ -384,16 +374,7 @@ namespace Crystalarium.Main
 
                 
   
-            // Draw text on top of the game.
-
-            DrawText(width, height, Math.Round(frameRate,1));
-
-            if (Engine.Controller.Context == "menu")
-            {
-                DrawMenu(width, height);    
-            }
-
-            EndDraw(height);
+         
 
             base.Draw(gameTime);
             
@@ -409,61 +390,7 @@ namespace Crystalarium.Main
             errorSplash = new ErrorSplash(s, new SpriteBatch(GraphicsDevice));
         }
 
-        private void DrawString(string s, Vector2 pos)
-        {
-            Engine.Renderer.DrawString(Textures.Consolas, s, pos, 22, Color.White);
-        }
-
-        // draw info on top of the game.
-        private void DrawText(int width, int height, double frameRate)
-        {
-
-
-            string info = "Hovering over: " + actions.GetMousePos().X + ", " + actions.GetMousePos().Y;
-            if (Engine.Controller.Context == "menu")
-            {
-                info = "Hovering over: N/A, N/A";
-            }
-
-            string rules = "Ruleset: " + CurrentRuleset.Name;
-
-            // some debug text. We'll clear this out sooner or later...
-          
-      
-            DrawString( "FPS: "+frameRate+" Sim Speed: "+Engine.Sim.ActualStepsPS + " Steps/Second Chunks: " 
-                + Map.ChunkCount +" Agents: "+Map.AgentCount+" Connections: "+Map.ConnectionCount, new (10, 10));
-
-            DrawString( "Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new(10, 30));
-
-            DrawString( "Press "+Engine.Controller.GetAction("Instructions").FirstKeybindAsString()+" For instructions.", new (10, height - 50));
-
-        }
-
-        //draw the crude menu for switching rulesets.
-        private void DrawMenu(int width, int height)
-        { 
-            Engine.Renderer.Draw(Textures.pixel, new RotatedRect( new(0), new (width,height), 0, new() ), new Color(0,0,0,180) );
-            currentMenu.Draw(Engine.Renderer);
-
-        }
-
-            
-
-      
-
-        // draw the build number, the most important thing!
-        private void EndDraw(int height)
-        {
-
-            DrawString( "Milestone 7, Build " + BUILD, new (10, height - 25));
-            
-            Engine.EndDraw();
-            return;
-            
-
-        
-            
-        }
+       dt
 
 
     }

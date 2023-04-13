@@ -13,39 +13,23 @@ namespace CrystalCore.View.Core
     public class ScaledRenderer : BasicRenderer, IBatchRenderer
     {
 
-        private static Vector2 internalResolution = new Vector2(1600,900);
-        private Vector2 windowResolution;
-        private GraphicsDevice graphicsDevice;
-
-        public static float Width
+        public new Vector2 Size
         {
-            get
-            {
-                return internalResolution.X;
-            }
+            get { return new Vector2(1600, 900); }
         }
 
-
-        public static float Height
+        private Vector2 WindowSize
         {
-            get
-            {
-                return internalResolution.Y;
-            }
+            get { return base.Size; }
         }
 
-        public ScaledRenderer(GraphicsDevice gd): base(new SpriteBatch(gd))
-        {
+        public ScaledRenderer(GraphicsDevice gd) : base(gd) { }
 
-            windowResolution = gd.Viewport.Bounds.Size.ToVector2();
-            graphicsDevice = gd;
-
-        }
 
         public override void End()
         {
             base.End();
-            windowResolution = graphicsDevice.Viewport.Bounds.Size.ToVector2();
+           
         }
 
         public override void Draw(Texture2D texture, RotatedRect position, Rectangle sourceRect, Color color)
@@ -61,6 +45,8 @@ namespace CrystalCore.View.Core
                 // this code ought to be a seperate method but whatever.    
                 size  = new(position.Height, position.Width);
                 size = ToRealResolution(size);
+
+                // swap components
                 float x, y;
                 size.Deconstruct(out y, out x);
                 size = new(x, y);
@@ -94,11 +80,11 @@ namespace CrystalCore.View.Core
         public Vector2 ToVirtualResolution(Vector2 realRes)
         {
 
-            realRes.X *= internalResolution.X;
-            realRes.X /= windowResolution.X;
+            realRes.X *= Size.X;
+            realRes.X /= WindowSize.X;
 
-            realRes.Y *= internalResolution.Y;
-            realRes.Y /= windowResolution.Y;
+            realRes.Y *= Size.Y;
+            realRes.Y /= WindowSize.Y;
 
             return realRes;
 
@@ -111,15 +97,15 @@ namespace CrystalCore.View.Core
 
         private float ScaleX(float x)
         {
-            x/=internalResolution.X;
-            x*=windowResolution.X;
+            x/=Size.X;
+            x*=WindowSize.X;
             return x;
         }
 
         private float ScaleY(float y)
         {
-            y /= internalResolution.Y;
-            y *= windowResolution.Y;
+            y /= Size.Y;
+            y *= WindowSize.Y;
             return y;
         }
 

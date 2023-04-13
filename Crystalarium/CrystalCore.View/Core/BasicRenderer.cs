@@ -16,11 +16,20 @@ namespace CrystalCore.View.Core
     public class BasicRenderer: IBatchRenderer
     {
 
+        private GraphicsDevice gd;
         private SpriteBatch spriteBatch;
 
-        public BasicRenderer(SpriteBatch sb)
+        public Vector2 Size
         {
-            spriteBatch = sb;
+            get
+            {
+                return gd.Viewport.Bounds.Size.ToVector2();
+            }
+        }
+
+        public BasicRenderer(GraphicsDevice gd)
+        {
+            spriteBatch = new SpriteBatch(gd);
         }
 
         public virtual void Draw(Texture2D texture, RotatedRect destination, Rectangle source, Color color)

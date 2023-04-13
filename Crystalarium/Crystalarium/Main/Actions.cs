@@ -486,6 +486,8 @@ namespace Crystalarium.Main
 
                  });
 
+
+
             c.CreateControl("MenuAction1", Keystate.OnPress)
                 .AddAction("play", () => SwitchAgent(0))
                 .AddAction("menu", () => MenuAction(0))
@@ -615,7 +617,6 @@ namespace Crystalarium.Main
 
             Point pixelCoords = game.view.LocalizeCoords(virtualPixelCoords.ToPoint());
 
-            Console.WriteLine(Mouse.GetState().Position + "  "+pixelCoords);
 
             Vector2 clickCoords = game.view.Camera.PixelToTileCoords(pixelCoords);
 
