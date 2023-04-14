@@ -48,13 +48,6 @@ namespace Crystalarium.Main
 
             
 
-        internal Menu currentMenu = null;
-
-        internal Menu RulesetMenu { get; private set; }
-        internal Menu SaveMenu { get; private set; }
-        internal Menu LoadMenu { get; private set; }
-
-        internal Menu InstructionsMenu { get; private set; }
 
         public CrystalGame()
         {
@@ -105,31 +98,7 @@ namespace Crystalarium.Main
         {
 
 
-            // initialize fonts
-            Textures.testFont = Content.Load<SpriteFont>("Consolas12");
-            Textures.Consolas = new FontFamily(
-                new SpriteFont[]{
-                Content.Load<SpriteFont>("Consolas48"),
-                Content.Load<SpriteFont>("Consolas200")
-                });
-
-            // textures.
-            Textures.pixel = Content.Load<Texture2D>("pixel");
-            Textures.tile = Content.Load<Texture2D>("tile");
-            Textures.testSquare = Content.Load<Texture2D>("testSquare");
-            Textures.viewboxBG = Content.Load<Texture2D>("ViewportBG");
-            Textures.chunkGrid = Content.Load<Texture2D>("chunkGrid");
-            Textures.altChunkGrid = Content.Load<Texture2D>("AltChunkGrid");
-            Textures.sampleAgent = Content.Load<Texture2D>("SampleAgent");
-
-            // agent textures
-            Textures.emitter = Content.Load<Texture2D>("Agents/emitter");
-            Textures.channel = Content.Load<Texture2D>("Agents/channel");
-            Textures.luminalGate = Content.Load<Texture2D>("Agents/luminalGate");
-            Textures.mirror = Content.Load<Texture2D>("Agents/mirror");
-            Textures.notGate = Content.Load<Texture2D>("Agents/notgate");
-            Textures.prism = Content.Load<Texture2D>("Agents/prism");
-            Textures.stopper = Content.Load<Texture2D>("Agents/stopper");
+            Textures.LoadContent(Content);
 
 
             // create the engine
@@ -166,91 +135,18 @@ namespace Crystalarium.Main
             actions = new Actions(Engine.Controller, this);
 
             // Create menus ( this feels like a very ugly hack)
-            // well, what is ui structure but a bunch of data definitions and hooks into actual code?
-            // this will be expanded on in the future, I bet.
-
-            // all of this is actually hideous
-            // horrible
-            // I despise looking at this
-
-
-            RulesetMenu = new Menu("Switch Ruleset?",
-                  "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
-                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
-
-                (int i) => { return "Press " + i + " to " + "switch to ruleset '" + Engine.Rulesets[i - 1].Name + "'."; },
-                (int i) => { return false; },
-                (int i) => { return Engine.Rulesets.Count < i; });
-
-            SaveMenu = new Menu("Save Map",
-                 "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
-                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
-                (int i) =>
-                {
-                    string path = Path.Combine("Saves", i + ".xml");
-                    return "Press " + i + " to " + "save in slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB).") : "Empty).");
-
-                },
-                (int i) => { return false; },
-                 (int i) => { return false; }
-                );
-
-
-            LoadMenu = new Menu("Load Map",
-                 "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
-                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
-                (int i) =>
-                {
-                    string path = Path.Combine("Saves", i + ".xml");
-                    return "Press " + i + " to " + "load from slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB).") : "Empty).");
-
-                },
-                (int i) => { return false; },
-                (int i) => { return !File.Exists(Path.Combine("Saves", i + ".xml")); }
-                );
-
-            InstructionsMenu = new Menu("Controls",
-                "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
-                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
-             (int i) => // mostly this part, ew
-             {
-                 Controller c = Engine.Controller;
-                 return "These are Crystalarium's Controls. They can be edited in Settings/Controls.xml." +
-
-                 "\n\nCamera: Move: " + c.GetAction("CamUp").FirstKeybindAsString() + c.GetAction("CamLeft").FirstKeybindAsString()
-                 + c.GetAction("CamDown").FirstKeybindAsString() + c.GetAction("CamRight").FirstKeybindAsString()
-                 + ". Zoom: Scrollwheel. Pan: " + c.GetAction("Pan").FirstKeybindAsString()
-                 + ". Toggle Debug View: " + c.GetAction("ToggleDebugView").FirstKeybindAsString() +
-
-                 ".\nInteract: Place: " + c.GetAction("PlaceAgent").FirstKeybindAsString() + ". Remove: "
-                 + c.GetAction("RemoveAgent").FirstKeybindAsString() + ". Rotate: " + c.GetAction("RotateAgent").FirstKeybindAsString() +
-                 ".\nSelect Agents: Previous/Next Agent: " + c.GetAction("PrevAgent").FirstKeybindAsString() + ", " + c.GetAction("NextAgent").FirstKeybindAsString() +
-                 ". Select: Number keys. Pipette: " + c.GetAction("Pipette").FirstKeybindAsString() + "." +
-
-                 "\nSimulation: Pause/Unpause: " + c.GetAction("ToggleSim").FirstKeybindAsString() +
-                 ". Single Step: " + c.GetAction("SimStep").FirstKeybindAsString() + ". Decrease/Increase Speed: " +
-                 c.GetAction("DecreaseSimSpeed").FirstKeybindAsString() + ", " + c.GetAction("IncreaseSimSpeed").FirstKeybindAsString() +
-
-                 ".\nOther: Switch Ruleset: " + c.GetAction("OpenRulesetMenu").FirstKeybindAsString() + ". Save: " + c.GetAction("Save").FirstKeybindAsString() +
-                 ". Load: " + c.GetAction("Load").FirstKeybindAsString() + ".";
-
-
-             },
-             (int i) => { return i > 1; },
-             (int i) => { return false; }
-             );
+           
 
             // create a test grid, and do some test things to it.
             Map = Engine.addGrid(CurrentRuleset);
 
             Map.OnReset += actions.OnMapReset;
-            int width = (int)ScaledRenderer.Width;
-            int height = (int)ScaledRenderer.Height;
 
 
+            IBatchRenderer r = (IBatchRenderer)Engine.Renderer; 
 
             // create a couple test viewports.
-            view = Engine.addView(Map, 0, 0, width, height, Configuration.DefaultSkin);
+            view = Engine.addView(Map, 0, 0, (int)r.Width, (int)r.Height, Configuration.DefaultSkin);
             view.Camera.MinScale = 12;
             //prevent the camera from leaving the world.
             view.SetCameraBound(true);
@@ -259,7 +155,7 @@ namespace Crystalarium.Main
             // setup the minimap.
             if (minimapEnabled)
             {
-                SetupMinimap(width);
+                SetupMinimap((int)r.Width);
             }
             
         }
@@ -363,6 +259,7 @@ namespace Crystalarium.Main
                 Engine.StartDraw();
             }
             catch (Exception e)
+            { 
                 
                 SetErrorSplash("Crystalarium's engine unexpectedly crashed while rendering graphics." +
                     "\nIt would really be a help if you could report this problem, so it can get fixed." +
@@ -372,10 +269,10 @@ namespace Crystalarium.Main
                 return;
             }
 
-                
-  
-         
 
+
+
+            Engine.EndDraw();
             base.Draw(gameTime);
             
         
@@ -390,7 +287,7 @@ namespace Crystalarium.Main
             errorSplash = new ErrorSplash(s, new SpriteBatch(GraphicsDevice));
         }
 
-       dt
+       
 
 
     }

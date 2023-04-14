@@ -1,8 +1,12 @@
-﻿using CrystalCore.Util.Graphics;
+﻿using CrystalCore.Input;
+using CrystalCore.Util.Graphics;
 using CrystalCore.View.Core;
+using CrystalCore;
+using CrystalCore.Model.Elements;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,23 +16,115 @@ namespace Crystalarium.Main
     internal class CrudeUI
     {
 
+        private CrystalGame game;
+
         private double frameRate = 60;
 
-        public CrudeUI()
+
+        internal Menu currentMenu = null;
+
+        internal Menu RulesetMenu { get; private set; }
+        internal Menu SaveMenu { get; private set; }
+        internal Menu LoadMenu { get; private set; }
+
+        internal Menu InstructionsMenu { get; private set; }
+
+
+
+        public CrudeUI(CrystalGame game)
         {
 
+            this.game = game;
+
+
+            // well, what is ui structure but a bunch of data definitions and hooks into actual code?
+            // this will be expanded on in the future, I bet.
+
+            // all of this is actually hideous
+            // horrible
+            // I despise looking at this
+            Engine Engine = game.Engine;
+
+            RulesetMenu = new Menu("Switch Ruleset?",
+                  "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
+                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
+
+                (int i) => { return "Press " + i + " to " + "switch to ruleset '" + Engine.Rulesets[i - 1].Name + "'."; },
+                (int i) => { return false; },
+                (int i) => { return Engine.Rulesets.Count < i; });
+
+            SaveMenu = new Menu("Save Map",
+                 "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
+                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
+                (int i) =>
+                {
+                    string path = Path.Combine("Saves", i + ".xml");
+                    return "Press " + i + " to " + "save in slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB).") : "Empty).");
+
+                },
+                (int i) => { return false; },
+                 (int i) => { return false; }
+                );
+
+
+            LoadMenu = new Menu("Load Map",
+                 "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
+                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
+                (int i) =>
+                {
+                    string path = Path.Combine("Saves", i + ".xml");
+                    return "Press " + i + " to " + "load from slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB).") : "Empty).");
+
+                },
+                (int i) => { return false; },
+                (int i) => { return !File.Exists(Path.Combine("Saves", i + ".xml")); }
+                );
+
+            InstructionsMenu = new Menu("Controls",
+                "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
+                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
+             (int i) => // mostly this part, ew
+             {
+                 Controller c = Engine.Controller;
+                 return "These are Crystalarium's Controls. They can be edited in Settings/Controls.xml." +
+
+                 "\n\nCamera: Move: " + c.GetAction("CamUp").FirstKeybindAsString() + c.GetAction("CamLeft").FirstKeybindAsString()
+                 + c.GetAction("CamDown").FirstKeybindAsString() + c.GetAction("CamRight").FirstKeybindAsString()
+                 + ". Zoom: Scrollwheel. Pan: " + c.GetAction("Pan").FirstKeybindAsString()
+                 + ". Toggle Debug View: " + c.GetAction("ToggleDebugView").FirstKeybindAsString() +
+
+                 ".\nInteract: Place: " + c.GetAction("PlaceAgent").FirstKeybindAsString() + ". Remove: "
+                 + c.GetAction("RemoveAgent").FirstKeybindAsString() + ". Rotate: " + c.GetAction("RotateAgent").FirstKeybindAsString() +
+                 ".\nSelect Agents: Previous/Next Agent: " + c.GetAction("PrevAgent").FirstKeybindAsString() + ", " + c.GetAction("NextAgent").FirstKeybindAsString() +
+                 ". Select: Number keys. Pipette: " + c.GetAction("Pipette").FirstKeybindAsString() + "." +
+
+                 "\nSimulation: Pause/Unpause: " + c.GetAction("ToggleSim").FirstKeybindAsString() +
+                 ". Single Step: " + c.GetAction("SimStep").FirstKeybindAsString() + ". Decrease/Increase Speed: " +
+                 c.GetAction("DecreaseSimSpeed").FirstKeybindAsString() + ", " + c.GetAction("IncreaseSimSpeed").FirstKeybindAsString() +
+
+                 ".\nOther: Switch Ruleset: " + c.GetAction("OpenRulesetMenu").FirstKeybindAsString() + ". Save: " + c.GetAction("Save").FirstKeybindAsString() +
+                 ". Load: " + c.GetAction("Load").FirstKeybindAsString() + ".";
+
+
+             },
+             (int i) => { return i > 1; },
+             (int i) => { return false; }
+             );
+
+
+          
         }
 
-        public void Draw(IBatchRenderer rend)
+        public void Draw(IBatchRenderer rend, GameTime gameTime)
         {
 
-           
+            frameRate += (((1 / gameTime.ElapsedGameTime.TotalSeconds) - frameRate) * 0.1);
 
             // Draw text on top of the game.
 
             DrawText( rend);
 
-            if (Engine.Controller.Context == "menu")
+            if (game.Engine.Controller.Context == "menu")
             {
                 DrawMenu(rend);
             }
@@ -45,7 +141,9 @@ namespace Crystalarium.Main
         private void DrawText( IBatchRenderer rend)
         {
 
-            frameRate += (((1 / gameTime.ElapsedGameTime.TotalSeconds) - frameRate) * 0.1);
+
+            Engine Engine = game.Engine;
+            Map Map = game.Map;
 
             string info = "Hovering over: " + actions.GetMousePos().X + ", " + actions.GetMousePos().Y;
             if (Engine.Controller.Context == "menu")
@@ -53,17 +151,17 @@ namespace Crystalarium.Main
                 info = "Hovering over: N/A, N/A";
             }
 
-            string rules = "Ruleset: " + CurrentRuleset.Name;
+            string rules = "Ruleset: " + game.CurrentRuleset.Name;
 
             // some debug text. We'll clear this out sooner or later...
 
 
             DrawString("FPS: " + Math.Round(frameRate, 1) + " Sim Speed: " + Engine.Sim.ActualStepsPS + " Steps/Second Chunks: "
-                + Map.ChunkCount + " Agents: " + Map.AgentCount + " Connections: " + Map.ConnectionCount, new Point(10, 10));
+                + Map.ChunkCount + " Agents: " + Map.AgentCount + " Connections: " + Map.ConnectionCount, new(10, 10), rend);
 
-            DrawString("Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Point(10, 30));
+            DrawString("Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Point(10, 30), rend);
 
-            DrawString("Press " + Engine.Controller.GetAction("Instructions").FirstKeybindAsString() + " For instructions.", new Point(10, (int)(rend.Height) - 50));
+            DrawString("Press " + Engine.Controller.GetAction("Instructions").FirstKeybindAsString() + " For instructions.", new(10, rend.Height - 50), rend);
 
         }
 
@@ -85,7 +183,7 @@ namespace Crystalarium.Main
 
             DrawString("Milestone 7, Build " + BUILD, new Vector2(10, rend.Height - 25), rend);
 
-            Engine.EndDraw();
+            
             return;
 
 
