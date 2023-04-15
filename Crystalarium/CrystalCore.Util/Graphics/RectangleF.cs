@@ -32,7 +32,11 @@ namespace CrystalCore.Util.Graphics
 
         public Rectangle toRectangle()
         {
-            return new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
+            return new Rectangle(
+                (int)MathF.Floor(X), 
+                (int)MathF.Floor(Y), 
+                (int)MathF.Ceiling(Width), 
+                (int)MathF.Ceiling(Height));
         }
 
         public float X { get; set; }

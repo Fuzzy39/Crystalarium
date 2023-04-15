@@ -145,7 +145,7 @@ namespace Crystalarium.Main
             Engine Engine = game.Engine;
             Map Map = game.Map;
 
-            string info = "Hovering over: " + actions.GetMousePos().X + ", " + actions.GetMousePos().Y;
+            string info = "Hovering over: " + game.Controls.GetMousePos().X + ", " + game.Controls.GetMousePos().Y;
             if (Engine.Controller.Context == "menu")
             {
                 info = "Hovering over: N/A, N/A";
@@ -159,7 +159,7 @@ namespace Crystalarium.Main
             DrawString("FPS: " + Math.Round(frameRate, 1) + " Sim Speed: " + Engine.Sim.ActualStepsPS + " Steps/Second Chunks: "
                 + Map.ChunkCount + " Agents: " + Map.AgentCount + " Connections: " + Map.ConnectionCount, new(10, 10), rend);
 
-            DrawString("Placing: " + actions.CurrentType.Name + " (facing " + actions.Rotation + ") \n" + info + "\n" + rules, new Point(10, 30), rend);
+            DrawString("Placing: " + game.Controls.CurrentType.Name + " (facing " + game.Controls.Rotation + ") \n" + info + "\n" + rules, new(10, 30), rend);
 
             DrawString("Press " + Engine.Controller.GetAction("Instructions").FirstKeybindAsString() + " For instructions.", new(10, rend.Height - 50), rend);
 
@@ -181,7 +181,7 @@ namespace Crystalarium.Main
         private void EndDraw( IBatchRenderer rend)
         {
 
-            DrawString("Milestone 7, Build " + BUILD, new Vector2(10, rend.Height - 25), rend);
+            DrawString("Milestone 7, Build " + CrystalGame.BUILD, new Vector2(10, rend.Height - 25), rend);
 
             
             return;

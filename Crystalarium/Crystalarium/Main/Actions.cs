@@ -428,12 +428,12 @@ namespace Crystalarium.Main
                 {
 
                     c.Context = "menu";
-                    game.currentMenu = game.RulesetMenu;
+                    game.UI.currentMenu = game.UI.RulesetMenu;
                 })
                .AddAction("menu", () =>
                 {
                     c.Context = "play";
-                    game.currentMenu = null;
+                    game.UI.currentMenu = null;
                 });
 
             c.CreateControl("Close", Keystate.OnPress)
@@ -444,7 +444,7 @@ namespace Crystalarium.Main
                 .AddAction("menu", () =>
                 {
                     c.Context = "play";
-                    game.currentMenu = null;
+                    game.UI.currentMenu = null;
                 });
 
 
@@ -452,7 +452,7 @@ namespace Crystalarium.Main
             c.CreateControl("Save", Keystate.OnPress)
                 .AddAction("", () =>
                 {
-                    game.currentMenu = game.SaveMenu;
+                    game.UI.currentMenu = game.UI.SaveMenu;
                     c.Context = "menu";
 
                 });
@@ -460,7 +460,7 @@ namespace Crystalarium.Main
             c.CreateControl("Load", Keystate.OnPress)
                  .AddAction("", () =>
                  {
-                     game.currentMenu = game.LoadMenu;
+                     game.UI.currentMenu = game.UI.LoadMenu;
                      c.Context = "menu";
 
                  });
@@ -469,19 +469,19 @@ namespace Crystalarium.Main
             c.CreateControl("Instructions", Keystate.OnPress)
                  .AddAction("play", () =>
                  {
-                     game.currentMenu = game.InstructionsMenu;
+                     game.UI.currentMenu = game.UI.InstructionsMenu;
                      c.Context = "menu";
 
                  })
                  .AddAction("menu", () =>
                  {
-                     if(game.currentMenu == game.InstructionsMenu)
+                     if(game.UI.currentMenu == game.UI.InstructionsMenu)
                      {
                          c.Context = "play";
-                         game.currentMenu=null;
+                         game.UI.currentMenu=null;
                      }
 
-                     game.currentMenu = game.InstructionsMenu;
+                     game.UI.currentMenu = game.UI.InstructionsMenu;
 
 
                  });
@@ -548,7 +548,7 @@ namespace Crystalarium.Main
 
         private void MenuAction(int i)
         {
-            if(game.currentMenu==game.RulesetMenu)
+            if(game.UI.currentMenu==game.UI.RulesetMenu)
             {
                 SwitchRuleset(i);
                 return;
@@ -557,11 +557,11 @@ namespace Crystalarium.Main
             string path =Path.Combine("Saves", (i + 1) + ".xml");
 
 
-            if (game.currentMenu == game.SaveMenu)
+            if (game.UI.currentMenu == game.UI.SaveMenu)
             {
                 game.Engine.saveManager.Save(path, game.Map);
                 c.Context = "play";
-                game.currentMenu = null;
+                game.UI.currentMenu = null;
                 return;
             }
 
@@ -582,7 +582,7 @@ namespace Crystalarium.Main
             }
 
             c.Context = "play";
-            game.currentMenu = null;
+            game.UI.currentMenu = null;
         }
 
         private void SwitchRuleset(int i)

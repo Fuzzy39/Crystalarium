@@ -53,7 +53,7 @@ namespace CrystalCore
             get => _controller;
         }
 
-        public IRenderer Renderer
+        public IBatchRenderer Renderer
         {
             get => _primaryRenderer;
         }

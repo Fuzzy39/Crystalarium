@@ -29,6 +29,7 @@ namespace CrystalCore.View.Core
 
         public BasicRenderer(GraphicsDevice gd)
         {
+            this.gd = gd;
             spriteBatch = new SpriteBatch(gd);
         }
 

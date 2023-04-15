@@ -24,29 +24,34 @@ namespace Crystalarium.Main
          * 
          */
 
+
+        // Misc.
         private GraphicsDeviceManager _graphics;
 
-            
-        internal Engine Engine { get; private set; } // the 'engine'
-
-        private const int BUILD = 988; // I like to increment this number every time I run the code after changing it. I don't always though.
-
+        internal const int BUILD = 996; // I like to increment this number every time I run the code after changing it. I don't always though.
        
         private bool minimapEnabled = true; // setting false is useful for testing graphics stuff.
 
-        internal Ruleset CurrentRuleset { get; set; }
+
+
+        // Engine facing objects
+        internal Engine Engine { get; private set; } // the 'engine'
 
         internal GridView view { get; private set; } // the primary view
         private GridView minimap; // the minimap
-
         internal Map Map { get; private set; } // the world seen by the view and minimap
 
-        private Actions actions; // this sets up our user interaction.
+
+
+        // Objects to Setup controls, rulesets, and the (horrible) UI, respectively.
+        internal Actions Controls { get; private set; }
         internal Configuration Configuration{get; private set;}
+        internal CrudeUI UI { get; private set; }
 
+
+        // Engine external game state
         private ErrorSplash errorSplash = null;
-
-            
+        internal Ruleset CurrentRuleset { get; set; }
 
 
         public CrystalGame()
@@ -101,8 +106,11 @@ namespace Crystalarium.Main
             Textures.LoadContent(Content);
 
 
+
             // create the engine
             Engine = new Engine(TargetElapsedTime, GraphicsDevice);
+
+           
 
 
             try
@@ -127,20 +135,18 @@ namespace Crystalarium.Main
             }
 
 
-
-
             Engine.Sim.TargetStepsPS = 10;
 
             // setup our interaction related code and register it with the engine.
-            actions = new Actions(Engine.Controller, this);
+            Controls = new Actions(Engine.Controller, this);
 
-            // Create menus ( this feels like a very ugly hack)
-           
+            // Make the UI
+            UI = new CrudeUI(this);
 
             // create a test grid, and do some test things to it.
             Map = Engine.addGrid(CurrentRuleset);
 
-            Map.OnReset += actions.OnMapReset;
+            Map.OnReset += Controls.OnMapReset;
 
 
             IBatchRenderer r = (IBatchRenderer)Engine.Renderer; 
@@ -197,7 +203,7 @@ namespace Crystalarium.Main
                 view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
 
                     // create ghosts.
-                view.CreateGhost(actions.CurrentType, actions.GetMousePos(), actions.Rotation);
+                view.CreateGhost(Controls.CurrentType, Controls.GetMousePos(), Controls.Rotation);
             }
             else
             {
@@ -269,7 +275,7 @@ namespace Crystalarium.Main
                 return;
             }
 
-
+            UI.Draw(Engine.Renderer, gameTime);
 
 
             Engine.EndDraw();
