@@ -108,7 +108,7 @@ namespace CrystalCore.View.Subviews
 
 
                 renderBounds = RenderFull(renderBounds, facing);
-                RotatedRect actualBounds = RotatedRect.FromBoundingLocation(renderBounds.Location, renderBounds.Size, facing.ToRadians());
+                RotatedRect actualBounds = RotatedRect.FromFootprint(renderBounds, facing);
 
                 rend.Draw(config.SignalTexture, actualBounds, DetermineColor(cs));
 

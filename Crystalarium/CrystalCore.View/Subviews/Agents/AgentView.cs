@@ -49,7 +49,7 @@ namespace CrystalCore.View.Subviews.Agents
 
             // render the Agent.
 
-            RotatedRect pos = new(ShrinkBorders(), ((Entity)RenderData).Facing);
+            RotatedRect pos = RotatedRect.FromFootprint(ShrinkBorders(), ((Entity)RenderData).Facing);
 
             rend.Draw(config.DefaultTexture, pos, config.Color);
 

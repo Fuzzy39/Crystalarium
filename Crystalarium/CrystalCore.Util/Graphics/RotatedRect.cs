@@ -28,16 +28,33 @@ namespace CrystalCore.Util.Graphics
         /// </summary>
         public float Rotation { get; private set; }
 
-        private Vector2 DistFromLoc(float dist, float rot)
+        /// <summary>
+        /// The size of the rectangle, width and height swapping when it is rotated sideways.
+        /// </summary>
+        public Vector2 AdjustedSize
         {
-            return new(X + MathF.Cos(rot) * dist, Y + MathF.Sin(rot) * dist);
+            get
+            {
+                
+                if(DirectionUtil.FromRadians(Rotation).IsHorizontal())
+                {
+                    return new(Height, Width);
+                }
+                else
+                {
+                    return new(Width, Height);
+                }
+            }
         }
+
 
         public RectangleF AsRectangleF
         {
             get
             {
-                return new RectangleF(X, Y, Width, Height);
+                float w = Width;
+                float h = Height;
+                return new RectangleF(X, Y, w, h);
             }
         }
 
@@ -243,6 +260,13 @@ namespace CrystalCore.Util.Graphics
 
         // valid rotation values are between 0 and pi/2. MAKE IT SO.
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="BoundingLocation"></param>
+        /// <param name="size">Size of interior rectangle</param>
+        /// <param name="rotation"></param>
+        /// <returns></returns>
         public static RotatedRect FromBoundingLocation(Vector2 BoundingLocation, Vector2 size, float rotation)
         {
             rotation = MathHelper.WrapAngle(rotation);
@@ -261,16 +285,19 @@ namespace CrystalCore.Util.Graphics
                 // unless it doesn't work
                 // then idk, good luck I guess
 
-                < -MathF.PI / 2f => new(BoundingLocation.X + (w*Cos(rotation+PI)), 
+                // down
+                < -PI / 2f => new(BoundingLocation.X + (w*Cos(rotation+PI)), 
                                         BoundingLocation.Y + w*Sin(rotation+PI) + h*Cos(rotation +PI)),
 
-
+                // left
                 < 0 => new(BoundingLocation.X, 
                            BoundingLocation.Y + w*Sin(-rotation)),
 
-                < MathF.PI / 2f => new(BoundingLocation.X + h * Sin(rotation), 
+                // up
+                < PI / 2f => new(BoundingLocation.X + h * Sin(rotation), 
                                        BoundingLocation.Y ),
 
+                // right
                 _ => new(BoundingLocation.X + w * Cos(PI-rotation) + h * Sin(PI-rotation), 
                          BoundingLocation.Y + h * Cos(PI-rotation)),
             };
@@ -278,6 +305,33 @@ namespace CrystalCore.Util.Graphics
             RotatedRect toReturn = new RotatedRect(loc, size, 0f, new(0));
             toReturn.Rotation = rotation;
             return toReturn;
+        }
+
+        public static RotatedRect FromBoundingLocation(Point BoundingLocation, Point size, float rotation)
+        {
+            return FromBoundingLocation(BoundingLocation.ToVector2(), size.ToVector2(), rotation);
+        }
+
+
+        /// <summary>
+        /// Create a (gird aligned) rotated rectangle knowing the footprint it takes up.
+        /// </summary>
+        /// <param name="loc"></param>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static RotatedRect FromFootprint(RectangleF loc, Direction d)
+        {
+            if(d.IsHorizontal())
+            {
+                loc = new(loc.X,loc.Y, loc.Height, loc.Width);
+            }
+
+            return FromBoundingLocation(loc.Location, loc.Size, d.ToRadians());
+        }
+
+        public static RotatedRect FromFootprint(Rectangle loc, Direction d)
+        {
+            return FromFootprint(new RectangleF(loc), d);
         }
 
 

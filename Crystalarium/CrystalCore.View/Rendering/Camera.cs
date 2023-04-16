@@ -329,10 +329,12 @@ namespace CrystalCore.View.Rendering
 
             //Console.WriteLine(rect.BoundingBox);
 
+            Vector2 size = rect.AdjustedSize;
             Point pixelCoords = TileToPixelCoords(rect.BoundingBox.Location) - new Point(1);
-            Point pixelSize = new Point((int)(bounds.Size.X * _scale), (int)(bounds.Size.Y * _scale)) + new Point(1, 1);
+            Point pixelSize = new Point((int)(size.X * _scale), (int)(size.Y * _scale)) + new Point(1, 1);
 
-            
+         
+
 
             renderer.RenderTexture( texture, new Rectangle(pixelCoords, pixelSize), c, DirectionUtil.FromRadians(rect.Rotation));
 

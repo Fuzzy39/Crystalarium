@@ -612,8 +612,8 @@ namespace Crystalarium.Main
         internal Point GetMousePos()
         {
             // crude patch. Fix, someday?
-          
-            Vector2 virtualPixelCoords = ((ScaledRenderer)game.Engine.Renderer).ToVirtualResolution( Mouse.GetState().Position.ToVector2() );
+
+            Vector2 virtualPixelCoords = /*((ScaledRenderer)game.Engine.Renderer).ToVirtualResolution(*/ Mouse.GetState().Position.ToVector2(); //);
 
             Point pixelCoords = game.view.LocalizeCoords(virtualPixelCoords.ToPoint());
 

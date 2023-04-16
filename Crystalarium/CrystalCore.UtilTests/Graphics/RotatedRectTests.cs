@@ -88,6 +88,18 @@ namespace CrystalCore.Util.Graphics.Tests
 
         }
 
+        [TestMethod()]
+        public void FootprintTest()
+        {
+            RotatedRect r = RotatedRect.FromFootprint(new Rectangle(0, 0, 2, 1), Direction.left);
+
+            AssertClose(new Vector2(0, 1), r.TopLeft);
+            AssertClose(new Vector2(0, 0), r.TopRight);
+
+            AssertClose(new Vector2(2, 1), r.BottomLeft);
+            AssertClose(new Vector2(2, 0), r.BottomRight);
+        }
+
 
 
         private void AssertClose( Vector2 a, Vector2 b)
