@@ -11,18 +11,11 @@ using System.Text;
 namespace CrystalCore.View.Rendering
 {
     /// <summary>
-    /// The Camera Class renders images in a coordinate space.
+    /// The Camera Class translates two cooridinate spaces
     /// the camera's position in this coordinate space as well as the scale the space is rendered at can be freely changed.
     /// </summary>
-    public class Camera : IRenderer
+    public class Camera
     {
-
-
-
-        /// <summary>
-        /// The  <see cref="BoundedRenderer">BoundedRenderer</see> this Camera uses to render textures. It also contains this Camera's pixel bounds.
-        /// </summary>
-        private BoundedRenderer renderer;
 
         /// <summary>
         /// the number of pixels that currently represent one tile in gridspace.
@@ -52,7 +45,13 @@ namespace CrystalCore.View.Rendering
         /// <summary>
         /// Whether the position of this camera is bound to <see cref="_bounds">_bounds</see> or whether it is free.
         /// </summary>
-        protected bool _isBound; 
+        protected bool _isBound;
+
+
+        /// <summary>
+        /// The size, in pixels, of this camera's view.
+        /// </summary>
+        private Point _size;
 
         /// <summary>
         ///  Whether this Camera is bound to <see cref="Bounds">Bounds</see> or whether it is free.
@@ -152,21 +151,47 @@ namespace CrystalCore.View.Rendering
             get
             {
                 Vector2 toReturn = new Vector2();
-                toReturn.X = _position.X + (TileBounds().Size.X / 2.0f);
-                toReturn.Y = _position.Y + (TileBounds().Size.Y / 2.0f);
+                toReturn.X = _position.X + (TileBounds.Size.X / 2.0f);
+                toReturn.Y = _position.Y + (TileBounds.Size.Y / 2.0f);
                 return toReturn;
             }
             set
             {
-                float x = (float)(-1f * ((TileBounds().Size.X) / 2f)) + value.X;
-                float y = (float)(-1f * ((TileBounds().Size.Y) / 2f)) + value.Y;
+                float x = (float)(-1f * ((TileBounds.Size.X) / 2f)) + value.X;
+                float y = (float)(-1f * ((TileBounds.Size.Y) / 2f)) + value.Y;
                 SetPosition(new Vector2(x, y));
                
 
             }
         }
 
-        
+
+        public virtual Vector2 TopLeftPosition
+        {
+            get
+            {
+                return _position;
+            }
+        }
+
+
+        // returns the bounds in tilespace of the viewport
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>The tile coordinates this camera can currently see.</returns>
+        public RectangleF TileBounds
+        {
+            get
+            {
+                return new RectangleF(TopLeftPosition.X, TopLeftPosition.Y,
+                    (float)(_size.X / Scale),
+                    (float)(_size.Y / Scale));
+            }
+
+        }
+
+
         /// <summary>
         /// The Position of the top left corner of the Camera's view, in tile coordinates.
         /// </summary>
@@ -177,16 +202,13 @@ namespace CrystalCore.View.Rendering
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pixelBoundry">The Bounds in pixels relative to the top left corner of the game window.</param>
-        internal Camera( Rectangle pixelBoundry, IRenderer rend)
+        internal Camera( Point size)
         {
 
-            renderer = new BoundedRenderer( pixelBoundry, rend);
 
-            // default scale values
+            _size = size;
+
+            // default scale values - completely arbitrary
             _minScale = 10;
             _maxScale = 100;
 
@@ -228,8 +250,8 @@ namespace CrystalCore.View.Rendering
         /// <returns>whether the requested position was set.</returns>
         protected bool SetPosition(Vector2 pos)
         {
-            float centerX = (float)(((TileBounds().Size.X) / 2f)) + pos.X;
-            float centerY = (float)(((TileBounds().Size.Y) / 2f)) + pos.Y;
+            float centerX = (float)(((TileBounds.Size.X) / 2f)) + pos.X;
+            float centerY = (float)(((TileBounds.Size.Y) / 2f)) + pos.Y;
             Vector2 nextCenter = new Vector2(centerX, centerY);
 
             if ((!_isBound) || new RectangleF(_bounds).Contains(nextCenter))
@@ -295,58 +317,8 @@ namespace CrystalCore.View.Rendering
 
         
 
-        // returns the bounds in tilespace of the viewport
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>The tile coordinates this camera can currently see.</returns>
-        public RectangleF TileBounds()
-        {
-            return new RectangleF(_position.X, _position.Y,
-                (float)(renderer.PixelBoundry.Width / Scale),
-                (float)(renderer.PixelBoundry.Height / Scale));
-        }
+       
 
-
-        public void Draw(Texture2D texture, RotatedRect rect, Rectangle source, Color c)
-        {
-
-            if(texture.Width!= source.Width || texture.Height!= source.Height)
-            {
-                throw new NotImplementedException("Wait for render target!");
-            }
-
-            RectangleF bounds = rect.AsRectangleF;
-            if (bounds.Area < 0)
-            {
-                throw new ArgumentException("A Camera was asked to render a texture with bounds " + bounds + ". Negative size is not acceptable.");
-            }
-
-            if (bounds.Area == 0)
-            {
-                return;
-            }
-
-            //Console.WriteLine(rect.BoundingBox);
-
-            Vector2 size = rect.AdjustedSize;
-            Point pixelCoords = TileToPixelCoords(rect.BoundingBox.Location) - new Point(1);
-            Point pixelSize = new Point((int)(size.X * _scale), (int)(size.Y * _scale)) + new Point(1, 1);
-
-         
-
-
-            renderer.RenderTexture( texture, new Rectangle(pixelCoords, pixelSize), c, DirectionUtil.FromRadians(rect.Rotation));
-
-        }
-
-     
-
-        // whatever, I'll fix this in a bit, once we have rendertargets
-        public void DrawString(FontFamily font, string text, Vector2 position, float height, Color color)
-        {
-            throw new NotImplementedException();
-        }
 
        
     }

@@ -75,7 +75,7 @@ namespace CrystalCore
 
             _saver = new MapSaver(this);
 
-            _primaryRenderer = new BasicRenderer(gd);
+            _primaryRenderer = new ScaledRenderer(gd);
 
 
             _viewports = new List<GridView>();

@@ -28,7 +28,7 @@ namespace Crystalarium.Main
         // Misc.
         private GraphicsDeviceManager _graphics;
 
-        internal const int BUILD = 1023; // I like to increment this number every time I run the code after changing it. I don't always though.
+        internal const int BUILD = 1024; // I like to increment this number every time I run the code after changing it. I don't always though.
        
         private bool minimapEnabled = true; // setting false is useful for testing graphics stuff.
 
@@ -42,7 +42,7 @@ namespace Crystalarium.Main
         internal Map Map { get; private set; } // the world seen by the view and minimap
 
 
-
+            
         // Objects to Setup controls, rulesets, and the (horrible) UI, respectively.
         internal Actions Controls { get; private set; }
         internal Configuration Configuration{get; private set;}
