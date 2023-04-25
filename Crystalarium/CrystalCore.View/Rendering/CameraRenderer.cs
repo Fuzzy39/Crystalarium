@@ -19,7 +19,13 @@ namespace CrystalCore.View.Rendering
         private IRenderer baseRenderer;
         private PhysicsCamera camera;
 
-
+        public PhysicsCamera Camera
+        {
+            get
+            {
+                return camera;
+            }
+        }
       
 
 
@@ -27,7 +33,7 @@ namespace CrystalCore.View.Rendering
         {
             this.pixelBounds = pixelBounds;
             baseRenderer = rend;
-            camera = new PhysicsCamera();
+            camera = new PhysicsCamera(pixelBounds.Size);
         }
 
         /// <summary>
@@ -62,8 +68,8 @@ namespace CrystalCore.View.Rendering
             //Console.WriteLine(rect.BoundingBox);
 
             Vector2 size = rect.AdjustedSize;
-            Point pixelCoords = TileToPixelCoords(rect.BoundingBox.Location) - new Point(1) + pixelBounds.Location;
-            Point pixelSize = new Point((int)(size.X * _scale), (int)(size.Y * _scale)) + new Point(1, 1);
+            Point pixelCoords = camera.TileToPixelCoords(rect.BoundingBox.Location) - new Point(1) + pixelBounds.Location;
+            Point pixelSize = new Point((int)(size.X * camera.Scale), (int)(size.Y * camera.Scale)) + new Point(1, 1);
 
 
             Rectangle footprint = new Rectangle(pixelCoords, pixelSize);

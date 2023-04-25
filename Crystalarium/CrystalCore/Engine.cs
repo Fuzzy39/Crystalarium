@@ -11,6 +11,7 @@ using CrystalCore.Model.Rules;
 using CrystalCore.Model.Elements;
 using CrystalCore.Util;
 using CrystalCore.View.Core;
+using CrystalCore.View.Rendering;
 
 namespace CrystalCore
 {

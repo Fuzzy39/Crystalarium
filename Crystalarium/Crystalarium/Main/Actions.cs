@@ -262,7 +262,7 @@ namespace Crystalarium.Main
 
                     // grow grid
 
-                    game.Map.ExpandToFit(new Rectangle(clickCoords.X, clickCoords.Y, 0,0));
+                    game.Map.ExpandToFit(new Rectangle(clickCoords.X, clickCoords.Y, 1,1));
 
                 });
 

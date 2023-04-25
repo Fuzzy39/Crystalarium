@@ -35,7 +35,7 @@ namespace CrystalCore.View
         // elements
         private Map _map; // the grid that this GridView is rendering.
         private Border _border; // the border of this Gridview (which exists, whether it is being rendered or not)
-        private PhysicsCamera _camera; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
+        private CameraRenderer _cameraRend; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
         //private RenderTarget2D _target; // the target this gridview is rendered to.
         private SubviewManager _subviewManager; // our subview manager, who kindly takes after our subviews.
         private SkinSet _skinSet; // Our Current Skinset, which defines any graphical settings for anything we could possibly render.
@@ -64,7 +64,7 @@ namespace CrystalCore.View
 
         public PhysicsCamera Camera
         {
-            get => _camera;
+            get => _cameraRend.Camera;
         }
 
         internal SubviewManager Manager
@@ -146,7 +146,7 @@ namespace CrystalCore.View
             this.container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
 
-            _camera = new PhysicsCamera(PixelBounds, rend);
+            _cameraRend = new CameraRenderer(PixelBounds, rend);
 
             _subviewManager = new SubviewManager(this);
 
@@ -208,10 +208,10 @@ namespace CrystalCore.View
             DrawBackground(rend);
 
             // Update our subview manager and have it render its subviews.
-            _subviewManager.Draw(Camera);
+            _subviewManager.Draw(_cameraRend);
 
             // draw the viewport if in debug mode.
-            DrawOtherGridView(Camera);
+            DrawOtherGridView(_cameraRend);
             //sb.End();
 
 
@@ -248,9 +248,9 @@ namespace CrystalCore.View
 
           
             // this cast is annoying, but whatever
-            ((IRenderer)_camera).Draw(
+            ((IRenderer)_cameraRend).Draw(
                 SkinSet.ViewCastOverlay, 
-                ViewCastTarget.Camera.TileBounds(),
+                ViewCastTarget.Camera.TileBounds,
                 new Color(.2f, .2f, .2f, .001f)
             );
         }
@@ -259,13 +259,13 @@ namespace CrystalCore.View
         { 
             try
             {
-                _camera.Update(_map.Bounds);
+                _cameraRend.Update(_map.Bounds);
             }
             catch
             {
 
-                _camera.Position = Map.Center;
-                Console.WriteLine("Camera is out of bounds. Resetting position to "+_camera.Position);
+                Camera.Position = Map.Center;
+                Console.WriteLine("Camera is out of bounds. Resetting position to "+Camera.Position);
             }
         }
 

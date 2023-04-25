@@ -71,7 +71,7 @@ namespace CrystalCore.View.Subviews
             }
 
             // check that we are visible on screen.
-            if (renderTarget.Camera.TileBounds().Intersects(_renderData.Bounds))
+            if (renderTarget.Camera.TileBounds.Intersects(_renderData.Bounds))
             {
 
                 Render(rend);

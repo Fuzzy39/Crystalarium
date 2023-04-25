@@ -166,7 +166,7 @@ namespace CrystalCore.View.Rendering
 
         // Constructors
 
-        internal PhysicsCamera() : base()
+        internal PhysicsCamera(Point size) : base(size)
         {
 
 
@@ -268,8 +268,8 @@ namespace CrystalCore.View.Rendering
             if (_isBound)
             {
                 // first, get the center.
-                float centerX = (float)(((TileBounds().Size.X) / 2f)) + pos.X;
-                float centerY = (float)(((TileBounds().Size.Y) / 2f)) + pos.Y;
+                float centerX = (float)(((TileBounds.Size.X) / 2f)) + pos.X;
+                float centerY = (float)(((TileBounds.Size.Y) / 2f)) + pos.Y;
                 Vector2 center = new Vector2(centerX, centerY);
 
                 // rectify positions.

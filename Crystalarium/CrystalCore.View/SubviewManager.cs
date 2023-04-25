@@ -134,7 +134,7 @@ namespace CrystalCore.View
                 foreach (Chunk ch in list)
                 {
 
-                    if (!Parent.Camera.TileBounds().Intersects(ch.Bounds))
+                    if (!Parent.Camera.TileBounds.Intersects(ch.Bounds))
                     {
                         continue;
                     }
@@ -178,7 +178,7 @@ namespace CrystalCore.View
                 Agent a = (Agent)cm;
 
                 // does this agent need rendered?
-                if (!_parent.Camera.TileBounds().Intersects(a.Bounds))
+                if (!_parent.Camera.TileBounds.Intersects(a.Bounds))
                 {
                     continue;
                 }
