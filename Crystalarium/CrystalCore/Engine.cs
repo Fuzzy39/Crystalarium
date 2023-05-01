@@ -231,9 +231,16 @@ namespace CrystalCore
                 throw new InvalidOperationException("CrystalCore must be initalized before it can be drawn. Call Engine.Initialize().");
             }
 
-            _primaryRenderer.Begin();
-            
+        
+
             // draw viewports
+            foreach (GridView v in _viewports)
+            {
+                v.PreDraw(_primaryRenderer);
+            }
+
+            _primaryRenderer.Begin();
+
             foreach (GridView v in _viewports)
             {
                 v.Draw(_primaryRenderer);

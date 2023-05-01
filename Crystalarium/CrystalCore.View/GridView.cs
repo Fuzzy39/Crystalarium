@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace CrystalCore.View
 {
-    public class GridView : IRenderable
+    public class GridView : IPreRenderable
     {
         /* A GridView represents an area that renders a grid.   
          * 
@@ -39,12 +39,16 @@ namespace CrystalCore.View
         //private RenderTarget2D _target; // the target this gridview is rendered to.
         private SubviewManager _subviewManager; // our subview manager, who kindly takes after our subviews.
         private SkinSet _skinSet; // Our Current Skinset, which defines any graphical settings for anything we could possibly render.
-
         private GridView _viewCastTarget; // if not null, chunks viewed by this gridview (assuming it has the same grid) will be brightened.
+
+
+
 
         private bool _doAgentRendering; // whether a gridview with this skin renders agents and signals.
         public bool AllowMultipleGhosts { get; set; } // can this gridview contain multiple ghosts, or just one?
         public bool DoDebugRendering { get; set; } // should agents render their debug ports and signals?
+
+        private RenderTarget2D renderTarget;
 
         // Properties
         public Rectangle PixelBounds
@@ -136,7 +140,7 @@ namespace CrystalCore.View
 
 
         // create the viewport
-        public GridView(IRenderer rend, List<GridView> container, Map g, Point pos, Point dimensions, SkinSet skinSet)
+        public GridView(IBatchRenderer rend, List<GridView> container, Map g, Point pos, Point dimensions, SkinSet skinSet)
         {
             // initialize from parameters
             _map = g;
@@ -146,7 +150,7 @@ namespace CrystalCore.View
             this.container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
 
-            _cameraRend = new CameraRenderer(PixelBounds, rend);
+            _cameraRend = new CameraRenderer(new(new(),PixelBounds.Size), rend);
 
             _subviewManager = new SubviewManager(this);
 
@@ -164,12 +168,14 @@ namespace CrystalCore.View
 
             _viewCastTarget = null;
 
+            renderTarget = rend.CreateTarget(dimensions);
+
 
 
         }
 
         // an alternate viewport constructor, without points.
-        internal GridView(IRenderer rend, List<GridView> container, Map g, int x, int y, int width, int height, SkinSet skinSet)
+        internal GridView(IBatchRenderer rend, List<GridView> container, Map g, int x, int y, int width, int height, SkinSet skinSet)
             : this(rend, container, g, new Point(x, y), new Point(width, height), skinSet) { }
 
 
@@ -192,17 +198,11 @@ namespace CrystalCore.View
 
 
 
-        public bool Draw(IRenderer rend)
+        public void PreDraw(IBatchRenderer rend)
         {
-            //sb.End();
+         
 
-            //sb.GraphicsDevice.SetRenderTarget(_target);
-            //sb.GraphicsDevice.Clear(Color.Magenta);
-
-            // no, I don't know what these settings do.
-            // could look it up...
-            //sb.Begin();
-
+            rend.StartTarget(renderTarget);
 
             // draw the background.
             DrawBackground(rend);
@@ -212,21 +212,36 @@ namespace CrystalCore.View
 
             // draw the viewport if in debug mode.
             DrawOtherGridView(_cameraRend);
-            //sb.End();
 
 
-            //sb.GraphicsDevice.SetRenderTarget(null);
+            rend.EndTarget();
 
-            //sb.Begin();
 
-            //sb.Draw(_target, PixelBounds, Color.White);
+        }
+
+        
+        public bool Draw(IRenderer rend)
+        {
+            
+
+            // no, I don't know what these settings do.
+            // could look it up...
+
+
+            // the actual juice.
+            rend.Draw(renderTarget, _pixelBounds, Color.White);
+
+
 
             // finally, draw the border.
             _border.Draw(rend);
 
+
             return true;
            
         }
+
+     
 
 
         private void DrawBackground(IRenderer rend)
@@ -235,7 +250,7 @@ namespace CrystalCore.View
             if (CurrentSkin.GridViewBG == null)
                 return;
 
-            rend.Draw(CurrentSkin.GridViewBG, _pixelBounds, CurrentSkin.GridViewBGColor);
+            rend.Draw(CurrentSkin.GridViewBG, new Rectangle(new(0), _pixelBounds.Size), CurrentSkin.GridViewBGColor);
            
         }
 
