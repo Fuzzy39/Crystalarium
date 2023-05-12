@@ -6,6 +6,7 @@ using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View;
 using CrystalCore.View.Core;
+using CrystalCore.View.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -200,7 +201,9 @@ namespace Crystalarium.Main
             if (Engine.Controller.Context == "play")
             {
                 view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
-                view.Camera.ZoomOrigin = view.LocalizeCoords(Mouse.GetState().Position);
+                // HACK
+                view.Camera.ZoomOrigin = view.LocalizeCoords(
+                    ((ScaledRenderer)Engine.Renderer).ToVirtualResolution(Mouse.GetState().Position.ToVector2()).ToPoint());
 
                     // create ghosts.
                 view.CreateGhost(Controls.CurrentType, Controls.GetMousePos(), Controls.Rotation);

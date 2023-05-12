@@ -14,6 +14,7 @@ using CrystalCore.Model.Elements;
 using System.IO;
 using System.Xml;
 using CrystalCore.View.Core;
+using CrystalCore.View.Rendering;
 
 namespace Crystalarium.Main
 {
@@ -613,7 +614,7 @@ namespace Crystalarium.Main
         {
             // crude patch. Fix, someday?
 
-            Vector2 virtualPixelCoords = /*((ScaledRenderer)game.Engine.Renderer).ToVirtualResolution(*/ Mouse.GetState().Position.ToVector2(); //);
+            Vector2 virtualPixelCoords = ((ScaledRenderer)game.Engine.Renderer).ToVirtualResolution( Mouse.GetState().Position.ToVector2());
 
             Point pixelCoords = game.view.LocalizeCoords(virtualPixelCoords.ToPoint());
 
