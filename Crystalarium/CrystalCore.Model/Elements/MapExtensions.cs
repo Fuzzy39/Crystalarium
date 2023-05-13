@@ -154,10 +154,7 @@ namespace CrystalCore.Model.Elements
 
         public static List<Chunk> ChunksInBounds(this Map g, Rectangle rect)
         {
-            if (!g.Bounds.Contains(rect))
-            {
-                throw new ArgumentException("Grid " + g + " does not contain bounds: " + rect);
-            }
+           rect = Rectangle.Intersect(g.Bounds, rect);
 
 
             List<Chunk> toReturn = new List<Chunk>();

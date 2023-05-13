@@ -28,6 +28,7 @@ namespace CrystalCore
         private MapSaver _saver;
         private SimulationManager _sim;
         private Controller _controller;
+
         private IBatchRenderer _primaryRenderer;
 
     

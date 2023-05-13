@@ -1,0 +1,63 @@
+﻿using CrystalCore.Model.Elements;
+using CrystalCore.Model.Objects;
+using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CrystalCore
+{
+    public class Clipboard
+    {
+        
+        private List<AgentRepresentation> content;
+
+
+        public Clipboard()
+        {
+          
+            content = new List<AgentRepresentation>();
+        }
+
+
+        public void Copy(Map m, Rectangle selection)
+        {
+            List<Agent> agents = prepareSelection(m, selection);
+            foreach (Agent agent in agents)
+            {
+                content.Add(new AgentRepresentation(agent, selection.Location));
+            }
+        }
+
+        public void Cut(Map m, Rectangle selection) 
+        {
+
+            List<Agent> agents = prepareSelection(m, selection);
+
+            foreach (Agent agent in agents)
+            {
+                content.Add(new AgentRepresentation(agent, selection.Location));
+                agent.Destroy();
+            }
+        }
+
+        private List<Agent> prepareSelection(Map m, Rectangle selection)
+        {
+            Rectangle r = new(selection.Location, selection.Size + new Point(1));
+            content.Clear();
+            List<Agent> toReturn = m.AgentsWithin(r);
+            return toReturn;
+        }
+
+        public void Paste(Map m, Point location)
+        {
+            foreach(AgentRepresentation ar in  content)
+            {
+                ar.CreateAgent(m, location);
+            }
+        }
+
+    }
+}

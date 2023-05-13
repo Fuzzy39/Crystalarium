@@ -15,6 +15,7 @@ using System.IO;
 using System.Xml;
 using CrystalCore.View.Core;
 using CrystalCore.View.Rendering;
+using CrystalCore;
 
 namespace Crystalarium.Main
 {
@@ -34,7 +35,7 @@ namespace Crystalarium.Main
 
         private CrystalGame game; // The game.
 
-
+        private Clipboard clipboard;
 
         internal Direction Rotation { get; private set; } // the direction that any agents placed down will be facing.
 
@@ -57,6 +58,7 @@ namespace Crystalarium.Main
 
             this.c = c;
             this.game = game;
+            clipboard = new Clipboard();
 
             Rotation = Direction.up;
 
@@ -262,7 +264,6 @@ namespace Crystalarium.Main
                     }
 
                     // grow grid
-
                     game.Map.ExpandToFit(new Rectangle(clickCoords.X, clickCoords.Y, 1,1));
 
                 });
@@ -309,6 +310,49 @@ namespace Crystalarium.Main
 
 
                 });
+
+
+            c.CreateControl("Copy", Keystate.OnPress)
+                .AddAction("play", () =>
+                {
+                    Point p = GetMousePos();
+                    int x1 = p.X;
+                    int x2;
+                    int y1 = p.Y;
+                    int y2;
+
+                    Console.WriteLine("Copy command begun. Any invalid input will abort the operation.");
+                    try
+                    {
+                       
+                        Console.WriteLine("Bottom right of selection x coordinate?");
+                        x2 = int.Parse(Console.ReadLine());
+
+                        Console.WriteLine("Bottom right of selection y coordinate?");
+                        y2 = int.Parse(Console.ReadLine());
+
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("operation aborted.");
+                        return;
+                    }
+
+                    Rectangle selection = new(x1, y1, x2 - x1, y2 - y1);
+                    clipboard.Copy(game.Map, selection);
+
+                })
+                .Bind(Button.LeftControl, Button.C);
+
+            c.CreateControl("Paste", Keystate.OnPress)
+               .AddAction("play", () =>
+               {
+                   Point clickCoords = GetMousePos();
+                   clipboard.Paste(game.Map, clickCoords);
+
+               })
+               .Bind(Button.LeftControl, Button.V);
+
 
         }
 
