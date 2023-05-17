@@ -315,34 +315,24 @@ namespace Crystalarium.Main
             c.CreateControl("Copy", Keystate.OnPress)
                 .AddAction("play", () =>
                 {
-                    Point p = GetMousePos();
-                    int x1 = p.X;
-                    int x2;
-                    int y1 = p.Y;
-                    int y2;
+                    Copy("Copy");
 
-                    Console.WriteLine("Copy command begun. Any invalid input will abort the operation.");
-                    try
+                });
+
+
+
+            c.CreateControl("Cut", Keystate.OnPress)
+                .AddAction("play", () =>
+                {
+                    Rectangle sel = Copy("Cut");
+                    List<Agent> agents = game.Map.AgentsWithin(sel);
+                    foreach (Agent agent in agents)
                     {
-                       
-                        Console.WriteLine("Bottom right of selection x coordinate?");
-                        x2 = int.Parse(Console.ReadLine());
-
-                        Console.WriteLine("Bottom right of selection y coordinate?");
-                        y2 = int.Parse(Console.ReadLine());
-
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("operation aborted.");
-                        return;
+                        agent.Destroy();
                     }
 
-                    Rectangle selection = new(x1, y1, x2 - x1, y2 - y1);
-                    clipboard.Copy(game.Map, selection);
+                });
 
-                })
-                .Bind(Button.LeftControl, Button.C);
 
             c.CreateControl("Paste", Keystate.OnPress)
                .AddAction("play", () =>
@@ -350,8 +340,8 @@ namespace Crystalarium.Main
                    Point clickCoords = GetMousePos();
                    clipboard.Paste(game.Map, clickCoords);
 
-               })
-               .Bind(Button.LeftControl, Button.V);
+               });
+              
 
 
         }
@@ -589,6 +579,40 @@ namespace Crystalarium.Main
             float camSpeed = 1.2f; // I guess this is acceleration
             game.view.Camera.AddVelocity(camSpeed, d); 
         }
+
+        private Rectangle Copy(string name)
+        {
+
+            Point p = GetMousePos();
+            int x1 = p.X;
+            int x2;
+            int y1 = p.Y;
+            int y2;
+
+            Console.WriteLine(name + " command begun. Any invalid input will abort the operation.\nTop left corner of selection: " + p);
+
+            try
+            {
+
+                Console.WriteLine("Bottom right of selection x coordinate?");
+                x2 = int.Parse(Console.ReadLine());
+
+                Console.WriteLine("Bottom right of selection y coordinate?");
+                y2 = int.Parse(Console.ReadLine());
+
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("operation aborted.");
+                return new Rectangle();
+            }
+
+            Rectangle selection = new(x1, y1, x2 - x1, y2 - y1);
+            clipboard.Copy(game.Map, selection);
+            selection.Size += new Point(1);
+            return selection;
+        }
+
 
 
         private void MenuAction(int i)

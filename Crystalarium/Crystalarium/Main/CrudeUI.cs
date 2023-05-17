@@ -86,7 +86,7 @@ namespace Crystalarium.Main
              (int i) => // mostly this part, ew
              {
                  Controller c = Engine.Controller;
-                 return "These are Crystalarium's Controls. They can be edited in Settings/Controls.xml." +
+                 return "These are Crystalarium's Controls. They can be edited in Settings/Controls.xml.\nIf multiple keybinds for a control are defined, only the first is listed here." +
 
                  "\n\nCamera: Move: " + c.GetAction("CamUp").FirstKeybindAsString() + c.GetAction("CamLeft").FirstKeybindAsString()
                  + c.GetAction("CamDown").FirstKeybindAsString() + c.GetAction("CamRight").FirstKeybindAsString()
@@ -103,7 +103,12 @@ namespace Crystalarium.Main
                  c.GetAction("DecreaseSimSpeed").FirstKeybindAsString() + ", " + c.GetAction("IncreaseSimSpeed").FirstKeybindAsString() +
 
                  ".\nOther: Switch Ruleset: " + c.GetAction("OpenRulesetMenu").FirstKeybindAsString() + ". Save: " + c.GetAction("Save").FirstKeybindAsString() +
-                 ". Load: " + c.GetAction("Load").FirstKeybindAsString() + ".";
+                 ". Load: " + c.GetAction("Load").FirstKeybindAsString() + ".\n" +
+                 "Copy/Paste: Copy: " + c.GetAction("Copy").FirstKeybindAsString() + ". Cut: " + c.GetAction("Cut").FirstKeybindAsString() +
+                 ". Paste: " + c.GetAction("Paste").FirstKeybindAsString()
+
+                 + "\n\nNote: Copy and Cut will freeze the game. Direct your attention to the console window to perform these commands.";
+
 
 
              },

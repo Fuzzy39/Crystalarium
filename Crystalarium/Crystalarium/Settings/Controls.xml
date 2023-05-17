@@ -31,7 +31,11 @@
 	<PlaceAgent>  MouseLeft </PlaceAgent>
 	<RemoveAgent> MouseRight </RemoveAgent>
 	<RotateAgent> R </RotateAgent>
-		
+
+
+	<Cut> LeftControl, X</Cut>
+	<Copy> LeftControl, C</Copy>
+	<Paste> LeftControl, V</Paste>
 
 
 	<!-- Controls to set simulation speed -->
@@ -69,5 +73,7 @@
 	<Load> LeftControl, O</Load>
 
 	<Instructions>I</Instructions>
+	
+	
 	
 </Controls>
