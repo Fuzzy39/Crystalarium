@@ -50,6 +50,7 @@ namespace CrystalCore.View.Subviews
 
             }
 
+        
             RenderFromA(rend);
             RenderFromB(rend);
 

@@ -29,7 +29,7 @@ namespace Crystalarium.Main
         // Misc.
         private GraphicsDeviceManager _graphics;
 
-        internal const int BUILD = 1046; // I like to increment this number every time I run the code after changing it. I don't always though.
+        internal const int BUILD = 1048; // I like to increment this number every time I run the code after changing it. I don't always though.
        
         private bool minimapEnabled = true; // setting false is useful for testing graphics stuff.
 
@@ -244,8 +244,6 @@ namespace Crystalarium.Main
 
         protected override void Draw(GameTime gameTime)
         {
-
-
 
 
             if (errorSplash != null)

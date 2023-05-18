@@ -216,6 +216,11 @@ namespace CrystalCore.View
 
                     Connection beam = (Connection)cm;
 
+                    if(beam.FromA == 0 && beam.FromB == 0 && !Parent.DoDebugRendering)
+                    {
+                        continue;
+                    }
+
          
                     if (!_beamViews.ViewExistsFor(beam))
                     {

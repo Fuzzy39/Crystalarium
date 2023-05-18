@@ -186,7 +186,7 @@ namespace Crystalarium.Main
         private void EndDraw( IBatchRenderer rend)
         {
 
-            DrawString("Milestone 7, Build " + CrystalGame.BUILD, new Vector2(10, rend.Height - 25), rend);
+            DrawString("Milestone 8, Build " + CrystalGame.BUILD, new Vector2(10, rend.Height - 25), rend);
 
             
             return;
