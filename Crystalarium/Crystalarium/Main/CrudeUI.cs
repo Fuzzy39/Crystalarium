@@ -103,7 +103,7 @@ namespace Crystalarium.Main
                  c.GetAction("DecreaseSimSpeed").FirstKeybindAsString() + ", " + c.GetAction("IncreaseSimSpeed").FirstKeybindAsString() +
 
                  ".\nOther: Switch Ruleset: " + c.GetAction("OpenRulesetMenu").FirstKeybindAsString() + ". Save: " + c.GetAction("Save").FirstKeybindAsString() +
-                 ". Load: " + c.GetAction("Load").FirstKeybindAsString() + ".\n" +
+                 ". Load: " + c.GetAction("Load").FirstKeybindAsString() +". Crash: "+c.GetAction("Crash").FirstKeybindAsString()+ ".\n" +
                  "Copy/Paste: Copy: " + c.GetAction("Copy").FirstKeybindAsString() + ". Cut: " + c.GetAction("Cut").FirstKeybindAsString() +
                  ". Paste: " + c.GetAction("Paste").FirstKeybindAsString()
 
@@ -186,7 +186,7 @@ namespace Crystalarium.Main
         private void EndDraw( IBatchRenderer rend)
         {
 
-            DrawString("Milestone 8, Build " + CrystalGame.BUILD, new Vector2(10, rend.Height - 25), rend);
+            DrawString(CrystalGame.VersionString, new Vector2(10, rend.Height - 25), rend);
 
             
             return;

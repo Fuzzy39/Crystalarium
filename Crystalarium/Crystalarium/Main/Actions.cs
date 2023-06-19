@@ -316,6 +316,7 @@ namespace Crystalarium.Main
                 .AddAction("play", () =>
                 {
                     Copy("Copy");
+                    Console.WriteLine("Copied!");
 
                 });
 
@@ -331,6 +332,7 @@ namespace Crystalarium.Main
                         agent.Destroy();
                     }
 
+                    Console.WriteLine(agents.Count+" agents cut!");
                 });
 
 
@@ -569,7 +571,9 @@ namespace Crystalarium.Main
                 .Bind(Button.D9);
 
 
-
+            c.CreateControl("Crash", Keystate.OnPress)
+                .AddAction("", () => throw new Exception("An Exception was thrown intentionally by the user."))
+                .Bind(Button.LeftControl, Button.Space, Button.Back);
 
         }
 
@@ -597,8 +601,20 @@ namespace Crystalarium.Main
                 Console.WriteLine("Bottom right of selection x coordinate?");
                 x2 = int.Parse(Console.ReadLine());
 
+                if(x2<=x1)
+                {
+                    Console.WriteLine("Invalid X coord.");
+                    throw new FormatException();
+                }
+
                 Console.WriteLine("Bottom right of selection y coordinate?");
                 y2 = int.Parse(Console.ReadLine());
+
+                if (y2 <= y1)
+                {
+                    Console.WriteLine("Invalid Y coord.");
+                    throw new FormatException();
+                }
 
             }
             catch (FormatException)

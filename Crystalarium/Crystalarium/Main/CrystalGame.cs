@@ -29,11 +29,22 @@ namespace Crystalarium.Main
         // Misc.
         private GraphicsDeviceManager _graphics;
 
-        internal const int BUILD = 1048; // I like to increment this number every time I run the code after changing it. I don't always though.
-       
+        // version number.
+        private const int MAJOR = 9;
+        private const int MINOR = 0;
+        private const int BUILD = 1058; // I like to increment this number every time I run the code after changing it. I don't always though.
+
+        internal static string VersionString
+        {
+            get
+            {
+
+                return "Milestone "+MAJOR+" (Development) v"+MAJOR+"."+MINOR+"."+BUILD;
+            }
+        }
+
+
         private bool minimapEnabled = true; // setting false is useful for testing graphics stuff.
-
-
 
         // Engine facing objects
         internal Engine Engine { get; private set; } // the 'engine'
