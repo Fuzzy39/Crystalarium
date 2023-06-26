@@ -32,7 +32,7 @@ namespace Crystalarium.Main
         // version number.
         private const int MAJOR = 9;
         private const int MINOR = 0;
-        private const int BUILD = 1058; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 1066; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
@@ -56,13 +56,12 @@ namespace Crystalarium.Main
 
             
         // Objects to Setup controls, rulesets, and the (horrible) UI, respectively.
-        internal Actions Controls { get; private set; }
+        internal Actions Actions { get; private set; }
         internal Configuration Configuration{get; private set;}
         internal CrudeUI UI { get; private set; }
 
 
         // Engine external game state
-        private ErrorSplash errorSplash = null;
         internal Ruleset CurrentRuleset { get; set; }
 
 
@@ -114,54 +113,29 @@ namespace Crystalarium.Main
         protected override void LoadContent()
         {
 
-
             Textures.LoadContent(Content);
-
-
 
             // create the engine
             Engine = new Engine(TargetElapsedTime, GraphicsDevice);
 
-           
-
-
-            try
-            {
-                // setup the engine's configuration.
-                Configuration = new Configuration(this);
-
-            }
-            catch (InitializationFailedException e)
-            {
-                errorSplash = new ErrorSplash(e.Message, new SpriteBatch(GraphicsDevice));
-                Engine = null;
-                return;
-            }
-            catch (Exception e)
-            {
-                SetErrorSplash("Crystalarium's engine unexpectedly crashed during initialization." +
-                    "\nIt would really be a help if you could report this problem, so it can get fixed." +
-                    "\nA detailed description of the problem is below:\n\n" + e.ToString());
-                //Engine = null;
-                return;
-            }
-
-
+            
+            // setup the engine's configuration.
+            Configuration = new Configuration(this);
             Engine.Sim.TargetStepsPS = 10;
 
+
             // setup our interaction related code and register it with the engine.
-            Controls = new Actions(Engine.Controller, this);
+            Actions = new Actions(Engine.Controller, this);
 
             // Make the UI
             UI = new CrudeUI(this);
 
             // create a test grid, and do some test things to it.
             Map = Engine.addGrid(CurrentRuleset);
+            Map.OnReset += Actions.OnMapReset;
 
-            Map.OnReset += Controls.OnMapReset;
 
-
-            IBatchRenderer r = (IBatchRenderer)Engine.Renderer; 
+            IBatchRenderer r = Engine.Renderer; 
 
             // create a couple test viewports.
             view = Engine.addView(Map, 0, 0, (int)r.Width, (int)r.Height, Configuration.DefaultSkin);
@@ -201,13 +175,8 @@ namespace Crystalarium.Main
         {
 
 
-
-            if (errorSplash != null)
-            {
-                return;
-            }
-
-            // this is temporary code, meant to demonstrate a viewport's capabilities.
+            // this is temporary disgusting code.
+            // I'm saying temporary mostly as a hope.
 
             if (Engine.Controller.Context == "play")
             {
@@ -216,8 +185,8 @@ namespace Crystalarium.Main
                 view.Camera.ZoomOrigin = view.LocalizeCoords(
                     ((ScaledRenderer)Engine.Renderer).ToVirtualResolution(Mouse.GetState().Position.ToVector2()).ToPoint());
 
-                    // create ghosts.
-                view.CreateGhost(Controls.CurrentType, Controls.GetMousePos(), Controls.Rotation);
+                // create ghosts.
+                view.CreateGhost(Actions.CurrentType, Actions.GetMousePos(), Actions.Rotation);
             }
             else
             {
@@ -233,19 +202,8 @@ namespace Crystalarium.Main
             }
 
 
-
-            try
-            {
-                Engine.Update(gameTime);
-            }
-            catch (Exception e)
-            {
-                SetErrorSplash("Crystalarium's engine unexpectedly crashed while updating the simulation." +
-                    "\nIt would really be a help if you could report this problem, so it can get fixed." +
-                    "\nA detailed description of the problem is below:\n\n" + e.ToString());
-                //Engine = null;
-                return;
-            }
+            Engine.Update(gameTime);
+         
 
             base.Update(gameTime);
 
@@ -256,57 +214,21 @@ namespace Crystalarium.Main
         protected override void Draw(GameTime gameTime)
         {
 
-
-            if (errorSplash != null)
-            {
-                
-                errorSplash.Draw(GraphicsDevice);
-                //EndDraw(height);
-               
-                return;
-            }
-
-
             // make everything a flat color.
             GraphicsDevice.Clear(new Color(70, 70, 70));
 
-
             // try to draw the game
-            try
-            {
-                Engine.StartDraw();
-            }
-            catch (Exception e)
-            { 
-                
-                SetErrorSplash("Crystalarium's engine unexpectedly crashed while rendering graphics." +
-                    "\nIt would really be a help if you could report this problem, so it can get fixed." +
-                    "\nA detailed description of the problem is below:\n\n" + e.ToString());
-                Engine.EndDraw();
-                //Engine = null;
-                return;
-            }
+            Engine.StartDraw();
+            
           
             UI.Draw(Engine.Renderer, gameTime);
-
-
           
             Engine.EndDraw();
             base.Draw(gameTime);
-            
-        
-
+     
         }
 
 
-
-
-        internal void SetErrorSplash(string s)
-        {
-            errorSplash = new ErrorSplash(s, new SpriteBatch(GraphicsDevice));
-        }
-
-       
 
 
     }

@@ -150,7 +150,7 @@ namespace Crystalarium.Main
             Engine Engine = game.Engine;
             Map Map = game.Map;
 
-            string info = "Hovering over: " + game.Controls.GetMousePos().X + ", " + game.Controls.GetMousePos().Y;
+            string info = "Hovering over: " + game.Actions.GetMousePos().X + ", " + game.Actions.GetMousePos().Y;
             if (Engine.Controller.Context == "menu")
             {
                 info = "Hovering over: N/A, N/A";
@@ -164,7 +164,7 @@ namespace Crystalarium.Main
             DrawString("FPS: " + Math.Round(frameRate, 1) + " Sim Speed: " + Engine.Sim.ActualStepsPS + " Steps/Second Chunks: "
                 + Map.ChunkCount + " Agents: " + Map.AgentCount + " Connections: " + Map.ConnectionCount, new(10, 10), rend);
 
-            DrawString("Placing: " + game.Controls.CurrentType.Name + " (facing " + game.Controls.Rotation + ") \n" + info + "\n" + rules, new(10, 30), rend);
+            DrawString("Placing: " + game.Actions.CurrentType.Name + " (facing " + game.Actions.Rotation + ") \n" + info + "\n" + rules, new(10, 30), rend);
 
             DrawString("Press " + Engine.Controller.GetAction("Instructions").FirstKeybindAsString() + " For instructions.", new(10, rend.Height - 50), rend);
 

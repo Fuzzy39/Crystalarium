@@ -663,7 +663,7 @@ namespace Crystalarium.Main
             }
             catch (MapLoadException e)
             {
-                game.SetErrorSplash("Crystalrium couldn't load the specified save file.\nReason: " + e.Message);
+                throw new MapLoadException("Crystalrium couldn't load the specified save file.\nReason: " + e.Message+"\n"+e.StackTrace);
             }
 
             c.Context = "play";

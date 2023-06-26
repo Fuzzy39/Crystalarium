@@ -8,6 +8,7 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <StartupObject></StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Icon.ico" />
@@ -24,15 +25,21 @@
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrystalCore\CrystalCore.csproj" />
+    <ProjectReference Include="..\CrystalCrash\CrystalCrash.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Settings\Controls.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-</Project>
+
+    <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
+	    <Message Text="Restoring dotnet tools" Importance="High" />
+	    <Exec Command="dotnet tool restore" />
+    </Target>
+</Project>  

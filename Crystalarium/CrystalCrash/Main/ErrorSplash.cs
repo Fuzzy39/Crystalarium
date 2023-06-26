@@ -1,10 +1,10 @@
-﻿    using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Crystalarium.Main
+namespace CrystalCrash.Main
 {
     /// <summary>
     /// An ErrorSplash is what appears when CrystalCore cannot initalize, or maybe other problems later.
@@ -22,12 +22,12 @@ namespace Crystalarium.Main
         {
             this.sb = sb;
             i = 0f;
-            string[] faces = { ":(", "X(", ":O",":/" ,":|","!?"};
+            string[] faces = { ":(", "X(", ":O", ":/", ":|", "!?" };
             random = new Random();
             face = faces[random.Next(faces.Length)];
-            
+
             // a little easter egg, just for people who see it crash a lot (me).
-            if(random.NextDouble()<.02)
+            if (random.NextDouble() < .02)
             {
                 face = "Straight from the Chaos Realms!";
             }
@@ -37,9 +37,9 @@ namespace Crystalarium.Main
         }
 
 
-        internal void Draw( GraphicsDevice gd)
+        internal void Draw(GraphicsDevice gd)
         {
-           
+
 
             // make everything a flat color.
             int r = (int)((MathF.Sin(i) + 1) * 100);
@@ -49,8 +49,8 @@ namespace Crystalarium.Main
 
             // print the error message.
             sb.Begin();
-            DrawString(sb, new Vector2(50, 50),face, 55f);
-            DrawString(sb, new Vector2(50, 130), errorMessage,16.5f);
+            DrawString(sb, new Vector2(50, 50), face, .4f);
+            DrawString(sb, new Vector2(50,100), errorMessage, .16f);
 
             i += .005f;
 
@@ -62,7 +62,8 @@ namespace Crystalarium.Main
 
         private void DrawString(SpriteBatch sb, Vector2 pos, string s, float scale)
         {
-            Textures.Consolas.Draw(sb, s, scale, pos, Color.White);
+           // Textures.Consolas.Draw(sb, s, scale, pos, Color.White);
+            sb.DrawString(CrashHandler.Consolas, s, pos, Color.White, 0f, new Vector2(), scale, SpriteEffects.None, 0f);
         }
 
         private void DrawString(SpriteBatch sb, Vector2 pos, string s)
