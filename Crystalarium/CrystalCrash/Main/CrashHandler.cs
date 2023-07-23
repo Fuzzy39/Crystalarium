@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.IO;
 
 namespace CrystalCrash.Main
 {
@@ -14,7 +15,7 @@ namespace CrystalCrash.Main
 
         private ErrorSplash error;
         private string errorMessage;
-       
+
 
         public CrashHandler(string errorMessage)
         {
@@ -22,6 +23,12 @@ namespace CrystalCrash.Main
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             this.errorMessage = errorMessage;
+
+            // log error to file.
+            using (StreamWriter writer = new StreamWriter("LatestFail.txt"))
+            {
+                writer.WriteLine(errorMessage);
+            }
         }
             
         protected override void Initialize()
