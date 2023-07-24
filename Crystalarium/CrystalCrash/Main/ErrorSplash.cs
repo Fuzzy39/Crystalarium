@@ -22,16 +22,14 @@ namespace CrystalCrash.Main
         {
             this.sb = sb;
             i = 0f;
-            string[] faces = { ":(", "X(", ":O", ":/", ":|", "!?" };
+            string[] randomSplash = { ":(", "X(", "Straight From the Chaos Realms!", ":/", "Hmm. This is awkward.", "And once again, I make a fool of myself.",
+            "Same as it ever was. Same as it ever was.", "Did somebody forget a semicolon?", "I, Er, had a bit of an oopsie...", "And it was looking so good!","Aw, crap, this looks complicated.", 
+                "I didn't realize how unstable computers computing computers would be.", "Those lazers finnaly got me.", "Maybe just do this in Minecraft?", 
+                "Well, at least you can relax here.", "Take a deep breath, we'll figure this out.", "Dang. Right in the beanhole."};
             random = new Random();
-            face = faces[random.Next(faces.Length)];
+            face = randomSplash[random.Next(randomSplash.Length)];
 
-            // a little easter egg, just for people who see it crash a lot (me).
-            if (random.NextDouble() < .02)
-            {
-                face = "Straight from the Chaos Realms!";
-            }
-
+            
             this.errorMessage = errorMessage;
             Console.WriteLine(errorMessage);
         }
