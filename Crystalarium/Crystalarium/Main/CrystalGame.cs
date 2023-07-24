@@ -39,7 +39,7 @@ namespace Crystalarium.Main
             get
             {
 
-                return "Milestone "+MAJOR+" (Development) v"+MAJOR+"."+MINOR+"."+BUILD;
+                return "Milestone "+(MAJOR+1)+" (Development) v"+MAJOR+"."+MINOR+"."+BUILD;
             }
         }
 
