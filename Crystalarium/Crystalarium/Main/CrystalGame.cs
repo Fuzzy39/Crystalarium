@@ -30,9 +30,9 @@ namespace Crystalarium.Main
         private GraphicsDeviceManager _graphics;
 
         // version number.
-        private const int MAJOR = 9;
+        private const int MAJOR = 8;
         private const int MINOR = 0;
-        private const int BUILD = 1069; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 1070; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
