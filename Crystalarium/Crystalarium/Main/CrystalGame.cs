@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace Crystalarium.Main
 {
@@ -32,7 +33,7 @@ namespace Crystalarium.Main
         // version number.
         private const int MAJOR = 8;
         private const int MINOR = 0;
-        private const int BUILD = 1071; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 1081; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
@@ -72,20 +73,21 @@ namespace Crystalarium.Main
             Content.RootDirectory = "Content";
             IsMouseVisible = true; // I guess there are reasons this might be false, but it used to be false by default, which was confusing.
 
+            _graphics.PreferredBackBufferWidth = 1280;  
+            _graphics.PreferredBackBufferHeight = 720;  
+     
+
+
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
+
+
         }
 
 
         protected override void Initialize()
         {
-            //let's make the window a tiny bit bigger, for testing
-            _graphics.PreferredBackBufferWidth = 1280;  // set this value to the desired width of your window
-            _graphics.PreferredBackBufferHeight = 720;   // set this value to the desired height of your window
-            _graphics.ApplyChanges();
-
-         
-            Window.AllowUserResizing = true;
-            Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
-
+            
 
             // create the folder for saves, if it does not exist.
             if (!Directory.Exists("Saves"))
@@ -101,10 +103,17 @@ namespace Crystalarium.Main
 
         public void OnResize(object sender, EventArgs e)
         {
-            _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-            _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
 
-            _graphics.ApplyChanges();
+            if (_graphics.PreferredBackBufferWidth != _graphics.GraphicsDevice.Viewport.Width ||
+               _graphics.PreferredBackBufferHeight != _graphics.GraphicsDevice.Viewport.Height)
+            {
+                _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+                _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+
+                _graphics.ApplyChanges();
+
+               
+            }
         }
 
 
@@ -175,10 +184,9 @@ namespace Crystalarium.Main
         {
 
 
-            // this is temporary disgusting code.
-            // I'm saying temporary mostly as a hope.
+            // almost all of this code probably deserves to be moved.
 
-            if (Engine.Controller.Context == "play")
+            if (Engine.Controller.Context == "play" && IsActive)
             {
                 view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
                 // HACK
@@ -202,7 +210,7 @@ namespace Crystalarium.Main
             }
 
 
-            Engine.Update(gameTime);
+            Engine.Update(gameTime, IsActive);
          
 
             base.Update(gameTime);
@@ -217,13 +225,12 @@ namespace Crystalarium.Main
             // make everything a flat color.
             GraphicsDevice.Clear(new Color(70, 70, 70));
 
-            // try to draw the game
+            // draw the game
             Engine.StartDraw();
-            
-          
+            // for the time being, the game handles the 'UI' as the engine has no such systems. 
             UI.Draw(Engine.Renderer, gameTime);
-          
             Engine.EndDraw();
+
             base.Draw(gameTime);
      
         }

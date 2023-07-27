@@ -197,7 +197,13 @@ namespace CrystalCore
             return rs;
         }
 
-        public void Update(GameTime gameTime)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameTime">?</param>
+        /// <param name="isWindowActive">Is the game window active/does it have focus?</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void Update(GameTime gameTime, bool isWindowActive)
         {
             if (!Initialized)
             {
@@ -215,7 +221,10 @@ namespace CrystalCore
                 v.Update();
             }
 
-
+            if (!isWindowActive)
+            {
+                return;
+            }
             _controller.Update();
 
         }

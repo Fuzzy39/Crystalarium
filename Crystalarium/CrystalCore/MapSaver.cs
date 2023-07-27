@@ -145,13 +145,15 @@ namespace CrystalCore
                     xml.VerifyElementToRead("Ruleset");
                     string ruleName = xml.Reader.ReadElementContentAsString();
 
+
+
                     // get the ruleset.
-                    m.Ruleset = GetRuleset(ruleName);
+                    m.Ruleset = GetRuleset(ruleName); // triggers a map reset
 
+                    LoadGeometry(xml, m); // triggers another map reset, with the correct size.
 
+                    // resetting twice is kinda awkward
 
-                    LoadGeometry(xml, m);
-                    
                     LoadAgents(xml, m);
 
 
@@ -206,7 +208,7 @@ namespace CrystalCore
 
                 origin *= new Point(Chunk.SIZE);
                 size *= new Point(Chunk.SIZE);
-                m.ExpandToFit(new Rectangle(origin, size));
+                m.Reset(new Rectangle(origin, size));
 
                 xml.Reader.ReadEndElement();
             }

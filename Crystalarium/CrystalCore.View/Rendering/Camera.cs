@@ -239,6 +239,12 @@ namespace CrystalCore.View.Rendering
         }
 
 
+        internal virtual void Reset(Rectangle bounds) 
+        {
+            _bounds = bounds;
+            Position = bounds.Center.ToVector2();
+        }
+
 
         // sets the position of the camera if that position would be in bounds.
         // pos represents the location of the top left corner of the screen.

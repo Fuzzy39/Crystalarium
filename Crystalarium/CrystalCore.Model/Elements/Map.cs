@@ -112,14 +112,14 @@ namespace CrystalCore.Model.Elements
             sim.removeGrid(this);
         }
 
+
         public void Reset()
         {
-            if(OnReset != null)
-            {
-                OnReset(this, new EventArgs());
-                
-            }
-           
+            Reset(new Rectangle(0, 0, 0, 0));
+        }
+
+        public void Reset(Rectangle minimumBounds)
+        {
 
             // reseting our grid should remove all references to any remaining mapObjects
             if (grid != null)
@@ -133,14 +133,18 @@ namespace CrystalCore.Model.Elements
 
           
             grid = new Grid<Chunk>(new Chunk(this, new Point(0, 0) ));
-
+            this.ExpandToFit(minimumBounds);
 
 
             // could be redundant?
             _agents.Clear();
             _connections = 0;
-            _chunks = 1;
 
+            if(OnReset != null)
+            {
+                OnReset(this, new EventArgs());
+
+            }
         }
 
         public void ExpandGrid(Direction d)

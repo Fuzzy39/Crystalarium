@@ -231,8 +231,6 @@ namespace CrystalCore.View
             // the actual juice.
             rend.Draw(renderTarget, _pixelBounds, Color.White);
 
-
-
             // finally, draw the border.
             _border.Draw(rend);
 
@@ -304,8 +302,11 @@ namespace CrystalCore.View
         // this should be called whenever our skin changes.
         public void Reset()
         {
+            
             Manager.Reset();
-            Camera.Position = _map.Center;
+            Camera.Reset(_map.Bounds);
+          
+           
         }
     }
 }

@@ -202,6 +202,9 @@ namespace CrystalCore.View.Rendering
         }
 
 
+      
+
+
         private void UpdatePosition()
         {
             Vector2 nextPos = OriginPosition + new Vector2(Velocity.X / (float)Scale, Velocity.Y / (float)Scale);
