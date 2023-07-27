@@ -127,7 +127,6 @@ namespace Crystalarium.Main
 
 
 
-
             //############### MIRROR #####################
             t = CrystalRules.CreateType("mirror", new Point(1, 1));
             // up right
@@ -270,7 +269,7 @@ namespace Crystalarium.Main
 
             tr.Requirements = ReceivingOnSide(Direction.up);
 
-            tr.Transformations.Add(new SignalTransformation(1, down, left, right));
+            tr.Transformations.Add(new SignalTransformation(1, down, right));
 
 
             // right rule
@@ -279,7 +278,7 @@ namespace Crystalarium.Main
 
             tr.Requirements = ReceivingOnSide(Direction.right);
 
-            tr.Transformations.Add(new SignalTransformation(1, down, left, up));
+            tr.Transformations.Add(new SignalTransformation(1, down, up));
 
 
 
@@ -289,16 +288,10 @@ namespace Crystalarium.Main
 
             tr.Requirements = ReceivingOnSide(Direction.down);
 
-            tr.Transformations.Add(new SignalTransformation(1, right, left, up));
+            tr.Transformations.Add(new SignalTransformation(1, right,  up));
 
 
-            // left rule
-            tr = new TransformationRule();
-            t.Rules.Add(tr);
-
-            tr.Requirements = ReceivingOnSide(Direction.left);
-
-            tr.Transformations.Add(new SignalTransformation(1, down, right, up));
+           
 
 
 
@@ -447,7 +440,7 @@ namespace Crystalarium.Main
             basic.AgentConfigs.Add(conf);
 
             conf = new AgentViewConfig(baseConfig, BasicRules.GetAgentType("splitter"));
-            conf.DefaultTexture = Textures.prism;
+            conf.DefaultTexture = Textures.splitter;
             basic.AgentConfigs.Add(conf);
 
             // beams
@@ -518,6 +511,7 @@ namespace Crystalarium.Main
             conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("prism"));
             conf.Color = new Color(50, 100, 200);
             beams.AgentConfigs.Add(conf);
+
 
             // mirror
             conf = new AgentViewConfig(baseConfig, CrystalRules.GetAgentType("mirror"));

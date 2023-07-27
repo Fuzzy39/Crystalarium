@@ -31,6 +31,7 @@ namespace Crystalarium.Main
         internal static Texture2D prism;
         internal static Texture2D stopper;
         internal static Texture2D notGate;
+        internal static Texture2D splitter;
 
         // other textrues
         internal static Texture2D viewboxBG;
@@ -70,6 +71,7 @@ namespace Crystalarium.Main
             Textures.notGate = Content.Load<Texture2D>("Agents/notgate");
             Textures.prism = Content.Load<Texture2D>("Agents/prism");
             Textures.stopper = Content.Load<Texture2D>("Agents/stopper");
+            splitter = Content.Load<Texture2D>("Agents/splitter");
         }
 
     }
