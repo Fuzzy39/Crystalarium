@@ -53,6 +53,7 @@ namespace CrystalCore.Model.Elements
 
             _children = new List<ChunkMember>();
             _membersWithin = new List<ChunkMember>();
+            Ready();
         }
 
         private void CheckOverlap()

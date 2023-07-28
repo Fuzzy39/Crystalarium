@@ -27,7 +27,7 @@ namespace CrystalCore.View.Subviews.Agents
             get { return config.AgentType; }
         }
 
-        internal AgentView(GridView v, Agent a, List<Subview> others, AgentViewConfig config) : base(v, a, others)
+        internal AgentView(GridView v, Agent a, AgentViewConfig config) : base(v, a)
         {
            
             _ports = null;
@@ -38,6 +38,7 @@ namespace CrystalCore.View.Subviews.Agents
 
         protected override void Render(IRenderer rend)
         {
+
            
 
             // render the thing if we have been set to.

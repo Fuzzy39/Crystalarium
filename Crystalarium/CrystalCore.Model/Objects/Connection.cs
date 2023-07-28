@@ -101,8 +101,8 @@ namespace CrystalCore.Model.Objects
 
             _length = length;
 
-           
 
+            Ready();
           
         }
 

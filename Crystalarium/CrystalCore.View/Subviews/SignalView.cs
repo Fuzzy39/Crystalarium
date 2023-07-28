@@ -29,7 +29,7 @@ namespace CrystalCore.View.Subviews
         }
 
 
-        public SignalView(GridView v, Connection b, List<Subview> others, SignalViewConfig config) : base(v, b, others)
+        public SignalView(GridView v, Connection b, SignalViewConfig config) : base(v, b)
         {
             this.config = config;
 

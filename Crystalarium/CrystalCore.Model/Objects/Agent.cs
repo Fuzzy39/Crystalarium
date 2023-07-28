@@ -17,13 +17,13 @@ namespace CrystalCore.Model.Objects
         private AgentType _type;
 
         protected List<TransformationRule> _activeRules;
-    
+
         private PortManager portInterface;
 
         private bool updatedSignalsThisStep;
         // properties 
 
-       // internal event EventHandler OnPortsDestroyed;
+        // internal event EventHandler OnPortsDestroyed;
 
         public AgentType Type
         {
@@ -47,7 +47,7 @@ namespace CrystalCore.Model.Objects
         }
 
         // Constructors
-        public Agent(Map g, Point location, AgentType t, Direction facing) : base(g, new Rectangle(location, t.Size), (t.Ruleset.RotateLock ? Direction.up:facing))
+        public Agent(Map g, Point location, AgentType t, Direction facing) : base(g, new Rectangle(location, t.Size), (t.Ruleset.RotateLock ? Direction.up : facing))
         {
 
             if (g.Ruleset != t.Ruleset)
@@ -60,7 +60,7 @@ namespace CrystalCore.Model.Objects
             // create the portinterface
             portInterface = new PortManager(t, this);
             portInterface.OnCreation();
-            
+
 
             // if diagonal signals are allowed, then agents should not be bigger than 1 by 1
             if (Type.Ruleset.DiagonalSignalsAllowed && Bounds.Size.X * Bounds.Size.Y > 1)
@@ -70,10 +70,12 @@ namespace CrystalCore.Model.Objects
 
             updatedSignalsThisStep = false;
 
-           // do the default thing.
-           _activeRules = new List<TransformationRule>();
-           _activeRules.Add(Type.DefaultState);
-           Execute();
+            // do the default thing.
+            _activeRules = new List<TransformationRule>();
+            _activeRules.Add(Type.DefaultState);
+            Execute();
+
+            Ready();
 
         }
 
@@ -85,7 +87,7 @@ namespace CrystalCore.Model.Objects
 
             base.Destroy();
             portInterface.Destroy();
-           
+
 
 
         }
@@ -111,7 +113,7 @@ namespace CrystalCore.Model.Objects
             base.Rotate(d);
             portInterface.Rotate();
 
-            
+
 
             if (Type.Ruleset.RunDefaultStateOnRotation)
             {
@@ -130,13 +132,13 @@ namespace CrystalCore.Model.Objects
             }
 
             _type = at;
-            
+
             // do the default thing.
             _activeRules = new List<TransformationRule>();
             _activeRules.Add(Type.DefaultState);
             RunTransformations();
             portInterface.StatusChanged();
-            
+
         }
 
 
@@ -157,17 +159,17 @@ namespace CrystalCore.Model.Objects
 
         }
 
-        
+
 
 
         private List<TransformationRule> DetermineState() //Indiana
         {
-          
+
             List<TransformationRule> toReturn = new List<TransformationRule>();
 
             foreach (TransformationRule state in Type.Rules)
             {
-                
+
                 // check if we meet the requirements
                 if (state.SatisfiesRequirements(this))
                 {
@@ -178,7 +180,7 @@ namespace CrystalCore.Model.Objects
 
             if (toReturn.Count == 0)
             {
-                toReturn.Add( Type.DefaultState);
+                toReturn.Add(Type.DefaultState);
             }
 
             return toReturn;
@@ -187,12 +189,12 @@ namespace CrystalCore.Model.Objects
         private List<Transformation> GetTransformations()
         {
             List<Transformation> toReturn = new List<Transformation>();
-            foreach(TransformationRule tr in _activeRules)
+            foreach (TransformationRule tr in _activeRules)
             {
                 toReturn.AddRange(tr.Transformations);
             }
             return Compact(toReturn);
-                
+
         }
 
         // add all transformations that can be added.
@@ -206,12 +208,12 @@ namespace CrystalCore.Model.Objects
             bool compacted = false;
 
 
-            foreach(Transformation lookat in list)
+            foreach (Transformation lookat in list)
             {
                 if (lookat == t) { continue; }
 
                 // compact add together any transformations that can be added to ours.
-                if(t.GetType()==lookat.GetType())
+                if (t.GetType() == lookat.GetType())
                 {
                     t = t.Add(lookat);
                     compacted = true;
@@ -221,11 +223,11 @@ namespace CrystalCore.Model.Objects
                 toReturn.Add(lookat);
 
             }
-            
+
             // stick ours back on to the end.
             toReturn.Add(t);
 
-            if(compacted)
+            if (compacted)
             {
                 return Compact(toReturn);
             }
@@ -242,7 +244,7 @@ namespace CrystalCore.Model.Objects
 
             RunTransformations();
 
-            if(!updatedSignalsThisStep)
+            if (!updatedSignalsThisStep)
             {
                 OnlyTransmitOn(new PortTransmission[0]);
             }
@@ -265,11 +267,11 @@ namespace CrystalCore.Model.Objects
 
         internal void Update()
         {
-            if(!portInterface.StatusHadChanged)
+            if (!portInterface.StatusHadChanged)
             {
                 return;
             }
-           
+
             Execute();
 
         }
@@ -277,7 +279,7 @@ namespace CrystalCore.Model.Objects
         internal void OnlyTransmitOn(PortTransmission[] pts)
         {
             List<Port> ports = new List<Port>();
-            foreach(PortTransmission pt in pts)
+            foreach (PortTransmission pt in pts)
             {
                 ports.Add(GetPort(pt.portID));
             }
@@ -286,7 +288,7 @@ namespace CrystalCore.Model.Objects
             updatedSignalsThisStep = true;
         }
 
-    
+
 
         public Port GetPort(PortID portID)
         {
@@ -298,18 +300,18 @@ namespace CrystalCore.Model.Objects
         }
 
 
-       /* ///<summary>
-        /// 
-        /// </summary>
-        /// <returns> the value this port was receiving at the end of the last simulation step.</returns>
-        internal int GetPortValue(PortIdentifier portID)
-        {
-            if (!portID.CheckValidity(Type))
-            {
-                throw new InvalidOperationException("Bad PortID.");
-            }
+        /* ///<summary>
+         /// 
+         /// </summary>
+         /// <returns> the value this port was receiving at the end of the last simulation step.</returns>
+         internal int GetPortValue(PortIdentifier portID)
+         {
+             if (!portID.CheckValidity(Type))
+             {
+                 throw new InvalidOperationException("Bad PortID.");
+             }
 
-            return _stalePortValues[(int)portID.Facing][portID.ID];
-        }*/
+             return _stalePortValues[(int)portID.Facing][portID.ID];
+         }*/
     }
 }

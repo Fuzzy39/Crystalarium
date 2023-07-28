@@ -20,7 +20,7 @@ namespace CrystalCore.View.Subviews
 
 
         // Constructor
-        internal ChunkView(GridView v, Chunk ch, List<Subview> others, ChunkViewConfig config) : base(v, ch, others)
+        internal ChunkView(GridView v, Chunk ch, ChunkViewConfig config) : base(v, ch)
         {
             this.config = config;
 

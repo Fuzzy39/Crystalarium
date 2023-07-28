@@ -17,7 +17,6 @@ namespace CrystalCore.View.Subviews
 
         protected MapObject _renderData; // the thing we view
         protected GridView renderTarget;
-        private List<Subview> others; // I forget what this is for...
 
         internal MapObject RenderData
         {
@@ -25,65 +24,36 @@ namespace CrystalCore.View.Subviews
         }
 
 
-        protected Subview(GridView v, MapObject o, List<Subview> others)
+        protected Subview(GridView v, MapObject o)
         {
-            // check that we don't already exist
-            foreach (Subview r in others)
-            {
-                if (r.RenderData == o)
-                    //return;
-                    throw new InvalidOperationException("Attempted to create an already existing Renderer.");
-
-            }
-            this.others = others;
+        
             _renderData = o;
             renderTarget = v;
 
-            // add ourselves to the list of renderers.
-            others.Add(this);
 
         }
-
-
-        /// <summary>
-        /// remove external refrences to this object.
-        /// </summary>
-        internal void Destroy()
-        {
-            others.Remove(this);
-        }
-
 
         /// <summary>
         /// Draw this GridObject.
         /// </summary>
         /// <param name="sb"></param>
-        /// <returns>whether drawing was successful. Subview is destroyed if false. </returns>
+        /// <returns>whether the object being drawn exists </returns>
 
         public bool Draw(IRenderer rend)
         {
-            // probably don't kill anybody.
-            // we might have to kill ourselves, if we aren't rendering anything.
-            if (_renderData == null || RenderData.Bounds.IsEmpty)
-            {
-                Destroy();
-                return false;
-            }
+
+            if(RenderData.Destroyed) return false;
 
             // check that we are visible on screen.
             if (renderTarget.Camera.TileBounds.Intersects(_renderData.Bounds))
             {
 
                 Render(rend);
-                return true;
+               
             }
-            else
-            {
+           
+            return true;
 
-                Destroy();
-                return false;
-
-            }
 
         }
 

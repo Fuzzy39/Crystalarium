@@ -60,23 +60,70 @@ namespace CrystalCore.View
         {
 
             _parent = parent;
+
+            parent.Map.OnMapObjectReady += OnMapObjectReady;
+
             Reset();
+
+           
 
         }
 
+
+        private void OnMapObjectReady(object o, EventArgs e)
+        {
+            if(o is Agent)
+            {
+               
+                Agent a = (Agent)o;
+                _agentViews.Add(new AgentView(Parent, a, Parent.CurrentSkin.GetAgentViewConfig(a.Type)));
+            }
+
+            if(o is Connection)
+            {
+                Connection c = (Connection)o;
+                _beamViews.Add(new SignalView(Parent, c, Parent.CurrentSkin.SignalConfig));
+            }
+
+            if(o is Chunk)
+            {
+                Chunk c = (Chunk)o;
+                _chunkViews.Add(new ChunkView(Parent, c, Parent.CurrentSkin.ChunkConfig));
+            }
+
+        }
 
         // methods
 
         internal void Reset()
         {
-            // remove all curent views and ghosts: they are now outdated.
+         
+            // remove all curent  ghosts: they are now outdated.
+            _ghosts = new List<AgentGhost>();
 
             // initialize our lists
             _chunkViews = new List<Subview>();
             _agentViews = new List<Subview>();
             _beamViews = new List<Subview>();
 
-            _ghosts = new List<AgentGhost>();
+            // we now need to add all appropriate objects
+
+            List<Chunk> chunks = Parent.Map.ChunksInBounds(Parent.Map.Bounds);
+
+            foreach (Chunk ch in chunks )
+            {
+
+                OnMapObjectReady(ch, new());
+
+               /* foreach(ChunkMember chm in ch.Children)
+                {
+                    OnMapObjectReady(chm, new());
+                }*/
+                
+            }
+
+          
+      
         }
 
 
@@ -94,28 +141,23 @@ namespace CrystalCore.View
 
         public bool Draw(IRenderer rend)
         {
+
+      
             // first update the chunk list and draw chunks.
-            AddChunks();
             DrawObjects(rend, _chunkViews);
             
             // do the same with agents.
             if (Parent.DoAgentRendering)
             {
-                AddAgents();
                 foreach(AgentView av in _agentViews)
                 {
                     av.DrawBackground(rend);
                 }
+                
 
-                AddSignals();
                 DrawObjects(rend, _beamViews);
 
                 DrawObjects(rend, _agentViews);
-
-
-               
-
-
 
             }
             DrawGhosts(rend);
@@ -124,113 +166,6 @@ namespace CrystalCore.View
 
         }
 
-
-
-        // adds chunks to be rendered, if needbe.
-        private void AddChunks()
-        {
-            foreach (List<Chunk> list in Parent.Map.grid.Elements)
-            {
-                foreach (Chunk ch in list)
-                {
-
-                    if (!Parent.Camera.TileBounds.Intersects(ch.Bounds))
-                    {
-                        continue;
-                    }
-
-                    if(!_chunkViews.ViewExistsFor(ch))
-                    {
-                        new ChunkView(_parent, ch, _chunkViews, Parent.CurrentSkin.ChunkConfig);
-                    }
-
-                 
-
-                }
-            }
-        }
-
-
-        // adds all visible agents.
-        private void AddAgents()
-        {
-            // find agents that need rendered
-            foreach (ChunkView chr in _chunkViews)
-            {
-
-                AddAgents((Chunk)chr.RenderData);
-            }
-
-        }
-
-        // adds all visible agents in chunk ch
-        private void AddAgents(Chunk ch)
-        {
-            
-
-            foreach (ChunkMember cm in ch.Children)
-            {
-                if(!(cm is Agent))
-                {
-                    continue;
-                }
-
-                Agent a = (Agent)cm;
-
-                // does this agent need rendered?
-                if (!_parent.Camera.TileBounds.Intersects(a.Bounds))
-                {
-                    continue;
-                }
-
-                AgentView av = (AgentView)(_agentViews.GetViewFor(a));
-                
-                if(av!= null && av.Type != a.Type)
-                {
-                    av.Destroy();
-                    av = null;
-                }
-
-                if (av == null)
-                {
-                    // add a new renderer.
-                    new AgentView(_parent, a, _agentViews, Parent.CurrentSkin.GetAgentViewConfig(a.Type));
-                }
-            }
-        }
-
-        private void AddSignals()
-        {
-            // find agents that need rendered
-            foreach (ChunkView chr in _chunkViews)
-            {
-
-                foreach( ChunkMember cm in ((Chunk)chr.RenderData).MembersWithin)
-                {
-
-                    if (!(cm is Connection))
-                    {
-                        continue;
-                       
-                    }
-
-                    Connection beam = (Connection)cm;
-
-                    if(beam.FromA == 0 && beam.FromB == 0 && !Parent.DoDebugRendering)
-                    {
-                        continue;
-                    }
-
-         
-                    if (!_beamViews.ViewExistsFor(beam))
-                    {
-                        
-                        new SignalView (_parent, beam, _beamViews, Parent.CurrentSkin.SignalConfig);
-
-                    }
-                }
-            }
-        }
 
 
         private void DrawObjects(IRenderer rend, List<Subview> list)
@@ -244,7 +179,14 @@ namespace CrystalCore.View
 
                 // repeat the previous index if this renderer was destroyed.
                 if (r.Draw(rend))
+                {
                     i++;
+                    continue;
+                }
+                
+                list.Remove(r);
+                
+                    
             }
         }
 

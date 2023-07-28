@@ -32,7 +32,8 @@ namespace CrystalCore.Model.Elements
 
         public event EventHandler OnReset;
         public event EventHandler OnResize;
-
+        public event EventHandler OnMapObjectReady;
+        public event EventHandler OnMapObjectDestroyed;
     
 
         public int AgentCount { get => _agents.Count; }
@@ -121,6 +122,9 @@ namespace CrystalCore.Model.Elements
         public void Reset(Rectangle minimumBounds)
         {
 
+          
+
+
             // reseting our grid should remove all references to any remaining mapObjects
             if (grid != null)
             {
@@ -207,7 +211,7 @@ namespace CrystalCore.Model.Elements
         {
 
             // Remove a grid object from it's appropriate containers.
-
+            OnMapObjectDestroyed?.Invoke(o, new());
             if (o is Agent)
             {
                 _agents.Remove((Agent)o);
@@ -225,10 +229,17 @@ namespace CrystalCore.Model.Elements
                 _chunks--;
                 return;
             }
+
+          
+            
+            
         }
 
         internal void OnObjectCreated(object o, EventArgs e)
         {
+
+          
+
             if (o is Agent)
             {
                 _agents.Add((Agent)o);
@@ -246,6 +257,15 @@ namespace CrystalCore.Model.Elements
                 _chunks++;
                 return;
             }
+
+            
+            
+        }
+
+
+        internal void OnObjectReady(object o, EventArgs e)
+        {
+            OnMapObjectReady?.Invoke(o, new());
         }
 
        

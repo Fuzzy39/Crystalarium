@@ -16,6 +16,7 @@ namespace CrystalCore.Model.Elements
 
         public event EventHandler OnDestroy;
         public event EventHandler OnCreate;
+        public event EventHandler OnReady;
 
         public virtual Rectangle Bounds
         {
@@ -71,8 +72,9 @@ namespace CrystalCore.Model.Elements
 
             // our grid should be notified when we are destroyed.
             OnCreate += m.OnObjectCreated;
-            OnCreate(this, new EventArgs());
+            OnCreate?.Invoke(this, new EventArgs());
 
+            OnReady += m.OnObjectReady;
             OnDestroy += m.OnObjectDestroyed;
 
         }
@@ -85,14 +87,18 @@ namespace CrystalCore.Model.Elements
             : this(m, new Rectangle(x, y, width, height)) { }
 
 
+        protected void Ready()
+        {
+            OnReady?.Invoke(this, new()); 
+        }
+
         public virtual void Destroy()
         {
             // remove references to this object.
 
-            if (OnDestroy != null)
-            {
-                OnDestroy(this, new EventArgs());
-            }
+            
+            OnDestroy?.Invoke(this, new EventArgs());
+            
             _bounds = new Rectangle(0, 0, 0, 0);
             _map = null;
             _destroyed = true;

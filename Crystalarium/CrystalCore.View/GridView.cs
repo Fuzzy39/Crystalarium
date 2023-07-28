@@ -152,11 +152,10 @@ namespace CrystalCore.View
 
             _cameraRend = new CameraRenderer(new(new(),PixelBounds.Size), rend);
 
-            _subviewManager = new SubviewManager(this);
-
             _skinSet = skinSet;
 
-          
+            _subviewManager = new SubviewManager(this);
+
 
             // border
             _border = new Border(this);
