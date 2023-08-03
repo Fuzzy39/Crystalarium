@@ -40,28 +40,30 @@ namespace CrystalCore.Util
 
             if(rad< -Math.PI * .75f)
             {
-                return Direction.down;
+                return Direction.left;
             }
 
             if(rad < -Math.PI * .25f)
             {
-                return Direction.left;
+                return Direction.up;
             }
 
             if(rad < Math.PI * .25f)
             {
-                return Direction.up;
+                return Direction.right;
             }
 
             if(rad < Math.PI *.75f)
             {
-                return Direction.right;
+                return Direction.down;
             }
 
-            return Direction.down;
+            return Direction.left;
         }
 
-            
+
+       
+
         public static bool IsVertical(this Direction d)
         {
             if (d == Direction.up || d == Direction.down)
@@ -141,22 +143,13 @@ namespace CrystalCore.Util
 
         // What? Radians? really?
         // Yes, really. We do need this.
+        // the code contains more trig than you might expect.
+        // not like an enormous amount, but I bet you'd expect none.
         public static float ToRadians(this Direction d)
         {
-            return d switch
-            {
-                Direction.up => 0,
 
-                Direction.right => MathF.PI / 2f,
-
-                Direction.down => MathF.PI,
-
-                Direction.left => MathF.PI * 3f / 2f,
-
-                // default
-                _ => 0,
-
-            };
+            return d.ToCompassPoint().ToRadians();
+         
         }
 
         public static Direction Rotate(this Direction d, RotationalDirection r)
@@ -321,12 +314,8 @@ namespace CrystalCore.Util
         {
             // by golly, this is wizardry, ain't it?
             // even CompassPoints are Orthagonal, odds are diagonal.
-            if (((int)cp) % 2 == 0)
-            {
-                return false;
-            }
-
-            return true;
+            return ((int)cp) % 2 != 0;
+      
         }
 
         /// <summary>
@@ -336,14 +325,15 @@ namespace CrystalCore.Util
         /// <returns></returns>
         public static float ToRadians(this CompassPoint cp)
         {
-            float toReturn = 0;
+            float toReturn = -MathF.PI/2f;
+
             foreach( int i in Enum.GetValues<CompassPoint>() )
             {
                 CompassPoint point = (CompassPoint)i;
 
                 if (point == cp)
                 {
-                    return toReturn;
+                    return MathHelper.WrapAngle(toReturn);
                 }
 
                 toReturn += MathF.PI / 4f;

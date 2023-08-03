@@ -199,8 +199,7 @@ namespace CrystalCore.Util.Graphics
         /// 
         /// </summary>
         /// <param name="location"> the physiscal location of the location origin of this rectangle.</param>
-        /// <param name="size"> the width and height of this rectangle </param>
-        /// <param name="locationOrigin">the point on the rectangle where location is defined, from 0,0 (top left) to 1,1 (bottom right)</param>
+        /// <param name="size"> the width and height of this rectangle </param>  
         /// <param name="rotation">the angle, in radians, that this rectangle is rotated around from rotation origin. </param>
         /// <param name="rotationOrigin">The point on the rectangle that is rotated about, from 0,0 (top left) to 1,1 (bottom right) </param>
         public RotatedRect( Vector2 location, Vector2 size, float rotation, Vector2 rotationOrigin)
@@ -257,7 +256,7 @@ namespace CrystalCore.Util.Graphics
         }
 
 
-
+        static float i = 0f;
         // valid rotation values are between 0 and pi/2. MAKE IT SO.
 
         /// <summary>
@@ -269,7 +268,8 @@ namespace CrystalCore.Util.Graphics
         /// <returns></returns>
         public static RotatedRect FromBoundingLocation(Vector2 BoundingLocation, Vector2 size, float rotation)
         {
-            rotation = MathHelper.WrapAngle(rotation);
+            i += .0001f;
+            rotation = MathHelper.WrapAngle(rotation+(i));
 
             float w = size.X;
             float h = size.Y;
@@ -335,6 +335,37 @@ namespace CrystalCore.Util.Graphics
         }
 
 
+        /// <summary>
+        /// Rotates the rectangle by a number of radians about the relative origin.
+        /// </summary>
+        /// <param name="radians"></param>
+        /// <param name="origin">the relative origin of rotation, where (0,0) is the position of the rectangle and (1,1) is the furthest corner.</param>
+        public void RotateBy(float radians, Vector2 origin)
+        {
+            // step 1 find actual origin
+            Vector2 originPos = PositionOfSizeRelativePoint(origin.X, origin.Y);
+
+            RotateAbout(radians, originPos);           
+        }
+
+        public void RotateAbout(float radians, Vector2 origin)
+        {
+           
+            // step 2 rotate position
+            X -= origin.X;
+            Y -= origin.Y;
+            float newX = X * Cos(radians) - Y * Sin(radians);
+            float newY = Y * Cos(radians) + X * Sin(radians);
+            X = newX + origin.X;
+            Y = newY + origin.Y;
+
+            // step 3 resolve new rotation value
+
+            // we measure the angle between our position, the origin and what we think is the origin to find our missing angle
+            //Vector2 falseOriginPos = PositionOfSizeRelativePoint(origin.X, origin.Y);
+
+            Rotation = MathHelper.WrapAngle(Rotation + radians);
+        }
 
 
     }

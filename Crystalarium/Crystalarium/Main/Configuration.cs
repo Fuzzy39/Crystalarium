@@ -29,7 +29,7 @@ namespace Crystalarium.Main
 
 
         internal SkinSet DefaultSkin { get; private set; }
-        internal SkinSet MiniMapSkin { get; private set; }
+        internal SkinSet MiniMapSkin { get; private set; }  
 
 
         internal Configuration(CrystalGame game)
@@ -55,7 +55,7 @@ namespace Crystalarium.Main
 
             // create a ruleset
             CrystalRules = game.Engine.addRuleset("Crystalarium");
-           
+            //CrystalRules.DiagonalSignalsAllowed = true;
                 
             // define SignalRules
             AgentType t;
@@ -77,7 +77,7 @@ namespace Crystalarium.Main
             CrystalRules.CreateType("stopper", new Point(1, 1));
 
             // ############### Emitter #####################
-            t = CrystalRules.CreateType("emitter", new Point(1, 1));
+            t = CrystalRules.CreateType("emitter", new Point(1, 2));
 
             t.Rules.Add(new TransformationRule());
             // condition: active ports > 0

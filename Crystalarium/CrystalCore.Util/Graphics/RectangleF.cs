@@ -74,6 +74,17 @@ namespace CrystalCore.Util.Graphics
             get { return new Vector2(X, Y); }
         }
 
+
+        public Vector2 Center
+        {
+            get { return new(X + Width / 2, Y + Height / 2); }
+        }
+
+        public Vector2 RelativeCenter
+        {
+            get { return Center - TopLeft; }
+        }
+
         // the size of the rectangle
         public Vector2 Size
         {

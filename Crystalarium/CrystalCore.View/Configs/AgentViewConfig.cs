@@ -16,10 +16,11 @@ namespace CrystalCore.View.Configs
         private AgentType _type; // what type of agent is this config for?
 
         private Texture2D _background;  // Our background texture
+
         private Color _backgroundColor; // our background color.
-        private bool _doBackgroundRotation; // whether the backroung is rotated along with the primary texture.
 
         private Texture2D _defaultTexture;
+        private Direction _textureFacing;
         private Color _color;
 
         private float _shrinkage;// the amount of the tile, in pixels per edge (at camera scale of 100) that is left blank when this agent is rendered.
@@ -34,6 +35,15 @@ namespace CrystalCore.View.Configs
         {
             get => _backgroundColor;
             set => _backgroundColor = value;
+        }
+
+        /// <summary>
+        /// the direction the texture is facing.
+        /// </summary>
+        public Direction TextureFacing
+        {
+            get => _textureFacing;
+            set => _textureFacing = value;
         }
 
         public float Shrinkage
@@ -71,12 +81,6 @@ namespace CrystalCore.View.Configs
             set => _doBackgroundShrinkage = value;
         }
 
-        public bool DoBackgroundRotation
-        {
-            get => _doBackgroundRotation;
-            set => _doBackgroundRotation = value;
-        }
-
         public AgentType AgentType
         {
             get => _type;
@@ -91,7 +95,7 @@ namespace CrystalCore.View.Configs
             Color = Color.White;
             DefaultTexture = null;
             DoBackgroundShrinkage = false;
-            DoBackgroundRotation = false;
+            TextureFacing = Direction.up;
             _type = type;
         }
 
@@ -102,8 +106,7 @@ namespace CrystalCore.View.Configs
             Shrinkage = from.Shrinkage;
             Color = from.Color;
             DefaultTexture = from.DefaultTexture;
-            DoBackgroundShrinkage = from.DoBackgroundShrinkage;
-            DoBackgroundRotation = from.DoBackgroundRotation;
+            TextureFacing = from.TextureFacing;
             _type = type;
         }
 

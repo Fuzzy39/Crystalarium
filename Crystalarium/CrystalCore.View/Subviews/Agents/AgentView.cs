@@ -49,8 +49,12 @@ namespace CrystalCore.View.Subviews.Agents
 
 
             // render the Agent.
+            Direction facing = ((Entity)RenderData).Facing;
+            float textureFacing = facing.ToRadians() - config.TextureFacing.ToRadians();
 
-            RotatedRect pos = RotatedRect.FromFootprint(ShrinkBorders(), ((Entity)RenderData).Facing);
+            RotatedRect pos = RotatedRect.FromFootprint(ShrinkBorders(), Direction.up);
+
+            //pos.RotateAbout( textureFacing- facing.ToRadians(), RenderData.Bounds.Location.ToVector2()+new Vector2(.5f) );
 
             rend.Draw(config.DefaultTexture, pos, config.Color);
 
@@ -85,19 +89,15 @@ namespace CrystalCore.View.Subviews.Agents
             }
 
             RectangleF bounds = new RectangleF(RenderData.Bounds);
-            Direction facing = Direction.up;
+     
 
             if (config.DoBackgroundShrinkage)
             {
                 bounds = ShrinkBorders();
             }
+          
 
-            if (config.DoBackgroundRotation)
-            {
-                facing = ((Agent)RenderData).Facing;
-            }
-
-            RotatedRect pos = new(bounds, facing);
+            RotatedRect pos = new(bounds, DirectionUtil.FromRadians(0));
             rend.Draw(config.Background, pos, config.BackgroundColor);
         }
 

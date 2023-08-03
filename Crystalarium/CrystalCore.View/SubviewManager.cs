@@ -153,11 +153,11 @@ namespace CrystalCore.View
                 {
                     av.DrawBackground(rend);
                 }
-                
-
-                DrawObjects(rend, _beamViews);
 
                 DrawObjects(rend, _agentViews);
+                DrawObjects(rend, _beamViews);
+
+                
 
             }
             DrawGhosts(rend);
