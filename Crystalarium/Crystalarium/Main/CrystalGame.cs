@@ -191,6 +191,7 @@ namespace Crystalarium.Main
                 view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
                 // HACK
                 view.Camera.ZoomOrigin = view.LocalizeCoords(
+                    //Mouse.GetState().Position); // For basic Renderer
                     ((ScaledRenderer)Engine.Renderer).ToVirtualResolution(Mouse.GetState().Position.ToVector2()).ToPoint());
 
                 // create ghosts.
@@ -218,8 +219,6 @@ namespace Crystalarium.Main
           
         }
 
-
-        float i = 0;
         protected override void Draw(GameTime gameTime)
         {
 
@@ -230,9 +229,7 @@ namespace Crystalarium.Main
             Engine.StartDraw();
             // for the time being, the game handles the 'UI' as the engine has no such systems. 
             UI.Draw(Engine.Renderer, gameTime);
-            i += .01f;
-
-            Engine.Renderer.Draw(Textures.emitter, RotatedRect.FromBoundingLocation(new Point (0,0), new Point (100, 150), i), Color.Blue);
+            //Engine.Renderer.Draw(Textures.emitter, new RotatedRect(new Rectangle(0, 0, 200, 200),), Color.White);
 
             Engine.EndDraw();
 

@@ -256,7 +256,7 @@ namespace CrystalCore.Util.Graphics
         }
 
 
-        static float i = 0f;
+   
         // valid rotation values are between 0 and pi/2. MAKE IT SO.
 
         /// <summary>
@@ -268,8 +268,8 @@ namespace CrystalCore.Util.Graphics
         /// <returns></returns>
         public static RotatedRect FromBoundingLocation(Vector2 BoundingLocation, Vector2 size, float rotation)
         {
-            i += .0001f;
-            rotation = MathHelper.WrapAngle(rotation+(i));
+          
+            rotation = MathHelper.WrapAngle(rotation);
 
             float w = size.X;
             float h = size.Y;
@@ -314,7 +314,7 @@ namespace CrystalCore.Util.Graphics
 
 
         /// <summary>
-        /// Create a (gird aligned) rotated rectangle knowing the footprint it takes up.
+        /// Create a (gird aligned) rotated rectangle knowing the footprint it takes up. WHEN POINTING RIGHT
         /// </summary>
         /// <param name="loc"></param>
         /// <param name="d"></param>

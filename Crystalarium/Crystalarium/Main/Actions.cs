@@ -698,7 +698,9 @@ namespace Crystalarium.Main
         {
             // crude patch. Fix, someday?
 
-            Vector2 virtualPixelCoords = ((ScaledRenderer)game.Engine.Renderer).ToVirtualResolution( Mouse.GetState().Position.ToVector2());
+            Vector2 virtualPixelCoords =
+                //Mouse.GetState().Position.ToVector2(); // for basic renderer
+                ((ScaledRenderer)game.Engine.Renderer).ToVirtualResolution( Mouse.GetState().Position.ToVector2());
 
             Point pixelCoords = game.view.LocalizeCoords(virtualPixelCoords.ToPoint());
 

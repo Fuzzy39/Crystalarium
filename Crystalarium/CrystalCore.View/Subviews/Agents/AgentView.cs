@@ -52,7 +52,14 @@ namespace CrystalCore.View.Subviews.Agents
             Direction facing = ((Entity)RenderData).Facing;
             float textureFacing = facing.ToRadians() - config.TextureFacing.ToRadians();
 
-            RotatedRect pos = RotatedRect.FromFootprint(ShrinkBorders(), Direction.up);
+            RectangleF loc = ShrinkBorders();
+            Vector2 size = loc.Size;
+            if (facing.IsHorizontal())
+            {
+                size = new(size.Y, size.X);
+            }
+
+            RotatedRect pos = RotatedRect.FromBoundingLocation(loc.Location, size, textureFacing);
 
             //pos.RotateAbout( textureFacing- facing.ToRadians(), RenderData.Bounds.Location.ToVector2()+new Vector2(.5f) );
 
@@ -95,9 +102,10 @@ namespace CrystalCore.View.Subviews.Agents
             {
                 bounds = ShrinkBorders();
             }
-          
 
-            RotatedRect pos = new(bounds, DirectionUtil.FromRadians(0));
+           
+
+            RotatedRect pos = RotatedRect.FromBoundingLocation(bounds.Location, bounds.Size, 0);
             rend.Draw(config.Background, pos, config.BackgroundColor);
         }
 

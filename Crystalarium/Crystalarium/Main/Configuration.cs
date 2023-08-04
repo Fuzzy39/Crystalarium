@@ -77,7 +77,7 @@ namespace Crystalarium.Main
             CrystalRules.CreateType("stopper", new Point(1, 1));
 
             // ############### Emitter #####################
-            t = CrystalRules.CreateType("emitter", new Point(1, 2));
+            t = CrystalRules.CreateType("emitter", new Point(3, 2));
 
             t.Rules.Add(new TransformationRule());
             // condition: active ports > 0
@@ -261,7 +261,7 @@ namespace Crystalarium.Main
             BasicRules.CreateType("stopper", new Point(1, 1));
 
             // ############ SPLITTER #################
-            t = BasicRules.CreateType("splitter", new Point(1, 1));
+            t = BasicRules.CreateType("splitter", new Point(1, 1)); 
 
             // top rule
             tr = new TransformationRule();

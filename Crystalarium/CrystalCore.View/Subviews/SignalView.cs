@@ -110,7 +110,7 @@ namespace CrystalCore.View.Subviews
 
             // Main goal here is to find the rotatedrect that makes sense for our situation
 
-            float length = signal.Length + 1;
+            float length = signal.Length;
 
             if(!hasEnd)
             {

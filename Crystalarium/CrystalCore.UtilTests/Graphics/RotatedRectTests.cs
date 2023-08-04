@@ -93,11 +93,11 @@ namespace CrystalCore.Util.Graphics.Tests
         {
             RotatedRect r = RotatedRect.FromFootprint(new Rectangle(0, 0, 2, 1), Direction.left);
 
-            AssertClose(new Vector2(0, 1), r.TopLeft);
-            AssertClose(new Vector2(0, 0), r.TopRight);
+            AssertClose(new Vector2(1, 2), r.TopLeft);
+            AssertClose(new Vector2(0, 2), r.TopRight);
 
-            AssertClose(new Vector2(2, 1), r.BottomLeft);
-            AssertClose(new Vector2(2, 0), r.BottomRight);
+            AssertClose(new Vector2(1, 0), r.BottomLeft);
+            AssertClose(new Vector2(0, 0), r.BottomRight);
         }
 
 
