@@ -33,7 +33,7 @@ namespace CrystalCore.Model.Elements
                 }
             }
 
-            throw new ArgumentException("Chunk '" + ch + "' is not part of Grid '" + cg + "'.");
+            throw new ArgumentException("Chunk '" + (ch!=null?ch:"null") + "' is not part of Grid '" + cg + "'.");
         }
 
 
@@ -154,7 +154,7 @@ namespace CrystalCore.Model.Elements
 
         public static List<Chunk> ChunksInBounds(this Map g, Rectangle rect)
         {
-           rect = Rectangle.Intersect(g.Bounds, rect);
+            rect = Rectangle.Intersect(g.Bounds, rect);
 
 
             List<Chunk> toReturn = new List<Chunk>();

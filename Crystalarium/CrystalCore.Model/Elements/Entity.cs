@@ -44,7 +44,7 @@ namespace CrystalCore.Model.Elements
 
             if (g.EntitiesWithin(bounds).Count > 1) // it will always be at least 1, because we are in our bounds.
             {
-                throw new InvalidOperationException("Entity: " + this + " cannot be created. It overlaps another prexisting entity.");
+                throw new InvalidOperationException("Entity with bounds " + this.Bounds + " cannot be created. It overlaps another prexisting entity.");
             }
         }
 

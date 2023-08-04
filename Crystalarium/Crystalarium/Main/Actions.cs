@@ -16,6 +16,7 @@ using System.Xml;
 using CrystalCore.View.Core;
 using CrystalCore.View.Rendering;
 using CrystalCore;
+using System.ComponentModel;
 
 namespace Crystalarium.Main
 {
@@ -247,14 +248,25 @@ namespace Crystalarium.Main
                 {
 
                     Point clickCoords = GetMousePos();
-                    Agent toRemove = null;
+                    Rectangle boundsToCheck = new(clickCoords, CurrentType.GetSize(Rotation));
+
+                    // grow grid
+                    game.Map.ExpandToFit(boundsToCheck);
+
+                    // destroy agents intersecting bounds
+                  
+                    List<Agent> toRemove = game.Map.AgentsWithin(boundsToCheck);
 
 
-                    toRemove = game.Map.getAgentAtPos(clickCoords);
-                    if (toRemove != null)
+                    if (toRemove.Count>1)
                     {
-                        toRemove.Destroy();
+                        return;
 
+                    }
+
+                    if(toRemove.Count==1)
+                    {
+                        toRemove[0].Destroy();
                     }
 
                     // create agent
@@ -263,8 +275,7 @@ namespace Crystalarium.Main
                         new Agent(game.Map, clickCoords, CurrentType, Rotation);
                     }
 
-                    // grow grid
-                    game.Map.ExpandToFit(new Rectangle(clickCoords.X, clickCoords.Y, 1,1));
+
 
                 });
 
