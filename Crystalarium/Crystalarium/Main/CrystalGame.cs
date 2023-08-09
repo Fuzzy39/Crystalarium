@@ -32,8 +32,8 @@ namespace Crystalarium.Main
 
         // version number.
         private const int MAJOR = 8;
-        private const int MINOR = 0;
-        private const int BUILD = 1133; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int MINOR = 1;
+        private const int BUILD = 1149; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
@@ -229,7 +229,9 @@ namespace Crystalarium.Main
             Engine.StartDraw();
             // for the time being, the game handles the 'UI' as the engine has no such systems. 
             UI.Draw(Engine.Renderer, gameTime);
-            //Engine.Renderer.Draw(Textures.emitter, new RotatedRect(new Rectangle(0, 0, 200, 200),), Color.White);
+
+            // just a test texture to make sure I'm not going insane
+            //Engine.Renderer.Draw(Textures.emitter, new RotatedRect(new Rectangle(300, 300, 200, 200), MathF.PI/4, new(0f)), Color.White);
 
             Engine.EndDraw();
 

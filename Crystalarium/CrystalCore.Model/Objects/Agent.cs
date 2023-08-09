@@ -47,7 +47,7 @@ namespace CrystalCore.Model.Objects
         }
 
         // Constructors
-        public Agent(Map g, Point location, AgentType t, Direction facing) : base(g, new Rectangle(location, t.Size), (t.Ruleset.RotateLock ? Direction.up : facing))
+        public Agent(Map g, Point location, AgentType t, Direction facing) : base(g, location, t.UpwardsSize, (t.Ruleset.RotateLock ? Direction.up : facing))
         {
 
             if (g.Ruleset != t.Ruleset)
@@ -126,7 +126,7 @@ namespace CrystalCore.Model.Objects
 
         internal void Mutate(AgentType at)
         {
-            if (at.Size != Type.Size)
+            if (at.UpwardsSize != Type.UpwardsSize)
             {
                 throw new ArgumentException("An agent of type " + Type.Name + " cannot be mutated to type " + at.Name);
             }

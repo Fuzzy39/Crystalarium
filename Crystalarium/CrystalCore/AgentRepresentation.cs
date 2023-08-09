@@ -42,11 +42,11 @@ namespace CrystalCore
         {
             // this could be wrong when the direction is horizontal, because bounds arent adjusted.
             // seems like a minor issue - only effects map expansion.
-            Rectangle bounds = new Rectangle(relativeTo + location, type.Size);
+            
 
-            m.ExpandToFit(bounds);
+            m.ExpandToFit(Entity.CalculateBounds(location, type.UpwardsSize, facing));
 
-            if (Entity.IsValidLocation(m, bounds, facing))
+            if (Entity.IsValidLocation(m, relativeTo + location, type.UpwardsSize, facing))
             {
                 new Agent(m, relativeTo + location, type, facing);
             }

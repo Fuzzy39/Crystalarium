@@ -159,7 +159,7 @@ namespace CrystalCore.Model.Objects
 
             if (((Direction)facing.ToDirection()).IsVertical())
             {
-                for (int j = 0; j < type.Size.X; j++)
+                for (int j = 0; j < type.UpwardsSize.X; j++)
                 {
                     Port p = new Port(facing, j, parent);
                     ports.Add(p);
@@ -169,7 +169,7 @@ namespace CrystalCore.Model.Objects
                 return ports;
             }
 
-            for (int j = 0; j < type.Size.Y; j++)
+            for (int j = 0; j < type.UpwardsSize.Y; j++)
             {
                 Port p = new Port(facing, j, parent);
                 ports.Add(p);

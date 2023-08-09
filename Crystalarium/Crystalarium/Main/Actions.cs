@@ -270,7 +270,7 @@ namespace Crystalarium.Main
                     }
 
                     // create agent
-                    if (Entity.IsValidLocation(game.Map, new Rectangle(clickCoords, CurrentType.Size), Rotation))
+                    if (Entity.IsValidLocation(game.Map, clickCoords, CurrentType.UpwardsSize, Rotation))
                     {
                         new Agent(game.Map, clickCoords, CurrentType, Rotation);
                     }
@@ -583,8 +583,8 @@ namespace Crystalarium.Main
 
 
             c.CreateControl("Crash", Keystate.OnPress)
-                .AddAction("", () => throw new Exception("An Exception was thrown intentionally by the user."))
-                .Bind(Button.LeftControl, Button.Space, Button.Back);
+                .AddAction("", () => throw new Exception("An Exception was thrown intentionally by the user."));
+             
 
         }
 

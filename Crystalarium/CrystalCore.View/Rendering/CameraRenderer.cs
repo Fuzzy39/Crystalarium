@@ -67,7 +67,7 @@ namespace CrystalCore.View.Rendering
 
             //Console.WriteLine(rect.BoundingBox);
 
-            Vector2 size = rect.AdjustedSize;
+            Vector2 size = rect.Size;
             Point pixelCoords = camera.TileToPixelCoords(rect.BoundingBox.Location) - new Point(1) + pixelBounds.Location;
             Point pixelSize = new Point((int)(size.X * camera.Scale), (int)(size.Y * camera.Scale)) + new Point(1, 1);
 
@@ -75,8 +75,8 @@ namespace CrystalCore.View.Rendering
             Rectangle footprint = new Rectangle(pixelCoords, pixelSize);
             Direction facing = DirectionUtil.FromRadians(rect.Rotation);
 
-            baseRenderer.Draw(texture, RotatedRect.FromFootprint(footprint, facing), c);
-
+          //  baseRenderer.Draw(texture, RotatedRect.FromFootprint(footprint, facing), c);
+            baseRenderer.Draw(texture, RotatedRect.FromBoundingLocation(pixelCoords, pixelSize, rect.Rotation), c);
         }
 
 

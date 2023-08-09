@@ -35,7 +35,7 @@ namespace CrystalCore.Model.Interface
                 throw new InitializationFailedException("Mutation Transformation: unkown mutate type.");
             }
 
-            if (!mutateTo.Size.Equals(at.Size))
+            if (!mutateTo.UpwardsSize.Equals(at.UpwardsSize))
             {
                 throw new InitializationFailedException("Mutation Transformation: Agents that are mutated cannot change size.");
             }
@@ -45,6 +45,7 @@ namespace CrystalCore.Model.Interface
 
         internal override void Transform(object o)
         {
+          
             if (!(o is Agent))
             {
                 throw new ArgumentException("o must be a ");

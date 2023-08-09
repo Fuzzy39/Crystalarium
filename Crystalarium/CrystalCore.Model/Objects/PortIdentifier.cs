@@ -40,12 +40,12 @@ namespace CrystalCore.Model.Objects
 
             Direction d = (Direction)Facing.ToDirection();
 
-            if (d.IsVertical() & at.Size.X <= ID)
+            if (d.IsVertical() & at.UpwardsSize.X <= ID)
             {
                 return false;
             }
 
-            if (d.IsHorizontal() & at.Size.Y <= ID)
+            if (d.IsHorizontal() & at.UpwardsSize.Y <= ID)
             {
                 return false;
             }

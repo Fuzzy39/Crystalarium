@@ -44,7 +44,7 @@ namespace CrystalCore.Model.Rules
             get => _name;
         }
 
-        public Point Size
+        public Point UpwardsSize
         {
             get => _size;
         }
@@ -86,9 +86,9 @@ namespace CrystalCore.Model.Rules
         {
             try
             {
-                if (Size.X < 1 || Size.Y < 1)
+                if (UpwardsSize.X < 1 || UpwardsSize.Y < 1)
                 {
-                    throw new InitializationFailedException("Invalid size of " + Size + ". Size must be positive.");
+                    throw new InitializationFailedException("Invalid size of " + UpwardsSize + ". Size must be positive.");
                 }
 
                 foreach (Transformation tf in DefaultState.Transformations)

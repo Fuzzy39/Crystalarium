@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CrystalCore.Model\CrystalCore.Model.csproj" />
     <ProjectReference Include="..\CrystalCore.View\CrystalCore.View.csproj" />
     <ProjectReference Include="..\CrystalCore\CrystalCore.csproj" />
   </ItemGroup>

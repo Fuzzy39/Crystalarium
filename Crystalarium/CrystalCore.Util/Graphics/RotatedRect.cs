@@ -28,6 +28,15 @@ namespace CrystalCore.Util.Graphics
         /// </summary>
         public float Rotation { get; private set; }
 
+
+        /// <summary>
+        /// The size of the rectangle. These widths and heights will not change or switch as the rectangle is rotated.
+        /// </summary>
+        public Vector2 Size
+        {
+            get { return new Vector2(Width, Height); }
+        }
+
         /// <summary>
         /// The size of the rectangle, width and height swapping when it is rotated sideways.
         /// </summary>
@@ -200,7 +209,7 @@ namespace CrystalCore.Util.Graphics
         /// </summary>
         /// <param name="location"> the physiscal location of the location origin of this rectangle.</param>
         /// <param name="size"> the width and height of this rectangle </param>  
-        /// <param name="rotation">the angle, in radians, that this rectangle is rotated around from rotation origin. </param>
+        /// <param name="rotation">the angle, in radians clockwise, that this rectangle is rotated around from rotation origin. </param>
         /// <param name="rotationOrigin">The point on the rectangle that is rotated about, from 0,0 (top left) to 1,1 (bottom right) </param>
         public RotatedRect( Vector2 location, Vector2 size, float rotation, Vector2 rotationOrigin)
         {
@@ -213,26 +222,19 @@ namespace CrystalCore.Util.Graphics
 
             // we need to get the location, now.
 
-            // step 1: convert location origin into real units in a rectangle oriented reference frame
 
-            // what have I gotten myself into?
-
+            // let's pretend this makes sense. Cool? thanks.
             rotationOrigin *= size;
-            rotationOrigin += location;
 
-         
+            float OriginLocationDist = rotationOrigin.Length();
 
-            // step 2: rotate location origin about rotation origin
-            location -= rotationOrigin;
-            Vector2 oldLoc = location;
-            location.X = oldLoc.X * MathF.Cos(Rotation) - oldLoc.Y * MathF.Sin(Rotation);
-            location.Y = oldLoc.Y *MathF.Cos(Rotation) + oldLoc.X *MathF.Sin(Rotation);
-            location += rotationOrigin;
-
-            // step 3: translate origin to position
-            
-            X = location.X;
-            Y = location.Y;
+            float deltaTheta =  Atan(rotationOrigin.Y / rotationOrigin.X) + Rotation;
+            if(float.IsNaN(deltaTheta))
+            {
+                deltaTheta = 0; // shouldn't matter because originlocdist = 0
+            }
+            X = location.X - Cos(deltaTheta) * OriginLocationDist;
+            Y = location.Y - Sin(deltaTheta) * OriginLocationDist;
             
             
         }
@@ -314,28 +316,6 @@ namespace CrystalCore.Util.Graphics
 
 
         /// <summary>
-        /// Create a (gird aligned) rotated rectangle knowing the footprint it takes up. WHEN POINTING RIGHT
-        /// </summary>
-        /// <param name="loc"></param>
-        /// <param name="d"></param>
-        /// <returns></returns>
-        public static RotatedRect FromFootprint(RectangleF loc, Direction d)
-        {
-            if(d.IsHorizontal())
-            {
-                loc = new(loc.X,loc.Y, loc.Height, loc.Width);
-            }
-
-            return FromBoundingLocation(loc.Location, loc.Size, d.ToRadians());
-        }
-
-        public static RotatedRect FromFootprint(Rectangle loc, Direction d)
-        {
-            return FromFootprint(new RectangleF(loc), d);
-        }
-
-
-        /// <summary>
         /// Rotates the rectangle by a number of radians about the relative origin.
         /// </summary>
         /// <param name="radians"></param>
@@ -348,16 +328,16 @@ namespace CrystalCore.Util.Graphics
             RotateAbout(radians, originPos);           
         }
 
-        public void RotateAbout(float radians, Vector2 origin)
+        public void RotateAbout(float radians, Vector2 AbsoluteOrigin)
         {
            
             // step 2 rotate position
-            X -= origin.X;
-            Y -= origin.Y;
+            X -= AbsoluteOrigin.X;
+            Y -= AbsoluteOrigin.Y;
             float newX = X * Cos(radians) - Y * Sin(radians);
             float newY = Y * Cos(radians) + X * Sin(radians);
-            X = newX + origin.X;
-            Y = newY + origin.Y;
+            X = newX + AbsoluteOrigin.X;
+            Y = newY + AbsoluteOrigin.Y;
 
             // step 3 resolve new rotation value
 

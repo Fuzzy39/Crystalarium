@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrystalCore.Util", "Crystal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrystalCore.UtilTests", "CrystalCore.UtilTests\CrystalCore.UtilTests.csproj", "{9B929944-6D01-417D-8C78-1BAE76AE98C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalCrash", "CrystalCrash\CrystalCrash.csproj", "{31C4151B-70A3-492A-A1AA-CDF30D62D64B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrystalCrash", "CrystalCrash\CrystalCrash.csproj", "{31C4151B-70A3-492A-A1AA-CDF30D62D64B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

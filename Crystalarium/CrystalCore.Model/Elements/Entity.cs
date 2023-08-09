@@ -38,11 +38,11 @@ namespace CrystalCore.Model.Elements
         }
 
         // the disgusting line there properly rotates the entitiy.
-        public Entity(Map g, Rectangle bounds, Direction facing) : base ( g, AdjustBounds(bounds, facing))
+        public Entity(Map g, Point location, Point upwardsSize, Direction facing) : base ( g, CalculateBounds(location, upwardsSize, facing))
         {
             _facing = facing;
 
-            if (g.EntitiesWithin(bounds).Count > 1) // it will always be at least 1, because we are in our bounds.
+            if (g.EntitiesWithin(Bounds).Count > 1) // it will always be at least 1, because we are in our bounds.
             {
                 throw new InvalidOperationException("Entity with bounds " + this.Bounds + " cannot be created. It overlaps another prexisting entity.");
             }
@@ -70,11 +70,9 @@ namespace CrystalCore.Model.Elements
         }
 
 
-        public static bool IsValidLocation(Map g, Rectangle bounds, Direction facing)
+        public static bool IsValidLocation(Map g, Rectangle bounds)
         {
-           
-
-            bounds = AdjustBounds(bounds, facing);
+         
             if (g.Bounds.Contains(bounds))
             {
                 if (g.EntitiesWithin(bounds).Count == 0)
@@ -87,14 +85,28 @@ namespace CrystalCore.Model.Elements
             return false;
         }
 
-        private static Rectangle AdjustBounds(Rectangle bounds, Direction facing)
+
+        public static bool IsValidLocation(Map g, Point location, Point upwardsSize, Direction facing) 
+        { 
+            return IsValidLocation(g, new(location, AdjustSize(upwardsSize, facing)));
+        }
+
+
+
+        private static Point AdjustSize(Point size, Direction facing)
         {
             if (facing.IsVertical())
             {
-                return bounds;
+                return size;
             }
 
-            return new Rectangle(bounds.Location, new Point(bounds.Size.Y, bounds.Size.X));
+            return new(size.Y, size.X);
+        }
+
+
+        public static Rectangle CalculateBounds(Point location, Point upwardsSize, Direction facing)
+        {
+            return new(location, AdjustSize(upwardsSize, facing));
         }
         
 

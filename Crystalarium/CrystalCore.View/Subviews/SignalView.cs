@@ -124,14 +124,13 @@ namespace CrystalCore.View.Subviews
 
             Vector2 size = new(length, config.SignalWidth);
 
-            // HOT TIP: in crystalarium, up is 0 radians, not left.
 
             // let's start location with the center of the tile our port comes from.
             Vector2 location = signal.Start.Location.ToVector2() + new Vector2(.5f);
 
             float yAxisAngle = absFacing.ToRadians() + (MathF.PI / 2f); // the angle the 
-            float dist = .25f;
-            float deltaX = MathF.Cos(yAxisAngle) * dist * (drawLeft?-1:1);
+            float dist = .25f; // the edge
+            float deltaX = MathF.Cos(yAxisAngle) * dist * (drawLeft ? -1 : 1);
             float deltaY = MathF.Sin(yAxisAngle) * dist * (drawLeft ? -1 : 1);
 
             location += new Vector2(deltaX, deltaY);

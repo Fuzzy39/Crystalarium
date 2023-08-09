@@ -76,7 +76,7 @@ namespace CrystalCore.View
             {
                
                 Agent a = (Agent)o;
-                _agentViews.Add(new AgentView(Parent, a, Parent.CurrentSkin.GetAgentViewConfig(a.Type)));
+                _agentViews.Add(new AgentView(Parent, a, Parent.CurrentSkin.AgentConfigs));
             }
 
             if(o is Connection)
@@ -154,10 +154,10 @@ namespace CrystalCore.View
                     av.DrawBackground(rend);
                 }
 
-                DrawObjects(rend, _agentViews);
+             
                 DrawObjects(rend, _beamViews);
+                DrawObjects(rend, _agentViews);
 
-                
 
             }
             DrawGhosts(rend);

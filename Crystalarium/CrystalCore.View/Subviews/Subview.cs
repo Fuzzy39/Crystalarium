@@ -47,6 +47,7 @@ namespace CrystalCore.View.Subviews
             // check that we are visible on screen.
             if (renderTarget.Camera.TileBounds.Intersects(_renderData.Bounds))
             {
+                
 
                 Render(rend);
                
@@ -66,41 +67,4 @@ namespace CrystalCore.View.Subviews
 
     }
 
-    //shh... it's a secret class, we don't talk about this one
-    internal static class SubviewListExtensions
-    {
-        /// <summary>
-        ///  Whether this list of subviews has a subview that renders this gridobject.
-        /// </summary>
-        /// <param name="views"></param>
-        /// <param name="gobj"></param>
-        /// <returns></returns>
-        public static bool ViewExistsFor(this List<Subview> views, MapObject gobj)
-        {
-            foreach (Subview view in views)
-            {
-                if (view.RenderData == gobj)
-                {
-                    
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public static Subview GetViewFor(this List<Subview> views, MapObject gobj)
-        {
-            foreach (Subview view in views)
-            {
-                if (view.RenderData == gobj)
-                {
-
-                    return view;
-                }
-            }
-
-            return null;
-        }
-    }
 }

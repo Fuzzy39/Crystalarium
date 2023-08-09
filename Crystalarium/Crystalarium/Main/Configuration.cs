@@ -55,7 +55,6 @@ namespace Crystalarium.Main
 
             // create a ruleset
             CrystalRules = game.Engine.addRuleset("Crystalarium");
-            //CrystalRules.DiagonalSignalsAllowed = true;
                 
             // define SignalRules
             AgentType t;
@@ -74,10 +73,11 @@ namespace Crystalarium.Main
             // setup agent types.
 
             // ############### STOPPER #####################
-            CrystalRules.CreateType("stopper", new Point(1, 1));
+            t = CrystalRules.CreateType("stopper", new Point(1, 1));
+
 
             // ############### Emitter #####################
-            t = CrystalRules.CreateType("emitter", new Point(3, 2));
+            t = CrystalRules.CreateType("emitter", new Point(1, 1));
 
             t.Rules.Add(new TransformationRule());
             // condition: active ports > 0
@@ -420,6 +420,7 @@ namespace Crystalarium.Main
             // beams
             beams.SignalConfig.SignalTexture = Textures.pixel;
             beams.SignalConfig.Color = new Color(230, 230, 150);
+           
 
             // chunks
             beams.ChunkConfig.ChunkBackground = Textures.chunkGrid;

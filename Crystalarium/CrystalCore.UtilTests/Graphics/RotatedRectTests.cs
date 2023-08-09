@@ -89,15 +89,46 @@ namespace CrystalCore.Util.Graphics.Tests
         }
 
         [TestMethod()]
-        public void FootprintTest()
+        public void RectOriginTest() 
         {
-            RotatedRect r = RotatedRect.FromFootprint(new Rectangle(0, 0, 2, 1), Direction.left);
+            // simple test
+            RotatedRect fromCenter = new RotatedRect(new Rectangle(25, 25, 50, 50), 0f, new(.5f, .5f));
+            AssertClose(new Vector2(0, 0), fromCenter.TopLeft);
+            AssertClose(new Vector2(50, 50), fromCenter.BottomRight);
 
-            AssertClose(new Vector2(1, 2), r.TopLeft);
-            AssertClose(new Vector2(0, 2), r.TopRight);
+            // x only
+            fromCenter = new(new Rectangle(25, 0, 50, 50), 0f, new(.5f, 0));
+            AssertClose(new Vector2(0, 0), fromCenter.TopLeft);
+            AssertClose(new Vector2(50, 50), fromCenter.BottomRight);
 
-            AssertClose(new Vector2(1, 0), r.BottomLeft);
-            AssertClose(new Vector2(0, 0), r.BottomRight);
+            // y only
+            fromCenter = new(new Rectangle(0, 25, 50, 50), 0f, new(0, .5f));
+            AssertClose(new Vector2(0, 0), fromCenter.TopLeft);
+            AssertClose(new Vector2(50, 50), fromCenter.BottomRight);
+
+
+            // not centered
+            fromCenter = new(new Rectangle(40, 25, 50, 50), 0f, new(.8f, .5f));
+            AssertClose(new Vector2(0, 0), fromCenter.TopLeft);
+            AssertClose(new Vector2(50, 50), fromCenter.BottomRight);
+
+            // rotated basic
+            fromCenter = new(new Rectangle(0, 0, 50, 50), MathF.PI/4f, new(.5f, .5f));
+            AssertClose(new Vector2(0, -25*MathF.Sqrt(2)), fromCenter.TopLeft);
+            AssertClose(new Vector2(0, 25*MathF.Sqrt(2)), fromCenter.BottomRight);
+            AssertClose(new Vector2(25 * MathF.Sqrt(2), 0 ), fromCenter.TopRight);
+
+            // rotated basic
+            fromCenter = new(new Rectangle(0, 0, 50, 50), MathF.PI / 4f, new(.5f, .5f));
+            AssertClose(new Vector2(0, -25 * MathF.Sqrt(2)), fromCenter.TopLeft);
+            AssertClose(new Vector2(0, 25 * MathF.Sqrt(2)), fromCenter.BottomRight);
+            AssertClose(new Vector2(25 * MathF.Sqrt(2), 0), fromCenter.TopRight);
+
+            // all together
+            fromCenter = new(new Rectangle(25, 40, 50, 50), MathF.PI / 2f, new(.8f, .5f));
+            AssertClose(new Vector2(50, 0), fromCenter.TopLeft);
+            AssertClose(new Vector2(0, 50), fromCenter.BottomRight);
+
         }
 
 

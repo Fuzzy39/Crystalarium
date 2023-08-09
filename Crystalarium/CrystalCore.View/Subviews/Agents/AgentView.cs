@@ -19,20 +19,34 @@ namespace CrystalCore.View.Subviews.Agents
     /// </summary>
     internal class AgentView : Subview
     {
-        private AgentViewConfig config; // the settings for how this agentview will render itself.
+        private List<AgentViewConfig> configs; // the settings for how this agentview will render itself.
+        private AgentViewConfig config;
         private List<DebugPort> _ports; // the ports that this agentview may render. 
       
-        internal AgentType Type
+        internal AgentType CurrentType
         {
             get { return config.AgentType; }
         }
 
-        internal AgentView(GridView v, Agent a, AgentViewConfig config) : base(v, a)
+        internal AgentView(GridView v, Agent a, List<AgentViewConfig> configs) : base(v, a)
         {
            
             _ports = null;
-            this.config = config;
+            this.configs = configs;
+            setCurrentConfig();
 
+        }
+
+        private void setCurrentConfig()
+        {
+            AgentType t = ((Agent)RenderData).Type;
+            foreach (AgentViewConfig config in configs)
+            {
+                if (config.AgentType == t)
+                {
+                    this.config = config;
+                }
+            }
         }
 
 
@@ -47,6 +61,11 @@ namespace CrystalCore.View.Subviews.Agents
                 throw new InvalidOperationException("RenderConfig not supplied with required texture.");
             }
 
+
+            if( ((Agent)RenderData).Type != CurrentType)
+            {
+                setCurrentConfig();
+            }
 
             // render the Agent.
             Direction facing = ((Entity)RenderData).Facing;
