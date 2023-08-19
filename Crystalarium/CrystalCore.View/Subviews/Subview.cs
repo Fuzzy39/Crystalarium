@@ -39,30 +39,15 @@ namespace CrystalCore.View.Subviews
         /// <param name="sb"></param>
         /// <returns>whether the object being drawn exists </returns>
 
-        public bool Draw(IRenderer rend)
+        public virtual bool Draw(IRenderer rend)
         {
 
-            if(RenderData.Destroyed) return false;
-
-            // check that we are visible on screen.
-            if (renderTarget.Camera.TileBounds.Intersects(_renderData.Bounds))
-            {
-                
-
-                Render(rend);
-               
-            }
-           
-            return true;
+            return !RenderData.Destroyed;
 
 
         }
 
-        /// <summary>
-        /// Subclasses of Subview use this method to do the actual drawing.
-        /// </summary>
-        /// <param name="sb"></param>
-        protected abstract void Render(IRenderer rend);
+   
 
 
     }

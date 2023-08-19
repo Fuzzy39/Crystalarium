@@ -39,17 +39,33 @@ namespace CrystalCore.View.Subviews
 
        
 
-        protected override void Render(IRenderer rend)
+        public override bool Draw(IRenderer rend)
         {
+
+            if(!base.Draw(rend))
+            {
+                return false;
+            }
+
+            // check that we are visible on screen.
+            if (!renderTarget.Camera.TileBounds.Intersects(_renderData.Bounds))
+            {
+
+                return true;
+
+            }
+
             if (config.SignalTexture == null)
             {
-                return;
+                return true;
 
             }
 
         
             RenderFromA(rend);
             RenderFromB(rend);
+
+            return true;
 
            
 

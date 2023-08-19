@@ -19,6 +19,8 @@
 	<StartPan> MouseMiddle </StartPan>
 	<Pan>      MouseMiddle </Pan>
 
+	
+	<!-- primarily for testing -->
 	<!-- For the most part, this fills the screen with garbage -->
 	<ToggleDebugView> OemTilde </ToggleDebugView>
 	<Crash> LeftControl, Space, Back </Crash> <!--Back is backspace.-->

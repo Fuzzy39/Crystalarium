@@ -25,7 +25,7 @@ namespace Crystalarium.Main
         internal Ruleset CrystalRules { get; private set; }
         internal Ruleset BasicRules { get; private set; }
         internal Ruleset FilumRules { get; private set; }
-        internal Ruleset WireRules { get; private set; } // wire rules
+        internal Ruleset WireRules { get; private set; } // wire rules  
 
 
         internal SkinSet DefaultSkin { get; private set; }
@@ -140,7 +140,7 @@ namespace Crystalarium.Main
             tr = new TransformationRule();
             t.Rules.Add(tr);
             tr.Requirements = new Condition(new PortValueOperand(down), greaterThan, Zero());
-            tr.Transformations.Add(new SignalTransformation(1, left));
+            tr.Transformations.Add(new SignalTransformation(1, left));  
 
             tr = new TransformationRule();
             t.Rules.Add(tr);

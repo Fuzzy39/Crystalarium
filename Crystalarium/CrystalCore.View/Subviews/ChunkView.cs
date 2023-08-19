@@ -26,8 +26,21 @@ namespace CrystalCore.View.Subviews
 
         }
 
-        protected override void Render(IRenderer rend)
+        public override bool Draw(IRenderer rend)
         {
+
+            if (!base.Draw(rend))
+            {
+                return false;
+            }
+
+            // check that we are visible on screen.
+            if (!renderTarget.Camera.TileBounds.Intersects(_renderData.Bounds))
+            {
+
+                return true;
+
+            }
 
             if (config.ChunkBackground == null)
             {
@@ -36,6 +49,8 @@ namespace CrystalCore.View.Subviews
 
 
             rend.Draw(config.ChunkBackground, RenderData.Bounds, determineColor());
+
+            return true;
                 
         }
 

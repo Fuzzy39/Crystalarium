@@ -326,8 +326,10 @@ namespace Crystalarium.Main
             c.CreateControl("Copy", Keystate.OnPress)
                 .AddAction("play", () =>
                 {
-                    Copy("Copy");
-                    Console.WriteLine("Copied!");
+                    if(!Copy("Copy").IsEmpty)
+                    {
+                        Console.WriteLine("Copied!");
+                    }
 
                 });
 
@@ -337,6 +339,12 @@ namespace Crystalarium.Main
                 .AddAction("play", () =>
                 {
                     Rectangle sel = Copy("Cut");
+
+                    if(sel.IsEmpty)
+                    {
+                        return;
+                    }
+
                     List<Agent> agents = game.Map.AgentsWithin(sel);
                     foreach (Agent agent in agents)
                     {

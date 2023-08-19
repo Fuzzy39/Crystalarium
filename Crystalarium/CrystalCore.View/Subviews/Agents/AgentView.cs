@@ -50,10 +50,21 @@ namespace CrystalCore.View.Subviews.Agents
         }
 
 
-        protected override void Render(IRenderer rend)
+        public override bool Draw(IRenderer rend)
         {
 
-           
+            if (!base.Draw(rend))
+            {
+                return false;
+            }
+
+            // check that we are visible on screen.
+            if (!renderTarget.Camera.TileBounds.Intersects(_renderData.Bounds))
+            {
+
+                return true;
+
+            }
 
             // render the thing if we have been set to.
             if (config.DefaultTexture == null)
@@ -96,10 +107,13 @@ namespace CrystalCore.View.Subviews.Agents
                 {
                     dp.Draw(rend);
 
+             
+                
                 }
             }
 
-            
+            return true;
+
         }
 
         /// <summary?

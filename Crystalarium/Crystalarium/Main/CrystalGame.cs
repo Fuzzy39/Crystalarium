@@ -32,15 +32,15 @@ namespace Crystalarium.Main
 
         // version number.
         private const int MAJOR = 8;
-        private const int MINOR = 1;
-        private const int BUILD = 1149; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int MINOR = 2;
+        private const int BUILD = 1151; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
             get
             {
 
-                return "Milestone "+(MAJOR+1)+" (Development) v"+MAJOR+"."+MINOR+"."+BUILD;
+                return "Milestone "+(MAJOR+1)+" (Experimental) v"+MAJOR+"."+MINOR+"."+BUILD;
             }
         }
 
@@ -219,8 +219,11 @@ namespace Crystalarium.Main
           
         }
 
+        float x = 0;
+
         protected override void Draw(GameTime gameTime)
         {
+            x += .03f;
 
             // make everything a flat color.
             GraphicsDevice.Clear(new Color(70, 70, 70));
@@ -230,8 +233,23 @@ namespace Crystalarium.Main
             // for the time being, the game handles the 'UI' as the engine has no such systems. 
             UI.Draw(Engine.Renderer, gameTime);
 
-            // just a test texture to make sure I'm not going insane
-            //Engine.Renderer.Draw(Textures.emitter, new RotatedRect(new Rectangle(300, 300, 200, 200), MathF.PI/4, new(0f)), Color.White);
+            int size = 1600;
+            int lim = 50;
+
+            float a = (MathF.Sin(x)*.5f)+.5f;
+            float b = (MathF.Sin(x+(2*MathF.PI/3f)) * .5f) + .5f;
+            float c = (MathF.Sin(x+(4*MathF.PI/3f)) * .5f) + .5f;
+            Gradient.ColorStop uno = new (new(a,b,c), 0);
+            Gradient.ColorStop dos = new(new(b,c,a), lim / 2);
+            Gradient.ColorStop tres = new(new(c,b,a), lim);
+
+            Gradient grad = new Gradient(uno, dos, tres);
+            for (int i = 0; i < lim; i++)
+            {
+                Engine.Renderer.Draw(Textures.pixel, new Rectangle(i * (size / lim), (int)(MathF.Sin((i + x)/5f) * 80)+ (i * (900 / lim)), size / lim, 100), grad.getColor(i));
+            }
+
+
 
             Engine.EndDraw();
 
