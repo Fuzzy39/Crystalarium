@@ -116,6 +116,7 @@ namespace CrystalCore.View.Subviews
 
             ChannelState cs = DetermineState(value, hasEnd);
             Connection signal = (Connection)RenderData;
+       
 
             if (cs != ChannelState.Active && !renderTarget.DoDebugRendering)
             {
@@ -153,7 +154,7 @@ namespace CrystalCore.View.Subviews
 
 
             RotatedRect renderBounds = new(location, size, absFacing.ToRadians(), new(0, .5f));
-            rend.Draw(config.SignalTexture, renderBounds, DetermineColor(cs));
+            rend.Draw(config.SignalTexture, renderBounds, DetermineColor(value, hasEnd));
 
           
         }
@@ -176,22 +177,21 @@ namespace CrystalCore.View.Subviews
             return ChannelState.Bounded;
         }
 
-        private Color DetermineColor(ChannelState cs)
-        {
-            switch (cs)
-            {
-                case ChannelState.Unbounded:
-                    return Color.Black;
-                case ChannelState.Bounded:
-                    return Color.DimGray;
+  
 
-                case ChannelState.Active:
-                    return config.Color;
+        private Color DetermineColor(int value, bool hasEnd)
+        {
+            if(value!=0)
+            {
+                return config.Colors.getColor(value);
             }
 
-            return Color.Magenta;
-            
+            if (!hasEnd)
+            {
+                return Color.Black;
+            }
 
+            return Color.DimGray;
         }
 
      

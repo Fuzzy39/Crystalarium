@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Util;
+using CrystalCore.Util.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,7 +14,7 @@ namespace CrystalCore.View.Configs
         // See the SignalView class for descriptions of these fields.
 
         private Texture2D beamTexture;
-        private Color color;
+        private Gradient colors;
         private float beamWidth;
 
         public Texture2D SignalTexture // the texture for use as the chunk's background.
@@ -27,14 +28,14 @@ namespace CrystalCore.View.Configs
 
         }
 
-        public Color Color // the default color for a chunk. default is white.
+        public Gradient Colors // the default color for a signal. default is white.
         {
-            get => color;
+            get => colors;
             set
             {
                 if (!Initialized)
                 {
-                    color = value;
+                    colors = value;
                     return;
                 }
                 throw new InvalidOperationException("Cannot modify skin config after engine initialization.");
@@ -66,14 +67,14 @@ namespace CrystalCore.View.Configs
         public SignalViewConfig() : base()
         {
             SignalTexture = null;
-            Color = Color.White;
+            Colors = new Gradient(new Gradient.ColorStop(Color.White, 0f));
             SignalWidth = .25f;
         }
 
         public SignalViewConfig(SignalViewConfig from) : base()
         {
             SignalTexture = from.beamTexture;
-            Color = from.Color;
+            Colors = from.Colors;
             SignalWidth = from.beamWidth;
         }
 

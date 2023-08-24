@@ -3,6 +3,7 @@ using CrystalCore.Model.Language;
 using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
+using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
 using Microsoft.Xna.Framework;
 using System;
@@ -83,7 +84,7 @@ namespace Crystalarium.Main
             // condition: active ports > 0
             t.Rules[0].Requirements = null;
             // transmit on all sides
-            t.Rules[0].Transformations.Add(new SignalTransformation(1, up));
+            t.Rules[0].Transformations.Add(new SignalTransformation(2, up));
 
             // ############### PRISM #####################
             t = CrystalRules.CreateType("prism", new Point(1, 1));
@@ -419,12 +420,12 @@ namespace Crystalarium.Main
 
             // beams
             beams.SignalConfig.SignalTexture = Textures.pixel;
-            beams.SignalConfig.Color = new Color(230, 230, 150);
+            beams.SignalConfig.Colors =new( new Gradient.ColorStop(new Color(230, 230, 150),1));
            
 
             // chunks
             beams.ChunkConfig.ChunkBackground = Textures.chunkGrid;
-
+            
 
             // Minimal skin
             Skin basic = new Skin(BasicRules, DefaultSkin);
@@ -446,7 +447,7 @@ namespace Crystalarium.Main
 
             // beams
             basic.SignalConfig.SignalTexture = Textures.pixel;
-            basic.SignalConfig.Color = new Color(230, 230, 150);
+            basic.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 230, 150), 0));
 
             // chunks
             basic.ChunkConfig.ChunkBackground = Textures.chunkGrid;
@@ -532,7 +533,7 @@ namespace Crystalarium.Main
 
             // beams
             beams.SignalConfig.SignalTexture = Textures.pixel;
-            beams.SignalConfig.Color = new Color(230, 230, 150);
+            beams.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 230, 150), 0));
 
             // chunks
             beams.ChunkConfig.ChunkBackground = Textures.pixel;
@@ -563,8 +564,7 @@ namespace Crystalarium.Main
 
             // touch
             basic.SignalConfig.SignalTexture = Textures.pixel;
-            basic.SignalConfig.Color = new Color(230, 230, 150);
-
+            beams.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 230, 150), 0));
             // chunks
             basic.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
 
