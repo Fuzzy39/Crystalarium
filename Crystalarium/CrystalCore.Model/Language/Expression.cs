@@ -10,7 +10,7 @@ namespace CrystalCore.Model.Language
     /// </summary>
     public abstract class Expression : InitializableObject
     {
-        internal TokenType ReturnType { get; private set; }
+        internal TokenType ReturnType { get;private set; }
 
 
         internal Expression(TokenType tokenType)

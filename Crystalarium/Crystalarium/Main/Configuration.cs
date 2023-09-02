@@ -60,16 +60,16 @@ namespace Crystalarium.Main
             // define SignalRules
             AgentType t;
             TransformationRule tr;
-            Operator greaterThan = new Operator(OperatorType.GreaterThan);
-            Operator equals = new Operator(OperatorType.EqualTo);
-            Operator xor = new Operator(OperatorType.Xor);
-            Operator and = new Operator(OperatorType.And);
-            Operator or = new Operator(OperatorType.Or);
+            Operator greaterThan = Operator.GreaterThan;
+            Operator equals =Operator.EqualTo;
+            Operator xor = Operator.Xor;
+            Operator and =Operator.And;
+            Operator or = Operator.Or;
 
             // helpful things?
-            Condition isReceiving = new Condition(new ThresholdOperand(1), greaterThan, Zero());
-            Condition twoOrMoreSignals = new Condition(new ThresholdOperand(1), greaterThan, new IntOperand(1));
-            Condition lessThanTwoSignals = new Condition(new ThresholdOperand(1), new Operator(OperatorType.LessThan), new IntOperand(2));
+            FunctionCall isReceiving = new FunctionCall(greaterThan, new ThresholdOperand(1),  Zero());
+            FunctionCall twoOrMoreSignals = new FunctionCall(greaterThan, new ThresholdOperand(1),  new IntOperand(1));
+            FunctionCall lessThanTwoSignals = new FunctionCall(Operator.LessThan, new ThresholdOperand(1), new IntOperand(2));
 
             // setup agent types.
 
@@ -81,7 +81,7 @@ namespace Crystalarium.Main
             t = CrystalRules.CreateType("emitter", new Point(1, 1));
 
             t.Rules.Add(new TransformationRule());
-            // condition: active ports > 0
+            // FunctionCall: active ports > 0
             t.Rules[0].Requirements = null;
             // transmit on all sides
             t.Rules[0].Transformations.Add(new SignalTransformation(2, up));
@@ -135,23 +135,23 @@ namespace Crystalarium.Main
             // shaped like \
             tr = new TransformationRule();
             t.Rules.Add(tr);
-            tr.Requirements = new Condition(new PortValueOperand(left), greaterThan, Zero());
+            tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(left), Zero());
             tr.Transformations.Add(new SignalTransformation(1, down));
 
             tr = new TransformationRule();
             t.Rules.Add(tr);
-            tr.Requirements = new Condition(new PortValueOperand(down), greaterThan, Zero());
+            tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(down), Zero());
             tr.Transformations.Add(new SignalTransformation(1, left));  
 
             tr = new TransformationRule();
             t.Rules.Add(tr);
-            tr.Requirements = new Condition(new PortValueOperand(up), greaterThan, Zero());
+            tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(up), Zero());
             tr.Transformations.Add(new SignalTransformation(1, right));
 
             tr = new TransformationRule();
             t.Rules.Add(tr);
 
-            tr.Requirements = new Condition(new PortValueOperand(right), greaterThan, Zero());
+            tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(right), Zero());
             tr.Transformations.Add(new SignalTransformation(1, up));
 
             //############### LUMINAL GATE #####################
@@ -164,16 +164,16 @@ namespace Crystalarium.Main
            
 
             // down
-            tr.Requirements = new Condition
+            tr.Requirements = new FunctionCall
             (
-                new Condition
-                (
-                    new Condition(new PortValueOperand(left), greaterThan, Zero()),
-                    xor,
-                    new Condition(new PortValueOperand(right), greaterThan, Zero())
-                ),
                 and,
-                new Condition(new PortValueOperand(up), greaterThan, Zero())
+                new FunctionCall
+                (
+                    xor,
+                    new FunctionCall(greaterThan, new PortValueOperand(left), Zero()),
+                    new FunctionCall(greaterThan, new PortValueOperand(right), Zero())
+                ),
+                new FunctionCall(greaterThan, new PortValueOperand(up), Zero())
 
             );
 
@@ -184,16 +184,18 @@ namespace Crystalarium.Main
             tr = new TransformationRule();
             t.Rules.Add(tr);
 
-            tr.Requirements = new Condition
+            tr.Requirements = new FunctionCall
             (
-                new Condition
-                (
-                    new Condition(new PortValueOperand(left), greaterThan, Zero()),
-                    xor,
-                    new Condition(new PortValueOperand(right), greaterThan, Zero())
-                ),
                 and,
-                new Condition(new PortValueOperand(down), greaterThan, Zero())
+                new FunctionCall
+                (
+                    xor,
+                    new FunctionCall(greaterThan, new PortValueOperand(left), Zero()),
+                   
+                    new FunctionCall(greaterThan, new PortValueOperand(right), Zero())
+                ),
+               
+                new FunctionCall(greaterThan, new PortValueOperand(down), Zero())
                 
             );
 
@@ -209,14 +211,14 @@ namespace Crystalarium.Main
             tr = new TransformationRule();
             t.Rules.Add(tr);
 
-            tr.Requirements = new Condition(new PortValueOperand(up), greaterThan, Zero());
+            tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(up), Zero());
             tr.Transformations.Add(new SignalTransformation(1, down));
 
 
             tr = new TransformationRule();
             t.Rules.Add(tr);
 
-            tr.Requirements = new Condition(new PortValueOperand(down), greaterThan, Zero());
+            tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(down), Zero());
             tr.Transformations.Add(new SignalTransformation(1, up));
 
 
@@ -239,17 +241,19 @@ namespace Crystalarium.Main
 
             t.Rules.Add(new TransformationRule());
             // not gate
-            // Condition (left>0)||(right>0)||(down>0)
-            t.Rules[0].Requirements = new Condition
+            // FunctionCall (left>0)||(right>0)||(down>0)
+            t.Rules[0].Requirements = new FunctionCall
             (
-                new Condition
-                (
-                    new Condition(new PortValueOperand(left), equals, Zero()),
-                    and,
-                    new Condition(new PortValueOperand(right), equals, Zero())
-                ),
                 and,
-                new Condition(new PortValueOperand(down), equals, Zero())
+                new FunctionCall
+                (
+                    and,
+                    new FunctionCall(equals, new PortValueOperand(left), Zero()),
+                  
+                    new FunctionCall(equals, new PortValueOperand(right), Zero())
+                ),
+                
+                new FunctionCall(equals, new PortValueOperand(down), Zero())
             );
 
 
@@ -324,12 +328,13 @@ namespace Crystalarium.Main
             t = WireRules.CreateType("wire", new Point(1, 1));
             AgentType wire = t;
             t.Rules.Add(new TransformationRule());
-            // condition: active ports > 0
-            t.Rules[0].Requirements = new Condition
+            // FunctionCall: active ports > 0
+            t.Rules[0].Requirements = new FunctionCall
                 (
-                    new Condition(new ThresholdOperand(1), greaterThan, Zero()),
-                    and,    
-                    new Condition(new ThresholdOperand(1), new Operator(OperatorType.LessThan), new IntOperand(3))
+                    and,
+                    new FunctionCall(greaterThan, new ThresholdOperand(1), Zero()),
+                       
+                    new FunctionCall(Operator.LessThan, new ThresholdOperand(1), new IntOperand(3))
                 );
 
 
@@ -363,9 +368,9 @@ namespace Crystalarium.Main
             return new IntOperand(0);
         }
 
-        private Condition ReceivingOnSide(Direction d)
+        private FunctionCall ReceivingOnSide(Direction d)
         {
-            return new Condition(new PortValueOperand(new PortID(0, d.ToCompassPoint())), new Operator(OperatorType.GreaterThan), Zero());
+            return new FunctionCall(Operator.GreaterThan, new PortValueOperand(new PortID(0, d.ToCompassPoint())), Zero());
         }
 
         private void CreateDefaultSkins()

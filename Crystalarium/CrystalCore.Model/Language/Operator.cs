@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CrystalCore.Model.Language
 {
-    public enum OperatorType
+    public enum Operator
     {
         EqualTo,
         GreaterThan,
@@ -14,46 +14,36 @@ namespace CrystalCore.Model.Language
         And,
         Xor
     }
-    public class Operator
+    public static class OperatorExtensions
     {
-        private OperatorType _type;
-
-        internal OperatorType Type
-        {
-            get { return _type; }
-        }
-        public Operator(OperatorType ot)
-        {
-            _type = ot;
-        }
-
-        internal Token Operate(Token a, Token b)
+      
+        internal static Token Operate(this Operator op, Token a, Token b)
         {
 
-            if (!IsValid(a.Type, b.Type))
+            if (!IsValid(op, a.Type, b.Type))
             {
                 throw new InvalidOperationException("Invalid operation. How did this happen?");
             }
 
-            return _type switch
+            return op switch
             {
-                OperatorType.EqualTo => new Token(TokenType.boolean, a.Value.Equals( b.Value)),
-                OperatorType.NotEqualTo => new Token(TokenType.boolean, !a.Value.Equals(b.Value)),
+                Operator.EqualTo => new Token(TokenType.boolean, a.Value.Equals( b.Value)),
+                Operator.NotEqualTo => new Token(TokenType.boolean, !a.Value.Equals(b.Value)),
 
-                OperatorType.GreaterThan => new Token(TokenType.boolean, (int)a.Value > (int)b.Value),
-                OperatorType.LessThan => new Token(TokenType.boolean, (int)a.Value < (int)b.Value),
+                Operator.GreaterThan => new Token(TokenType.boolean, (int)a.Value > (int)b.Value),
+                Operator.LessThan => new Token(TokenType.boolean, (int)a.Value < (int)b.Value),
 
-                OperatorType.Or => new Token(TokenType.boolean, (bool)a.Value || (bool)b.Value),
-                OperatorType.And => new Token(TokenType.boolean, (bool)a.Value & (bool)b.Value),
-                OperatorType.Xor => new Token(TokenType.boolean, (bool)a.Value ^ (bool)b.Value),
+                Operator.Or => new Token(TokenType.boolean, (bool)a.Value || (bool)b.Value),
+                Operator.And => new Token(TokenType.boolean, (bool)a.Value & (bool)b.Value),
+                Operator.Xor => new Token(TokenType.boolean, (bool)a.Value ^ (bool)b.Value),
 
                 _ => throw new InvalidOperationException("Missing a case here!"),
             };
         }
 
-        internal bool IsValid(TokenType a, TokenType b)
+        internal static bool IsValid(this Operator op, TokenType a, TokenType b)
         {
-            if (_type == OperatorType.NotEqualTo || _type == OperatorType.EqualTo)
+            if (op == Operator.NotEqualTo || op == Operator.EqualTo)
             {
                 return true;
             }
@@ -67,7 +57,7 @@ namespace CrystalCore.Model.Language
 
             if (a == TokenType.boolean)
             {
-                if (_type == OperatorType.Or || _type == OperatorType.And || _type == OperatorType.Xor)
+                if (op == Operator.Or || op == Operator.And || op == Operator.Xor)
                 {
                     return true;
                 }
@@ -75,7 +65,7 @@ namespace CrystalCore.Model.Language
                 return false;
             }
 
-            if (_type == OperatorType.GreaterThan || _type == OperatorType.LessThan) 
+            if (op == Operator.GreaterThan || op == Operator.LessThan) 
             {
                 return true;
             }
@@ -83,7 +73,7 @@ namespace CrystalCore.Model.Language
             return false;
         }
 
-        internal TokenType ReturnType()
+        internal static TokenType ReturnType(this Operator op)
         {
 
             return TokenType.boolean;

@@ -33,7 +33,7 @@ namespace Crystalarium.Main
         // version number.
         private const int MAJOR = 8;
         private const int MINOR = 2;
-        private const int BUILD = 1167; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 1169; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
@@ -219,11 +219,11 @@ namespace Crystalarium.Main
           
         }
 
-        float x = 0;
+    
 
         protected override void Draw(GameTime gameTime)
         {
-            x += .03f;
+           
 
             // make everything a flat color.
             GraphicsDevice.Clear(new Color(70, 70, 70));

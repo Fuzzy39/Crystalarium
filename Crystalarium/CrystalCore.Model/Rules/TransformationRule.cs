@@ -69,7 +69,7 @@ namespace CrystalCore.Model.Rules
                         throw new InitializationFailedException("Transformation requirements must evaluate to a boolean.");
                     }
                 }
-
+    
 
 
                 // an agentstate can have no transformations, and be inert, if it wishes.
