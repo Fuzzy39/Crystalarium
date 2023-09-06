@@ -84,7 +84,7 @@ namespace Crystalarium.Main
             // FunctionCall: active ports > 0
             t.Rules[0].Requirements = null;
             // transmit on all sides
-            t.Rules[0].Transformations.Add(new SignalTransformation(2, up));
+            t.Rules[0].Transformations.Add(new ConstantSignalTransformation(2, up));
 
             // ############### PRISM #####################
             t = CrystalRules.CreateType("prism", new Point(1, 1));
@@ -96,7 +96,7 @@ namespace Crystalarium.Main
 
             tr.Requirements = ReceivingOnSide(Direction.up);
        
-            tr.Transformations.Add(new SignalTransformation(1, down, left, right));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, down, left, right));
 
 
             // right rule
@@ -105,7 +105,7 @@ namespace Crystalarium.Main
 
             tr.Requirements = ReceivingOnSide(Direction.right);
            
-            tr.Transformations.Add(new SignalTransformation(1, down, left, up));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, down, left, up));
 
 
 
@@ -115,7 +115,7 @@ namespace Crystalarium.Main
 
             tr.Requirements = ReceivingOnSide(Direction.down);
 
-            tr.Transformations.Add(new SignalTransformation(1, right, left, up));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, right, left, up));
 
 
             // left rule
@@ -124,7 +124,7 @@ namespace Crystalarium.Main
 
             tr.Requirements = ReceivingOnSide(Direction.left);
 
-            tr.Transformations.Add(new SignalTransformation(1, down, right, up));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, down, right, up));
 
 
 
@@ -136,23 +136,23 @@ namespace Crystalarium.Main
             tr = new TransformationRule();
             t.Rules.Add(tr);
             tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(left), Zero());
-            tr.Transformations.Add(new SignalTransformation(1, down));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, down));
 
             tr = new TransformationRule();
             t.Rules.Add(tr);
             tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(down), Zero());
-            tr.Transformations.Add(new SignalTransformation(1, left));  
+            tr.Transformations.Add(new ConstantSignalTransformation(1, left));  
 
             tr = new TransformationRule();
             t.Rules.Add(tr);
             tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(up), Zero());
-            tr.Transformations.Add(new SignalTransformation(1, right));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, right));
 
             tr = new TransformationRule();
             t.Rules.Add(tr);
 
             tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(right), Zero());
-            tr.Transformations.Add(new SignalTransformation(1, up));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, up));
 
             //############### LUMINAL GATE #####################
             t = CrystalRules.CreateType("luminal gate", new Point(1, 1));
@@ -178,7 +178,7 @@ namespace Crystalarium.Main
             );
 
             // transmit 
-            tr.Transformations.Add(new SignalTransformation(1,  down));
+            tr.Transformations.Add(new ConstantSignalTransformation(1,  down));
 
             // Up
             tr = new TransformationRule();
@@ -200,7 +200,7 @@ namespace Crystalarium.Main
             );
 
             // transmit 
-            tr.Transformations.Add(new SignalTransformation(1, up));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, up));
 
 
             // ############# CHANNEL ####################
@@ -212,14 +212,14 @@ namespace Crystalarium.Main
             t.Rules.Add(tr);
 
             tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(up), Zero());
-            tr.Transformations.Add(new SignalTransformation(1, down));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, down));
 
 
             tr = new TransformationRule();
             t.Rules.Add(tr);
 
             tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(down), Zero());
-            tr.Transformations.Add(new SignalTransformation(1, up));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, up));
 
 
 
@@ -258,7 +258,7 @@ namespace Crystalarium.Main
 
 
             // transmit on all sides
-            t.Rules[0].Transformations.Add(new SignalTransformation(1,  up));
+            t.Rules[0].Transformations.Add(new ConstantSignalTransformation(1,  up));
 
           
 
@@ -274,7 +274,7 @@ namespace Crystalarium.Main
 
             tr.Requirements = ReceivingOnSide(Direction.up);
 
-            tr.Transformations.Add(new SignalTransformation(1, down, right));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, down, right));
 
 
             // right rule
@@ -283,7 +283,7 @@ namespace Crystalarium.Main
 
             tr.Requirements = ReceivingOnSide(Direction.right);
 
-            tr.Transformations.Add(new SignalTransformation(1, down, up));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, down, up));
 
 
 
@@ -293,7 +293,7 @@ namespace Crystalarium.Main
 
             tr.Requirements = ReceivingOnSide(Direction.down);
 
-            tr.Transformations.Add(new SignalTransformation(1, right,  up));
+            tr.Transformations.Add(new ConstantSignalTransformation(1, right,  up));
 
 
            
@@ -348,7 +348,7 @@ namespace Crystalarium.Main
             // Electron Head
             t = WireRules.CreateType("electron head", new Point(1, 1));
             AgentType electronHead = t;
-            t.DefaultState.Transformations.Add(new SignalTransformation(1, up, down, left, right,
+            t.DefaultState.Transformations.Add(new ConstantSignalTransformation(1, up, down, left, right,
               new PortID(0, CompassPoint.northwest), new PortID(0, CompassPoint.northeast),
               new PortID(0, CompassPoint.southwest), new PortID(0, CompassPoint.southeast)));
 
