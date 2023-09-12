@@ -16,7 +16,7 @@ namespace CrystalCore.Model.Interface
 
         public MutateTransformation(AgentType mutateTo) : base()
         {
-            ChecksRequired = true;
+            ForrbiddenInDefaultState = true;
             MustBeLast = true;
 
             if (mutateTo == null)
@@ -56,10 +56,6 @@ namespace CrystalCore.Model.Interface
 
         }
 
-        internal override Transformation Add(Transformation toAdd)
-        {
-            CheckType(toAdd);
-            return toAdd;
-        }
+    
     }
 }

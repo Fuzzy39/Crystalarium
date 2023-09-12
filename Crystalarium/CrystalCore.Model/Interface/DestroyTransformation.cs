@@ -11,15 +11,10 @@ namespace CrystalCore.Model.Interface
 
         public DestroyTransformation() : base()
         {
-            ChecksRequired = true;
+            ForrbiddenInDefaultState = true;
             MustBeLast = true;
         }
 
-        internal override Transformation Add(Transformation toAdd)
-        {
-            CheckType(toAdd);
-            return this; // not like it matters.
-        }
 
         internal override void Transform(object o)
         {

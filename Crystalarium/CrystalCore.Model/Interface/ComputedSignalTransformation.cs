@@ -20,7 +20,7 @@ namespace CrystalCore.Model.Interface
         public ComputedSignalTransformation(Expression value, params PortID[] ports) : base()
         {
 
-            ChecksRequired = false;
+            ForrbiddenInDefaultState = false;
             MustBeLast = false;
 
             // give all ports this value.
@@ -28,11 +28,6 @@ namespace CrystalCore.Model.Interface
             this.value = value;
 
 
-        }
-
-        internal override Transformation Add(Transformation toAdd)
-        {
-            throw new NotImplementedException();
         }
 
         internal override void Transform(object o)

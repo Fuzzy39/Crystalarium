@@ -93,7 +93,7 @@ namespace CrystalCore.Model.Rules
 
                 foreach (Transformation tf in DefaultState.Transformations)
                 {
-                    if(tf.ChecksRequired)
+                    if(tf.ForrbiddenInDefaultState)
                     {
                         throw new InitializationFailedException("The default state of an Agent cannot perform a '" + tf.GetType().ToString() + "'.");
                     }

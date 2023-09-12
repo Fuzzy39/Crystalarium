@@ -193,46 +193,45 @@ namespace CrystalCore.Model.Objects
             {
                 toReturn.AddRange(tr.Transformations);
             }
-            return Compact(toReturn);
+            return SortTransformations(toReturn);
 
         }
 
         // add all transformations that can be added.
-        private List<Transformation> Compact(List<Transformation> list)
+        // This method assumes that the list passed into it is in the same order that the transformation rules are in.
+        private List<Transformation> SortTransformations(List<Transformation> list)
         {
 
             if (list.Count == 0) { return list; }
 
             List<Transformation> toReturn = new List<Transformation>();
-            Transformation t = list[0];
-            bool compacted = false;
+            Transformation last = null;
 
-
-            foreach (Transformation lookat in list)
-            {
-                if (lookat == t) { continue; }
-
-                // compact add together any transformations that can be added to ours.
-                if (t.GetType() == lookat.GetType())
+            foreach(Transformation tr in list) 
+            { 
+                if(tr.MustBeLast && last == null)
                 {
-                    t = t.Add(lookat);
-                    compacted = true;
+                    last = tr;
                     continue;
-
                 }
-                toReturn.Add(lookat);
 
+                // any subsequent must be last transformations are disregarded.
+                if(tr.MustBeLast)
+                {
+                    continue;
+                }
+
+                toReturn.Add(tr);
+                
             }
 
-            // stick ours back on to the end.
-            toReturn.Add(t);
-
-            if (compacted)
+            if(last!=null)
             {
-                return Compact(toReturn);
+                toReturn.Add(last);
             }
 
             return toReturn;
+          
 
         }
         /// <summary> 

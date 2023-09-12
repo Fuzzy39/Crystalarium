@@ -21,7 +21,7 @@ namespace CrystalCore.Model.Interface
         public ConstantSignalTransformation(int value, params PortID[] ports) : base()
         {
 
-            ChecksRequired = false;
+            ForrbiddenInDefaultState = false;
             MustBeLast = false;
 
             // give all ports this value.
@@ -36,7 +36,7 @@ namespace CrystalCore.Model.Interface
 
         public ConstantSignalTransformation(params PortTransmission[] ports)
         {
-            ChecksRequired = false;
+            ForrbiddenInDefaultState = false;
             MustBeLast = false;
 
             this.ports = ports;
@@ -68,54 +68,6 @@ namespace CrystalCore.Model.Interface
             a.OnlyTransmitOn(ports);
         }
 
-        /// <summary>
-        /// This method is scary
-        /// It combines the portTransmissions by port of this transform and toAdd, favoring toAdd if there is a conflict.
-        /// </summary>
-        /// <param name="toAdd"></param>
-        /// <returns></returns>
-        internal override Transformation Add(Transformation toAdd)
-        {
-            CheckType(toAdd);
-            ConstantSignalTransformation other = (ConstantSignalTransformation)toAdd;
-
-
-            // This is the list of our transmissions that are entirely unique to us compared to ToAdd.
-            List<PortTransmission> unalike = new List<PortTransmission>(ports);
-
-
-            // get the portIDs we are transmiting on.
-            List<PortID> toTransmitOn = new List<PortID>();
-            foreach (PortTransmission pt in ports)
-            {
-                toTransmitOn.Add(pt.portID);
-            }
-
-            // if we share any portIDs with toAdd, we remove them from the unique list.
-            foreach (PortTransmission portTrans in other.ports)
-            {
-
-                if (toTransmitOn.Contains(portTrans.portID))
-                {
-                    PortTransmission? toRemove = null;
-                    foreach (PortTransmission pt in unalike)
-                    {
-                        if (pt.portID.Equals(portTrans.portID))
-                        {
-                            toRemove = pt;
-                            break;
-                        }
-                    }
-                    unalike.Remove((PortTransmission)toRemove);
-                }
-
-            }
-
-            List<PortTransmission> toTransmit = new List<PortTransmission>(other.ports);
-            toTransmit.AddRange(unalike);
-
-            return new ConstantSignalTransformation(toTransmit.ToArray());
-
-        }
+      
     }
 }

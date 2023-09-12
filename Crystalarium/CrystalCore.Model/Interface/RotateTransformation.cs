@@ -16,7 +16,7 @@ namespace CrystalCore.Model.Interface
 
         public RotateTransformation(RotationalDirection direction) 
         {
-            ChecksRequired = true;
+            ForrbiddenInDefaultState = true;
             MustBeLast = false;
             this.direction = direction;
         }
@@ -37,10 +37,6 @@ namespace CrystalCore.Model.Interface
             a.Rotate(direction);
         }
 
-        internal override Transformation Add(Transformation toAdd)
-        {
-            CheckType(toAdd);
-            return toAdd;
-        }
+      
     }
 }
