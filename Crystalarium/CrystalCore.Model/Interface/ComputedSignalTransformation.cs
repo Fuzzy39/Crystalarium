@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CrystalCore.Model.Interface
 {
-    internal class ComputedSignalTransformation : Transformation
+    public class ComputedSignalTransformation : Transformation
     {
 
 
@@ -30,17 +30,18 @@ namespace CrystalCore.Model.Interface
 
         }
 
-        internal override void Transform(object o)
+        internal override void Transform(Agent a)
         {
-            var transformation = Resolve((Agent)o);
-            transformation.Transform(o);
+           var transformation = Resolve(a);
+           transformation.Transform(a);
+
         }
 
 
         private ConstantSignalTransformation Resolve(Agent a)
         {
-            int val = (int)value.Resolve(a).Value;
-            return new ConstantSignalTransformation(val, ports);
+            int val = (int)value.Resolve(a).Value; // we checked earlier, this cast won't fail
+            return new ConstantSignalTransformation(val, ports); // note, we aren't running validate on this, but it's fine in this case.
         }
 
         internal override void Validate(AgentType at)

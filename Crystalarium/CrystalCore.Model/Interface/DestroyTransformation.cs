@@ -16,15 +16,8 @@ namespace CrystalCore.Model.Interface
         }
 
 
-        internal override void Transform(object o)
-        {
-            
-            if (!(o is Agent))
-            {
-                throw new ArgumentException("o must be a ");
-            }
-            Agent a = (Agent)o;
-            
+        internal override void Transform(Agent a)
+        { 
             a.Destroy(); // hopefull this is the right way to do things.
         }
 

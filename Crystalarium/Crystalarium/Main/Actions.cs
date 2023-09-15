@@ -175,8 +175,8 @@ namespace Crystalarium.Main
 
 
             c.CreateControl("CamLeft", Keystate.Down)
-                .AddAction("play", () => MoveCamera(Direction.left))
-               ;
+                .AddAction("play", () => MoveCamera(Direction.left));
+               
 
             c.CreateControl("CamRight", Keystate.Down)
                 .AddAction("play", () => MoveCamera(Direction.right));

@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 
 namespace Crystalarium.Main
 {
@@ -26,7 +27,9 @@ namespace Crystalarium.Main
         internal Ruleset CrystalRules { get; private set; }
         internal Ruleset BasicRules { get; private set; }
         internal Ruleset FilumRules { get; private set; }
-        internal Ruleset WireRules { get; private set; } // wire rules  
+        internal Ruleset WireRules { get; private set; }
+
+        internal Ruleset TernaryRules { get; private set; }
 
 
         internal SkinSet DefaultSkin { get; private set; }
@@ -53,7 +56,7 @@ namespace Crystalarium.Main
             PortID left = new PortID(0, CompassPoint.west);
             PortID right = new PortID(0, CompassPoint.east);
 
-
+            #region Crystalarium
             // create a ruleset
             CrystalRules = game.Engine.addRuleset("Crystalarium");
                 
@@ -227,9 +230,9 @@ namespace Crystalarium.Main
 
             game.CurrentRuleset = CrystalRules;
 
+            #endregion
 
-
-
+            #region Minimal
             // setup TouchRules
 
             BasicRules = game.Engine.addRuleset("Minimal");
@@ -295,11 +298,9 @@ namespace Crystalarium.Main
 
             tr.Transformations.Add(new ConstantSignalTransformation(1, right,  up));
 
+            #endregion
 
-           
-
-
-
+            #region filum
             // setup filum
             /* FilumRules = game.Engine.addRuleset("Filum");
 
@@ -316,7 +317,9 @@ namespace Crystalarium.Main
              FilumRules.CreateType("signal", new Point(1, 1));
              FilumRules.CreateType("dying signal", new Point(1, 1));
             */
+            #endregion
 
+            #region wireworld
             // setup wireworld
             WireRules = game.Engine.addRuleset("Wire World");
 
@@ -361,6 +364,45 @@ namespace Crystalarium.Main
             electronTail.Rules[0].Transformations.Add(new MutateTransformation(wire));
             electronHead.Rules[0].Transformations.Add(new MutateTransformation(electronTail));
 
+            #endregion
+
+            #region ternary
+            TernaryRules = game.Engine.addRuleset("Ternary");
+
+            // ###### Emitter (+) #######
+            t = TernaryRules.CreateType("emitter (+)", new Point(1, 1));
+
+
+
+            t.Rules.Add(new TransformationRule());
+           
+         
+            t.Rules[0].Requirements = null;
+
+            // transmit on all sides
+            t.Rules[0].Transformations.Add(new ConstantSignalTransformation(1, up));
+
+
+            // ###### Emitter (-) #######
+            t = TernaryRules.CreateType("emitter (-)", new Point(1, 1));
+
+
+            t.Rules.Add(new TransformationRule());
+            t.Rules[0].Requirements = null;
+            // transmit on all sides
+            t.Rules[0].Transformations.Add(new ConstantSignalTransformation(-1, up));
+
+
+            // ###### not gate #######
+            t = TernaryRules.CreateType("not gate", new Point(1, 1));
+
+
+            t.Rules.Add(new TransformationRule());
+            t.Rules[0].Requirements = null;
+            // transmit on all sides
+            t.Rules[0].Transformations.Add(new ComputedSignalTransformation(new FunctionCall(Operator.Multiply, new IntOperand(-1), new PortValueOperand(down)), up));
+
+            #endregion
         }
 
         private IntOperand Zero()
@@ -388,7 +430,7 @@ namespace Crystalarium.Main
             baseConfig.Color = Color.White;
             baseConfig.Shrinkage = .05f;
 
-
+            #region crystalarium
             // Signals skin
             Skin beams = new Skin(CrystalRules, DefaultSkin);
             beams.GridViewBG = Textures.viewboxBG;
@@ -430,8 +472,9 @@ namespace Crystalarium.Main
 
             // chunks
             beams.ChunkConfig.ChunkBackground = Textures.chunkGrid;
-            
+            #endregion
 
+            #region Minimal
             // Minimal skin
             Skin basic = new Skin(BasicRules, DefaultSkin);
             basic.GridViewBG = Textures.viewboxBG;
@@ -457,10 +500,11 @@ namespace Crystalarium.Main
             // chunks
             basic.ChunkConfig.ChunkBackground = Textures.chunkGrid;
 
+            #endregion
 
-
+            #region WireWorld
             // ##### Wire World #####
-            Skin wire= new Skin(WireRules, DefaultSkin);
+            Skin wire = new Skin(WireRules, DefaultSkin);
             wire.GridViewBG = Textures.viewboxBG;
 
             baseConfig = new AgentViewConfig(null);
@@ -485,7 +529,38 @@ namespace Crystalarium.Main
 
             // chunks
             wire.ChunkConfig.ChunkBackground = Textures.altChunkGrid;
+            #endregion
 
+            #region ternary
+            Skin ternary = new Skin(TernaryRules, DefaultSkin);
+            ternary.GridViewBG = Textures.viewboxBG;
+
+
+
+            ternary.SignalConfig.SignalTexture = Textures.pixel;
+            ternary.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 150, 150), -1), new Gradient.ColorStop(new(150,150,230), 1));
+
+            // emitter (+)
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (+)"));
+            conf.DefaultTexture = Textures.emitter;
+            ternary.AgentConfigs.Add(conf);
+
+            // emitter (-)
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (-)"));
+            conf.DefaultTexture = Textures.emitter;
+            conf.Color = Color.Red;
+            ternary.AgentConfigs.Add(conf);
+
+            // not gate
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("not gate"));
+            conf.DefaultTexture = Textures.notGate;
+            ternary.AgentConfigs.Add(conf);
+
+
+            // chunks
+            ternary.ChunkConfig.ChunkBackground = Textures.chunkGrid;
+
+            #endregion
 
         }
 
@@ -500,6 +575,7 @@ namespace Crystalarium.Main
             baseConfig.DefaultTexture = Textures.pixel;
             baseConfig.Color = Color.Magenta;
 
+            #region Crystalarium
             // Signals skin
             Skin beams = new Skin(CrystalRules, MiniMapSkin);
             beams.GridViewBG = Textures.viewboxBG;
@@ -545,8 +621,9 @@ namespace Crystalarium.Main
             beams.ChunkConfig.DoCheckerBoardColoring = true;
             beams.ChunkConfig.BackgroundColor = new Color(50, 50, 150);
             beams.ChunkConfig.OriginChunkColor = new Color(150, 50, 50);
+            #endregion
 
-
+            #region Minimal
             // touch skin
             Skin basic = new Skin(BasicRules, MiniMapSkin);
             basic.GridViewBG = Textures.viewboxBG;
@@ -573,7 +650,9 @@ namespace Crystalarium.Main
             // chunks
             basic.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
 
-            // 
+            #endregion
+
+            #region WireWorld
             Skin wire = new Skin(WireRules, MiniMapSkin);
             wire.GridViewBG = Textures.viewboxBG;
 
@@ -597,6 +676,36 @@ namespace Crystalarium.Main
 
 
             wire.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
+            #endregion
+
+            #region Ternary
+
+            // touch skin
+            Skin ternary = new Skin(TernaryRules, MiniMapSkin);
+            ternary.GridViewBG = Textures.viewboxBG;
+
+           
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (+)"));
+            conf.Color = new Color(70, 70, 220);
+            ternary.AgentConfigs.Add(conf);
+
+
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (-)"));
+            conf.Color = new Color(220, 70, 70);
+            ternary.AgentConfigs.Add(conf);
+
+
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("not gate"));
+            conf.Color = new Color(220, 70, 70);
+            ternary.AgentConfigs.Add(conf);
+
+            ternary.SignalConfig.SignalTexture = Textures.pixel;
+            ternary.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 150, 150), -1), new Gradient.ColorStop(new(150, 150, 230), 1));
+
+            // chunks
+            ternary.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
+
+            #endregion
 
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrystalCore.Model.Objects;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,7 +22,7 @@ namespace CrystalCore.Model.Rules
 
         internal abstract void Validate(AgentType at);
 
-        internal abstract void Transform(object o);
+        internal abstract void Transform(Agent a);
 
         protected void CheckType(Transformation toCheck)
         {

@@ -55,17 +55,9 @@ namespace CrystalCore.Model.Interface
 
         }
 
-        internal override void Transform(object o)
-        {
-
-            if (!(o is Agent))
-            {
-                throw new ArgumentException("A signaltransformation acts on an Agent object.");
-            }
-
-            Agent a = (Agent)o;
-
-            a.OnlyTransmitOn(ports);
+        internal override void Transform(Agent a)
+        { 
+            a.TransmitOn(ports);
         }
 
       

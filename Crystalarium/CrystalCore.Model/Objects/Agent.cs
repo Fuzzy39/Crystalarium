@@ -241,13 +241,9 @@ namespace CrystalCore.Model.Objects
         internal void Execute()
         {
 
+            // reset transmissions
+            portInterface.ResetTransmissions();
             RunTransformations();
-
-            if (!updatedSignalsThisStep)
-            {
-                OnlyTransmitOn(new PortTransmission[0]);
-            }
-
             updatedSignalsThisStep = false;
 
         }
@@ -275,7 +271,7 @@ namespace CrystalCore.Model.Objects
 
         }
 
-        internal void OnlyTransmitOn(PortTransmission[] pts)
+        internal void TransmitOn(PortTransmission[] pts)
         {
             List<Port> ports = new List<Port>();
             foreach (PortTransmission pt in pts)
@@ -283,7 +279,7 @@ namespace CrystalCore.Model.Objects
                 ports.Add(GetPort(pt.portID));
             }
 
-            portInterface.OnlyTransmitOn(ports, pts);
+            portInterface.TransmitOn(ports, pts);
             updatedSignalsThisStep = true;
         }
 
