@@ -20,7 +20,6 @@ namespace CrystalCore.Model.Objects
 
         private PortManager portInterface;
 
-        private bool updatedSignalsThisStep;
         // properties 
 
         // internal event EventHandler OnPortsDestroyed;
@@ -68,7 +67,7 @@ namespace CrystalCore.Model.Objects
                 throw new InvalidOperationException("The Ruleset '" + Type.Ruleset.Name + "' has specified that diagonal signals are allowed, which requires that no agents are greater than 1 by 1 in size.");
             }
 
-            updatedSignalsThisStep = false;
+         
 
             // do the default thing.
             _activeRules = new List<TransformationRule>();
@@ -244,7 +243,7 @@ namespace CrystalCore.Model.Objects
             // reset transmissions
             portInterface.ResetTransmissions();
             RunTransformations();
-            updatedSignalsThisStep = false;
+         
 
         }
 
@@ -280,7 +279,7 @@ namespace CrystalCore.Model.Objects
             }
 
             portInterface.TransmitOn(ports, pts);
-            updatedSignalsThisStep = true;
+          
         }
 
 
