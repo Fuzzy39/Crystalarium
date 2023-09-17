@@ -91,7 +91,7 @@ namespace CrystalCore.Model.Rules
                     throw new InitializationFailedException("Invalid size of " + UpwardsSize + ". Size must be positive.");
                 }
 
-                foreach (Transformation tf in DefaultState.Transformations)
+                foreach (ITransformation tf in DefaultState.Transformations)
                 {
                     if(tf.ForrbiddenInDefaultState)
                     {

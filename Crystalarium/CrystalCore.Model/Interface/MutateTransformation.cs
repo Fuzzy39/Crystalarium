@@ -9,15 +9,31 @@ using System.Text;
 
 namespace CrystalCore.Model.Interface
 {
-    public class MutateTransformation : Transformation
+    public class MutateTransformation : ITransformation
     {
+
+
+        public bool ForrbiddenInDefaultState
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool MustBeLast
+        {
+            get
+            {
+                return true;
+            }
+        }
+
 
         private AgentType mutateTo;
 
         public MutateTransformation(AgentType mutateTo) : base()
         {
-            ForrbiddenInDefaultState = true;
-            MustBeLast = true;
 
             if (mutateTo == null)
             {
@@ -28,7 +44,7 @@ namespace CrystalCore.Model.Interface
             this.mutateTo = mutateTo;
         }
 
-        internal override void Validate(AgentType at)
+        public void Validate(AgentType at)
         {
             if (at.Ruleset!=mutateTo.Ruleset)
             {
@@ -43,9 +59,11 @@ namespace CrystalCore.Model.Interface
 
         }
 
-        internal override void Transform(Agent a)
+        public Transform CreateTransform(Agent a)
         {
-            a.Mutate(mutateTo);
+  
+
+            return a => a.Mutate(mutateTo);
 
         }
 

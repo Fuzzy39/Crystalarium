@@ -7,29 +7,44 @@ using System.Text;
 
 namespace CrystalCore.Model.Interface
 {
-    internal class RotateTransformation : Transformation
+    internal class RotateTransformation : ITransformation
     {
 
+        public bool ForrbiddenInDefaultState
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public bool MustBeLast
+        {
+            get
+            {
+                return false;
+            }
+        }
 
 
         private RotationalDirection direction;
 
         public RotateTransformation(RotationalDirection direction) 
         {
-            ForrbiddenInDefaultState = true;
-            MustBeLast = false;
+            
             this.direction = direction;
         }
 
-        internal override void Validate(AgentType at)
+        public void Validate(AgentType at)
         {
           // nothing can go wrong, that's good.
         }
        
 
-        internal override void Transform(Agent a)
+        public Transform CreateTransform(Agent a)
         {
-            a.Rotate(direction);
+            
+            return a => a.Rotate(direction);
         }
 
       

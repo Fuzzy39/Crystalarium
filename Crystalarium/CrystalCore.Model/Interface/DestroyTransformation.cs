@@ -6,24 +6,33 @@ using System.Text;
 
 namespace CrystalCore.Model.Interface
 {
-    internal class DestroyTransformation : Transformation
+    internal class DestroyTransformation : ITransformation
     {
 
-        public DestroyTransformation() : base()
+        public bool ForrbiddenInDefaultState
         {
-            ForrbiddenInDefaultState = true;
-            MustBeLast = true;
+            get
+            {
+                return true;
+            }
         }
 
+        public bool MustBeLast
+        {
+            get
+            {
+                return true;
+            }
+        }
 
-        internal override void Transform(Agent a)
+        public Transform CreateTransform(Agent a)
         { 
-            a.Destroy(); // hopefull this is the right way to do things.
+            return a=>a.Destroy(); // hopefully this is the right way to do things.
         }
 
-        internal override void Validate(AgentType at)
+        public void Validate(AgentType at)
         {
-            
+            // always good to go!
         }
 
     }

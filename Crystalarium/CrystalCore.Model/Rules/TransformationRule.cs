@@ -15,7 +15,7 @@ namespace CrystalCore.Model.Rules
         // fields
 
         private Expression _requirements;
-        private List<Transformation> _transformations;
+        private List<ITransformation> _transformations;
 
 
         public Expression Requirements
@@ -27,7 +27,7 @@ namespace CrystalCore.Model.Rules
             }
         }
 
-        public List<Transformation> Transformations
+        public List<ITransformation> Transformations
         {
             get
             {
@@ -41,7 +41,7 @@ namespace CrystalCore.Model.Rules
         // Constructors
         public TransformationRule()
         {
-            _transformations = new List<Transformation>();
+            _transformations = new List<ITransformation>();
         }
 
         internal bool SatisfiesRequirements(object context)
@@ -74,7 +74,7 @@ namespace CrystalCore.Model.Rules
 
                 // an agentstate can have no transformations, and be inert, if it wishes.
                 bool agentDestroyed = false;
-                foreach (Transformation tf in Transformations)
+                foreach (ITransformation tf in Transformations)
                 {
 
                     if (agentDestroyed)
@@ -104,7 +104,7 @@ namespace CrystalCore.Model.Rules
         private void ValidateChildren(AgentType at)
         {
 
-            foreach (Transformation tf in Transformations)
+            foreach (ITransformation tf in Transformations)
             {
 
                 tf.Validate(at);

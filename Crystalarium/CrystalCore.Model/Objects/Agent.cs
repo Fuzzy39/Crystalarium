@@ -16,10 +16,11 @@ namespace CrystalCore.Model.Objects
 
         private AgentType _type;
 
-        protected List<TransformationRule> _activeRules;
+        protected List<Transform> _nextTransforms;
 
         private PortManager portInterface;
 
+      
         // properties 
 
         // internal event EventHandler OnPortsDestroyed;
@@ -27,12 +28,6 @@ namespace CrystalCore.Model.Objects
         public AgentType Type
         {
             get => _type;
-        }
-
-
-        public List<TransformationRule> ActiveRules
-        {
-            get { return _activeRules; }
         }
 
         internal List<List<Port>> Ports
@@ -67,11 +62,11 @@ namespace CrystalCore.Model.Objects
                 throw new InvalidOperationException("The Ruleset '" + Type.Ruleset.Name + "' has specified that diagonal signals are allowed, which requires that no agents are greater than 1 by 1 in size.");
             }
 
-         
+
 
             // do the default thing.
-            _activeRules = new List<TransformationRule>();
-            _activeRules.Add(Type.DefaultState);
+            _nextTransforms = new();
+            SetDefaultTransformsNext();
             Execute();
 
             Ready();
@@ -116,8 +111,7 @@ namespace CrystalCore.Model.Objects
 
             if (Type.Ruleset.RunDefaultStateOnRotation)
             {
-                _activeRules.Clear();
-                _activeRules.Add(Type.DefaultState);
+                SetDefaultTransformsNext();
                 Execute();
             }
         }
@@ -133,14 +127,18 @@ namespace CrystalCore.Model.Objects
             _type = at;
 
             // do the default thing.
-            _activeRules = new List<TransformationRule>();
-            _activeRules.Add(Type.DefaultState);
-            RunTransformations();
+            
+            SetDefaultTransformsNext();
+            Transform();
             portInterface.StatusChanged();
 
         }
 
-
+        internal void SetDefaultTransformsNext()
+        {
+            _nextTransforms.Clear();
+            Type.DefaultState.Transformations.ForEach(t => _nextTransforms.Add(t.CreateTransform(this)));
+        }
 
         public override string ToString()
         {
@@ -151,17 +149,17 @@ namespace CrystalCore.Model.Objects
         /// This method tranistions the current simulation step's state into the last step. This allows us to freely change the state of the grid without 
         /// causing any changes to what we are making decisions about.
         /// </summary>
-        internal void PreserveState()
+        internal void CalculateNextStep()
         {
             portInterface.PreserveState();
-            _activeRules = DetermineState();
+            _nextTransforms = GetTransformations(GetActiveRules());
 
         }
 
 
 
 
-        private List<TransformationRule> DetermineState() //Indiana
+        private List<TransformationRule> GetActiveRules() //Indiana
         {
 
             List<TransformationRule> toReturn = new List<TransformationRule>();
@@ -185,28 +183,33 @@ namespace CrystalCore.Model.Objects
             return toReturn;
         }
 
-        private List<Transformation> GetTransformations()
+        private List<Transform> GetTransformations(List<TransformationRule> activeRules)
         {
-            List<Transformation> toReturn = new List<Transformation>();
-            foreach (TransformationRule tr in _activeRules)
+            List<ITransformation> transformations = new List<ITransformation>();
+            foreach (TransformationRule tr in activeRules)
             {
-                toReturn.AddRange(tr.Transformations);
+                transformations.AddRange(tr.Transformations);
             }
-            return SortTransformations(toReturn);
+            transformations = SortTransformations(transformations);
+            List<Transform> toReturn = new();
 
+            transformations.ForEach(trans => toReturn.Add(trans.CreateTransform(this)));
+
+            
+            return toReturn;
         }
 
         // add all transformations that can be added.
         // This method assumes that the list passed into it is in the same order that the transformation rules are in.
-        private List<Transformation> SortTransformations(List<Transformation> list)
+        private List<ITransformation> SortTransformations(List<ITransformation> list)
         {
 
             if (list.Count == 0) { return list; }
 
-            List<Transformation> toReturn = new List<Transformation>();
-            Transformation last = null;
+            List<ITransformation> toReturn = new List<ITransformation>();
+            ITransformation last = null;
 
-            foreach(Transformation tr in list) 
+            foreach(ITransformation tr in list) 
             { 
                 if(tr.MustBeLast && last == null)
                 {
@@ -233,31 +236,7 @@ namespace CrystalCore.Model.Objects
           
 
         }
-        /// <summary> 
-        /// Runs through transformations of this agent type.
-        /// </summary>
-        /// <param name="a"></param>
-        internal void Execute()
-        {
-
-            // reset transmissions
-            portInterface.ResetTransmissions();
-            RunTransformations();
-         
-
-        }
-
-        private void RunTransformations()
-        {
-
-            List<Transformation> transformations = GetTransformations();
-            foreach (Transformation tf in transformations)
-            {
-                tf.Transform(this);
-
-            }
-        }
-
+       
 
         internal void Update()
         {
@@ -270,6 +249,31 @@ namespace CrystalCore.Model.Objects
 
         }
 
+        /// <summary> 
+        /// Runs through transformations of this agent type.
+        /// </summary>
+        /// <param name="a"></param>
+        internal void Execute()
+        {
+
+            // reset transmissions
+            portInterface.ResetTransmissions();
+
+            Transform();
+
+
+        }
+
+        private void Transform()
+        {
+            foreach (Transform transform in _nextTransforms)
+            {
+                transform(this);
+            }
+            _nextTransforms.Clear();
+        }
+      
+
         internal void TransmitOn(PortTransmission[] pts)
         {
             List<Port> ports = new List<Port>();
@@ -279,7 +283,7 @@ namespace CrystalCore.Model.Objects
             }
 
             portInterface.TransmitOn(ports, pts);
-          
+         
         }
 
 

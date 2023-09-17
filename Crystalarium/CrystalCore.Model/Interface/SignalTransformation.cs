@@ -10,18 +10,32 @@ using System.Threading.Tasks;
 
 namespace CrystalCore.Model.Interface
 {
-    public class ComputedSignalTransformation : Transformation
+    public class SignalTransformation : ITransformation
     {
 
+        public bool ForrbiddenInDefaultState
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool MustBeLast
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         private PortID[] ports;
         private Expression value;
 
-        public ComputedSignalTransformation(Expression value, params PortID[] ports) : base()
+        public SignalTransformation(Expression value, params PortID[] ports)
         {
 
-            ForrbiddenInDefaultState = false;
-            MustBeLast = false;
+            
 
             // give all ports this value.
             this.ports = ports;
@@ -30,27 +44,39 @@ namespace CrystalCore.Model.Interface
 
         }
 
-        internal override void Transform(Agent a)
+        public SignalTransformation(int value, params PortID[] ports)
         {
-           var transformation = Resolve(a);
-           transformation.Transform(a);
+            this.value = new IntOperand(value);
+            this.ports = ports;
+        }
+
+        public Transform CreateTransform(Agent a)
+        {
+         
+
+            return (a) =>
+            {
+                int val = (int)value.Resolve(a).Value;
+                List<PortTransmission> toTransmit = new(ports.Length);
+
+                // this is a cursed line for no reason at all. just iterating with an index
+                { int i = 0; toTransmit.ForEach(trans => { i++; trans = new(val, ports[i]); }); }
+
+                a.TransmitOn(toTransmit.ToArray());
+            };
+
+
+          
 
         }
 
-
-        private ConstantSignalTransformation Resolve(Agent a)
-        {
-            int val = (int)value.Resolve(a).Value; // we checked earlier, this cast won't fail
-            return new ConstantSignalTransformation(val, ports); // note, we aren't running validate on this, but it's fine in this case.
-        }
-
-        internal override void Validate(AgentType at)
+        public void Validate(AgentType at)
         {
 
             foreach (PortID port in ports)
             {
                 if (!port.CheckValidity(at))
-                {
+                {                                   
                     throw new InitializationFailedException(
                         "Signal Transformation: Port ID: " + port.ID + " is not valid for AgentType '" + at.Name + "'.");
                 }
