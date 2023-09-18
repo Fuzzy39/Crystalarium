@@ -52,15 +52,18 @@ namespace CrystalCore.Model.Interface
 
         public Transform CreateTransform(Agent a)
         {
-         
+
+            int val = (int)value.Resolve(a).Value;
 
             return (a) =>
             {
-                int val = (int)value.Resolve(a).Value;
-                List<PortTransmission> toTransmit = new(ports.Length);
+               
+                List<PortTransmission> toTransmit = new();
 
-                // this is a cursed line for no reason at all. just iterating with an index
-                { int i = 0; toTransmit.ForEach(trans => { i++; trans = new(val, ports[i]); }); }
+                for(int i = 0; i<ports.Length; i++) 
+                {
+                    toTransmit.Add(new(val, ports[i]));
+                }
 
                 a.TransmitOn(toTransmit.ToArray());
             };
