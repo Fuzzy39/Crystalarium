@@ -41,7 +41,9 @@ namespace CrystalCore.Model.Interface
     }
 
     /// <summary>
-    /// whether the given number of ports on the agent are receiving a signal of a particular value.
+    /// The amount of ports exceeding the threshold value. If the value is positive, values must be equal to or greater than the threshold.
+    /// If 0, the value must be non-zero
+    /// If negative, the value must be less than or equal to the value.
     /// </summary>
     public class ThresholdOperand : Expression
     {
@@ -65,13 +67,26 @@ namespace CrystalCore.Model.Interface
             foreach (Port p in a.PortList)
             {
                
-                if (p.Value >= threshold)
+                if (meetsThreshold(p.Value))
                 {
                     toReturn++;
                 }
                 
             }
             return new Token(ReturnType, toReturn);
+        }
+
+        private bool meetsThreshold(int value)
+        {
+            if(threshold>0)
+            {
+                return value >= threshold;
+            }
+            if (threshold == 0)
+            {
+                return value != 0;
+            }
+            return value <= 0;
         }
     }
 

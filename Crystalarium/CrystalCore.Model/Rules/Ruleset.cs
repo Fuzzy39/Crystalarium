@@ -5,6 +5,7 @@ using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace CrystalCore.Model.Rules
 {
@@ -144,13 +145,7 @@ namespace CrystalCore.Model.Rules
                 throw new InvalidOperationException("Cannot Modify Ruleset after it has been initialized.");
             }
 
-            foreach (AgentType at in _agentTypes)
-            {
-                if (name == at.Name)
-                {
-                    throw new ArgumentException("Agent Type name already used in this ruleset");
-                }
-            }
+         
 
             _agentTypes.Add(new AgentType(this, name, size));
 
@@ -179,6 +174,21 @@ namespace CrystalCore.Model.Rules
         {
             try
             {
+                foreach (AgentType at in _agentTypes)
+                {
+                    List<AgentType> types = new(_agentTypes);
+                    types.Remove(at);
+
+                    types.ForEach(ty =>
+                    {
+                        if (at.Name == ty.Name)
+                        {
+                            throw new InitializationFailedException("The agent type name '" + at.Name + "' has been used multiple times in this ruleset. The names of agent types should be unique human-readable identifiers.");
+                        }
+                    });
+                  
+                }
+
                 foreach (AgentType at in _agentTypes)
                 {
                     at.Initialize();

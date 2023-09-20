@@ -87,7 +87,7 @@ namespace Crystalarium.Main
             // FunctionCall: active ports > 0
             t.Rules[0].Requirements = null;
             // transmit on all sides
-            t.Rules[0].Transformations.Add(new SignalTransformation(2, up));
+            t.Rules[0].Transformations.Add(new SignalTransformation(1, up));
 
             // ############### PRISM #####################
             t = CrystalRules.CreateType("prism", new Point(1, 1));
@@ -369,21 +369,20 @@ namespace Crystalarium.Main
             #region ternary
             TernaryRules = game.Engine.addRuleset("Ternary");
 
-            // ###### Emitter (+) #######
+            // ############### STOPPER #####################
+            t = TernaryRules.CreateType("stopper", new Point(1, 1));
+
+
+            // ###### Emitter (+) ##########################
             t = TernaryRules.CreateType("emitter (+)", new Point(1, 1));
-
-
-
+            
             t.Rules.Add(new TransformationRule());
-           
-         
             t.Rules[0].Requirements = null;
-
             // transmit on all sides
             t.Rules[0].Transformations.Add(new SignalTransformation(1, up));
 
 
-            // ###### Emitter (-) #######
+            // ###### Emitter (-) ##########################
             t = TernaryRules.CreateType("emitter (-)", new Point(1, 1));
 
 
@@ -393,7 +392,34 @@ namespace Crystalarium.Main
             t.Rules[0].Transformations.Add(new SignalTransformation(-1, up));
 
 
-            // ###### not gate #######
+            // ############### MIRROR ##################### \
+            t = TernaryRules.CreateType("mirror", new Point(1, 1));
+
+            tr = new TransformationRule();
+            t.Rules.Add(tr);
+            tr.Requirements = null;
+            tr.Transformations.Add(new SignalTransformation(new PortValueOperand(left), down));
+            tr.Transformations.Add(new SignalTransformation(new PortValueOperand(up), right));
+            tr.Transformations.Add(new SignalTransformation(new PortValueOperand(right), up));
+            tr.Transformations.Add(new SignalTransformation(new PortValueOperand(down), left));
+
+
+
+            // ############### SPLITTER ##################### 
+            t = TernaryRules.CreateType("splitter", new Point(1, 1));
+
+            tr = new TransformationRule();
+            t.Rules.Add(tr);
+
+            // if there is exactly one transmission...
+            tr.Requirements = new FunctionCall(equals, new ThresholdOperand(0), new IntOperand(1));
+            tr.Transformations.Add(new SignalTransformation(
+                new FunctionCall(Operator.Add, new PortValueOperand(left), new PortValueOperand(right), new PortValueOperand(up), new PortValueOperand(down)),
+                up, left, right, down
+            ));
+
+
+            // ###### not gate #############################
             t = TernaryRules.CreateType("not gate", new Point(1, 1));
 
 
@@ -401,6 +427,45 @@ namespace Crystalarium.Main
             t.Rules[0].Requirements = null;
             // transmit on all sides
             t.Rules[0].Transformations.Add(new SignalTransformation(new FunctionCall(Operator.Multiply, new IntOperand(-1), new PortValueOperand(down)), up));
+
+            // ###### and gate #############################
+            t = TernaryRules.CreateType("and gate", new Point(1, 1));
+
+
+            t.Rules.Add(new TransformationRule());
+            t.Rules[0].Requirements = new FunctionCall(Operator.And,
+                new FunctionCall(Operator.EqualTo, new IntOperand(1), new PortValueOperand(left)),
+                new FunctionCall(Operator.EqualTo, new IntOperand(1), new PortValueOperand(right)));
+            // transmit on all sides
+            t.Rules[0].Transformations.Add(new SignalTransformation(1, up));
+
+            t.Rules.Add(new TransformationRule());
+            t.Rules[1].Requirements = new FunctionCall(Operator.Or, 
+                new FunctionCall(Operator.EqualTo, new IntOperand(-1), new PortValueOperand(left)),
+                new FunctionCall(Operator.EqualTo, new IntOperand(-1), new PortValueOperand(right)));
+
+            // transmit on all sides
+            t.Rules[1].Transformations.Add(new SignalTransformation(-1, up));
+
+
+            // ###### or gate #############################
+            t = TernaryRules.CreateType("or gate", new Point(1, 1));
+
+
+            t.Rules.Add(new TransformationRule());
+            t.Rules[0].Requirements = new FunctionCall(Operator.And,
+                new FunctionCall(Operator.EqualTo, new IntOperand(-1), new PortValueOperand(left)),
+                new FunctionCall(Operator.EqualTo, new IntOperand(-1), new PortValueOperand(right)));
+            // transmit on all sides
+            t.Rules[0].Transformations.Add(new SignalTransformation(-1, up));
+
+            t.Rules.Add(new TransformationRule());
+            t.Rules[1].Requirements = new FunctionCall(Operator.Or,
+                new FunctionCall(Operator.EqualTo, new IntOperand(1), new PortValueOperand(left)),
+                new FunctionCall(Operator.EqualTo, new IntOperand(1), new PortValueOperand(right)));
+
+            // transmit on all sides
+            t.Rules[1].Transformations.Add(new SignalTransformation(1, up));
 
             #endregion
         }
@@ -502,6 +567,64 @@ namespace Crystalarium.Main
 
             #endregion
 
+            #region ternary
+            Skin ternary = new Skin(TernaryRules, DefaultSkin);
+            ternary.GridViewBG = Textures.viewboxBG;
+
+
+
+            ternary.SignalConfig.SignalTexture = Textures.pixel;
+            ternary.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 150, 150), -1), new Gradient.ColorStop(new(150, 150, 230), 1));
+
+            // stopper
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("stopper"));
+            conf.DefaultTexture = Textures.stopper;
+            ternary.AgentConfigs.Add(conf);
+
+            // emitter (+)
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (+)"));
+            conf.DefaultTexture = Textures.emitter;
+            ternary.AgentConfigs.Add(conf);
+
+            // emitter (-)
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (-)"));
+            conf.DefaultTexture = Textures.emitter;
+            conf.Color = Color.Red;
+            ternary.AgentConfigs.Add(conf);
+
+            // splitter
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("splitter"));
+            conf.DefaultTexture = Textures.prism;
+            ternary.AgentConfigs.Add(conf);
+
+            // mirror
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("mirror"));
+            conf.DefaultTexture = Textures.mirror;
+            ternary.AgentConfigs.Add(conf);
+
+            // not gate
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("not gate"));
+            conf.DefaultTexture = Textures.notGate;
+            ternary.AgentConfigs.Add(conf);
+
+
+            // and gate
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("and gate"));
+            conf.DefaultTexture = Textures.notGate;
+            conf.Color = Color.Yellow;
+            ternary.AgentConfigs.Add(conf);
+
+            // or gate
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("or gate"));
+            conf.DefaultTexture = Textures.notGate;
+            conf.Color = Color.Green;
+            ternary.AgentConfigs.Add(conf);
+
+            // chunks
+            ternary.ChunkConfig.ChunkBackground = Textures.chunkGrid;
+
+            #endregion
+
             #region WireWorld
             // ##### Wire World #####
             Skin wire = new Skin(WireRules, DefaultSkin);
@@ -531,36 +654,7 @@ namespace Crystalarium.Main
             wire.ChunkConfig.ChunkBackground = Textures.altChunkGrid;
             #endregion
 
-            #region ternary
-            Skin ternary = new Skin(TernaryRules, DefaultSkin);
-            ternary.GridViewBG = Textures.viewboxBG;
-
-
-
-            ternary.SignalConfig.SignalTexture = Textures.pixel;
-            ternary.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 150, 150), -1), new Gradient.ColorStop(new(150,150,230), 1));
-
-            // emitter (+)
-            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (+)"));
-            conf.DefaultTexture = Textures.emitter;
-            ternary.AgentConfigs.Add(conf);
-
-            // emitter (-)
-            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (-)"));
-            conf.DefaultTexture = Textures.emitter;
-            conf.Color = Color.Red;
-            ternary.AgentConfigs.Add(conf);
-
-            // not gate
-            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("not gate"));
-            conf.DefaultTexture = Textures.notGate;
-            ternary.AgentConfigs.Add(conf);
-
-
-            // chunks
-            ternary.ChunkConfig.ChunkBackground = Textures.chunkGrid;
-
-            #endregion
+           
 
         }
 
@@ -684,19 +778,37 @@ namespace Crystalarium.Main
             Skin ternary = new Skin(TernaryRules, MiniMapSkin);
             ternary.GridViewBG = Textures.viewboxBG;
 
-           
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("stopper"));
+            conf.Color = new Color(180, 180, 180);
+            ternary.AgentConfigs.Add(conf);
+
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (+)"));
             conf.Color = new Color(70, 70, 220);
             ternary.AgentConfigs.Add(conf);
 
 
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (-)"));
-            conf.Color = new Color(220, 70, 70);
+            conf.Color = new Color(255, 0, 255);
             ternary.AgentConfigs.Add(conf);
 
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("mirror"));
+            conf.Color = new Color(120, 230, 230);
+            ternary.AgentConfigs.Add(conf);
+
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("splitter"));
+            conf.Color = new Color(50, 100, 200);
+            ternary.AgentConfigs.Add(conf);
 
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("not gate"));
             conf.Color = new Color(220, 70, 70);
+            ternary.AgentConfigs.Add(conf);
+
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("and gate"));
+            conf.Color = new Color(255, 0, 255);
+            ternary.AgentConfigs.Add(conf);
+
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("or gate"));
+            conf.Color = new Color(255, 0, 255);
             ternary.AgentConfigs.Add(conf);
 
             ternary.SignalConfig.SignalTexture = Textures.pixel;
