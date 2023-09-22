@@ -582,7 +582,7 @@ namespace Crystalarium.Main
 
             // beams
             beams.SignalConfig.SignalTexture = Textures.pixel;
-            beams.SignalConfig.Colors =new( new Gradient.ColorStop(new Color(230, 230, 150),1));
+            beams.SignalConfig.Colors =new( new Gradient.ColorStop(new Color(240, 240, 150), 1));
            
 
             // chunks
@@ -610,7 +610,7 @@ namespace Crystalarium.Main
 
             // beams
             basic.SignalConfig.SignalTexture = Textures.pixel;
-            basic.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 230, 150), 0));
+            basic.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(240, 240, 150), 0));
 
             // chunks
             basic.ChunkConfig.ChunkBackground = Textures.chunkGrid;
@@ -624,7 +624,7 @@ namespace Crystalarium.Main
 
 
             ternary.SignalConfig.SignalTexture = Textures.pixel;
-            ternary.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 150, 150), -1), new Gradient.ColorStop(new(150, 150, 230), 1));
+            ternary.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(240, 150, 150), -1), new Gradient.ColorStop(new(150, 240, 150), 1));
 
             // stopper
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("stopper"));
@@ -633,13 +633,12 @@ namespace Crystalarium.Main
 
             // emitter (+)
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("increment"));
-            conf.DefaultTexture = Textures.emitter;
+            conf.DefaultTexture = Textures.increment;
             ternary.AgentConfigs.Add(conf);
 
             // emitter (-)
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("decrement"));
-            conf.DefaultTexture = Textures.emitter;
-            conf.Color = Color.Red;
+            conf.DefaultTexture = Textures.decrement;
             ternary.AgentConfigs.Add(conf);
 
             // splitter
@@ -660,14 +659,12 @@ namespace Crystalarium.Main
 
             // and gate
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("and gate"));
-            conf.DefaultTexture = Textures.notGate;
-            conf.Color = Color.Yellow;
+            conf.DefaultTexture = Textures.and;
             ternary.AgentConfigs.Add(conf);
 
             // or gate
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("or gate"));
-            conf.DefaultTexture = Textures.notGate;
-            conf.Color = Color.Green;
+            conf.DefaultTexture = Textures.or;
             ternary.AgentConfigs.Add(conf);
 
             // chunks
@@ -758,7 +755,7 @@ namespace Crystalarium.Main
 
             // beams
             beams.SignalConfig.SignalTexture = Textures.pixel;
-            beams.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 230, 150), 0));
+            beams.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(240, 240, 150), 0));
 
             // chunks
             beams.ChunkConfig.ChunkBackground = Textures.pixel;
@@ -790,7 +787,7 @@ namespace Crystalarium.Main
 
             // touch
             basic.SignalConfig.SignalTexture = Textures.pixel;
-            beams.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 230, 150), 0));
+            beams.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(240, 240, 150), 0));
             // chunks
             basic.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
 
@@ -833,12 +830,12 @@ namespace Crystalarium.Main
             ternary.AgentConfigs.Add(conf);
 
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("increment"));
-            conf.Color = new Color(255, 0, 255);
+            conf.Color = new Color(70, 220, 70);
             ternary.AgentConfigs.Add(conf);
 
 
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("decrement"));
-            conf.Color = new Color(255, 0, 255);
+            conf.Color = new Color(220, 70, 70);
             ternary.AgentConfigs.Add(conf);
 
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("mirror"));
@@ -854,15 +851,15 @@ namespace Crystalarium.Main
             ternary.AgentConfigs.Add(conf);
 
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("and gate"));
-            conf.Color = new Color(255, 0, 255);
+            conf.Color = new Color(220, 200, 70);
             ternary.AgentConfigs.Add(conf);
 
             conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("or gate"));
-            conf.Color = new Color(255, 0, 255);
+            conf.Color = new Color(70, 220, 70);
             ternary.AgentConfigs.Add(conf);
 
             ternary.SignalConfig.SignalTexture = Textures.pixel;
-            ternary.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(230, 150, 150), -1), new Gradient.ColorStop(new(150, 150, 230), 1));
+            ternary.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(240, 150, 150), -1), new Gradient.ColorStop(new(150, 240, 150), 1));
 
             // chunks
             ternary.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
