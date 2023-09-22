@@ -374,22 +374,32 @@ namespace Crystalarium.Main
 
 
             // ###### Emitter (+) ##########################
-            t = TernaryRules.CreateType("emitter (+)", new Point(1, 1));
+            t = TernaryRules.CreateType("increment", new Point(1, 1));
             
             t.Rules.Add(new TransformationRule());
-            t.Rules[0].Requirements = null;
+            t.Rules[0].Requirements = new FunctionCall(Operator.LessThan, new PortValueOperand(down), new IntOperand(1));
             // transmit on all sides
-            t.Rules[0].Transformations.Add(new SignalTransformation(1, up));
+            t.Rules[0].Transformations.Add(new SignalTransformation(new FunctionCall(Operator.Add, new PortValueOperand(down), new IntOperand(1)), up));
+
+            t.Rules.Add(new TransformationRule());
+            t.Rules[1].Requirements = new FunctionCall(Operator.EqualTo, new PortValueOperand(down), new IntOperand(1));
+            // transmit on all sides
+            t.Rules[1].Transformations.Add(new SignalTransformation(-1, up));
 
 
             // ###### Emitter (-) ##########################
-            t = TernaryRules.CreateType("emitter (-)", new Point(1, 1));
+            t = TernaryRules.CreateType("decrement", new Point(1, 1));
 
 
             t.Rules.Add(new TransformationRule());
-            t.Rules[0].Requirements = null;
+            t.Rules[0].Requirements = new FunctionCall(Operator.GreaterThan, new PortValueOperand(down), new IntOperand(-1));
             // transmit on all sides
-            t.Rules[0].Transformations.Add(new SignalTransformation(-1, up));
+            t.Rules[0].Transformations.Add(new SignalTransformation(new FunctionCall(Operator.Add, new PortValueOperand(down), new IntOperand(-1)), up));
+
+            t.Rules.Add(new TransformationRule());
+            t.Rules[1].Requirements = new FunctionCall(Operator.EqualTo, new PortValueOperand(down), new IntOperand(-1));
+            // transmit on all sides
+            t.Rules[1].Transformations.Add(new SignalTransformation(1, up));
 
 
             // ############### MIRROR ##################### \
@@ -582,12 +592,12 @@ namespace Crystalarium.Main
             ternary.AgentConfigs.Add(conf);
 
             // emitter (+)
-            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (+)"));
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("increment"));
             conf.DefaultTexture = Textures.emitter;
             ternary.AgentConfigs.Add(conf);
 
             // emitter (-)
-            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (-)"));
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("decrement"));
             conf.DefaultTexture = Textures.emitter;
             conf.Color = Color.Red;
             ternary.AgentConfigs.Add(conf);
@@ -782,12 +792,12 @@ namespace Crystalarium.Main
             conf.Color = new Color(180, 180, 180);
             ternary.AgentConfigs.Add(conf);
 
-            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (+)"));
-            conf.Color = new Color(70, 70, 220);
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("increment"));
+            conf.Color = new Color(255, 0, 255);
             ternary.AgentConfigs.Add(conf);
 
 
-            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("emitter (-)"));
+            conf = new AgentViewConfig(baseConfig, TernaryRules.GetAgentType("decrement"));
             conf.Color = new Color(255, 0, 255);
             ternary.AgentConfigs.Add(conf);
 
