@@ -412,12 +412,52 @@ namespace Crystalarium.Main
             t.Rules.Add(tr);
 
             // if there is exactly one transmission...
-            tr.Requirements = new FunctionCall(equals, new ThresholdOperand(0), new IntOperand(1));
+            tr.Requirements = new FunctionCall(and, 
+                new FunctionCall(equals, new ThresholdOperand(0), new IntOperand(1)), 
+                new FunctionCall(Operator.NotEqualTo, Zero(), new PortValueOperand(up)));
+
+
             tr.Transformations.Add(new SignalTransformation(
                 new FunctionCall(Operator.Add, new PortValueOperand(left), new PortValueOperand(right), new PortValueOperand(up), new PortValueOperand(down)),
-                up, left, right, down
+                left, right, down
             ));
 
+
+            tr = new TransformationRule();
+            t.Rules.Add(tr);
+
+            tr.Requirements = new FunctionCall(and,
+                new FunctionCall(equals, new ThresholdOperand(0), new IntOperand(1)),
+                new FunctionCall(Operator.NotEqualTo, Zero(), new PortValueOperand(left)));
+            tr.Transformations.Add(new SignalTransformation(
+                new FunctionCall(Operator.Add, new PortValueOperand(left), new PortValueOperand(right), new PortValueOperand(up), new PortValueOperand(down)),
+                up, right, down
+            ));
+
+
+            tr = new TransformationRule();
+            t.Rules.Add(tr);
+
+            tr.Requirements = new FunctionCall(and,
+                new FunctionCall(equals, new ThresholdOperand(0), new IntOperand(1)),
+                new FunctionCall(Operator.NotEqualTo, Zero(), new PortValueOperand(right)));
+            tr.Transformations.Add(new SignalTransformation(
+                new FunctionCall(Operator.Add, new PortValueOperand(left), new PortValueOperand(right), new PortValueOperand(up), new PortValueOperand(down)),
+                up, left, down
+            ));
+
+
+
+            tr = new TransformationRule();
+            t.Rules.Add(tr);
+
+            tr.Requirements = new FunctionCall(and,
+                new FunctionCall(equals, new ThresholdOperand(0), new IntOperand(1)),
+                new FunctionCall(Operator.NotEqualTo, Zero(), new PortValueOperand(down)));
+            tr.Transformations.Add(new SignalTransformation(
+                new FunctionCall(Operator.Add, new PortValueOperand(left), new PortValueOperand(right), new PortValueOperand(up), new PortValueOperand(down)),
+                up, right, left
+            ));
 
             // ###### not gate #############################
             t = TernaryRules.CreateType("not gate", new Point(1, 1));

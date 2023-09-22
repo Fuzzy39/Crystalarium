@@ -8,8 +8,8 @@
    version="1.1"
    id="svg5"
    inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
-   sodipodi:docname="emitter fancy.svg"
-   inkscape:export-filename="png\emitter.png"
+   sodipodi:docname="Decrement.svg"
+   inkscape:export-filename="decrement.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -28,9 +28,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.4204826"
-     inkscape:cx="323.43788"
-     inkscape:cy="411.43201"
+     inkscape:zoom="0.2973261"
+     inkscape:cx="322.87781"
+     inkscape:cy="598.66927"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
@@ -76,7 +76,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#46dc46;fill-opacity:1;stroke-width:0.260854"
+       style="fill:#dc4646;fill-opacity:1;stroke-width:0.260854"
        id="rect249"
        width="205.99973"
        height="201.11195"
@@ -119,5 +119,12 @@
        d="M 181.84958,17.775949 H 17.933263 V 182.00689 l -63.613434,58.44582 -0.483107,-287.245226 297.370248,0.860805 c 0,0 -69.35739,63.70766 -69.35739,63.70766 z"
        id="path2399"
        sodipodi:nodetypes="ccccccc" />
+    <rect
+       style="fill:#dc4646;stroke-width:0.205337;fill-opacity:1"
+       id="rect6397"
+       width="40"
+       height="15"
+       x="80"
+       y="112.5" />
   </g>
 </svg>

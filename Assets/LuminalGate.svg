@@ -27,14 +27,14 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.4204826"
-     inkscape:cx="371.00227"
-     inkscape:cy="324.62699"
-     inkscape:window-width="1350"
-     inkscape:window-height="1040"
-     inkscape:window-x="630"
-     inkscape:window-y="81"
-     inkscape:window-maximized="0"
+     inkscape:zoom="0.5946522"
+     inkscape:cx="335.49023"
+     inkscape:cy="363.23754"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
      showguides="true">
     <sodipodi:guide
@@ -119,7 +119,7 @@
        id="path2399"
        sodipodi:nodetypes="ccccccc" />
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke-width:0.322092"
+       style="fill:#ffffff;fill-opacity:1;stroke-width:0.322092;image-rendering:auto"
        id="rect6157"
        width="100"
        height="100"

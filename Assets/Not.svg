@@ -9,7 +9,7 @@
    id="svg5"
    inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
    sodipodi:docname="Not.svg"
-   inkscape:export-filename="notgate.png"
+   inkscape:export-filename="not.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -27,9 +27,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.4204826"
-     inkscape:cx="391.21714"
-     inkscape:cy="371.00227"
+     inkscape:zoom="0.8409652"
+     inkscape:cx="392.40625"
+     inkscape:cy="277.06259"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
@@ -137,16 +137,10 @@
        id="path2399"
        sodipodi:nodetypes="ccccccc" />
     <circle
-       style="fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+       style="fill:#ffffff;fill-opacity:1;stroke-width:0.220486"
        id="path17661"
-       cx="99.920166"
-       cy="53.090488"
-       r="15" />
-    <circle
-       style="fill:#dc4646;fill-opacity:1;stroke-width:0.264583"
-       id="path17717"
-       cx="99.920166"
-       cy="53.090488"
-       r="8" />
+       cx="99.90876"
+       cy="54.254894"
+       r="12.5" />
   </g>
 </svg>
