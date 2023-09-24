@@ -266,9 +266,10 @@ namespace CrystalCore.Model.Objects
 
         private void Transform()
         {
-            foreach (Transform transform in _nextTransforms)
+            for (int i = 0; i<_nextTransforms.Count; i++)
             {
-                transform(this);
+                _nextTransforms[i].Invoke(this);
+                  
             }
             _nextTransforms.Clear();
         }
