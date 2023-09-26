@@ -102,9 +102,6 @@ namespace CrystalCore.Model.Elements
 
             Reset();
 
-     
-
-
         }
 
 
@@ -137,6 +134,7 @@ namespace CrystalCore.Model.Elements
 
           
             grid = new Grid<Chunk>(new Chunk(this, new Point(0, 0) ));
+           
             this.ExpandToFit(minimumBounds);
 
 
@@ -144,11 +142,16 @@ namespace CrystalCore.Model.Elements
             _agents.Clear();
             _connections = 0;
 
-            if(OnReset != null)
+            grid.ElementList[0].FillWithDefaultAgents();
+
+            if (OnReset != null)
             {
                 OnReset(this, new EventArgs());
 
             }
+
+            
+
         }
 
         public void ExpandGrid(Direction d)
@@ -201,9 +204,16 @@ namespace CrystalCore.Model.Elements
 
             grid.AddElements(toAdd, d);
 
+           
+
             if (OnResize != null)
             {
                 OnResize(this, new EventArgs());
+            }
+
+            foreach (Chunk chunk in toAdd)
+            {
+                chunk.FillWithDefaultAgents();
             }
         }
 

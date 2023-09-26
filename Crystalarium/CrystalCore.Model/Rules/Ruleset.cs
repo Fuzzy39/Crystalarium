@@ -25,11 +25,13 @@ namespace CrystalCore.Model.Rules
         private bool _diagonalSignalsAllowed; // whether signals are only allowed to face the 4 orthagonal directions. If set to false, no AgentType can be of size greater than 1 x 1.
         private bool _runDefaultStateOnRotation; // whether agents will run their default transformations after they are rotated.
 
+        private AgentType _defaultAgent; // The agent type that fills all empty spaces.
+
         // signals
         private int _beamMinLength;
         private int _beamMaxLength;
 
-
+        
 
         public bool RotateLock // whether agents can be rotated or face a direction other than up.
         {
@@ -72,7 +74,7 @@ namespace CrystalCore.Model.Rules
 
                 if (value < 1)
                 {
-                    throw new InvalidOperationException("Mainimum beam length cannot be less than one.");
+                    throw new InvalidOperationException("Minimum beam length cannot be less than one.");
                 }
 
 
@@ -118,7 +120,15 @@ namespace CrystalCore.Model.Rules
 
         }
 
-
+        public AgentType DefaultAgent
+        {
+            get => _defaultAgent;
+            set
+            {
+                if(Initialized) { throw new InvalidOperationException("Cannot Modify Ruleset after it has been initialized.");  }
+                _defaultAgent = value;
+            }
+        }
 
 
 
@@ -193,6 +203,9 @@ namespace CrystalCore.Model.Rules
                 {
                     at.Initialize();
                 }
+
+                initializeDefaultAgent();
+               
             }
             catch (InitializationFailedException e)
             {
@@ -200,6 +213,31 @@ namespace CrystalCore.Model.Rules
             }
 
             base.Initialize();
+        }
+
+
+
+        private void initializeDefaultAgent()
+        {
+            if (_defaultAgent == null)
+            {
+                return;
+            }
+
+            if (!_agentTypes.Contains(_defaultAgent))
+            {
+                throw new InitializationFailedException("Agent Type '" + _defaultAgent.Name + "' cannot be used as the default agent because it is not a member of this ruleset.");
+            }
+
+            int area = _defaultAgent.UpwardsSize.X*_defaultAgent.UpwardsSize.Y;
+            if (area != 1)
+            {
+                throw new InitializationFailedException("Agent Type '" + _defaultAgent.Name +
+                    "' cannot be used as a default agent because it is not 1 by 1. Its size is " + _defaultAgent.UpwardsSize);
+
+            }
+
+
         }
 
     }

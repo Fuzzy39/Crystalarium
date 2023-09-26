@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Objects;
+using CrystalCore.Model.Rules;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,10 @@ namespace CrystalCore.Model.Elements
             _children = new List<ChunkMember>();
             _membersWithin = new List<ChunkMember>();
             Ready();
+
+           
+          
+            
         }
 
         private void CheckOverlap()
@@ -82,6 +87,33 @@ namespace CrystalCore.Model.Elements
 
 
             }
+        }
+
+
+        public void FillWithDefaultAgents()
+        {
+            
+            AgentType def = _map.Ruleset.DefaultAgent;
+            if (def == null)
+            {
+                return;
+            }
+
+            while(MembersWithin.Count > 0) 
+            {
+                MembersWithin[0].Destroy();
+            }
+            MembersWithin.Clear();
+
+            for(int x = Bounds.X; x < Bounds.Right; x++)
+            {
+                for(int y = Bounds.Y; y < Bounds.Bottom; y++) 
+                { 
+                    new Agent(Map, new Point(x, y), def, Util.Direction.up);
+                }
+            }
+
+
         }
 
         public override string ToString()

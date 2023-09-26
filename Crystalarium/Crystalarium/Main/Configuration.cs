@@ -78,7 +78,7 @@ namespace Crystalarium.Main
 
             // ############### STOPPER #####################
             t = CrystalRules.CreateType("stopper", new Point(1, 1));
-
+            CrystalRules.DefaultAgent = t;
 
             // ############### Emitter #####################
             t = CrystalRules.CreateType("emitter", new Point(1, 1));
