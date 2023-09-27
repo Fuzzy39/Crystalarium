@@ -168,7 +168,7 @@ namespace CrystalCore.View
             _viewCastTarget = null;
 
             renderTarget = rend.CreateTarget(dimensions);
-
+            
 
 
         }

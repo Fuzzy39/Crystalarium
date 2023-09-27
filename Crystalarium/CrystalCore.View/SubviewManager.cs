@@ -115,10 +115,10 @@ namespace CrystalCore.View
 
                 OnMapObjectReady(ch, new());
 
-               /* foreach(ChunkMember chm in ch.Children)
+                foreach(ChunkMember chm in ch.Children)
                 {
                     OnMapObjectReady(chm, new());
-                }*/
+                }
                 
             }
 

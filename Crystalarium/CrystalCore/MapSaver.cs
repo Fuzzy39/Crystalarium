@@ -154,7 +154,7 @@ namespace CrystalCore
 
                     // resetting twice is kinda awkward
 
-                    LoadAgents(xml, m);
+                    //LoadAgents(xml, m);
 
 
                 }

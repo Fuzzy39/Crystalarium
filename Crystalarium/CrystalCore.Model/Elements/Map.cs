@@ -142,7 +142,7 @@ namespace CrystalCore.Model.Elements
             _agents.Clear();
             _connections = 0;
 
-            grid.ElementList[0].FillWithDefaultAgents();
+          
 
             if (OnReset != null)
             {
@@ -150,7 +150,7 @@ namespace CrystalCore.Model.Elements
 
             }
 
-            
+            grid.ElementList[0].FillWithDefaultAgents();
 
         }
 

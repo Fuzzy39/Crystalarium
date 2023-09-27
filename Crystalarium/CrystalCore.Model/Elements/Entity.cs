@@ -1,4 +1,5 @@
-﻿using CrystalCore.Util;
+﻿using CrystalCore.Model.Objects;
+using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -42,8 +43,24 @@ namespace CrystalCore.Model.Elements
         {
             _facing = facing;
 
+
+            foreach (Entity e in g.EntitiesWithin(Bounds))
+            {
+                if (e == this)
+                {
+                    continue;
+                }
+
+                if (e is Agent && ((Agent)e).Type == g.Ruleset.DefaultAgent)
+                {
+                    e.Destroy();
+                }
+            }
+
+
             if (g.EntitiesWithin(Bounds).Count > 1) // it will always be at least 1, because we are in our bounds.
             {
+
                 throw new InvalidOperationException("Entity with bounds " + this.Bounds + " cannot be created. It overlaps another prexisting entity.");
             }
         }
