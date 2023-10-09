@@ -6,15 +6,23 @@ using System.Drawing;
 namespace CrystalCore.Model.ObjectContract
 {
     /// <summary>
-    /// A MapObject represents a physical region on the map. It typically does not have behavior.
+    /// A MapObject represents a physical region on the map. It cooresponds to an entity which has behavior in the simulation.
     /// </summary>
     internal interface MapObject : MapComponent
     {
         public Rectangle Bounds { get; }
 
-        public Map Map { get; }
+        public Entity Entity { get; }
 
-        public bool IsValidPosition(Rectangle Bounds);
+
+        // the chunk that the top left corner of this 
+        public Chunk Parent { get; }
+
+
+        public bool IsRepresentationOf(Entity entity)
+        {
+            return entity == Entity;
+        }
 
         public string ToString()
         {

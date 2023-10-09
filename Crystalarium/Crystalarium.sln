@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrystalCore.Util", "Crystal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrystalCrash", "CrystalCrash\CrystalCrash.csproj", "{31C4151B-70A3-492A-A1AA-CDF30D62D64B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalCore.NewModel", "CrystalCore.NewModel\CrystalCore.NewModel.csproj", "{1D524477-65D0-4AEF-BA90-A5B046EB8DA7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,10 +51,6 @@ Global
 		{31C4151B-70A3-492A-A1AA-CDF30D62D64B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31C4151B-70A3-492A-A1AA-CDF30D62D64B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31C4151B-70A3-492A-A1AA-CDF30D62D64B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D524477-65D0-4AEF-BA90-A5B046EB8DA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D524477-65D0-4AEF-BA90-A5B046EB8DA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D524477-65D0-4AEF-BA90-A5B046EB8DA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D524477-65D0-4AEF-BA90-A5B046EB8DA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

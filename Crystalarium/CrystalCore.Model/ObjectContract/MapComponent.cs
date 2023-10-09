@@ -1,10 +1,15 @@
-﻿namespace CrystalCore.Model.ObjectContract
+﻿using CrystalCore.Model.Core;
+
+namespace CrystalCore.Model.ObjectContract
 {
     internal interface MapComponent
     {
 
         public event EventHandler OnDestroy;
         public event EventHandler OnReady;
+
+
+        public Map Map { get; }
 
         public bool Destroyed
         {
