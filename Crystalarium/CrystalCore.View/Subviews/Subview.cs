@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CrystalCore.Model;
-using CrystalCore.Model.Elements;
+﻿using CrystalCore.Model.Elements;
 using CrystalCore.View.Core;
-using CrystalCore.View.Rendering;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace CrystalCore.View.Subviews
 {
@@ -26,7 +20,7 @@ namespace CrystalCore.View.Subviews
 
         protected Subview(GridView v, MapObject o)
         {
-        
+
             _renderData = o;
             renderTarget = v;
 
@@ -47,7 +41,7 @@ namespace CrystalCore.View.Subviews
 
         }
 
-   
+
 
 
     }

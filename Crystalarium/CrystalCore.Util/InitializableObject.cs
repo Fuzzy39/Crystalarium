@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CrystalCore.Util
+﻿namespace CrystalCore.Util
 {
     /// <summary>
     /// Classes that implement this are part of the engine that requires initialization checks in order to be used.

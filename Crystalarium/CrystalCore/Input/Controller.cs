@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.Input
 {
@@ -21,11 +20,11 @@ namespace CrystalCore.Input
         private string _context;
 
 
-      
+
 
         public List<Keybind> Keybinds
         {
-            get => new List<Keybind>( _keybinds);
+            get => new List<Keybind>(_keybinds);
         }
 
 
@@ -34,7 +33,7 @@ namespace CrystalCore.Input
             get => Mouse.GetState().ScrollWheelValue - _prevMouseState.ScrollWheelValue;
         }
 
-        
+
 
         public string Context
         {
@@ -46,7 +45,7 @@ namespace CrystalCore.Input
         public Controller()
         {
             ih = new InputHandler();
-         
+
 
             _keybinds = new List<Keybind>();
             _controls = new List<Control>();
@@ -59,9 +58,9 @@ namespace CrystalCore.Input
         {
             List<Keybind> toReturn = new List<Keybind>();
 
-            foreach(Keybind kb in Keybinds)
+            foreach (Keybind kb in Keybinds)
             {
-                if(kb.HasConflicts)
+                if (kb.HasConflicts)
                 {
                     toReturn.Add(kb);
                 }
@@ -75,9 +74,9 @@ namespace CrystalCore.Input
         public Control CreateControl(string name, Keystate ks)
         {
 
-            foreach(Control a in _controls)
+            foreach (Control a in _controls)
             {
-                if(a.Name==name)
+                if (a.Name == name)
                 {
                     throw new InvalidOperationException();
                 }
@@ -86,7 +85,7 @@ namespace CrystalCore.Input
             Control c = new Control(this, name, ks);
             _controls.Add(c);
             return c;
-            
+
         }
 
 
@@ -108,10 +107,10 @@ namespace CrystalCore.Input
             Keybind k = new Keybind(this, c, buttons);
 
             _keybinds.Add(k);
-            
+
             foreach (Keybind kb in Keybinds)
             {
-              
+
 
                 kb.UpdateSupersets();
             }
@@ -122,10 +121,10 @@ namespace CrystalCore.Input
         internal void RemoveKeybind(Keybind k)
         {
             _keybinds.Remove(k);
-           
+
             foreach (Keybind kb in Keybinds)
             {
-               
+
                 kb.UpdateSupersets();
             }
         }
@@ -134,26 +133,26 @@ namespace CrystalCore.Input
 
         internal void Update()
         {
-           
+
 
             // run keybindss
-            foreach(Keybind k in _keybinds)
+            foreach (Keybind k in _keybinds)
             {
                 k.Update(ih);
             }
 
 
-            
+
             // Update the input handler.
             ih.Update();
             _prevMouseState = Mouse.GetState();
 
 
         }
-        
 
-        
 
-          
+
+
+
     }
 }

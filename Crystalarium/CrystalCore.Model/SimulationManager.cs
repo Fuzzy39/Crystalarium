@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CrystalCore.Model.Elements;
+﻿using CrystalCore.Model.Core;
 using Microsoft.Xna.Framework;
 
 
@@ -13,13 +10,7 @@ namespace CrystalCore.Model
         // it begins.
         // yet another big project.
 
-        /*
-         * Simulation Manager's job is to figure out how many simulation steps should occur in each frame, and to do them.
-         * It's probably not best OOP practice, but I would rather not have this code in the main game class, I guess.
-         * It's not incredibly Object Oriented either, I don't think...
-         * But what do I know?
-         * 
-         */
+
 
         private double targetFPS; // the target FPS of the game. I can only imagine that it's 60.
 
@@ -38,11 +29,11 @@ namespace CrystalCore.Model
 
 
         public bool Paused
-        { 
+        {
             get { return _paused; }
-            set 
-            { 
-                if(value)
+            set
+            {
+                if (value)
                 {
                     _actualStepsPS = _targetStepsPS;
                 }
@@ -55,9 +46,9 @@ namespace CrystalCore.Model
         public int TargetStepsPS
         {
             get => _targetStepsPS;
-            set 
+            set
             {
-                _targetStepsPS = (value > MIN_STEPS_PER_SECOND) ? value : MIN_STEPS_PER_SECOND;
+                _targetStepsPS = value > MIN_STEPS_PER_SECOND ? value : MIN_STEPS_PER_SECOND;
                 _actualStepsPS = _targetStepsPS;
             }
         }
@@ -66,14 +57,14 @@ namespace CrystalCore.Model
 
         public List<Map> Grids => _grids;
 
-        public SimulationManager( double secondsBetweenFrames )
+        public SimulationManager(double secondsBetweenFrames)
         {
             // I feel like I should comment this, but I don't think anything here needs explaining...
             targetFPS = 1.0 / secondsBetweenFrames;
 
             _targetStepsPS = (int)Math.Round(targetFPS);
             _actualStepsPS = _targetStepsPS;
-            
+
             overdueSteps = 0;
 
             _grids = new List<Map>();
@@ -84,14 +75,14 @@ namespace CrystalCore.Model
         // The expected step rate given the current simulation speed.
         private double StepsPerFrame()
         {
-            return (double)_actualStepsPS / targetFPS;
+            return _actualStepsPS / targetFPS;
         }
 
         // returns the amount of simulation steps to be performed in the next frame.
         private int StepsNextFrame()
         {
-            return (int)(StepsPerFrame()+overdueSteps);
-          
+            return (int)(StepsPerFrame() + overdueSteps);
+
         }
 
         // the amount of overdue steps that will be created/destroyed next frame.
@@ -101,10 +92,10 @@ namespace CrystalCore.Model
         }
 
 
-        public void Update( GameTime time)
+        public void Update(GameTime time)
         {
             // adjust our current steprate, if needbe
-            if(Paused)
+            if (Paused)
             {
                 _actualStepsPS = 0;
                 return;
@@ -112,8 +103,8 @@ namespace CrystalCore.Model
 
             adjustActualSPS(time.IsRunningSlowly);
 
-         
-            for(int i=0; i<StepsNextFrame(); i++)
+
+            for (int i = 0; i < StepsNextFrame(); i++)
             {
                 // do a step.
                 Step();
@@ -129,7 +120,7 @@ namespace CrystalCore.Model
 
             // the rate that SPS will change in a frame. Fairly arbitrary.
             int SPSChange = 1;
-             
+
 
             // this code feels dirty...
             // I don't know how to fix it though...
@@ -149,9 +140,9 @@ namespace CrystalCore.Model
             }*/
 
             // we can run the simulation faster again!
-            if(_actualStepsPS<_targetStepsPS)
+            if (_actualStepsPS < _targetStepsPS)
             {
-                if(_actualStepsPS+SPSChange > _targetStepsPS)
+                if (_actualStepsPS + SPSChange > _targetStepsPS)
                 {
                     _actualStepsPS = _targetStepsPS;
                     return;
@@ -166,13 +157,13 @@ namespace CrystalCore.Model
         public void Step()
         {
             // do a simulation step.
-            
 
-            foreach(Map g in Grids)
+
+            foreach (Map g in Grids)
             {
                 g.Step();
             }
-            
+
         }
 
         // add a grid to the list of grids

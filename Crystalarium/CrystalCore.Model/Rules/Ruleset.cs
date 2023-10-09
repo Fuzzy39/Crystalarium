@@ -1,11 +1,9 @@
 ﻿// Namespace
 
-using CrystalCore.Model.Language;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace CrystalCore.Model.Rules
 {
@@ -145,7 +143,7 @@ namespace CrystalCore.Model.Rules
                 throw new InvalidOperationException("Cannot Modify Ruleset after it has been initialized.");
             }
 
-         
+
 
             _agentTypes.Add(new AgentType(this, name, size));
 
@@ -186,7 +184,7 @@ namespace CrystalCore.Model.Rules
                             throw new InitializationFailedException("The agent type name '" + at.Name + "' has been used multiple times in this ruleset. The names of agent types should be unique human-readable identifiers.");
                         }
                     });
-                  
+
                 }
 
                 foreach (AgentType at in _agentTypes)

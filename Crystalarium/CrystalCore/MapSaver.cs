@@ -1,13 +1,10 @@
 ﻿using CrystalCore.Model.Elements;
-using CrystalCore.Model.Interface;
 using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Xml;
 
 namespace CrystalCore
@@ -22,7 +19,7 @@ namespace CrystalCore
         private Engine engine;
         internal MapSaver(Engine e)
         {
-           engine = e;
+            engine = e;
         }
 
 
@@ -39,41 +36,41 @@ namespace CrystalCore
                 writer.WriteStartElement("Map");
                 writer.WriteAttributeString("FormatVersion", FORMAT_VERSION.ToString());
 
-                    writer.WriteStartElement("Ruleset");
+                writer.WriteStartElement("Ruleset");
 
-                        writer.WriteValue(m.Ruleset.Name);
+                writer.WriteValue(m.Ruleset.Name);
 
-                    writer.WriteEndElement();
+                writer.WriteEndElement();
 
-                    writer.WriteStartElement("Geometry");
+                writer.WriteStartElement("Geometry");
 
-                    xml.WritePoint( m.grid.Origin);
-                    xml.WritePoint(m.grid.Size);
-                
-                    writer.WriteEndElement();
+                xml.WritePoint(m.grid.Origin);
+                xml.WritePoint(m.grid.Size);
 
-                    writer.WriteStartElement("Agents");
-                        List<Agent> agents = m.AgentsWithin(m.Bounds);
+                writer.WriteEndElement();
 
-                        foreach(Agent a in agents)
-                        {
-                            WriteAgent(xml, a);
-                        }
-                    writer.WriteEndElement();
+                writer.WriteStartElement("Agents");
+                List<Agent> agents = m.AgentsWithin(m.Bounds);
+
+                foreach (Agent a in agents)
+                {
+                    WriteAgent(xml, a);
+                }
+                writer.WriteEndElement();
 
                 writer.WriteEndElement();
             }
 
         }
 
-        
+
 
         private void WriteAgent(XmlHelper xml, Agent a)
         {
-           
+
             xml.Writer.WriteStartElement("Agent");
 
-            xml.Writer.WriteStartElement("Type");    
+            xml.Writer.WriteStartElement("Type");
             xml.Writer.WriteValue(a.Type.Name);
             xml.Writer.WriteEndElement();
 
@@ -81,7 +78,7 @@ namespace CrystalCore
             xml.WriteDirection(a.Facing);
 
             WriteTransmissions(xml, a.PortList);
-            xml.Writer.WriteEndElement(); 
+            xml.Writer.WriteEndElement();
 
         }
 
@@ -89,12 +86,12 @@ namespace CrystalCore
         private void WriteTransmissions(XmlHelper xml, List<Port> ports)
         {
             xml.Writer.WriteStartElement("Transmissions");
-                
-            for(int i = 0; i<ports.Count; i++)
+
+            for (int i = 0; i < ports.Count; i++)
             {
-               
+
                 Port port = ports[i];
-                WriteTransmission(xml, new PortTransmission(port.TransmittingValue, port.ID, port.Facing));    
+                WriteTransmission(xml, new PortTransmission(port.TransmittingValue, port.ID, port.Facing));
 
             }
 
@@ -130,7 +127,7 @@ namespace CrystalCore
             int version = -1;
             try
             {
-               
+
                 using (XmlHelper xml = new XmlHelper(path, writing: false))
                 {
                     xml.Reader.Read();
@@ -162,41 +159,41 @@ namespace CrystalCore
             catch (Exception e) when (e is XmlException || e is MapLoadException)
             {
                 string tothrow = e.Message;
-                
-                if(version == -1 )
+
+                if (version == -1)
                 {
-                    tothrow = "NOTE: could not identify save file format version.\n"+tothrow;
+                    tothrow = "NOTE: could not identify save file format version.\n" + tothrow;
                 }
-                else if( version != FORMAT_VERSION)
+                else if (version != FORMAT_VERSION)
                 {
-                    tothrow = "NOTE: this file was created with format version " + version + ", and the current format version is " + FORMAT_VERSION + ".\n"+tothrow;
+                    tothrow = "NOTE: this file was created with format version " + version + ", and the current format version is " + FORMAT_VERSION + ".\n" + tothrow;
                 }
 
                 throw new MapLoadException(tothrow);
             }
 
-            
+
         }
 
 
 
         private Ruleset GetRuleset(string ruleName)
         {
-            foreach(Ruleset rs in engine.Rulesets)
+            foreach (Ruleset rs in engine.Rulesets)
             {
-                if(rs.Name.Equals(ruleName))
+                if (rs.Name.Equals(ruleName))
                 {
                     return rs;
                 }
             }
 
-            throw new MapLoadException("Ruleset: '"+ruleName+"' Does not exist.");
+            throw new MapLoadException("Ruleset: '" + ruleName + "' Does not exist.");
         }
 
         private void LoadGeometry(XmlHelper xml, Map m)
         {
 
-          
+
 
             try
             {
@@ -218,13 +215,13 @@ namespace CrystalCore
             }
             catch (MapLoadException e)
             {
-                throw new MapLoadException("Could not find the Geometry of this save file.\n"+e.Message);
+                throw new MapLoadException("Could not find the Geometry of this save file.\n" + e.Message);
             }
         }
 
-     
-        
-        private void LoadAgents(XmlHelper xml, Map m )
+
+
+        private void LoadAgents(XmlHelper xml, Map m)
         {
 
 
@@ -245,17 +242,17 @@ namespace CrystalCore
             {
                 throw new MapLoadException("Could not load an agent in this save file.\n" + e.Message);
             }
-            catch (MapLoadException e )
+            catch (MapLoadException e)
             {
                 throw new MapLoadException("Could not load an agent in this save file.\n" + e.Message);
             }
-            
+
         }
 
         private void LoadAgent(XmlHelper xml, Map m)
         {
-            
-            
+
+
             xml.Reader.ReadStartElement("Agent");
 
 
@@ -265,7 +262,7 @@ namespace CrystalCore
 
             if (type == null)
             {
-                throw new MapLoadException("Error at "+xml.FormattedReaderPosition+" of save file: No Agent of type '"+type+"' exists in ruleset '"+m.Ruleset.Name+"'.");
+                throw new MapLoadException("Error at " + xml.FormattedReaderPosition + " of save file: No Agent of type '" + type + "' exists in ruleset '" + m.Ruleset.Name + "'.");
             }
 
             Point loc = xml.ReadPoint();
@@ -277,28 +274,28 @@ namespace CrystalCore
             LoadTransmissions(xml, a);
 
             xml.Reader.ReadEndElement();
-            
+
         }
 
         private void LoadTransmissions(XmlHelper xml, Agent a)
         {
             xml.Reader.ReadStartElement("Transmissions");
 
-            List<PortTransmission> transmissions = new List<PortTransmission>();    
+            List<PortTransmission> transmissions = new List<PortTransmission>();
 
             while (xml.Reader.NodeType == XmlNodeType.Element)
             {
                 transmissions.Add(LoadTransmission(xml));
             }
 
-            
-            foreach(PortTransmission trans in transmissions)
+
+            foreach (PortTransmission trans in transmissions)
             {
                 Port p = a.GetPort(trans.portID);
                 p.Transmit(trans.value);
             }
-        
-            
+
+
 
             if (xml.Reader.Name.Equals("Transmissions"))
             {
@@ -313,7 +310,7 @@ namespace CrystalCore
         {
             xml.Reader.ReadStartElement("Transmission");
 
-          
+
 
             xml.VerifyElementToRead("Value");
             int value = xml.Reader.ReadElementContentAsInt();
@@ -325,7 +322,7 @@ namespace CrystalCore
             xml.VerifyElementToRead("ID");
             int id = xml.Reader.ReadElementContentAsInt();
 
-           
+
             xml.Reader.ReadEndElement();
 
             return new PortTransmission(value, id, facing);

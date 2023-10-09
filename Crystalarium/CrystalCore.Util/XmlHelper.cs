@@ -1,8 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Xml;
 
 namespace CrystalCore.Util
@@ -60,7 +56,7 @@ namespace CrystalCore.Util
             disposedValue = false;
 
 
-          
+
 
             if (writing)
             {
@@ -84,7 +80,7 @@ namespace CrystalCore.Util
             readSettings.IgnoreWhitespace = true;
 
             Reader = XmlReader.Create(new FileStream(path, FileMode.Open), readSettings);
-            
+
 
         }
 
@@ -92,7 +88,7 @@ namespace CrystalCore.Util
 
         public void WritePoint(Point p)
         {
-            if(Writer == null)
+            if (Writer == null)
             {
                 throw new InvalidOperationException("xmlHelper must be created in write mode to write");
             }
@@ -129,7 +125,7 @@ namespace CrystalCore.Util
 
         public void VerifyElementToRead(string name)
         {
-            if(Reader == null)
+            if (Reader == null)
             {
                 throw new InvalidOperationException("xmlHelper must be created in read mode to read");
             }
@@ -137,9 +133,9 @@ namespace CrystalCore.Util
             if (!Reader.Name.Equals(name))
             {
                 throw new MapLoadException("Expected to find element '" + name + "' at " + FormattedReaderPosition + ", but found '" + Reader.Name + "' instead.");
-            
+
             }
-            
+
         }
 
 
@@ -150,14 +146,14 @@ namespace CrystalCore.Util
                 throw new InvalidOperationException("xmlHelper must be created in read mode to read");
             }
 
-            
+
             Reader.ReadStartElement("Point");
 
             Point toReturn = new Point(0);
 
             VerifyElementToRead("X");
             toReturn.X = Reader.ReadElementContentAsInt();
-          
+
 
 
             VerifyElementToRead("Y");
@@ -179,13 +175,13 @@ namespace CrystalCore.Util
 
             if (!Enum.TryParse(dir, out d))
             {
-                throw new MapLoadException("Could not parse '"+dir+"' at "+ FormattedReaderPosition + " as a direction.");
+                throw new MapLoadException("Could not parse '" + dir + "' at " + FormattedReaderPosition + " as a direction.");
             }
 
             return d;
         }
 
-      
+
 
         protected virtual void Dispose(bool disposing)
         {
@@ -196,13 +192,13 @@ namespace CrystalCore.Util
                     // dispose managed state (managed objects)
 
                     if (Writer != null) { Writer.Dispose(); }
-                    if(Reader!= null)
+                    if (Reader != null)
                     {
                         Reader.Dispose();
                     }
                 }
 
-               
+
                 disposedValue = true;
             }
         }

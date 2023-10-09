@@ -1,15 +1,11 @@
-﻿using CrystalCore.Input;
+﻿using CrystalCore;
+using CrystalCore.Input;
+using CrystalCore.Model.Elements;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Core;
-using CrystalCore;
-using CrystalCore.Model.Elements;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Crystalarium.Main
 {
@@ -103,7 +99,7 @@ namespace Crystalarium.Main
                  c.GetAction("DecreaseSimSpeed").FirstKeybindAsString() + ", " + c.GetAction("IncreaseSimSpeed").FirstKeybindAsString() +
 
                  ".\nOther: Switch Ruleset: " + c.GetAction("OpenRulesetMenu").FirstKeybindAsString() + ". Save: " + c.GetAction("Save").FirstKeybindAsString() +
-                 ". Load: " + c.GetAction("Load").FirstKeybindAsString() +". Crash: "+c.GetAction("Crash").FirstKeybindAsString()+ ".\n" +
+                 ". Load: " + c.GetAction("Load").FirstKeybindAsString() + ". Crash: " + c.GetAction("Crash").FirstKeybindAsString() + ".\n" +
                  "Copy/Paste: Copy: " + c.GetAction("Copy").FirstKeybindAsString() + ". Cut: " + c.GetAction("Cut").FirstKeybindAsString() +
                  ". Paste: " + c.GetAction("Paste").FirstKeybindAsString()
 
@@ -117,7 +113,7 @@ namespace Crystalarium.Main
              );
 
 
-          
+
         }
 
         public void Draw(IBatchRenderer rend, GameTime gameTime)
@@ -127,7 +123,7 @@ namespace Crystalarium.Main
 
             // Draw text on top of the game.
 
-            DrawText( rend);
+            DrawText(rend);
 
             if (game.Engine.Controller.Context == "menu")
             {
@@ -139,11 +135,11 @@ namespace Crystalarium.Main
 
         private void DrawString(string s, Vector2 pos, IBatchRenderer rend)
         {
-           rend.DrawString(Textures.Consolas, s, pos, 22, Color.White);
+            rend.DrawString(Textures.Consolas, s, pos, 22, Color.White);
         }
 
         // draw info on top of the game.
-        private void DrawText( IBatchRenderer rend)
+        private void DrawText(IBatchRenderer rend)
         {
 
 
@@ -171,7 +167,7 @@ namespace Crystalarium.Main
         }
 
         //draw the crude menu for switching rulesets.
-        private void DrawMenu( IBatchRenderer rend)
+        private void DrawMenu(IBatchRenderer rend)
         {
             rend.Draw(Textures.pixel, new RotatedRect(new(0), new(rend.Width, rend.Height), 0, new()), new Color(0, 0, 0, 180));
             currentMenu.Draw(rend);
@@ -183,12 +179,12 @@ namespace Crystalarium.Main
 
 
         // draw the build number, the most important thing!
-        private void EndDraw( IBatchRenderer rend)
+        private void EndDraw(IBatchRenderer rend)
         {
 
             DrawString(CrystalGame.VersionString, new Vector2(10, rend.Height - 25), rend);
 
-            
+
             return;
 
 

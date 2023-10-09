@@ -1,14 +1,10 @@
-﻿using CrystalCore.Model.Objects;
-using CrystalCore.Util;
+﻿using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.View.Configs
 {
-    public class ChunkViewConfig:InitializableObject
+    public class ChunkViewConfig : InitializableObject
     {
 
         // A renderer template is created by the user and given to gridviews to use so that they can create chunk renderers.
@@ -73,9 +69,9 @@ namespace CrystalCore.View.Configs
         public bool DoCheckerBoardColoring
         {
             get { return _doCheckerBoardColoring; }
-            set 
-            { 
-                if (!Initialized) {  _doCheckerBoardColoring = value; return; }
+            set
+            {
+                if (!Initialized) { _doCheckerBoardColoring = value; return; }
                 throw new InvalidOperationException("Cannot modify skin config after engine initialization.");
             }
         }
@@ -83,16 +79,16 @@ namespace CrystalCore.View.Configs
         public Color? OriginChunkColor
         {
             get { return _originChunkColor; }
-            set 
+            set
             {
                 if (!Initialized) { _originChunkColor = value; return; }
                 throw new InvalidOperationException("Cannot modify skin config after engine initialization.");
             }
         }
 
-       
 
-        public ChunkViewConfig(): base()
+
+        public ChunkViewConfig() : base()
         {
             _chunkBG = null;
             _BGColor = Color.White;
@@ -101,8 +97,8 @@ namespace CrystalCore.View.Configs
             _originChunkColor = null;
             _viewCastTarget = null;
 
-    
-            
+
+
         }
 
         public ChunkViewConfig(ChunkViewConfig from) : base()
@@ -114,12 +110,12 @@ namespace CrystalCore.View.Configs
             _originChunkColor = from.OriginChunkColor;
             _viewCastTarget = from._viewCastTarget;
 
-           
+
         }
 
         public override void Initialize()
-        { 
-            if(ChunkBackground==null)
+        {
+            if (ChunkBackground == null)
             {
                 throw new InitializationFailedException("ChunkViewConfig requires a background texture.");
             }

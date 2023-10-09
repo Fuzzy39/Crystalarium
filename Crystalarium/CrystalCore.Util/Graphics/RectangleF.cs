@@ -1,7 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.Util.Graphics
 {
@@ -33,9 +30,9 @@ namespace CrystalCore.Util.Graphics
         public Rectangle toRectangle()
         {
             return new Rectangle(
-                (int)MathF.Floor(X), 
-                (int)MathF.Floor(Y), 
-                (int)MathF.Ceiling(Width), 
+                (int)MathF.Floor(X),
+                (int)MathF.Floor(Y),
+                (int)MathF.Ceiling(Width),
                 (int)MathF.Ceiling(Height));
         }
 

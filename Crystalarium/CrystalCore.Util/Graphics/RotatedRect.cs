@@ -1,9 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static System.MathF;
 
 namespace CrystalCore.Util.Graphics
@@ -44,8 +39,8 @@ namespace CrystalCore.Util.Graphics
         {
             get
             {
-                
-                if(DirectionUtil.FromRadians(Rotation).IsHorizontal())
+
+                if (DirectionUtil.FromRadians(Rotation).IsHorizontal())
                 {
                     return new(Height, Width);
                 }
@@ -156,8 +151,8 @@ namespace CrystalCore.Util.Graphics
 
 
 
-  
-      
+
+
 
         public RectangleF BoundingBox
         {
@@ -169,7 +164,7 @@ namespace CrystalCore.Util.Graphics
                 float Y1 = MiscUtil.PickLeast(TopLeft.Y, TopRight.Y, BottomLeft.Y, BottomRight.Y);
                 float Y2 = MiscUtil.PickGreatest(TopLeft.Y, TopRight.Y, BottomLeft.Y, BottomRight.Y);
 
-                return new RectangleF(X1,Y1, X2- X1, Y2 - Y1);
+                return new RectangleF(X1, Y1, X2 - X1, Y2 - Y1);
 
             }
         }
@@ -184,7 +179,7 @@ namespace CrystalCore.Util.Graphics
             float realX = Cos(-Rotation) * OwnX + Sin(-Rotation) * OwnY;
             float realY = Sin(Rotation) * OwnX + Cos(Rotation) * OwnY;
 
-            return new Vector2(realX+X,realY+Y);
+            return new Vector2(realX + X, realY + Y);
 
         }
 
@@ -193,14 +188,14 @@ namespace CrystalCore.Util.Graphics
         {
             Vector2 oldLoc = BoundingBox.Location;
 
-            Vector2 diff = newLoc-oldLoc;
+            Vector2 diff = newLoc - oldLoc;
 
             X += diff.X;
             Y += diff.Y;
 
         }
 
-        
+
 
         // And finally, the constructors
 
@@ -211,7 +206,7 @@ namespace CrystalCore.Util.Graphics
         /// <param name="size"> the width and height of this rectangle </param>  
         /// <param name="rotation">the angle, in radians clockwise, that this rectangle is rotated around from rotation origin. </param>
         /// <param name="rotationOrigin">The point on the rectangle that is rotated about, from 0,0 (top left) to 1,1 (bottom right) </param>
-        public RotatedRect( Vector2 location, Vector2 size, float rotation, Vector2 rotationOrigin)
+        public RotatedRect(Vector2 location, Vector2 size, float rotation, Vector2 rotationOrigin)
         {
 
             Rotation = MathHelper.WrapAngle(rotation);
@@ -228,18 +223,18 @@ namespace CrystalCore.Util.Graphics
 
             float OriginLocationDist = rotationOrigin.Length();
 
-            float deltaTheta =  Atan(rotationOrigin.Y / rotationOrigin.X) + Rotation;
-            if(float.IsNaN(deltaTheta))
+            float deltaTheta = Atan(rotationOrigin.Y / rotationOrigin.X) + Rotation;
+            if (float.IsNaN(deltaTheta))
             {
                 deltaTheta = 0; // shouldn't matter because originlocdist = 0
             }
             X = location.X - Cos(deltaTheta) * OriginLocationDist;
             Y = location.Y - Sin(deltaTheta) * OriginLocationDist;
-            
-            
+
+
         }
 
-        public RotatedRect(RectangleF rect, float rotation, Vector2 origin):this(rect.Location, rect.Size, rotation, origin)
+        public RotatedRect(RectangleF rect, float rotation, Vector2 origin) : this(rect.Location, rect.Size, rotation, origin)
         {
         }
 
@@ -247,7 +242,7 @@ namespace CrystalCore.Util.Graphics
         {
         }
 
-        public RotatedRect(RectangleF rect, Direction d): this(rect, d.ToRadians(), new(.5f))
+        public RotatedRect(RectangleF rect, Direction d) : this(rect, d.ToRadians(), new(.5f))
         {
 
         }
@@ -258,7 +253,7 @@ namespace CrystalCore.Util.Graphics
         }
 
 
-   
+
         // valid rotation values are between 0 and pi/2. MAKE IT SO.
 
         /// <summary>
@@ -270,7 +265,7 @@ namespace CrystalCore.Util.Graphics
         /// <returns></returns>
         public static RotatedRect FromBoundingLocation(Vector2 BoundingLocation, Vector2 size, float rotation)
         {
-          
+
             rotation = MathHelper.WrapAngle(rotation);
 
             float w = size.X;
@@ -288,20 +283,20 @@ namespace CrystalCore.Util.Graphics
                 // then idk, good luck I guess
 
                 // down
-                < -PI / 2f => new(BoundingLocation.X + (w*Cos(rotation+PI)), 
-                                        BoundingLocation.Y + w*Sin(rotation+PI) + h*Cos(rotation +PI)),
+                < -PI / 2f => new(BoundingLocation.X + (w * Cos(rotation + PI)),
+                                        BoundingLocation.Y + w * Sin(rotation + PI) + h * Cos(rotation + PI)),
 
                 // left
-                < 0 => new(BoundingLocation.X, 
-                           BoundingLocation.Y + w*Sin(-rotation)),
+                < 0 => new(BoundingLocation.X,
+                           BoundingLocation.Y + w * Sin(-rotation)),
 
                 // up
-                < PI / 2f => new(BoundingLocation.X + h * Sin(rotation), 
-                                       BoundingLocation.Y ),
+                < PI / 2f => new(BoundingLocation.X + h * Sin(rotation),
+                                       BoundingLocation.Y),
 
                 // right
-                _ => new(BoundingLocation.X + w * Cos(PI-rotation) + h * Sin(PI-rotation), 
-                         BoundingLocation.Y + h * Cos(PI-rotation)),
+                _ => new(BoundingLocation.X + w * Cos(PI - rotation) + h * Sin(PI - rotation),
+                         BoundingLocation.Y + h * Cos(PI - rotation)),
             };
 
             RotatedRect toReturn = new RotatedRect(loc, size, 0f, new(0));
@@ -325,12 +320,12 @@ namespace CrystalCore.Util.Graphics
             // step 1 find actual origin
             Vector2 originPos = PositionOfSizeRelativePoint(origin.X, origin.Y);
 
-            RotateAbout(radians, originPos);           
+            RotateAbout(radians, originPos);
         }
 
         public void RotateAbout(float radians, Vector2 AbsoluteOrigin)
         {
-           
+
             // step 2 rotate position
             X -= AbsoluteOrigin.X;
             Y -= AbsoluteOrigin.Y;

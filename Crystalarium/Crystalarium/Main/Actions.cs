@@ -1,22 +1,17 @@
-﻿using CrystalCore.Input;
+﻿using CrystalCore;
+using CrystalCore.Input;
+using CrystalCore.Model;
+using CrystalCore.Model.Elements;
 using CrystalCore.Model.Objects;
+using CrystalCore.Model.Rules;
 using CrystalCore.Util;
-using CrystalCore.View;
+using CrystalCore.View.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using CrystalCore.View.Configs;
-using CrystalCore.Model;
-using CrystalCore.Model.Rules;
-using CrystalCore.Model.Elements;
 using System.IO;
 using System.Xml;
-using CrystalCore.View.Core;
-using CrystalCore.View.Rendering;
-using CrystalCore;
-using System.ComponentModel;
 
 namespace Crystalarium.Main
 {
@@ -44,9 +39,9 @@ namespace Crystalarium.Main
 
         internal AgentType CurrentType { get; private set; } // the agent type selected to place.
 
-      
-       
-  
+
+
+
 
         // used when panning
         private Point panOrigin = new Point();
@@ -69,20 +64,20 @@ namespace Crystalarium.Main
 
             game.Engine.ReportKeybindConflicts();
 
-           
-       
+
+
         }
 
-       internal void OnMapReset(object sender, EventArgs e)
+        internal void OnMapReset(object sender, EventArgs e)
         {
 
             game.CurrentRuleset = game.Map.Ruleset;
             CurrentType = game.CurrentRuleset.AgentTypes[0];
         }
 
-       
 
-        
+
+
 
 
         private void SetupController()
@@ -118,14 +113,14 @@ namespace Crystalarium.Main
                     // xml.Reader.ReadStartElement();
 
                     while (xml.Reader.NodeType != XmlNodeType.EndElement)
-                    { 
+                    {
 
                         //xml.Reader.Read();
                         string s = xml.Reader.Name;
                         Control con = c.GetAction(s);
 
                         if (con == null) { throw new XmlException("invalid Element at " + xml.FormattedReaderPosition + "."); }
-                        
+
 
                         s = xml.Reader.ReadElementContentAsString();
 
@@ -145,7 +140,7 @@ namespace Crystalarium.Main
                         }
 
                         con.Bind(buttons);
-                
+
 
                     }
 
@@ -176,7 +171,7 @@ namespace Crystalarium.Main
 
             c.CreateControl("CamLeft", Keystate.Down)
                 .AddAction("play", () => MoveCamera(Direction.left));
-               
+
 
             c.CreateControl("CamRight", Keystate.Down)
                 .AddAction("play", () => MoveCamera(Direction.right));
@@ -200,7 +195,7 @@ namespace Crystalarium.Main
 
 
 
-            
+
             c.CreateControl("Pan", Keystate.Down)
                 .AddAction("play", () =>
                 {
@@ -235,7 +230,7 @@ namespace Crystalarium.Main
             c.CreateControl("ToggleDebugView", Keystate.OnPress)
                 .AddAction("play", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
 
-            
+
         }
 
 
@@ -254,17 +249,17 @@ namespace Crystalarium.Main
                     game.Map.ExpandToFit(boundsToCheck);
 
                     // destroy agents intersecting bounds
-                  
+
                     List<Agent> toRemove = game.Map.AgentsWithin(boundsToCheck);
 
 
-                    if (toRemove.Count>1)
+                    if (toRemove.Count > 1)
                     {
                         return;
 
                     }
 
-                    if(toRemove.Count==1)
+                    if (toRemove.Count == 1)
                     {
                         toRemove[0].Destroy();
                     }
@@ -326,7 +321,7 @@ namespace Crystalarium.Main
             c.CreateControl("Copy", Keystate.OnPress)
                 .AddAction("play", () =>
                 {
-                    if(!Copy("Copy").IsEmpty)
+                    if (!Copy("Copy").IsEmpty)
                     {
                         Console.WriteLine("Copied!");
                     }
@@ -340,7 +335,7 @@ namespace Crystalarium.Main
                 {
                     Rectangle sel = Copy("Cut");
 
-                    if(sel.IsEmpty)
+                    if (sel.IsEmpty)
                     {
                         return;
                     }
@@ -351,7 +346,7 @@ namespace Crystalarium.Main
                         agent.Destroy();
                     }
 
-                    Console.WriteLine(agents.Count+" agents cut!");
+                    Console.WriteLine(agents.Count + " agents cut!");
                 });
 
 
@@ -362,7 +357,7 @@ namespace Crystalarium.Main
                    clipboard.Paste(game.Map, clickCoords);
 
                });
-              
+
 
 
         }
@@ -465,7 +460,7 @@ namespace Crystalarium.Main
                 });
 
 
-            
+
 
 
 
@@ -531,10 +526,10 @@ namespace Crystalarium.Main
                  })
                  .AddAction("menu", () =>
                  {
-                     if(game.UI.currentMenu == game.UI.InstructionsMenu)
+                     if (game.UI.currentMenu == game.UI.InstructionsMenu)
                      {
                          c.Context = "play";
-                         game.UI.currentMenu=null;
+                         game.UI.currentMenu = null;
                      }
 
                      game.UI.currentMenu = game.UI.InstructionsMenu;
@@ -592,15 +587,15 @@ namespace Crystalarium.Main
 
             c.CreateControl("Crash", Keystate.OnPress)
                 .AddAction("", () => throw new Exception("An Exception was thrown intentionally by the user."));
-             
+
 
         }
 
-        private void MoveCamera(Direction d) 
+        private void MoveCamera(Direction d)
         {
 
             float camSpeed = 1.2f; // I guess this is acceleration
-            game.view.Camera.AddVelocity(camSpeed, d); 
+            game.view.Camera.AddVelocity(camSpeed, d);
         }
 
         private Rectangle Copy(string name)
@@ -620,7 +615,7 @@ namespace Crystalarium.Main
                 Console.WriteLine("Bottom right of selection x coordinate?");
                 x2 = int.Parse(Console.ReadLine());
 
-                if(x2<=x1)
+                if (x2 <= x1)
                 {
                     Console.WriteLine("Invalid X coord.");
                     throw new FormatException();
@@ -652,13 +647,13 @@ namespace Crystalarium.Main
 
         private void MenuAction(int i)
         {
-            if(game.UI.currentMenu==game.UI.RulesetMenu)
+            if (game.UI.currentMenu == game.UI.RulesetMenu)
             {
                 SwitchRuleset(i);
                 return;
             }
 
-            string path =Path.Combine("Saves", (i + 1) + ".xml");
+            string path = Path.Combine("Saves", (i + 1) + ".xml");
 
 
             if (game.UI.currentMenu == game.UI.SaveMenu)
@@ -670,7 +665,7 @@ namespace Crystalarium.Main
             }
 
             // must be loading.
-            if(!File.Exists(path))
+            if (!File.Exists(path))
             {
                 return;
             }
@@ -682,7 +677,7 @@ namespace Crystalarium.Main
             }
             catch (MapLoadException e)
             {
-                throw new MapLoadException("Crystalrium couldn't load the specified save file.\nReason: " + e.Message+"\n"+e.StackTrace);
+                throw new MapLoadException("Crystalrium couldn't load the specified save file.\nReason: " + e.Message + "\n" + e.StackTrace);
             }
 
             c.Context = "play";
@@ -706,11 +701,11 @@ namespace Crystalarium.Main
 
         private void SwitchAgent(int i)
         {
-            if(i<game.CurrentRuleset.AgentTypes.Count)
+            if (i < game.CurrentRuleset.AgentTypes.Count)
             {
-                CurrentType = game.CurrentRuleset.AgentTypes[i];   
+                CurrentType = game.CurrentRuleset.AgentTypes[i];
             }
-        }   
+        }
 
         // returns the position of the mouse in tilespace relative to the maingame.view.
         internal Point GetMousePos()
@@ -719,7 +714,7 @@ namespace Crystalarium.Main
 
             Vector2 virtualPixelCoords =
                 //Mouse.GetState().Position.ToVector2(); // for basic renderer
-                ((ScaledRenderer)game.Engine.Renderer).ToVirtualResolution( Mouse.GetState().Position.ToVector2());
+                ((ScaledRenderer)game.Engine.Renderer).ToVirtualResolution(Mouse.GetState().Position.ToVector2());
 
             Point pixelCoords = game.view.LocalizeCoords(virtualPixelCoords.ToPoint());
 
@@ -727,7 +722,7 @@ namespace Crystalarium.Main
             Vector2 clickCoords = game.view.Camera.PixelToTileCoords(pixelCoords);
 
             clickCoords.Floor();
-          
+
             return clickCoords.ToPoint();
 
         }
@@ -735,9 +730,9 @@ namespace Crystalarium.Main
         private Vector2 DistanceFrom(Vector2 vect, Rectangle rect)
         {
             Vector2 toReturn = new Vector2(0);
-            if(vect.Y<rect.Top)
+            if (vect.Y < rect.Top)
             {
-                toReturn.Y = vect.Y-rect.Top;
+                toReturn.Y = vect.Y - rect.Top;
             }
 
             if (vect.Y > rect.Bottom)
@@ -750,7 +745,7 @@ namespace Crystalarium.Main
                 toReturn.X = vect.X - rect.Left;
             }
 
-            if(vect.X > rect.Right)
+            if (vect.X > rect.Right)
             {
                 toReturn.X = vect.X - rect.Right;
             }

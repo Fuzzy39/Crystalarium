@@ -4,10 +4,6 @@ using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.View.Subviews
 {
@@ -33,16 +29,16 @@ namespace CrystalCore.View.Subviews
         {
             this.config = config;
 
-            
+
         }
 
 
-       
+
 
         public override bool Draw(IRenderer rend)
         {
 
-            if(!base.Draw(rend))
+            if (!base.Draw(rend))
             {
                 return false;
             }
@@ -61,13 +57,13 @@ namespace CrystalCore.View.Subviews
 
             }
 
-        
+
             RenderFromA(rend);
             RenderFromB(rend);
 
             return true;
 
-           
+
 
         }
 
@@ -116,7 +112,7 @@ namespace CrystalCore.View.Subviews
 
             ChannelState cs = DetermineState(value, hasEnd);
             Connection signal = (Connection)RenderData;
-       
+
 
             if (cs != ChannelState.Active && !renderTarget.DoDebugRendering)
             {
@@ -129,12 +125,12 @@ namespace CrystalCore.View.Subviews
 
             float length = signal.Length;
 
-            if(!hasEnd)
+            if (!hasEnd)
             {
                 length -= .5f;
             }
 
-            if(facing.IsDiagonal())
+            if (facing.IsDiagonal())
             {
                 length *= MathF.Sqrt(2);
             }
@@ -156,18 +152,18 @@ namespace CrystalCore.View.Subviews
             RotatedRect renderBounds = new(location, size, absFacing.ToRadians(), new(0, .5f));
             rend.Draw(config.SignalTexture, renderBounds, DetermineColor(value, hasEnd));
 
-          
+
         }
 
 
 
         private ChannelState DetermineState(int value, bool hasEnd)
         {
-             if (value != 0)
+            if (value != 0)
             {
                 return ChannelState.Active;
             }
-             
+
             if (!hasEnd)
             {
                 return ChannelState.Unbounded;
@@ -177,11 +173,11 @@ namespace CrystalCore.View.Subviews
             return ChannelState.Bounded;
         }
 
-  
+
 
         private Color DetermineColor(int value, bool hasEnd)
         {
-            if(value!=0)
+            if (value != 0)
             {
                 return config.Colors.getColor(value);
             }
@@ -194,8 +190,8 @@ namespace CrystalCore.View.Subviews
             return Color.DimGray;
         }
 
-     
-       
+
+
 
 
 

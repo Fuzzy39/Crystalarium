@@ -2,11 +2,6 @@
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalCore.View.Rendering
 {
@@ -37,9 +32,9 @@ namespace CrystalCore.View.Rendering
         {
             this.gd = gd;
             spriteBatch = new SpriteBatch(gd);
-       
 
-          
+
+
         }
 
         public virtual void Draw(Texture2D texture, RotatedRect destination, Rectangle source, Color color)
@@ -58,9 +53,9 @@ namespace CrystalCore.View.Rendering
                 SpriteEffects.None, 0f
             );
 
-            if(!hasTarget)
+            if (!hasTarget)
             {
-                hasDrawntoPrimary=true;
+                hasDrawntoPrimary = true;
             }
 
         }
@@ -81,7 +76,7 @@ namespace CrystalCore.View.Rendering
 
         public virtual void End()
         {
-            if(hasTarget)
+            if (hasTarget)
             {
                 throw new InvalidOperationException("Has a render target.");
             }
@@ -92,38 +87,38 @@ namespace CrystalCore.View.Rendering
 
         public virtual RenderTarget2D CreateTarget(Point size)
         {
-            return  new RenderTarget2D(gd, size.X, size.Y);
+            return new RenderTarget2D(gd, size.X, size.Y);
         }
 
         public virtual void StartTarget(RenderTarget2D target)
         {
 
-            if(hasTarget)
+            if (hasTarget)
             {
                 throw new InvalidOperationException("Already has a target");
             }
 
-            if(hasDrawntoPrimary)
+            if (hasDrawntoPrimary)
             {
                 throw new InvalidOperationException("A render target cannot be created after graphics has been drawn to the window.");
             }
 
-            
+
             gd.SetRenderTarget(target);
             spriteBatch.Begin();
-            hasTarget=true;
+            hasTarget = true;
 
         }
 
 
         public virtual void EndTarget()
         {
-            if(!hasTarget)
+            if (!hasTarget)
             {
                 throw new InvalidOperationException("A target has not begun.");
             }
 
-      
+
 
             spriteBatch.End();
             gd.SetRenderTarget(null);

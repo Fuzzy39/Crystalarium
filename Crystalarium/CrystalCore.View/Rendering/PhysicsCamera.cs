@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using CrystalCore.Model;
-using CrystalCore.Util;
-using CrystalCore.View.Core;
+﻿using CrystalCore.Util;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 
 
@@ -13,24 +8,24 @@ namespace CrystalCore.View.Rendering
     /// <summary>
     /// A physics camera creates a more linear zoom on top of a camera's scaling abilities and adds velocity to panning and zooming.
     /// </summary>
-    public class PhysicsCamera:Camera
+    public class PhysicsCamera : Camera
     {
-        
-        
-       
+
+
+
         // 'Camera' controls
-       
+
         private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions. (in pixels/frame)
         private Vector3 friction = new Vector3(.05f, .05f, .000f); // the rate which camera velocity is reduced, as a ratio of velocity lost per frame.
         private const float MIN_FRICTION = .3f; // the minimum amount of friction that can be applied, if the camera is in motion, in pixels/frame.
         private const float MAX_SPEED = 15f; // the maximum velocity per dimension of the camera in pixels/frame.
 
-        
+
 
         private Point _zoomOrigin; // the point, in pixels relative to the top left corner of our gridview,
                                    // that serves as the origin for dilation translations/zooming.
 
-       
+
         public override Vector2 Position
         {
             get => base.Position;
@@ -40,7 +35,7 @@ namespace CrystalCore.View.Rendering
                 VelX = 0;
                 VelY = 0;
             }
-             
+
         }
 
 
@@ -64,7 +59,7 @@ namespace CrystalCore.View.Rendering
         /// </summary>
         public float Zoom
         {
-            get 
+            get
             {
                 int MaxArea = MaxScale * MaxScale;
                 int MinArea = MinScale * MinScale;
@@ -72,9 +67,9 @@ namespace CrystalCore.View.Rendering
                 // lerp between area and zoom
                 // scale where 0 is min and 1 is max. .5 is average of min and max.
                 //float linearScale = (float)( ( (float)_scale*_scale ) - MinArea ) / ((float)MaxArea-MinArea);
-                float cons = 100f/ ((float)MaxScale - MinScale);
-                float zoom =  ((float)_scale - MinScale)*cons ;
-             
+                float cons = 100f / ((float)MaxScale - MinScale);
+                float zoom = ((float)_scale - MinScale) * cons;
+
 
                 return zoom;
                 //return linearScale* 100f;
@@ -83,7 +78,7 @@ namespace CrystalCore.View.Rendering
             {
                 if (value < 0) { value = 0; VelZ = 0; }
                 if (value > 100) { value = 100; VelZ = 0; }
-              
+
 
                 int MaxArea = MaxScale * MaxScale;
                 int MinArea = MinScale * MinScale;
@@ -93,11 +88,11 @@ namespace CrystalCore.View.Rendering
 
                 _scale = MathHelper.Lerp(MinScale, MaxScale, value / 100f);
 
-              
+
 
 
             }
-        }   
+        }
 
 
         public Vector3 Velocity
@@ -110,14 +105,14 @@ namespace CrystalCore.View.Rendering
                 VelY = value.Y;
                 VelZ = value.Z;
             }
-        
+
 
         }
 
         public float VelX
         {
             get => _velocity.X;
-            set 
+            set
             {
                 _velocity.X = value;
                 // limit velocity.
@@ -142,7 +137,7 @@ namespace CrystalCore.View.Rendering
         public float VelZ
         {
             get => _velocity.Z;
-           
+
             set
             {
                 _velocity.Z = value;
@@ -159,8 +154,8 @@ namespace CrystalCore.View.Rendering
         public Point ZoomOrigin
         {
             get => _zoomOrigin;
-            set => _zoomOrigin = value; 
-        
+            set => _zoomOrigin = value;
+
         }
 
 
@@ -171,7 +166,7 @@ namespace CrystalCore.View.Rendering
 
 
             _zoomOrigin = new Point(0);
-           
+
         }
 
 
@@ -179,8 +174,8 @@ namespace CrystalCore.View.Rendering
         // Drawing code:
 
 
-     
-      
+
+
 
         // bounds represents the boundries of this 
         internal override void Update(Rectangle bounds)
@@ -190,7 +185,7 @@ namespace CrystalCore.View.Rendering
 
 
             UpdatePosition();
-          
+
             UpdateZoom(Zoom + Velocity.Z);
 
             // Apply friction.
@@ -202,7 +197,7 @@ namespace CrystalCore.View.Rendering
         }
 
 
-      
+
 
 
         private void UpdatePosition()
@@ -230,11 +225,11 @@ namespace CrystalCore.View.Rendering
         }
 
 
-        private float ApplyFriction(float before, float frict) 
-        { 
-            if(MathF.Abs(frict*before) < MIN_FRICTION)
+        private float ApplyFriction(float before, float frict)
+        {
+            if (MathF.Abs(frict * before) < MIN_FRICTION)
             {
-                
+
                 return MiscUtil.Reduce(before, MIN_FRICTION);
             }
 
@@ -264,7 +259,7 @@ namespace CrystalCore.View.Rendering
 
 
             // get the changes we need to make
-            Vector2 originError = originLocation- PixelToTileCoords(_zoomOrigin);
+            Vector2 originError = originLocation - PixelToTileCoords(_zoomOrigin);
             Vector2 pos = OriginPosition + originError;
 
             // pos could be invalid. we must forcibly validate it.
@@ -278,26 +273,26 @@ namespace CrystalCore.View.Rendering
                 // rectify positions.
                 // the .1fs are for some ridiclous floating point nonsense
                 if (center.X > _bounds.Right) { pos.X -= center.X - _bounds.Right; }
-                if (center.X < _bounds.Left) { pos.X -=  center.X - _bounds.Left - .1f; }
-                if (center.Y > _bounds.Bottom) { pos.Y -= center.Y -_bounds.Bottom; }
-                if (center.Y < _bounds.Top) { pos.Y -= center.Y - _bounds.Top -.1f; }
+                if (center.X < _bounds.Left) { pos.X -= center.X - _bounds.Left - .1f; }
+                if (center.Y > _bounds.Bottom) { pos.Y -= center.Y - _bounds.Bottom; }
+                if (center.Y < _bounds.Top) { pos.Y -= center.Y - _bounds.Top - .1f; }
 
             }
-            
-            
+
+
             SetPosition(pos);
-            
+
         }
 
         public void AddVelocity(float vel, Direction d)
         {
             // get the velocity we need to add.
-            Vector2 toAdd = d.ToPoint().ToVector2()*vel;
+            Vector2 toAdd = d.ToPoint().ToVector2() * vel;
             VelX += toAdd.X;
             VelY += toAdd.Y;
 
         }
 
 
-    }   
+    }
 }

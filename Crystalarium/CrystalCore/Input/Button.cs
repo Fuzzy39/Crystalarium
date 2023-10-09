@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CrystalCore.Input
+﻿namespace CrystalCore.Input
 {
     public enum Button
-    { 
+    {
         // most of this was stolen from Monogame's keys
         None = 0,
         //

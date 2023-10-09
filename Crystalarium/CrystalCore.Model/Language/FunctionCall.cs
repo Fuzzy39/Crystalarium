@@ -1,7 +1,6 @@
 ﻿using CrystalCore.Util;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.Model.Language
 {
@@ -14,7 +13,7 @@ namespace CrystalCore.Model.Language
         // wowee, lookit me!
 
         // Fields
-       
+
         private List<Expression> parameters;
 
 
@@ -25,7 +24,7 @@ namespace CrystalCore.Model.Language
         {
             get { return new List<Expression>(parameters); }
         }
-       
+
 
         public Operator Operation
         {
@@ -45,34 +44,34 @@ namespace CrystalCore.Model.Language
         {
             try
             {
-                if(parameters.Count < 2)
+                if (parameters.Count < 2)
                 {
                     throw new InitializationFailedException("Too few operands. Expected at least two.");
                 }
 
                 TokenType? last = null;
-                foreach(Expression expression in parameters) 
-                { 
-                    if(expression == null)
+                foreach (Expression expression in parameters)
+                {
+                    if (expression == null)
                     {
                         throw new InitializationFailedException("An Operand was null.");
                     }
 
                     expression.Initialize();
-                    if(last == null) 
+                    if (last == null)
                     {
                         last = expression.ReturnType;
                         continue;
                     }
 
-                    if(!Operation.IsValid((TokenType)last, expression.ReturnType))
+                    if (!Operation.IsValid((TokenType)last, expression.ReturnType))
                     {
                         throw new InitializationFailedException("Type Mismatch. Types " + last + " and " + expression.ReturnType + " are not compatable" +
                        "with " + _operation);
                     }
 
                     last = Operation.ReturnType();
-                   
+
                 }
 
 
@@ -94,13 +93,13 @@ namespace CrystalCore.Model.Language
             }
 
             List<Token> tokens = new List<Token>();
-            foreach(Expression expr in parameters)
+            foreach (Expression expr in parameters)
             {
                 tokens.Add(expr.Resolve(context));
             }
 
             Token prev = tokens[0];
-            for(int i = 1; i< tokens.Count; i++)
+            for (int i = 1; i < tokens.Count; i++)
             {
                 prev = _operation.Operate(prev, tokens[i]);
             }

@@ -1,9 +1,5 @@
 ﻿using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Crystalarium.Main
 {
@@ -31,7 +27,7 @@ namespace Crystalarium.Main
         {
             renderer.DrawString(Textures.Consolas, Title, new Point(100), 33, Color.White);
             renderer.DrawString(Textures.Consolas, returnMsg, new Point(120, 150), 22, Color.White);
-   
+
 
             int spacing = 1;
             for (int i = 1; i <= 9; i++)
@@ -41,7 +37,7 @@ namespace Crystalarium.Main
                     break;
                 }
 
-                if(shouldSkip(i))
+                if (shouldSkip(i))
                 {
                     continue;
                 }

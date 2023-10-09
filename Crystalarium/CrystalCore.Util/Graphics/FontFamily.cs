@@ -1,10 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalCore.Util.Graphics
 {
@@ -20,7 +15,7 @@ namespace CrystalCore.Util.Graphics
 
         public FontFamily(params SpriteFont[] fonts)
         {
-            if(fonts == null || fonts.Count() == 0)
+            if (fonts == null || fonts.Count() == 0)
             {
                 throw new ArgumentException("FontFamily must have at least one font.");
             }
@@ -37,7 +32,7 @@ namespace CrystalCore.Util.Graphics
 
         public void Draw(SpriteBatch sb, string s, float height, Vector2 loc, Color color)
         {
-            SpriteFont? font =  null;
+            SpriteFont? font = null;
             float fontHeight = 0;
 
 
@@ -48,10 +43,10 @@ namespace CrystalCore.Util.Graphics
             {
                 fontHeight = sf.MeasureString(" ").Y;
 
-                if (fontHeight>=height)
+                if (fontHeight >= height)
                 {
                     font = sf;
-                 
+
                     break;
 
                 }
@@ -59,18 +54,18 @@ namespace CrystalCore.Util.Graphics
             }
 
 
-            if(font == null)
+            if (font == null)
             {
                 font = fonts[^1];
             }
 
-      
+
 
             // compute the scale required for heights to match.
             float scale = height / fontHeight;
 
             // draw the font
-            sb.DrawString(font, s, loc, color, 0, new Vector2(0), scale,SpriteEffects.None,0f);
+            sb.DrawString(font, s, loc, color, 0, new Vector2(0), scale, SpriteEffects.None, 0f);
 
         }
 

@@ -3,11 +3,6 @@ using CrystalCore.Util.Graphics;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalCore.View.Rendering
 {
@@ -26,7 +21,7 @@ namespace CrystalCore.View.Rendering
                 return camera;
             }
         }
-      
+
 
 
         public CameraRenderer(Rectangle pixelBounds, IRenderer rend)
@@ -75,7 +70,7 @@ namespace CrystalCore.View.Rendering
             Rectangle footprint = new Rectangle(pixelCoords, pixelSize);
             Direction facing = DirectionUtil.FromRadians(rect.Rotation);
 
-          //  baseRenderer.Draw(texture, RotatedRect.FromFootprint(footprint, facing), c);
+            //  baseRenderer.Draw(texture, RotatedRect.FromFootprint(footprint, facing), c);
             baseRenderer.Draw(texture, RotatedRect.FromBoundingLocation(pixelCoords, pixelSize, rect.Rotation), c);
         }
 

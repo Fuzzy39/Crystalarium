@@ -2,11 +2,7 @@
 using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalCore
 {
@@ -18,14 +14,14 @@ namespace CrystalCore
 
         public Clipboard()
         {
-          
+
             content = new List<AgentRepresentation>();
         }
 
 
         public void Copy(Map m, Rectangle selection)
         {
-          
+
             List<Agent> agents = prepareSelection(m, selection);
             foreach (Agent agent in agents)
             {
@@ -33,7 +29,7 @@ namespace CrystalCore
             }
         }
 
-        public void Cut(Map m, Rectangle selection) 
+        public void Cut(Map m, Rectangle selection)
         {
 
             List<Agent> agents = prepareSelection(m, selection);
@@ -56,13 +52,13 @@ namespace CrystalCore
 
         public void Paste(Map m, Point location)
         {
-            if(Ruleset != m.Ruleset)
-            {   
+            if (Ruleset != m.Ruleset)
+            {
                 // the selection cannot be pasted.
                 return;
             }
 
-            foreach(AgentRepresentation ar in  content)
+            foreach (AgentRepresentation ar in content)
             {
                 ar.CreateAgent(m, location);
             }

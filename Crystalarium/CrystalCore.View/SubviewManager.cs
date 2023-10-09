@@ -3,10 +3,6 @@ using CrystalCore.Model.Objects;
 using CrystalCore.View.Core;
 using CrystalCore.View.Subviews;
 using CrystalCore.View.Subviews.Agents;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.View
 {
@@ -56,7 +52,7 @@ namespace CrystalCore.View
 
         // constructors
 
-        internal SubviewManager( GridView parent)
+        internal SubviewManager(GridView parent)
         {
 
             _parent = parent;
@@ -65,27 +61,27 @@ namespace CrystalCore.View
 
             Reset();
 
-           
+
 
         }
 
 
         private void OnMapObjectReady(object o, EventArgs e)
         {
-            if(o is Agent)
+            if (o is Agent)
             {
-               
+
                 Agent a = (Agent)o;
                 _agentViews.Add(new AgentView(Parent, a, Parent.CurrentSkin.AgentConfigs));
             }
 
-            if(o is Connection)
+            if (o is Connection)
             {
                 Connection c = (Connection)o;
                 _beamViews.Add(new SignalView(Parent, c, Parent.CurrentSkin.SignalConfig));
             }
 
-            if(o is Chunk)
+            if (o is Chunk)
             {
                 Chunk c = (Chunk)o;
                 _chunkViews.Add(new ChunkView(Parent, c, Parent.CurrentSkin.ChunkConfig));
@@ -97,7 +93,7 @@ namespace CrystalCore.View
 
         internal void Reset()
         {
-         
+
             // remove all curent  ghosts: they are now outdated.
             _ghosts = new List<AgentGhost>();
 
@@ -110,51 +106,51 @@ namespace CrystalCore.View
 
             List<Chunk> chunks = Parent.Map.ChunksInBounds(Parent.Map.Bounds);
 
-            foreach (Chunk ch in chunks )
+            foreach (Chunk ch in chunks)
             {
 
                 OnMapObjectReady(ch, new());
 
-               /* foreach(ChunkMember chm in ch.Children)
-                {
-                    OnMapObjectReady(chm, new());
-                }*/
-                
+                /* foreach(ChunkMember chm in ch.Children)
+                 {
+                     OnMapObjectReady(chm, new());
+                 }*/
+
             }
 
-          
-      
+
+
         }
 
 
         internal void AddGhost(AgentGhost gh)
         {
-            if(!_parent.AllowMultipleGhosts)
+            if (!_parent.AllowMultipleGhosts)
             {
                 _ghosts.Clear();
             }
 
             _ghosts.Add(gh);
-            
+
         }
 
 
         public bool Draw(IRenderer rend)
         {
 
-      
+
             // first update the chunk list and draw chunks.
             DrawObjects(rend, _chunkViews);
-            
+
             // do the same with agents.
             if (Parent.DoAgentRendering)
             {
-                foreach(AgentView av in _agentViews)
+                foreach (AgentView av in _agentViews)
                 {
                     av.DrawBackground(rend);
                 }
 
-             
+
                 DrawObjects(rend, _beamViews);
                 DrawObjects(rend, _agentViews);
 
@@ -183,16 +179,16 @@ namespace CrystalCore.View
                     i++;
                     continue;
                 }
-                
+
                 list.Remove(r);
-                
-                    
+
+
             }
         }
 
-        private void DrawGhosts( IRenderer rend)
+        private void DrawGhosts(IRenderer rend)
         {
-            foreach(AgentGhost gh in _ghosts)
+            foreach (AgentGhost gh in _ghosts)
             {
                 gh.Draw(rend);
             }

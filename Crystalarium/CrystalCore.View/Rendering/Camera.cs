@@ -1,12 +1,5 @@
-﻿
-using CrystalCore.Util;
-using CrystalCore.Util.Graphics;
-using CrystalCore.View.Core;
+﻿using CrystalCore.Util.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.View.Rendering
 {
@@ -61,10 +54,10 @@ namespace CrystalCore.View.Rendering
             get => _isBound;
             internal set
             {
-               
+
                 _isBound = value;
             }
-            
+
         }
 
         /// <summary>
@@ -160,7 +153,7 @@ namespace CrystalCore.View.Rendering
                 float x = (float)(-1f * ((TileBounds.Size.X) / 2f)) + value.X;
                 float y = (float)(-1f * ((TileBounds.Size.Y) / 2f)) + value.Y;
                 SetPosition(new Vector2(x, y));
-               
+
 
             }
         }
@@ -202,7 +195,7 @@ namespace CrystalCore.View.Rendering
         }
 
 
-        internal Camera( Point size)
+        internal Camera(Point size)
         {
 
 
@@ -217,7 +210,7 @@ namespace CrystalCore.View.Rendering
             _position = new Vector2(0, 0);
 
 
-           
+
             _bounds = new Rectangle(0, 0, 1, 1);
             _isBound = false;
         }
@@ -239,7 +232,7 @@ namespace CrystalCore.View.Rendering
         }
 
 
-        internal virtual void Reset(Rectangle bounds) 
+        internal virtual void Reset(Rectangle bounds)
         {
             _bounds = bounds;
             Position = bounds.Center.ToVector2();
@@ -268,7 +261,7 @@ namespace CrystalCore.View.Rendering
             }
 
             // granularly set X and y, if applicable.
-            if(_bounds.Left<=nextCenter.X &  _bounds.Right>=nextCenter.X)
+            if (_bounds.Left <= nextCenter.X & _bounds.Right >= nextCenter.X)
             {
                 _position.X = pos.X;
                 return false;
@@ -308,7 +301,7 @@ namespace CrystalCore.View.Rendering
 
         }
 
-       
+
         /// <summary>
         /// 
         /// </summary>
@@ -321,11 +314,11 @@ namespace CrystalCore.View.Rendering
             return new Vector2(x, y);
         }
 
-        
-
-       
 
 
-       
+
+
+
+
     }
 }

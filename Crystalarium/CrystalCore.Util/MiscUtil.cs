@@ -1,7 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.Util
 {
@@ -47,7 +44,7 @@ namespace CrystalCore.Util
             float toReturn = nums[0];
             foreach (float num in nums)
             {
-                if(num> toReturn)
+                if (num > toReturn)
                 {
                     toReturn = num;
                 }
@@ -91,10 +88,10 @@ namespace CrystalCore.Util
         {
             string toReturn = "";
             string[] lines = s.Split('\n');
-            
+
             foreach (string sub in lines)
             {
-              
+
                 toReturn += "\n    " + sub;
             }
             return toReturn;

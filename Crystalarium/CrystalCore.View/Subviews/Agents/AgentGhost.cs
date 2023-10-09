@@ -1,13 +1,9 @@
-﻿using CrystalCore.Util;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using CrystalCore.View.Configs;
-using CrystalCore.Model.Elements;
+﻿using CrystalCore.Model.Elements;
+using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
+using CrystalCore.View.Configs;
 using CrystalCore.View.Core;
+using Microsoft.Xna.Framework;
 
 namespace CrystalCore.View.Subviews.Agents
 {
@@ -37,13 +33,13 @@ namespace CrystalCore.View.Subviews.Agents
 
             float textureFacing = Facing.ToRadians() - config.TextureFacing.ToRadians();
 
-          
+
             Vector2 size = loc.Size;
             if (Facing.IsHorizontal())
             {
                 size = new(size.Y, size.X);
             }
-                
+
             RotatedRect pos = RotatedRect.FromBoundingLocation(loc.Location, size, textureFacing);
 
             // render the ghost.
@@ -56,7 +52,7 @@ namespace CrystalCore.View.Subviews.Agents
 
             return true;
         }
-    
+
 
 
         private Color DetermineColor()
@@ -79,6 +75,6 @@ namespace CrystalCore.View.Subviews.Agents
             return new Color(Color.Lerp(Color.White, c, .5f), .05f);
         }
 
-       
+
     }
 }

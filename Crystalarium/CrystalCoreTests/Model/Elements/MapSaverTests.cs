@@ -1,14 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CrystalCore.Model.Elements;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
-using Microsoft.Xna.Framework;
-using CrystalCore.Model.Objects;
 using CrystalCore.Util;
-using CrystalCore.Model.Interface;
-using CrystalCore.Model.Language;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Xna.Framework;
+using System;
 
 namespace CrystalCore.Model.Elements.Tests
 {
@@ -102,6 +97,6 @@ namespace CrystalCore.Model.Elements.Tests
 
 
 
-        }//you'll never find me!!!! // who put all these comments here? guh.    
+    }//you'll never find me!!!! // who put all these comments here? guh.    
 
 }

@@ -2,9 +2,6 @@
 using CrystalCore.Util.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.View.Configs
 {
@@ -80,7 +77,7 @@ namespace CrystalCore.View.Configs
 
         public override void Initialize()
         {
-         
+
             base.Initialize();
         }
 

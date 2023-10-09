@@ -7,8 +7,6 @@ using CrystalCore.View.Rendering;
 using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
 
 namespace CrystalCore.View
 {
@@ -95,18 +93,18 @@ namespace CrystalCore.View
             get => _doAgentRendering;
             set
             {
-                    _doAgentRendering = value;
+                _doAgentRendering = value;
             }
 
         }
-            
+
 
         public GridView ViewCastTarget
         {
             get => _viewCastTarget;
             set
             {
-               
+
                 if (value == null)
                 {
                     _viewCastTarget = null;
@@ -133,7 +131,7 @@ namespace CrystalCore.View
         }
 
 
-      
+
 
 
         // Contstructors
@@ -150,7 +148,7 @@ namespace CrystalCore.View
             this.container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
 
-            _cameraRend = new CameraRenderer(new(new(),PixelBounds.Size), rend);
+            _cameraRend = new CameraRenderer(new(new(), PixelBounds.Size), rend);
 
             _skinSet = skinSet;
 
@@ -189,9 +187,9 @@ namespace CrystalCore.View
             return p - _pixelBounds.Location;
         }
 
-        public void CreateGhost( AgentType t, Point loc, Direction facing)
+        public void CreateGhost(AgentType t, Point loc, Direction facing)
         {
-            AgentViewConfig conf =CurrentSkin.GetAgentViewConfig(t);
+            AgentViewConfig conf = CurrentSkin.GetAgentViewConfig(t);
             Manager.AddGhost(new AgentGhost(Map, conf, loc, facing));
         }
 
@@ -199,7 +197,7 @@ namespace CrystalCore.View
 
         public void PreDraw(IBatchRenderer rend)
         {
-         
+
 
             rend.StartTarget(renderTarget);
 
@@ -218,10 +216,10 @@ namespace CrystalCore.View
 
         }
 
-        
+
         public bool Draw(IRenderer rend)
         {
-            
+
 
             // no, I don't know what these settings do.
             // could look it up...
@@ -235,20 +233,20 @@ namespace CrystalCore.View
 
 
             return true;
-           
+
         }
 
-     
+
 
 
         private void DrawBackground(IRenderer rend)
-            {
+        {
             // do not draw the background if no background is set.
             if (CurrentSkin.GridViewBG == null)
                 return;
 
             rend.Draw(CurrentSkin.GridViewBG, new Rectangle(new(0), _pixelBounds.Size), CurrentSkin.GridViewBGColor);
-           
+
         }
 
         private void DrawOtherGridView(IRenderer rend)
@@ -258,17 +256,17 @@ namespace CrystalCore.View
                 return;
             }
 
-          
+
             // this cast is annoying, but whatever
             ((IRenderer)_cameraRend).Draw(
-                SkinSet.ViewCastOverlay, 
+                SkinSet.ViewCastOverlay,
                 ViewCastTarget.Camera.TileBounds,
                 new Color(.2f, .2f, .2f, .001f)
             );
         }
 
         public void Update()
-        { 
+        {
             try
             {
                 _cameraRend.Update(_map.Bounds);
@@ -277,7 +275,7 @@ namespace CrystalCore.View
             {
 
                 Camera.Position = Map.Center;
-                Console.WriteLine("Camera is out of bounds. Resetting position to "+Camera.Position);
+                Console.WriteLine("Camera is out of bounds. Resetting position to " + Camera.Position);
             }
         }
 
@@ -292,7 +290,7 @@ namespace CrystalCore.View
             Camera.IsBound = bound;
 
         }
-        
+
         public void OnGridReset(Object sender, EventArgs e)
         {
             Reset();
@@ -301,11 +299,11 @@ namespace CrystalCore.View
         // this should be called whenever our skin changes.
         public void Reset()
         {
-            
+
             Manager.Reset();
             Camera.Reset(_map.Bounds);
-          
-           
+
+
         }
     }
 }

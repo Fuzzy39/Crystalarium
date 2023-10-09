@@ -1,7 +1,4 @@
 ﻿using CrystalCore.Util;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.Model.Language
 {
@@ -10,7 +7,7 @@ namespace CrystalCore.Model.Language
     /// </summary>
     public abstract class Expression : InitializableObject
     {
-        internal TokenType ReturnType { get;private set; }
+        internal TokenType ReturnType { get; private set; }
 
 
         internal Expression(TokenType tokenType)
@@ -21,7 +18,7 @@ namespace CrystalCore.Model.Language
 
         internal abstract Token Resolve(object context);
 
-      
+
         public override void Initialize()
         {
             if (Initialized)

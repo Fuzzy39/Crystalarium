@@ -6,11 +6,6 @@ using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ChunkRenderer = CrystalCore.View.Subviews.ChunkView;
 
 namespace CrystalCore.View.Subviews.Agents
 {
@@ -22,7 +17,7 @@ namespace CrystalCore.View.Subviews.Agents
         private List<AgentViewConfig> configs; // the settings for how this agentview will render itself.
         private AgentViewConfig config;
         private List<DebugPort> _ports; // the ports that this agentview may render. 
-      
+
         internal AgentType CurrentType
         {
             get { return config.AgentType; }
@@ -30,7 +25,7 @@ namespace CrystalCore.View.Subviews.Agents
 
         internal AgentView(GridView v, Agent a, List<AgentViewConfig> configs) : base(v, a)
         {
-           
+
             _ports = null;
             this.configs = configs;
             setCurrentConfig();
@@ -73,7 +68,7 @@ namespace CrystalCore.View.Subviews.Agents
             }
 
 
-            if( ((Agent)RenderData).Type != CurrentType)
+            if (((Agent)RenderData).Type != CurrentType)
             {
                 setCurrentConfig();
             }
@@ -107,8 +102,8 @@ namespace CrystalCore.View.Subviews.Agents
                 {
                     dp.Draw(rend);
 
-             
-                
+
+
                 }
             }
 
@@ -129,14 +124,14 @@ namespace CrystalCore.View.Subviews.Agents
             }
 
             RectangleF bounds = new RectangleF(RenderData.Bounds);
-     
+
 
             if (config.DoBackgroundShrinkage)
             {
                 bounds = ShrinkBorders();
             }
 
-           
+
 
             RotatedRect pos = RotatedRect.FromBoundingLocation(bounds.Location, bounds.Size, 0);
             rend.Draw(config.Background, pos, config.BackgroundColor);

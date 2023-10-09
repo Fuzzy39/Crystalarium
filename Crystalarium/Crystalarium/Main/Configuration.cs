@@ -1,4 +1,4 @@
-﻿    using CrystalCore.Model.Interface;
+﻿using CrystalCore.Model.Interface;
 using CrystalCore.Model.Language;
 using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
@@ -6,10 +6,6 @@ using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 
 namespace Crystalarium.Main
 {
@@ -23,7 +19,7 @@ namespace Crystalarium.Main
     {
 
         private CrystalGame game; // The game.
-        
+
         internal Ruleset CrystalRules { get; private set; }
         internal Ruleset BasicRules { get; private set; }
         internal Ruleset FilumRules { get; private set; }
@@ -33,7 +29,7 @@ namespace Crystalarium.Main
 
 
         internal SkinSet DefaultSkin { get; private set; }
-        internal SkinSet MiniMapSkin { get; private set; }  
+        internal SkinSet MiniMapSkin { get; private set; }
 
 
         internal Configuration(CrystalGame game)
@@ -59,19 +55,19 @@ namespace Crystalarium.Main
             #region Crystalarium
             // create a ruleset
             CrystalRules = game.Engine.addRuleset("Crystalarium");
-                
+
             // define SignalRules
             AgentType t;
             TransformationRule tr;
             Operator greaterThan = Operator.GreaterThan;
-            Operator equals =Operator.EqualTo;
+            Operator equals = Operator.EqualTo;
             Operator xor = Operator.Xor;
-            Operator and =Operator.And;
+            Operator and = Operator.And;
             Operator or = Operator.Or;
 
             // helpful things?
-            FunctionCall isReceiving = new FunctionCall(greaterThan, new ThresholdOperand(1),  Zero());
-            FunctionCall twoOrMoreSignals = new FunctionCall(greaterThan, new ThresholdOperand(1),  new IntOperand(1));
+            FunctionCall isReceiving = new FunctionCall(greaterThan, new ThresholdOperand(1), Zero());
+            FunctionCall twoOrMoreSignals = new FunctionCall(greaterThan, new ThresholdOperand(1), new IntOperand(1));
             FunctionCall lessThanTwoSignals = new FunctionCall(Operator.LessThan, new ThresholdOperand(1), new IntOperand(2));
 
             // setup agent types.
@@ -98,7 +94,7 @@ namespace Crystalarium.Main
             t.Rules.Add(tr);
 
             tr.Requirements = ReceivingOnSide(Direction.up);
-       
+
             tr.Transformations.Add(new SignalTransformation(1, down, left, right));
 
 
@@ -107,7 +103,7 @@ namespace Crystalarium.Main
             t.Rules.Add(tr);
 
             tr.Requirements = ReceivingOnSide(Direction.right);
-           
+
             tr.Transformations.Add(new SignalTransformation(1, down, left, up));
 
 
@@ -144,7 +140,7 @@ namespace Crystalarium.Main
             tr = new TransformationRule();
             t.Rules.Add(tr);
             tr.Requirements = new FunctionCall(greaterThan, new PortValueOperand(down), Zero());
-            tr.Transformations.Add(new SignalTransformation(1, left));  
+            tr.Transformations.Add(new SignalTransformation(1, left));
 
             tr = new TransformationRule();
             t.Rules.Add(tr);
@@ -164,7 +160,7 @@ namespace Crystalarium.Main
             tr = new TransformationRule();
             t.Rules.Add(tr);
 
-           
+
 
             // down
             tr.Requirements = new FunctionCall
@@ -181,7 +177,7 @@ namespace Crystalarium.Main
             );
 
             // transmit 
-            tr.Transformations.Add(new SignalTransformation(1,  down));
+            tr.Transformations.Add(new SignalTransformation(1, down));
 
             // Up
             tr = new TransformationRule();
@@ -194,12 +190,12 @@ namespace Crystalarium.Main
                 (
                     xor,
                     new FunctionCall(greaterThan, new PortValueOperand(left), Zero()),
-                   
+
                     new FunctionCall(greaterThan, new PortValueOperand(right), Zero())
                 ),
-               
+
                 new FunctionCall(greaterThan, new PortValueOperand(down), Zero())
-                
+
             );
 
             // transmit 
@@ -208,7 +204,7 @@ namespace Crystalarium.Main
 
             // ############# CHANNEL ####################
             t = CrystalRules.CreateType("channel", new Point(1, 1));
-            
+
 
             // if we are reciving a particular signal, follow through.
             tr = new TransformationRule();
@@ -252,24 +248,24 @@ namespace Crystalarium.Main
                 (
                     and,
                     new FunctionCall(equals, new PortValueOperand(left), Zero()),
-                  
+
                     new FunctionCall(equals, new PortValueOperand(right), Zero())
                 ),
-                
+
                 new FunctionCall(equals, new PortValueOperand(down), Zero())
             );
 
 
             // transmit on all sides
-            t.Rules[0].Transformations.Add(new SignalTransformation(1,  up));
+            t.Rules[0].Transformations.Add(new SignalTransformation(1, up));
 
-          
+
 
             // ########### STOPPER ##############
             BasicRules.CreateType("stopper", new Point(1, 1));
 
             // ############ SPLITTER #################
-            t = BasicRules.CreateType("splitter", new Point(1, 1)); 
+            t = BasicRules.CreateType("splitter", new Point(1, 1));
 
             // top rule
             tr = new TransformationRule();
@@ -296,7 +292,7 @@ namespace Crystalarium.Main
 
             tr.Requirements = ReceivingOnSide(Direction.down);
 
-            tr.Transformations.Add(new SignalTransformation(1, right,  up));
+            tr.Transformations.Add(new SignalTransformation(1, right, up));
 
             #endregion
 
@@ -336,7 +332,7 @@ namespace Crystalarium.Main
                 (
                     and,
                     new FunctionCall(greaterThan, new ThresholdOperand(1), Zero()),
-                       
+
                     new FunctionCall(Operator.LessThan, new ThresholdOperand(1), new IntOperand(3))
                 );
 
@@ -346,7 +342,7 @@ namespace Crystalarium.Main
             AgentType electronTail = t;
             t.Rules.Add(new TransformationRule());
             t.Rules[0].Requirements = null;
-       
+
 
             // Electron Head
             t = WireRules.CreateType("electron head", new Point(1, 1));
@@ -357,7 +353,7 @@ namespace Crystalarium.Main
 
             t.Rules.Add(new TransformationRule());
             t.Rules[0].Requirements = null;
-         
+
 
             // describe everything's mutations
             wire.Rules[0].Transformations.Add(new MutateTransformation(electronHead));
@@ -375,7 +371,7 @@ namespace Crystalarium.Main
 
             // ###### Emitter (+) ##########################
             t = TernaryRules.CreateType("increment", new Point(1, 1));
-            
+
             t.Rules.Add(new TransformationRule());
             t.Rules[0].Requirements = new FunctionCall(Operator.LessThan, new PortValueOperand(down), new IntOperand(1));
             // transmit on all sides
@@ -422,8 +418,8 @@ namespace Crystalarium.Main
             t.Rules.Add(tr);
 
             // if there is exactly one transmission...
-            tr.Requirements = new FunctionCall(and, 
-                new FunctionCall(equals, new ThresholdOperand(0), new IntOperand(1)), 
+            tr.Requirements = new FunctionCall(and,
+                new FunctionCall(equals, new ThresholdOperand(0), new IntOperand(1)),
                 new FunctionCall(Operator.NotEqualTo, Zero(), new PortValueOperand(up)));
 
 
@@ -490,7 +486,7 @@ namespace Crystalarium.Main
             t.Rules[0].Transformations.Add(new SignalTransformation(1, up));
 
             t.Rules.Add(new TransformationRule());
-            t.Rules[1].Requirements = new FunctionCall(Operator.Or, 
+            t.Rules[1].Requirements = new FunctionCall(Operator.Or,
                 new FunctionCall(Operator.EqualTo, new IntOperand(-1), new PortValueOperand(left)),
                 new FunctionCall(Operator.EqualTo, new IntOperand(-1), new PortValueOperand(right)));
 
@@ -582,8 +578,8 @@ namespace Crystalarium.Main
 
             // beams
             beams.SignalConfig.SignalTexture = Textures.pixel;
-            beams.SignalConfig.Colors =new( new Gradient.ColorStop(new Color(240, 240, 150), 1));
-           
+            beams.SignalConfig.Colors = new(new Gradient.ColorStop(new Color(240, 240, 150), 1));
+
 
             // chunks
             beams.ChunkConfig.ChunkBackground = Textures.chunkGrid;
@@ -701,7 +697,7 @@ namespace Crystalarium.Main
             wire.ChunkConfig.ChunkBackground = Textures.altChunkGrid;
             #endregion
 
-           
+
 
         }
 
@@ -771,7 +767,7 @@ namespace Crystalarium.Main
 
             // bright
             conf = new AgentViewConfig(baseConfig, BasicRules.GetAgentType("not gate"));
-            conf.Color = new Color(220,70,70);
+            conf.Color = new Color(220, 70, 70);
             basic.AgentConfigs.Add(conf);
 
             // dark 

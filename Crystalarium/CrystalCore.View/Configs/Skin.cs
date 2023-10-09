@@ -2,9 +2,6 @@
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.View.Configs
 {
@@ -24,9 +21,9 @@ namespace CrystalCore.View.Configs
         // Settings specific to the gridview itself belong here, such as border and background textures.
         private Texture2D _gridViewBG;
         private Color _gridViewBGColor;
-    
-       
-            
+
+
+
 
 
 
@@ -37,14 +34,14 @@ namespace CrystalCore.View.Configs
 
         public ChunkViewConfig ChunkConfig
         {
-            get 
+            get
             {
-                return _chunkConfig; 
-                
+                return _chunkConfig;
+
             }
-            set 
+            set
             {
-                if (!Initialized){ _chunkConfig = value; return; }
+                if (!Initialized) { _chunkConfig = value; return; }
                 throw new InvalidOperationException("Cannot access skin configs after initialization.");
             }
         }
@@ -52,10 +49,10 @@ namespace CrystalCore.View.Configs
         public SignalViewConfig SignalConfig
         {
             get
-            {  
+            {
                 // allowing access does risk users changing settings, but the beamconfigs will not allow this once they are initialized.
-                return _beamConfig; 
-                
+                return _beamConfig;
+
             }
             set
             {
@@ -63,19 +60,19 @@ namespace CrystalCore.View.Configs
                 throw new InvalidOperationException("Cannot access skin configs after initialization.");
             }
         }
-        
+
         public List<AgentViewConfig> AgentConfigs
         {
             get { return _agentConfigs; }
-    
-           
+
+
         }
-        
+
 
         public Texture2D GridViewBG
         {
             get => _gridViewBG;
-            set 
+            set
             {
                 if (!Initialized) { _gridViewBG = value; return; }
                 throw new InvalidOperationException("Cannot access skin configs after initialization.");
@@ -93,7 +90,7 @@ namespace CrystalCore.View.Configs
         }
 
 
-     
+
 
 
         public Skin(Ruleset rs, SkinSet parent) : base()
@@ -101,16 +98,16 @@ namespace CrystalCore.View.Configs
             this._ruleset = rs;
             this._parent = parent;
 
-            if(parent.GetSkin(rs)!= null)
+            if (parent.GetSkin(rs) != null)
             {
-                throw new InvalidOperationException("Skinset '"+parent.Name+"' already contains a skin for ruleset '"+rs.Name+"'. It cannot contain multiple.");
+                throw new InvalidOperationException("Skinset '" + parent.Name + "' already contains a skin for ruleset '" + rs.Name + "'. It cannot contain multiple.");
             }
             parent.Skins.Add(this);
-           
+
             _agentConfigs = new List<AgentViewConfig>();
 
             //background
-            _gridViewBG= null;
+            _gridViewBG = null;
             _gridViewBGColor = Color.White;
 
             _beamConfig = new SignalViewConfig();
@@ -121,14 +118,14 @@ namespace CrystalCore.View.Configs
 
         internal AgentViewConfig GetAgentViewConfig(AgentType type)
         {
-            if(!Initialized)
+            if (!Initialized)
             {
                 throw new InvalidOperationException("This method of Skin cannot be used until the skin has been initialized. Call Engine.Initialize().");
             }
 
-            foreach(AgentViewConfig agentViewConfig in _agentConfigs)
+            foreach (AgentViewConfig agentViewConfig in _agentConfigs)
             {
-                if(agentViewConfig.AgentType==type)
+                if (agentViewConfig.AgentType == type)
                 {
                     return agentViewConfig;
                 }
@@ -163,7 +160,7 @@ namespace CrystalCore.View.Configs
             {
                 throw new InitializationFailedException("The skin rendering ruleset '" + _ruleset.Name + "' Failed to initialize:" + MiscUtil.Indent(e.Message));
             }
-          
+
             base.Initialize();
         }
 
@@ -171,40 +168,40 @@ namespace CrystalCore.View.Configs
         void InitializeAgentConfigs()
         {
             List<AgentType> typesConfigured = new List<AgentType>();
-            foreach(AgentViewConfig config in _agentConfigs)
+            foreach (AgentViewConfig config in _agentConfigs)
             {
-                if (typesConfigured.Contains( config.AgentType))
+                if (typesConfigured.Contains(config.AgentType))
                 {
-                    throw new InitializationFailedException("There are multiple AgentViewConfigs for AgentType '" + config.AgentType.Name+"'.");
+                    throw new InitializationFailedException("There are multiple AgentViewConfigs for AgentType '" + config.AgentType.Name + "'.");
                 }
 
-                if(config.AgentType == null)
+                if (config.AgentType == null)
                 {
                     throw new InitializationFailedException("An AgentViewConfig's agent type couldn't be found.");
                 }
 
-                if(_ruleset != config.AgentType.Ruleset)
+                if (_ruleset != config.AgentType.Ruleset)
                 {
-                    throw new InitializationFailedException("A config exists for an incorrect ruleset '"+ config.AgentType.Ruleset.Name + "', attempting to configure AgentType '" +
-                         config.AgentType.Name+ "'.");
+                    throw new InitializationFailedException("A config exists for an incorrect ruleset '" + config.AgentType.Ruleset.Name + "', attempting to configure AgentType '" +
+                         config.AgentType.Name + "'.");
                 }
 
                 config.Initialize();
                 typesConfigured.Add(config.AgentType);
-                
+
             }
 
             // check that all agent types have been configured.
-            foreach(AgentType type in _ruleset.AgentTypes)
+            foreach (AgentType type in _ruleset.AgentTypes)
             {
-                if(!typesConfigured.Contains(type))
+                if (!typesConfigured.Contains(type))
                 {
-                    throw new InitializationFailedException("Skin failed to include configs for AgentType '"+type.Name+"'.");
+                    throw new InitializationFailedException("Skin failed to include configs for AgentType '" + type.Name + "'.");
                 }
             }
         }
 
-     
+
 
 
 

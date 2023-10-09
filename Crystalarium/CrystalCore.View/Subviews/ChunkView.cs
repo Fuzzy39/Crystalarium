@@ -2,10 +2,6 @@
 using CrystalCore.View.Configs;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 
 namespace CrystalCore.View.Subviews
@@ -51,7 +47,7 @@ namespace CrystalCore.View.Subviews
             rend.Draw(config.ChunkBackground, RenderData.Bounds, determineColor());
 
             return true;
-                
+
         }
 
 
@@ -77,7 +73,7 @@ namespace CrystalCore.View.Subviews
             {
                 brighten(ref toReturn, 2.5);
             }
-                
+
             return toReturn;
 
         }

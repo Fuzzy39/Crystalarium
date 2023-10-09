@@ -1,21 +1,18 @@
 ﻿using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.View.Configs
 {
     public class SkinSet : InitializableObject
     {
         private List<Skin> _skins;
-        
+
         private Texture2D _viewCastOverlay; // if this is non-null, any gridview with this skin must have a non-null ViewCastTarget.
 
 
         public string Name { get; private set; }
-        
+
         public List<Skin> Skins
         {
             get { return _skins; }
@@ -38,19 +35,19 @@ namespace CrystalCore.View.Configs
         {
             _skins = new List<Skin>();
             Name = name;
-            
+
         }
 
         // Methods
         public Skin GetSkin(Ruleset rs)
         {
-            foreach(Skin skin in _skins)
+            foreach (Skin skin in _skins)
             {
-                if(skin.Ruleset == rs)
+                if (skin.Ruleset == rs)
                 {
                     return skin;
                 }
-               
+
             }
 
             return null;
@@ -78,19 +75,19 @@ namespace CrystalCore.View.Configs
                     throw new InitializationFailedException("The skinset's ViewCastOverlay property was null.");
                 }
 
-               
-                
 
-                foreach(Skin skin in _skins)
+
+
+                foreach (Skin skin in _skins)
                 {
                     skin.Initialize();
                 }
 
             }
-            catch(InitializationFailedException e)
+            catch (InitializationFailedException e)
             {
-               
-                throw new InitializationFailedException("SkinSet '"+Name+"' failed to initialize: "+MiscUtil.Indent(e.Message));
+
+                throw new InitializationFailedException("SkinSet '" + Name + "' failed to initialize: " + MiscUtil.Indent(e.Message));
             }
 
 

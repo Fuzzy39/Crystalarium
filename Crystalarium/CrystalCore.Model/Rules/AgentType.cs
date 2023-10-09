@@ -1,11 +1,7 @@
-﻿
-using CrystalCore.Model.Language;
-
+﻿using CrystalCore.Model.Rules.Transformations;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 
 namespace CrystalCore.Model.Rules
@@ -93,15 +89,15 @@ namespace CrystalCore.Model.Rules
 
                 foreach (ITransformation tf in DefaultState.Transformations)
                 {
-                    if(tf.ForrbiddenInDefaultState)
+                    if (tf.ForrbiddenInDefaultState)
                     {
                         throw new InitializationFailedException("The default state of an Agent cannot perform a '" + tf.GetType().ToString() + "'.");
                     }
                 }
 
                 DefaultState.Validate(this);
-             
-              
+
+
                 if (DefaultState.Requirements != null)
                 {
                     throw new InitializationFailedException("The default state of an AgentType may not have any requirements.");
@@ -112,8 +108,8 @@ namespace CrystalCore.Model.Rules
                 foreach (TransformationRule state in _rules)
                 {
                     state.Validate(this);
-                  
-                    
+
+
                 }
 
             }

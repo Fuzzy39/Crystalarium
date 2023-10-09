@@ -1,10 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CrystalCore.Model.Elements;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using CrystalCore.Model.Rules;
+﻿using CrystalCore.Model.Rules;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace CrystalCore.Model.Elements.Tests
 {
@@ -40,12 +37,12 @@ namespace CrystalCore.Model.Elements.Tests
             m.Reset();
 
 
-            Assert.IsTrue(m.ChunkCount==1);
-            Assert.IsTrue(m.Bounds==new Rectangle(0,0,16,16));
+            Assert.IsTrue(m.ChunkCount == 1);
+            Assert.IsTrue(m.Bounds == new Rectangle(0, 0, 16, 16));
             Assert.IsTrue(m.EntitiesWithin(m.Bounds).Count == 0);
 
         }
 
-     
+
     }
 }

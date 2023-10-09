@@ -1,15 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CrystalCore.View.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CrystalCore.Model.Rules;
-using CrystalCore.Model.Elements;
-using Microsoft.Xna.Framework;
-using CrystalCore.View.Configs;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace CrystalCore.View.Rendering.Tests
 {

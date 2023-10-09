@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace CrystalCore.Input
 {
 
-    public delegate void Action (); // what an action does.
+    public delegate void Action(); // what an action does.
 
 
     public class Control
@@ -24,7 +22,7 @@ namespace CrystalCore.Input
 
             public bool Act(string context)
             {
-                if(this.context == "" || context.Equals(this.context))
+                if (this.context == "" || context.Equals(this.context))
                 {
                     action();
                     return true;
@@ -41,7 +39,7 @@ namespace CrystalCore.Input
         private string _name; // The name of this action.
         private Keystate _keystate; // the keystate required for our actions to be triggered.
         List<ContextualAction> _actions;
-        
+
 
         internal string Name
         {
@@ -58,14 +56,14 @@ namespace CrystalCore.Input
             get => _keystate;
         }
 
-        internal Control( Controller c, string name, Keystate ks)
+        internal Control(Controller c, string name, Keystate ks)
         {
             _name = name;
             _controller = c;
             _keystate = ks;
             _actions = new List<ContextualAction>();
         }
-        
+
         // method chaining is a thing!
         // neat.
         public Control AddAction(string context, Action act)
@@ -86,7 +84,7 @@ namespace CrystalCore.Input
         /// <returns></returns>
         public Control Unbind()
         {
-            foreach(Keybind kb in _controller.Keybinds)
+            foreach (Keybind kb in _controller.Keybinds)
             {
                 if (kb.action == this)
                 {
@@ -100,9 +98,9 @@ namespace CrystalCore.Input
 
         public Keybind FirstKeybind()
         {
-            foreach(Keybind kb in _controller.Keybinds)
+            foreach (Keybind kb in _controller.Keybinds)
             {
-                if(kb.action == this)
+                if (kb.action == this)
                 {
                     return kb;
                 }
@@ -122,9 +120,9 @@ namespace CrystalCore.Input
         }
         internal void Trigger()
         {
-            foreach(ContextualAction a in _actions)
+            foreach (ContextualAction a in _actions)
             {
-                if(a.Act(controller.Context))
+                if (a.Act(controller.Context))
                 {
                     return;
                 }

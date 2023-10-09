@@ -1,9 +1,6 @@
 ﻿using CrystalCore;
-using CrystalCore.Input;
 using CrystalCore.Model.Elements;
 using CrystalCore.Model.Rules;
-using CrystalCore.Util;
-using CrystalCore.Util.Graphics;
 using CrystalCore.View;
 using CrystalCore.View.Core;
 using CrystalCore.View.Rendering;
@@ -12,7 +9,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.IO;
-using System.Runtime.Serialization;
 
 namespace Crystalarium.Main
 {
@@ -42,7 +38,7 @@ namespace Crystalarium.Main
                 // (Release)
                 // (Development)
                 // (Experimental)
-                return "Milestone " +(MAJOR+1)+" (Development) v"+MAJOR+"."+MINOR+"."+BUILD;
+                return "Milestone " + (MAJOR + 1) + " (Development) v" + MAJOR + "." + MINOR + "." + BUILD;
             }
         }
 
@@ -57,10 +53,10 @@ namespace Crystalarium.Main
         internal Map Map { get; private set; } // the world seen by the view and minimap
 
 
-            
+
         // Objects to Setup controls, rulesets, and the (horrible) UI, respectively.
         internal Actions Actions { get; private set; }
-        internal Configuration Configuration{get; private set;}
+        internal Configuration Configuration { get; private set; }
         internal CrudeUI UI { get; private set; }
 
 
@@ -75,9 +71,9 @@ namespace Crystalarium.Main
             Content.RootDirectory = "Content";
             IsMouseVisible = true; // I guess there are reasons this might be false, but it used to be false by default, which was confusing.
 
-            _graphics.PreferredBackBufferWidth = 1280;  
-            _graphics.PreferredBackBufferHeight = 720;  
-     
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+
 
 
             Window.AllowUserResizing = true;
@@ -89,7 +85,7 @@ namespace Crystalarium.Main
 
         protected override void Initialize()
         {
-            
+
 
             // create the folder for saves, if it does not exist.
             if (!Directory.Exists("Saves"))
@@ -114,7 +110,7 @@ namespace Crystalarium.Main
 
                 _graphics.ApplyChanges();
 
-               
+
             }
         }
 
@@ -129,7 +125,7 @@ namespace Crystalarium.Main
             // create the engine
             Engine = new Engine(TargetElapsedTime, GraphicsDevice);
 
-            
+
             // setup the engine's configuration.
             Configuration = new Configuration(this);
             Engine.Sim.TargetStepsPS = 10;
@@ -146,7 +142,7 @@ namespace Crystalarium.Main
             Map.OnReset += Actions.OnMapReset;
 
 
-            IBatchRenderer r = Engine.Renderer; 
+            IBatchRenderer r = Engine.Renderer;
 
             // create a couple test viewports.
             view = Engine.addView(Map, 0, 0, (int)r.Width, (int)r.Height, Configuration.DefaultSkin);
@@ -160,12 +156,12 @@ namespace Crystalarium.Main
             {
                 SetupMinimap((int)r.Width);
             }
-            
+
         }
 
         private void SetupMinimap(int width)
         {
-            minimap = Engine.addView( Map, width - 250, 0, 250, 250, Configuration.MiniMapSkin);
+            minimap = Engine.addView(Map, width - 250, 0, 250, 250, Configuration.MiniMapSkin);
 
             // setup borders
             minimap.Border.SetTextures(Textures.pixel, Textures.pixel);
@@ -214,18 +210,18 @@ namespace Crystalarium.Main
 
 
             Engine.Update(gameTime, IsActive);
-         
+
 
             base.Update(gameTime);
 
-          
+
         }
 
-    
+
 
         protected override void Draw(GameTime gameTime)
         {
-           
+
 
             // make everything a flat color.
             GraphicsDevice.Clear(new Color(70, 70, 70));
@@ -239,7 +235,7 @@ namespace Crystalarium.Main
             // wrap up.
             Engine.EndDraw();
             base.Draw(gameTime);
-     
+
         }
 
 
@@ -248,6 +244,5 @@ namespace Crystalarium.Main
     }
 
 
-   
+
 }
- 

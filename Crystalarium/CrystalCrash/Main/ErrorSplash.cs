@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace CrystalCrash.Main
 {
@@ -24,15 +21,15 @@ namespace CrystalCrash.Main
             this.sb = sb;
             i = 0f;
             string[] randomSplash = { ":(", "X(", "Straight From the Chaos Realms!", ":/", "Hmm. This is awkward.", "And once again, I make a fool of myself.",
-            "Same as it ever was. Same as it ever was.", "Did somebody forget a semicolon?", "I, Er, had a bit of an oopsie...", "And it was looking so good!","Aw, crap, this looks complicated.", 
-                "I didn't realize how unstable computers computing computers would be.", "Maybe just do this in Minecraft?", 
+            "Same as it ever was. Same as it ever was.", "Did somebody forget a semicolon?", "I, Er, had a bit of an oopsie...", "And it was looking so good!","Aw, crap, this looks complicated.",
+                "I didn't realize how unstable computers computing computers would be.", "Maybe just do this in Minecraft?",
                 "Well, at least you can relax here.", "Take a deep breath, we'll figure this out.", "Dang. Right in the beanhole.", "Breaking: Bean-Counter blames the Compiler!"
                 , "The blue crystals are the best!", "This puts the Crystal M. in Crystalarium!", "\"This is such a roblox ripoff, smh\"  - Roblox Kid", "Use this time to draw your daily picture of Squidward."
             ,"This is an Obamnamation!","Ooh, look, the screen turned gay!", "*Switches your xor gates to xnor gates.*" };
             random = new Random();
             face = randomSplash[random.Next(randomSplash.Length)];
 
-            
+
             this.errorMessage = errorMessage;
             Console.WriteLine(errorMessage);
         }
@@ -51,7 +48,7 @@ namespace CrystalCrash.Main
             // print the error message.
             sb.Begin();
             DrawString(sb, new Vector2(50, 50), face, .4f);
-            DrawString(sb, new Vector2(50,100), errorMessage, .16f);
+            DrawString(sb, new Vector2(50, 100), errorMessage, .16f);
 
             i += .005f;
 
@@ -63,7 +60,7 @@ namespace CrystalCrash.Main
 
         private void DrawString(SpriteBatch sb, Vector2 pos, string s, float scale)
         {
-           // Textures.Consolas.Draw(sb, s, scale, pos, Color.White);
+            // Textures.Consolas.Draw(sb, s, scale, pos, Color.White);
             sb.DrawString(CrashHandler.Consolas, s, pos, Color.White, 0f, new Vector2(), scale, SpriteEffects.None, 0f);
         }
 

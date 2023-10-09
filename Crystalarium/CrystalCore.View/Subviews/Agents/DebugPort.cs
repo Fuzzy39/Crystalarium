@@ -4,9 +4,6 @@ using CrystalCore.Util.Graphics;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.View.Subviews.Agents
 {
@@ -95,23 +92,23 @@ namespace CrystalCore.View.Subviews.Agents
 
         private Color DetermineColor()
         {
-          
-            if(Port.HasConnection == false)
+
+            if (Port.HasConnection == false)
             {
                 return Color.Magenta;
             }
 
-            if(Port.Value == 0 & Port.TransmittingValue == 0)
+            if (Port.Value == 0 & Port.TransmittingValue == 0)
             {
                 return Color.DimGray;
             }
 
-            if(Port.Value != 0 & Port.TransmittingValue != 0)
+            if (Port.Value != 0 & Port.TransmittingValue != 0)
             {
                 return Color.Purple;
             }
 
-            if(Port.Value!= 0)
+            if (Port.Value != 0)
             {
                 return Color.Blue;
             }

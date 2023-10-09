@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.Model.Language
 {
@@ -22,18 +20,18 @@ namespace CrystalCore.Model.Language
     }
     public static class OperatorExtensions
     {
-      
+
         internal static Token Operate(this Operator op, Token a, Token b)
         {
 
-            if (!IsValid(op, a.Type, b.Type))
+            if (!op.IsValid(a.Type, b.Type))
             {
                 throw new InvalidOperationException("Invalid operation. How did this happen?");
             }
 
             return op switch
             {
-                Operator.EqualTo => new Token(TokenType.boolean, a.Value.Equals( b.Value)),
+                Operator.EqualTo => new Token(TokenType.boolean, a.Value.Equals(b.Value)),
                 Operator.NotEqualTo => new Token(TokenType.boolean, !a.Value.Equals(b.Value)),
 
                 Operator.GreaterThan => new Token(TokenType.boolean, (int)a.Value > (int)b.Value),
@@ -68,7 +66,7 @@ namespace CrystalCore.Model.Language
 
             if (a != b)
             {
-              
+
                 return false;
             }
 
@@ -82,12 +80,12 @@ namespace CrystalCore.Model.Language
                 return false;
             }
 
-            if (op == Operator.GreaterThan || op == Operator.LessThan) 
+            if (op == Operator.GreaterThan || op == Operator.LessThan)
             {
                 return true;
             }
 
-         
+
             return false;
         }
 

@@ -1,15 +1,11 @@
-﻿using CrystalCore.Model.Objects;
-using CrystalCore.Model.Rules;
+﻿using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.View.Configs
 {
-    public class AgentViewConfig:InitializableObject
+    public class AgentViewConfig : InitializableObject
     {
 
 
@@ -24,7 +20,7 @@ namespace CrystalCore.View.Configs
         private Color _color;
 
         private float _shrinkage;// the amount of the tile, in pixels per edge (at camera scale of 100) that is left blank when this agent is rendered.
-                                  // did that make any sense? it is valid between 0 and 49. 
+                                 // did that make any sense? it is valid between 0 and 49. 
         private bool _doBackgroundShrinkage;  // whether the background is shrunken along with the primary texture.
 
 
@@ -58,7 +54,7 @@ namespace CrystalCore.View.Configs
                 }
 
 
-                _shrinkage = value; 
+                _shrinkage = value;
 
             }
         }
@@ -120,7 +116,7 @@ namespace CrystalCore.View.Configs
 
             base.Initialize();
         }
-       
+
 
     }
 }

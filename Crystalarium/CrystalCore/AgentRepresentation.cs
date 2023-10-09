@@ -3,10 +3,6 @@ using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Text;
 
 
 namespace CrystalCore
@@ -31,7 +27,7 @@ namespace CrystalCore
 
         public AgentRepresentation(Agent a, Point origin)
         {
-            this.location = a.Bounds.Location-origin;
+            this.location = a.Bounds.Location - origin;
             this.facing = a.Facing;
             this.type = a.Type;
         }
@@ -42,7 +38,7 @@ namespace CrystalCore
         {
             // this could be wrong when the direction is horizontal, because bounds arent adjusted.
             // seems like a minor issue - only effects map expansion.
-            
+
 
             m.ExpandToFit(Entity.CalculateBounds(location, type.UpwardsSize, facing));
 

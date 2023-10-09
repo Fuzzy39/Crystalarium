@@ -1,11 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.Input
 {
-   
+
 
     public enum Keystate
     {
@@ -41,7 +38,7 @@ namespace CrystalCore.Input
         // ugly code.
         internal bool KeyIsState(Button b, Keystate state)
         {
-            if((int)b>254)
+            if ((int)b > 254)
             {
                 // mouse key
                 switch (b)
@@ -49,8 +46,8 @@ namespace CrystalCore.Input
                     // ugly.
                     case Button.MouseLeft:
                         return ButtonIsState(
-                            Mouse.GetState().LeftButton, 
-                            prevMouseState.LeftButton, 
+                            Mouse.GetState().LeftButton,
+                            prevMouseState.LeftButton,
                             state);
 
                     case Button.MouseRight:
@@ -73,7 +70,7 @@ namespace CrystalCore.Input
             // keyboard key
 
             ButtonState current;
-            if( Keyboard.GetState().IsKeyDown( (Keys)(int)b ) )
+            if (Keyboard.GetState().IsKeyDown((Keys)(int)b))
             {
                 current = ButtonState.Pressed;
             }

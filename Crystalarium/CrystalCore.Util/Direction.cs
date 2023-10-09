@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Util
 {
@@ -38,22 +35,22 @@ namespace CrystalCore.Util
         {
             rad = MathHelper.WrapAngle(rad);
 
-            if(rad< -Math.PI * .75f)
+            if (rad < -Math.PI * .75f)
             {
                 return Direction.left;
             }
 
-            if(rad < -Math.PI * .25f)
+            if (rad < -Math.PI * .25f)
             {
                 return Direction.up;
             }
 
-            if(rad < Math.PI * .25f)
+            if (rad < Math.PI * .25f)
             {
                 return Direction.right;
             }
 
-            if(rad < Math.PI *.75f)
+            if (rad < Math.PI * .75f)
             {
                 return Direction.down;
             }
@@ -62,7 +59,7 @@ namespace CrystalCore.Util
         }
 
 
-       
+
 
         public static bool IsVertical(this Direction d)
         {
@@ -83,7 +80,7 @@ namespace CrystalCore.Util
         public static bool IsPositive(this Direction d)
         {
             return d == Direction.right || d == Direction.down;
-           
+
         }
 
         /// <summary>
@@ -149,7 +146,7 @@ namespace CrystalCore.Util
         {
 
             return d.ToCompassPoint().ToRadians();
-         
+
         }
 
         public static Direction Rotate(this Direction d, RotationalDirection r)
@@ -198,23 +195,23 @@ namespace CrystalCore.Util
         public static CompassPoint Rotate(this CompassPoint cp, RotationalDirection r)
         {
             int toReturn = (int)cp;
-            if(r == RotationalDirection.cw)
+            if (r == RotationalDirection.cw)
             {
                 toReturn++;
                 if (toReturn >= Enum.GetNames(typeof(CompassPoint)).Length)
-                { 
-                    toReturn = 0; 
+                {
+                    toReturn = 0;
                 }
 
                 return (CompassPoint)toReturn;
 
-               
+
             }
 
             toReturn--;
             if (toReturn < 0)
             {
-                toReturn = Enum.GetNames(typeof(CompassPoint)).Length-1;
+                toReturn = Enum.GetNames(typeof(CompassPoint)).Length - 1;
             }
 
             return (CompassPoint)toReturn;
@@ -315,7 +312,7 @@ namespace CrystalCore.Util
             // by golly, this is wizardry, ain't it?
             // even CompassPoints are Orthagonal, odds are diagonal.
             return ((int)cp) % 2 != 0;
-      
+
         }
 
         /// <summary>
@@ -325,9 +322,9 @@ namespace CrystalCore.Util
         /// <returns></returns>
         public static float ToRadians(this CompassPoint cp)
         {
-            float toReturn = -MathF.PI/2f;
+            float toReturn = -MathF.PI / 2f;
 
-            foreach( int i in Enum.GetValues<CompassPoint>() )
+            foreach (int i in Enum.GetValues<CompassPoint>())
             {
                 CompassPoint point = (CompassPoint)i;
 
@@ -343,6 +340,6 @@ namespace CrystalCore.Util
         }
     }
 
- 
+
 
 }

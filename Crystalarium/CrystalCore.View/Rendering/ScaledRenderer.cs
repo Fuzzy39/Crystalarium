@@ -2,11 +2,6 @@
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static System.MathF;
 
 namespace CrystalCore.View.Rendering
@@ -37,7 +32,7 @@ namespace CrystalCore.View.Rendering
         {
             // I somehow have a hunch that this math won't work right the first time...
 
-            if(hasTarget)
+            if (hasTarget)
             {
                 base.Draw(texture, position, sourceRect, color);
                 return;
@@ -77,7 +72,7 @@ namespace CrystalCore.View.Rendering
 
         public override void DrawString(FontFamily font, string text, Vector2 position, float height, Color color)
         {
-            if(hasTarget)
+            if (hasTarget)
             {
                 base.DrawString(font, text, position, height, color);
                 return;
@@ -93,11 +88,11 @@ namespace CrystalCore.View.Rendering
         // with this, units get screwed up so that when the target is drawn, real pixels are treated as virtual pixels, which means the image is the wrong size on screen.
         // without, units are correct, but the target's texture is in virtual pixels rather than real ones, which could make the image blurry.
 
-      /*  public override RenderTarget2D CreateTarget(Point size) 
-        {
-            
-            return base.CreateTarget(ToRealResolution(size.ToVector2()).ToPoint());
-        }*/
+        /*  public override RenderTarget2D CreateTarget(Point size) 
+          {
+
+              return base.CreateTarget(ToRealResolution(size.ToVector2()).ToPoint());
+          }*/
 
         public Vector2 ToVirtualResolution(Vector2 realRes)
         {

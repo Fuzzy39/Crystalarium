@@ -16,7 +16,7 @@ catch (Exception e) when (e is InitializationFailedException or MapLoadException
 
     // initialization failure creates its own sort of 'stacktrace', so we don't need the actual thing.
     bool initFail = e is InitializationFailedException;
-    using CrashHandler crash = new (e.Message + (initFail ? "" : "\n" + e.StackTrace));
+    using CrashHandler crash = new(e.Message + (initFail ? "" : "\n" + e.StackTrace));
     crash.Run();
 }
 catch (Exception e)

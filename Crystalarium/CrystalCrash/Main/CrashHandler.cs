@@ -30,12 +30,12 @@ namespace CrystalCrash.Main
                 writer.WriteLine(errorMessage);
             }
         }
-            
+
         protected override void Initialize()
         {
-            
-            _graphics.PreferredBackBufferWidth = 1280;  
-            _graphics.PreferredBackBufferHeight = 720;   
+
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -43,7 +43,7 @@ namespace CrystalCrash.Main
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
 
-            
+
         }
 
         public void OnResize(object sender, EventArgs e)
@@ -78,7 +78,7 @@ namespace CrystalCrash.Main
 
         protected override void Draw(GameTime gameTime)
         {
-          
+
 
             // TODO: Add your drawing code here
             error.Draw(_graphics.GraphicsDevice);

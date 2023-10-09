@@ -2,11 +2,6 @@
 using CrystalCore.Util.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalCore.View.Core
 {
@@ -28,13 +23,13 @@ namespace CrystalCore.View.Core
         /// 
 
         public void Draw(Texture2D texture, RotatedRect position, Rectangle sourceRect, Color color);
-       
+
         public void Draw(Texture2D texture, RotatedRect position, Color color)
         {
             Draw(texture, position, new(new(), new(texture.Width, texture.Height)), color);
         }
 
-                
+
         public void Draw(Texture2D texture, RectangleF position, Color color)
         {
             Draw(texture, new RotatedRect(position.Location, position.Size, 0, new(0)), color);
@@ -64,7 +59,7 @@ namespace CrystalCore.View.Core
         /// <param name="height">The height of a line of text.</param>
         /// <param name="color"></param>
         /// 
-        public void DrawString(FontFamily font, string text, Vector2 position, float height, Color color );
+        public void DrawString(FontFamily font, string text, Vector2 position, float height, Color color);
 
         public void DrawString(FontFamily font, string text, Point position, float height, Color color)
         {

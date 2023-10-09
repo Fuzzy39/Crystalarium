@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.View.Core
 {
@@ -104,7 +101,7 @@ namespace CrystalCore.View.Core
         {
 
             rend.Draw(_sideTexture, new Rectangle(pos, size), _color);
-           
+
         }
 
         private void drawCorners(IRenderer rend)

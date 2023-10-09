@@ -1,9 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalCore.Util.Graphics
 {
@@ -20,9 +15,9 @@ namespace CrystalCore.Util.Graphics
         /// <summary>
         /// the value of the first color stop
         /// </summary>
-        public float MinValue 
+        public float MinValue
         {
-            get 
+            get
             {
                 return colors[0].Value;
             }
@@ -36,12 +31,12 @@ namespace CrystalCore.Util.Graphics
             }
         }
 
-        public Gradient(params ColorStop[] colors) 
+        public Gradient(params ColorStop[] colors)
         {
 
-           this.colors =  new List<ColorStop>();
-           
-            foreach(ColorStop color in colors)
+            this.colors = new List<ColorStop>();
+
+            foreach (ColorStop color in colors)
             {
                 AddColorStop(color);
             }
@@ -50,11 +45,11 @@ namespace CrystalCore.Util.Graphics
 
         public void AddColorStop(ColorStop toAdd)
         {
-            foreach(ColorStop color in colors)
+            foreach (ColorStop color in colors)
             {
-                if(color.Value == toAdd.Value)
+                if (color.Value == toAdd.Value)
                 {
-                    throw new InvalidOperationException("May not add ColorStop: "+toAdd.ToString()+". ColorStops may not have the same value in a gradient.");
+                    throw new InvalidOperationException("May not add ColorStop: " + toAdd.ToString() + ". ColorStops may not have the same value in a gradient.");
                 }
             }
 
@@ -64,12 +59,12 @@ namespace CrystalCore.Util.Graphics
 
         public Color getColor(float value)
         {
-            if(value<=MinValue)
+            if (value <= MinValue)
             {
                 return colors.First().Color;
             }
 
-            if(value>=MaxValue)
+            if (value >= MaxValue)
             {
                 return colors.Last().Color;
             }
@@ -78,24 +73,24 @@ namespace CrystalCore.Util.Graphics
 
             int i = 0;
 
-            for(; i<colors.Count-1; i++) 
-            { 
-                if(value == colors[i].Value)
+            for (; i < colors.Count - 1; i++)
+            {
+                if (value == colors[i].Value)
                 {
                     return colors[i].Color;
                 }
 
-                if(value < colors[i+1].Value)
+                if (value < colors[i + 1].Value)
                 {
-                    
+
                     break;
                 }
             }
 
             // i and i+1 represents the index of the colors we need to blend
-            
+
             float lerpFactor = (value - colors[i].Value) / (colors[i + 1].Value - colors[i].Value);
-            
+
             return LerpColor(colors[i].Color, colors[i + 1].Color, lerpFactor);
 
 
@@ -108,7 +103,7 @@ namespace CrystalCore.Util.Graphics
         {
 
             int red = (int)MathF.Round(MathHelper.Lerp(one.R, two.R, amount));
-            int blue =(int)MathF.Round( MathHelper.Lerp(one.B, two.B, amount));
+            int blue = (int)MathF.Round(MathHelper.Lerp(one.B, two.B, amount));
             int green = (int)MathF.Round(MathHelper.Lerp(one.G, two.G, amount));
             int alpha = (int)MathF.Round(MathHelper.Lerp(one.A, two.A, amount));
 
@@ -125,7 +120,7 @@ namespace CrystalCore.Util.Graphics
 
             public Color Color
             {
-                get { return color;}
+                get { return color; }
                 set { color = value; }
             }
 

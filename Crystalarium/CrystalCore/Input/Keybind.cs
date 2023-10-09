@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace CrystalCore.Input
 {
@@ -29,7 +27,7 @@ namespace CrystalCore.Input
 
         public bool DisableOnSuperset { get; set; }
 
-   
+
 
         // properites
         public List<Button> buttons
@@ -41,10 +39,10 @@ namespace CrystalCore.Input
         public Keystate Trigger
         {
             get => _action.keystate;
-          
+
         }
 
-      
+
 
 
         internal Control action
@@ -73,9 +71,9 @@ namespace CrystalCore.Input
                     return false;
                 }
 
-                foreach(Keybind kb in supersets)
+                foreach (Keybind kb in supersets)
                 {
-                    if(kb.supersets.Contains(this))
+                    if (kb.supersets.Contains(this))
                     {
                         return true;
                     }
@@ -92,7 +90,7 @@ namespace CrystalCore.Input
             _controller = c;
             // and the action
             _action = control;
-            if(_action == null)
+            if (_action == null)
             {
                 throw new ArgumentException("Unkown Action '" + action + "'.");
             }
@@ -108,39 +106,39 @@ namespace CrystalCore.Input
             supersets = new List<Keybind>();
 
             // don't forget to set the controller!
-         
-           // c.AddKeybind(this); // also sets our supersets
+
+            // c.AddKeybind(this); // also sets our supersets
 
             DisableOnSuperset = true;
 
         }
 
-        
+
 
 
         internal void UpdateSupersets()
         {
             supersets.Clear();
-            if(!DisableOnSuperset)
+            if (!DisableOnSuperset)
             {
                 return;
             }
 
 
-            foreach(Keybind k in _controller.Keybinds)
+            foreach (Keybind k in _controller.Keybinds)
             {
-                if(k==this)
+                if (k == this)
                 {
                     continue;
                 }
 
-                if(isSuperset(k))
+                if (isSuperset(k))
                 {
                     supersets.Add(k);
                 }
             }
 
-           
+
         }
 
 
@@ -148,14 +146,14 @@ namespace CrystalCore.Input
         private bool isSuperset(Keybind k)
         {
 
-            if(k.Trigger != Trigger)
+            if (k.Trigger != Trigger)
             {
                 return false;
             }
 
-            foreach(Button b in _buttons)
+            foreach (Button b in _buttons)
             {
-                if(!k.buttons.Contains(b))
+                if (!k.buttons.Contains(b))
                 {
                     return false;
                 }
@@ -173,11 +171,11 @@ namespace CrystalCore.Input
         internal void Update(InputHandler ih)
         {
             // we need to check if the condition of this keybind is met, and if it is trigger the action
-            if(Active(ih))
+            if (Active(ih))
             {
-               
+
                 action.Trigger();
-                
+
             }
 
             triggeredLastUpdate = ButtonsDown(ih);
@@ -195,11 +193,11 @@ namespace CrystalCore.Input
 
             // we need to check the context, as well.
 
-         
 
-            if(!DisableOnSuperset)
+
+            if (!DisableOnSuperset)
             {
-               
+
                 return true;
             }
 
@@ -217,7 +215,7 @@ namespace CrystalCore.Input
 
             //  we are good to go.
             return true;
-            
+
 
         }
 
@@ -231,7 +229,7 @@ namespace CrystalCore.Input
 
             switch (Trigger)
             {
-                
+
                 case Keystate.Down:
                     return down;
                 case Keystate.Up:
@@ -248,13 +246,13 @@ namespace CrystalCore.Input
 
             return false;
 
-            
+
         }
 
 
         internal bool ButtonsDown(InputHandler ih)
         {
-            
+
 
             foreach (Button b in _buttons)
             {
@@ -277,11 +275,11 @@ namespace CrystalCore.Input
         public override string ToString()
         {
             string buttons = "";
-            foreach( Button b in _buttons)
+            foreach (Button b in _buttons)
             {
-                buttons +=", " + b; 
+                buttons += ", " + b;
             }
-            return "Keybind { \"" + action.Name + "\" " +  buttons+ " }";
+            return "Keybind { \"" + action.Name + "\" " + buttons + " }";
         }
 
         public string KeysAsString()
@@ -289,7 +287,7 @@ namespace CrystalCore.Input
             string s = "";
             foreach (Button b in _buttons)
             {
-                s += b+" + ";
+                s += b + " + ";
             }
             return s.Substring(0, s.Length - 3);
         }
