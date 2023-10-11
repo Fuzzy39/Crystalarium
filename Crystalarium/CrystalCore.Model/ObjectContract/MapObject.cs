@@ -15,7 +15,7 @@ namespace CrystalCore.Model.ObjectContract
         public Entity Entity { get; }
 
 
-        // the chunk that the top left corner of this 
+        // the chunk that the top left corner of this MapObject is in.
         public Chunk Parent { get; }
 
 

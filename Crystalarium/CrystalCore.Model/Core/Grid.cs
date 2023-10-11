@@ -1,31 +1,35 @@
-﻿using CrystalCore.Util;
+﻿using CrystalCore.Model.ObjectContract;
 using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace CrystalCore.Model.Core
 {
-    public class Grid<T>
+    internal class Grid
     {
-        private List<List<T>> _elements; // a 2d array where the outer array represents rows and the inner array represents columns. [x][y]
 
+        private List<List<Chunk>> _chunks;
 
         private Point _size; // the size, in chunks, of the grid.
-        private Point _origin; // the chunk coords where the chunk array, chunks, starts.
+        private Point _origin;
 
 
 
-
-
-        public List<List<T>> Elements
+        public List<List<Chunk>> Chunks
         {
-            get => _elements;
+            get => _chunks;
         }
 
-        public List<T> ElementList
+        public List<Chunk> ChunkList
         {
             get
             {
-                List<T> ToReturn = new List<T>();
-                foreach (List<T> elements in _elements)
+                List<Chunk> ToReturn = new List<Chunk>();
+                foreach (List<Chunk> elements in _chunks)
                 {
                     ToReturn.AddRange(elements);
 
@@ -33,7 +37,6 @@ namespace CrystalCore.Model.Core
                 return ToReturn;
             }
         }
-
 
 
         public Point Size
@@ -46,9 +49,7 @@ namespace CrystalCore.Model.Core
             get => _origin;
         }
 
-
-
-        public Grid(T firstElement)
+        public OldGrid(Chunk initial)
         {
             // initialize the chunk array.
             _elements = new List<List<T>>();
@@ -60,81 +61,6 @@ namespace CrystalCore.Model.Core
             // set the chunk origin.
             _origin = new Point(0, 0);
             _size = new Point(1, 1);
-        }
-
-        public void Clear()
-        {
-            _elements.Clear();
-        }
-
-        public void AddElements(T[] elements, Direction d)
-        {
-            if (d.IsHorizontal())
-            {
-                if (elements.Length != _elements[0].Count)
-                {
-                    throw new ArgumentException("The number of elements added must be equal to the height of the array when adding on the " + d + " side.");
-                }
-                // do the thing
-                AddHorizontal(elements, d);
-                return;
-            }
-
-            if (elements.Length != _elements.Count)
-            {
-                throw new ArgumentException("The number of elements added must be equal to the height of the array when adding on the " + d + " side.");
-            }
-
-            // do the signifigantly more annoying thing
-            AddVertical(elements, d);
-        }
-
-        private void AddHorizontal(T[] elements, Direction d)
-        {
-            // we are adding a new list<Chunk> to _chunks.
-            List<T> newList = new List<T>(elements);
-            _size.X++;
-
-            if (d == Direction.left)
-            {
-                _elements.Insert(0, newList);
-                _origin.X--;
-            }
-            else
-            {
-                _elements.Add(newList);
-            }
-
-        }
-
-
-        private void AddVertical(T[] elements, Direction d)
-        {
-            // we are adding a new Chunk to every list<Chunk> in _chunk.
-            _size.Y++;
-
-
-            if (d == Direction.up)
-                _origin.Y--;
-
-            // create the new chunks.
-            for (int x = 0; x < _elements.Count; x++)
-            {
-
-
-                if (d == Direction.up)
-                {
-
-                    _elements[x].Insert(0, elements[x]);
-                }
-                else
-                {
-
-                    _elements[x].Add(elements[x]);
-
-                }
-
-            }
         }
     }
 }

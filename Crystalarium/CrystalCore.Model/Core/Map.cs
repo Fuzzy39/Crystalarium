@@ -15,14 +15,8 @@ namespace CrystalCore.Model.Core
     {
 
 
-        private SimulationManager sim;
 
-
-        private List<Agent> _agents; // the amount of agents in this grid.
-        private int _connections;
-        private int _chunks;
-
-        public Grid<Chunk> grid;
+        public OldGrid<Chunk> grid;
 
 
 
@@ -36,11 +30,6 @@ namespace CrystalCore.Model.Core
         public event EventHandler OnMapObjectDestroyed;
 
 
-        public int AgentCount { get => _agents.Count; }
-
-        public int ConnectionCount { get => _connections; }
-
-        public int ChunkCount { get => _chunks; }
 
 
 
@@ -52,9 +41,6 @@ namespace CrystalCore.Model.Core
                 _ruleset = value;
 
                 Reset();
-
-
-
 
             }
         }
@@ -88,29 +74,21 @@ namespace CrystalCore.Model.Core
 
         }
 
-        public Map(SimulationManager sim, Ruleset r)
+        public Map( Ruleset r)
         {
             if (r == null)
             {
                 throw new ArgumentNullException("Null Ruleset not viable.");
             }
             _ruleset = r;
-            this.sim = sim;
-            sim.addGrid(this);
 
-            _agents = new List<Agent>();
+            
 
             Reset();
 
 
 
 
-        }
-
-
-        public void Destroy()
-        {
-            sim.removeGrid(this);
         }
 
 
@@ -136,13 +114,11 @@ namespace CrystalCore.Model.Core
             }
 
 
-            grid = new Grid<Chunk>(new Chunk(this, new Point(0, 0)));
+            grid = new OldGrid<Chunk>(new Chunk(this, new Point(0, 0)));
             this.ExpandToFit(minimumBounds);
 
 
-            // could be redundant?
-            _agents.Clear();
-            _connections = 0;
+           
 
             if (OnReset != null)
             {
@@ -212,57 +188,10 @@ namespace CrystalCore.Model.Core
 
             // Remove a grid object from it's appropriate containers.
             OnMapObjectDestroyed?.Invoke(o, new());
-            if (o is Agent)
-            {
-                _agents.Remove((Agent)o);
-                return;
-            }
-
-            if (o is Connection)
-            {
-                _connections--;
-                return;
-            }
-
-            if (o is Chunk)
-            {
-                _chunks--;
-                return;
-            }
-
-
-
-
+       
         }
 
-        internal void OnObjectCreated(object o, EventArgs e)
-        {
-
-
-
-            if (o is Agent)
-            {
-                _agents.Add((Agent)o);
-                return;
-            }
-
-            if (o is Connection)
-            {
-                _connections++;
-                return;
-            }
-
-            if (o is Chunk)
-            {
-                _chunks++;
-                return;
-            }
-
-
-
-        }
-
-
+     
         internal void OnObjectReady(object o, EventArgs e)
         {
             OnMapObjectReady?.Invoke(o, new());
@@ -273,32 +202,32 @@ namespace CrystalCore.Model.Core
         /// <summary>
         /// Perform a simulation step for this grid.
         /// </summary>
-        internal void Step()
-        {
+        //internal void Step()
+        //{
 
 
-            // have each agent determine the state they will be in next step based on the state of the grid last step.
-            foreach (Agent a in _agents)
-            {
-                a.CalculateNextStep();
-            }
+        //    // have each agent determine the state they will be in next step based on the state of the grid last step.
+        //    foreach (Agent a in _agents)
+        //    {
+        //        a.CalculateNextStep();
+        //    }
 
-            // have each agent perform it's next step, no longer needing to look at the state of the grid.
-            for (int i = 0; i < _agents.Count; i++)
-            {
-                Agent a = _agents[i];
+        //    // have each agent perform it's next step, no longer needing to look at the state of the grid.
+        //    for (int i = 0; i < _agents.Count; i++)
+        //    {
+        //        Agent a = _agents[i];
 
-                a.Update();
+        //        a.Update();
 
-                // transformations applied to agents can destroy them.
-                if (a.Destroyed)
-                {
-                    i--;
-                }
+        //        // transformations applied to agents can destroy them.
+        //        if (a.Destroyed)
+        //        {
+        //            i--;
+        //        }
 
 
-            }
-        }
+        //    }
+        //}
 
     }
 }
