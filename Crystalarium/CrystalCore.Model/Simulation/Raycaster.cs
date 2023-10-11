@@ -14,9 +14,9 @@ namespace CrystalCore.Model.Simulation
         private CompassPoint facing;
         private Connection current;
         private int currentLength;
-        private Map Map;
+        private DefaultMap Map;
 
-        internal Raycaster(Port port, Map map)
+        internal Raycaster(Port port, DefaultMap map)
         {
             this.port = port;
             Map = map;

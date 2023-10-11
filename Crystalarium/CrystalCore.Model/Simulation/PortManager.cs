@@ -59,9 +59,9 @@ namespace CrystalCore.Model.Simulation
             List<Connection> intersecting = new List<Connection>();
             Rectangle bounds = parent.Bounds;
             bounds.Inflate(1, 1);
-            List<Chunk> chunks = parent.Map.ChunksInBounds(Rectangle.Intersect(bounds, parent.Map.Bounds));
+            List<OldChunk> chunks = parent.Map.ChunksInBounds(Rectangle.Intersect(bounds, parent.Map.Bounds));
 
-            foreach (Chunk ch in chunks)
+            foreach (OldChunk ch in chunks)
             {
                 foreach (ChunkMember chm in ch.MembersWithin)
                 {

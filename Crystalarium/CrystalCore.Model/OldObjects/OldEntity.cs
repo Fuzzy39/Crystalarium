@@ -8,7 +8,7 @@ namespace CrystalCore.Model.DefaultObjects
     /// An Entity is a ChunkMember that faces a directaion.
     /// An Entity's bounds may not coincide with those of another entity. They are 'solid objects' on the grid.
     /// </summary>
-    public abstract class Entity : ChunkMember
+    public abstract class OldEntity : ChunkMember
     {
 
         private Direction _facing; // the direction this entity is facing.
@@ -38,7 +38,7 @@ namespace CrystalCore.Model.DefaultObjects
         }
 
         // the disgusting line there properly rotates the entitiy.
-        public Entity(Map g, Point location, Point upwardsSize, Direction facing) : base(g, CalculateBounds(location, upwardsSize, facing))
+        public OldEntity(DefaultMap g, Point location, Point upwardsSize, Direction facing) : base(g, CalculateBounds(location, upwardsSize, facing))
         {
             _facing = facing;
 
@@ -70,7 +70,7 @@ namespace CrystalCore.Model.DefaultObjects
         }
 
 
-        public static bool IsValidLocation(Map g, Rectangle bounds)
+        public static bool IsValidLocation(DefaultMap g, Rectangle bounds)
         {
 
             if (g.Bounds.Contains(bounds))
@@ -86,7 +86,7 @@ namespace CrystalCore.Model.DefaultObjects
         }
 
 
-        public static bool IsValidLocation(Map g, Point location, Point upwardsSize, Direction facing)
+        public static bool IsValidLocation(DefaultMap g, Point location, Point upwardsSize, Direction facing)
         {
             return IsValidLocation(g, new(location, AdjustSize(upwardsSize, facing)));
         }

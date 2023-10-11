@@ -17,8 +17,7 @@ namespace CrystalCore.Model.Core
         private Point _size; // the size, in chunks, of the grid.
         private Point _origin;
 
-
-
+       
         public List<List<Chunk>> Chunks
         {
             get => _chunks;
@@ -49,18 +48,23 @@ namespace CrystalCore.Model.Core
             get => _origin;
         }
 
-        public OldGrid(Chunk initial)
+        public Grid(DefaultMap map)
         {
-            // initialize the chunk array.
-            _elements = new List<List<T>>();
-            _elements.Add(new List<T>());
-
-            // create initial chunk.
-            _elements[0].Add(firstElement);
+            
 
             // set the chunk origin.
             _origin = new Point(0, 0);
             _size = new Point(1, 1);
+
+
+            // initialize the chunk array.
+            _chunks = new List<List<Chunk>> { new() };
+
+
+            // create initial chunk.
+            _chunks[0].Add(map.Factory.CreateChunk(map, new(0,0)));
+
+           
         }
     }
 }

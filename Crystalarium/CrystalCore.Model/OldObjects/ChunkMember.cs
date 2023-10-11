@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 namespace CrystalCore.Model.DefaultObjects
 {
     // does this need to be public? not sure.
-    public abstract class ChunkMember : MapObject
+    public abstract class ChunkMember : OldMapObject
     {
         /*
          * A Chunk Member is a GridObject that is not a chunk, and exists on top of a chunk.
@@ -12,16 +12,16 @@ namespace CrystalCore.Model.DefaultObjects
          * This is so that this member is only updated/rendered once.
          * 
          */
-        private Chunk _parentChunk; // the chunk where our position (top left corner) is.
-        private List<Chunk> _chunksWithin; // the list of chunks that intersect our boundries. this includes our parent.
+        private OldChunk _parentChunk; // the chunk where our position (top left corner) is.
+        private List<OldChunk> _chunksWithin; // the list of chunks that intersect our boundries. this includes our parent.
 
-        public Chunk Parent
+        public OldChunk Parent
         {
             get => _parentChunk;
 
         }
 
-        public List<Chunk> ChunksWithin
+        public List<OldChunk> ChunksWithin
         {
             get => _chunksWithin;
         }
@@ -44,7 +44,7 @@ namespace CrystalCore.Model.DefaultObjects
         }
 
 
-        public ChunkMember(Map g, Rectangle bounds) : base(g, bounds)
+        public ChunkMember(DefaultMap g, Rectangle bounds) : base(g, bounds)
         {
             // since this ChunkMember exists purely on the chunk grid, it cannot exist outside of it.
             if (!g.Bounds.Contains(bounds))
@@ -61,7 +61,7 @@ namespace CrystalCore.Model.DefaultObjects
 
             _chunksWithin = SetChunksWithin();
 
-            foreach (Chunk ch in _chunksWithin)
+            foreach (OldChunk ch in _chunksWithin)
             {
                 ch.MembersWithin.Add(this);
             }
@@ -69,7 +69,7 @@ namespace CrystalCore.Model.DefaultObjects
 
         }
 
-        private List<Chunk> SetChunksWithin()
+        private List<OldChunk> SetChunksWithin()
         {
             return Map.ChunksInBounds(Bounds);
         }
@@ -80,7 +80,7 @@ namespace CrystalCore.Model.DefaultObjects
             _parentChunk.Children.Remove(this);
 
 
-            foreach (Chunk ch in _chunksWithin)
+            foreach (OldChunk ch in _chunksWithin)
             {
                 ch.MembersWithin.Remove(this);
             }
@@ -99,7 +99,7 @@ namespace CrystalCore.Model.DefaultObjects
             //_parentChunk = _grid.getChunkAtCoords(Bounds.Location);
             //_parentChunk.Children.Add(this);
 
-            foreach (Chunk ch in _chunksWithin)
+            foreach (OldChunk ch in _chunksWithin)
             {
                 ch.MembersWithin.Remove(this);
             }
@@ -107,7 +107,7 @@ namespace CrystalCore.Model.DefaultObjects
             _chunksWithin.Clear();
             _chunksWithin = SetChunksWithin();
 
-            foreach (Chunk ch in _chunksWithin)
+            foreach (OldChunk ch in _chunksWithin)
             {
                 ch.MembersWithin.Add(this);
             }
@@ -117,7 +117,7 @@ namespace CrystalCore.Model.DefaultObjects
         public override string ToString()
         {
             string within = "";
-            foreach (Chunk ch in _chunksWithin)
+            foreach (OldChunk ch in _chunksWithin)
             {
                 within += ch + ", ";
             }

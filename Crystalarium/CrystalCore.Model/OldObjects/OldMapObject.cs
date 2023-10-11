@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.DefaultObjects
 {
-    abstract public class MapObject : MapComponent
+    abstract public class OldMapObject : MapComponent
     {
 
         /*
@@ -55,7 +55,7 @@ namespace CrystalCore.Model.DefaultObjects
 
 
         // constructors
-        public MapObject(Map m, Rectangle rect)
+        public OldMapObject(Map m, Rectangle rect)
         {
             if (m == null)
             {
@@ -80,11 +80,11 @@ namespace CrystalCore.Model.DefaultObjects
 
         }
 
-        public MapObject(Map m, Point pos, Point size)
+        public OldMapObject(Map m, Point pos, Point size)
           : this(m, new Rectangle(pos, size)) { }
 
 
-        public MapObject(Map m, int x, int y, int width, int height)
+        public OldMapObject(Map m, int x, int y, int width, int height)
             : this(m, new Rectangle(x, y, width, height)) { }
 
 

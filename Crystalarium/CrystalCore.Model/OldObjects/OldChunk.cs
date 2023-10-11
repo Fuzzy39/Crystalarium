@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.DefaultObjects
 {
-    public class Chunk : MapObject
+    public class OldChunk : OldMapObject
     {
         /*
          * A chunk is a unit of several tiles. together, they make up the grid.
@@ -39,7 +39,7 @@ namespace CrystalCore.Model.DefaultObjects
         }
 
 
-        internal Chunk(Map m, Point pos) : base(m, pos * new Point(SIZE), new Point(SIZE))
+        internal OldChunk(DefaultMap m, Point pos) : base(m, pos * new Point(SIZE), new Point(SIZE))
         {
             // check that this chunk does not exist over another chunk.
             if (m.grid != null)
@@ -56,7 +56,7 @@ namespace CrystalCore.Model.DefaultObjects
 
         private void CheckOverlap()
         {
-            foreach (Chunk ch in Map.grid.ElementList)
+            foreach (OldChunk ch in Map.grid.ElementList)
             {
 
                 if (ch == null)

@@ -9,7 +9,7 @@ namespace CrystalCore.Model.Simulation
     /// <summary>
     /// Agents are entities that actively participate in the simulation. It deterimines its state every stepa and acts accordingly.
     /// </summary>
-    public class Agent : Entity
+    public class Agent : OldEntity
     {
 
         private AgentType _type;
@@ -39,7 +39,7 @@ namespace CrystalCore.Model.Simulation
         }
 
         // Constructors
-        public Agent(Map g, Point location, AgentType t, Direction facing) : base(g, location, t.UpwardsSize, t.Ruleset.RotateLock ? Direction.up : facing)
+        public Agent(DefaultMap g, Point location, AgentType t, Direction facing) : base(g, location, t.UpwardsSize, t.Ruleset.RotateLock ? Direction.up : facing)
         {
 
             if (g.Ruleset != t.Ruleset)

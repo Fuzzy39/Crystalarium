@@ -17,14 +17,14 @@ namespace CrystalCore.Model.ObjectContract
         /// <summary>
         /// The Size of a chunk, in tiles.
         /// </summary>
-        public const int SIZE = 16;
+        public int Size { get; }
 
 
         public Point ChunkCoords 
         { 
             get
             {
-                return new Point(Bounds.X/SIZE, Bounds.Y/SIZE);
+                return new Point(Bounds.X/Size, Bounds.Y/Size);
             }        
         }
 
