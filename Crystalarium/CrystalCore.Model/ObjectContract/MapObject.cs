@@ -1,7 +1,4 @@
-﻿using CrystalCore.Model.Core;
-
-using System.Drawing;
-
+﻿using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.ObjectContract
 {

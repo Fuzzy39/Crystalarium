@@ -2,7 +2,7 @@
 using CrystalCore.Model.ObjectContract;
 using Microsoft.Xna.Framework;
 
-namespace CrystalCore.Model.DefaultObjects
+namespace CrystalCore.Model.OldObjects
 {
     abstract public class OldMapObject : MapComponent
     {

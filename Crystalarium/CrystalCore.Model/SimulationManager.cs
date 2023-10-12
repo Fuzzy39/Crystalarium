@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Core;
+using CrystalCore.Model.Simulation;
 using Microsoft.Xna.Framework;
 
 
@@ -178,6 +179,37 @@ namespace CrystalCore.Model
         internal void removeGrid(DefaultMap g)
         {
             _grids.Remove(g);
+        }
+
+
+        /// <summary>
+        /// Perform a simulation step for this grid.
+        /// </summary>
+        internal void Step()
+        {
+
+
+            // have each agent determine the state they will be in next step based on the state of the grid last step.
+            foreach (Agent a in _agents)
+            {
+                a.CalculateNextStep();
+            }
+
+            // have each agent perform it's next step, no longer needing to look at the state of the grid.
+            for (int i = 0; i < _agents.Count; i++)
+            {
+                Agent a = _agents[i];
+
+                a.Update();
+
+                // transformations applied to agents can destroy them.
+                if (a.Destroyed)
+                {
+                    i--;
+                }
+
+
+            }
         }
 
     }

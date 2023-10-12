@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.Core;
+﻿
 
 namespace CrystalCore.Model.ObjectContract
 {

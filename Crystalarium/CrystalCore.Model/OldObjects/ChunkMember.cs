@@ -1,7 +1,7 @@
 ﻿using CrystalCore.Model.Core;
 using Microsoft.Xna.Framework;
 
-namespace CrystalCore.Model.DefaultObjects
+namespace CrystalCore.Model.OldObjects
 {
     // does this need to be public? not sure.
     public abstract class ChunkMember : OldMapObject

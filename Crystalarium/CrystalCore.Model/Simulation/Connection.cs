@@ -1,5 +1,5 @@
 ﻿using CrystalCore.Model.Core;
-using CrystalCore.Model.DefaultObjects;
+using CrystalCore.Model.OldObjects;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 
@@ -82,7 +82,7 @@ namespace CrystalCore.Model.Simulation
 
 
 
-        public Connection(DefaultMap m, Port from, Port to, int length, CompassPoint direction)
+        public Connection(Map m, Port from, Port to, int length, CompassPoint direction)
             : base(m, GetBounds(from, to, length, direction))
         {
 

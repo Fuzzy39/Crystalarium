@@ -1,28 +1,18 @@
-﻿using CrystalCore.Model;
-using CrystalCore.Model.DefaultObjects;
-using CrystalCore.Model.Simulation;
+﻿using CrystalCore.Model.ObjectContract;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace CrystalCore.Model.Core
 {
     /// <summary>
-    /// the grid class represents a grid, a 2D plane where devices are built using various rulesets.
-    /// The Grid class manages all gridobjects on the grid.
+    /// DefaultMap represents a map made of 
     /// </summary>
-    public class DefaultMap:Map
+    public class DefaultMap : Map
     {
 
 
-        private SimulationManager sim;
 
-
-        private List<Agent> _agents; // the amount of agents in this grid.
-        private int _connections;
-        private int _chunks;
-
-        public Grid<OldChunk> grid;
+        private Grid _grid;
 
 
 
@@ -36,14 +26,6 @@ namespace CrystalCore.Model.Core
         public event EventHandler OnMapObjectDestroyed;
 
 
-        public int AgentCount { get => _agents.Count; }
-
-        public int ConnectionCount { get => _connections; }
-
-        public int ChunkCount { get => _chunks; }
-
-
-
         public Ruleset Ruleset
         {
             get => _ruleset;
@@ -53,25 +35,15 @@ namespace CrystalCore.Model.Core
 
                 Reset();
 
-
-
-
             }
         }
-
-
-
 
 
         public Rectangle Bounds
         {
             get
             {
-                return new Rectangle
-                  (grid.Origin.X * OldChunk.SIZE,
-                    grid.Origin.Y * OldChunk.SIZE,
-                    grid.Size.X * OldChunk.SIZE,
-                    grid.Size.Y * OldChunk.SIZE);
+                return new Rectangle(_grid.Origin, _grid.Size);
             }
 
         }
@@ -81,36 +53,25 @@ namespace CrystalCore.Model.Core
             get
             {
                 // the center tile coords of this grid
-                return grid.Size.ToVector2() * OldChunk.SIZE / 2f + Bounds.Location.ToVector2();
+                return _grid.Size.ToVector2() / 2f + Bounds.Location.ToVector2();
 
             }
 
 
         }
 
-        public DefaultMap(SimulationManager sim, Ruleset r)
+        public DefaultMap(Ruleset r)
         {
             if (r == null)
             {
                 throw new ArgumentNullException("Null Ruleset not viable.");
             }
             _ruleset = r;
-            this.sim = sim;
-            sim.addGrid(this);
-
-            _agents = new List<Agent>();
-
             Reset();
 
 
 
 
-        }
-
-
-        public void Destroy()
-        {
-            sim.removeGrid(this);
         }
 
 
@@ -126,23 +87,13 @@ namespace CrystalCore.Model.Core
 
 
             // reseting our grid should remove all references to any remaining mapObjects
-            if (grid != null)
-            {
-                foreach (OldChunk ch in grid.ElementList)
-                {
-                    ch.Destroy();
-                }
-
-            }
+            _grid.Destroy();
 
 
-            grid = new Grid<OldChunk>(new OldChunk(this, new Point(0, 0)));
+            _grid = new Grid(_ruleset.ComponentFactory);
             this.ExpandToFit(minimumBounds);
 
 
-            // could be redundant?
-            _agents.Clear();
-            _connections = 0;
 
             if (OnReset != null)
             {
@@ -151,55 +102,43 @@ namespace CrystalCore.Model.Core
             }
         }
 
-        public void ExpandGrid(Direction d)
+        /// <summary>
+        /// Grow the map in a particular direction.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Expand(Direction d)
         {
-            OldChunk[] toAdd;
-            Point start;
+            _grid.Expand(d);
 
-            // figure out a sensible starting point in grid space.
-            // if we switched on direction and made each one make sense, then 
-            if (d == Direction.up || d == Direction.left)
+            if (OnResize != null)
             {
-                start = grid.Elements[0][0].Coords + d.ToPoint();
+                OnResize(this, new EventArgs());
             }
-            else
-            {
-                start = grid.Origin + (grid.Size - new Point(1)) + d.ToPoint();
-            }
+        }
 
-            // get the size of the new entries.
-            if (d.IsVertical())
+        public void ExpandToFit(Rectangle rect)
+        {
+            // First: which way to expand?
+            while (rect.Y < Bounds.Y)
             {
-                // create an array!
-                toAdd = new OldChunk[grid.Size.X];
-            }
-            else
-            {
-                toAdd = new OldChunk[grid.Size.Y];
-
+                _grid.Expand(Direction.up);
             }
 
-            // calculate the direction we need to move from our starting point to generate the required chunks
-            Direction counting = d.IsVertical() ? d.Rotate(RotationalDirection.cw) : d.Rotate(RotationalDirection.ccw);
-            Point traverse = counting.ToPoint();
-
-            // make all the chunks
-            for (int i = 0; i < toAdd.Length; i++)
+            while (rect.X < Bounds.X)
             {
-
-                // calculate our distance from our start
-                Point add = new Point(i * traverse.X, i * traverse.Y);
-                Point coord = start + add;
-                // create the chunk, add it to the list.
-                toAdd[i] = new OldChunk(this, coord);
+                _grid.Expand(Direction.left);
             }
 
-            if (d == Direction.right || d == Direction.down)
+            while (rect.Right > Bounds.Right)
             {
-                Array.Reverse(toAdd);
+                _grid.Expand(Direction.right);
             }
 
-            grid.AddElements(toAdd, d);
+            while (rect.Bottom > Bounds.Bottom)
+            {
+                _grid.Expand(Direction.down);
+            }
 
             if (OnResize != null)
             {
@@ -212,56 +151,8 @@ namespace CrystalCore.Model.Core
 
             // Remove a grid object from it's appropriate containers.
             OnMapObjectDestroyed?.Invoke(o, new());
-            if (o is Agent)
-            {
-                _agents.Remove((Agent)o);
-                return;
-            }
-
-            if (o is Connection)
-            {
-                _connections--;
-                return;
-            }
-
-            if (o is OldChunk)
-            {
-                _chunks--;
-                return;
-            }
-
-
-
 
         }
-
-        internal void OnObjectCreated(object o, EventArgs e)
-        {
-
-
-
-            if (o is Agent)
-            {
-                _agents.Add((Agent)o);
-                return;
-            }
-
-            if (o is Connection)
-            {
-                _connections++;
-                return;
-            }
-
-            if (o is OldChunk)
-            {
-                _chunks++;
-                return;
-            }
-
-
-
-        }
-
 
         internal void OnObjectReady(object o, EventArgs e)
         {
@@ -270,35 +161,7 @@ namespace CrystalCore.Model.Core
 
 
 
-        /// <summary>
-        /// Perform a simulation step for this grid.
-        /// </summary>
-        internal void Step()
-        {
 
-
-            // have each agent determine the state they will be in next step based on the state of the grid last step.
-            foreach (Agent a in _agents)
-            {
-                a.CalculateNextStep();
-            }
-
-            // have each agent perform it's next step, no longer needing to look at the state of the grid.
-            for (int i = 0; i < _agents.Count; i++)
-            {
-                Agent a = _agents[i];
-
-                a.Update();
-
-                // transformations applied to agents can destroy them.
-                if (a.Destroyed)
-                {
-                    i--;
-                }
-
-
-            }
-        }
 
     }
 }

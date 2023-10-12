@@ -2,7 +2,7 @@
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 
-namespace CrystalCore.Model.DefaultObjects
+namespace CrystalCore.Model.OldObjects
 {
     /// <summary>
     /// An Entity is a ChunkMember that faces a directaion.

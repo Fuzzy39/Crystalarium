@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.ObjectContract
 {
@@ -17,14 +13,14 @@ namespace CrystalCore.Model.ObjectContract
         /// <summary>
         /// The Size of a chunk, in tiles.
         /// </summary>
-        public int Size { get; }
-
+        public const int SIZE = 16; // essentially arbitrary, other than the textures I made for chunks assume this
+            
 
         public Point ChunkCoords 
         { 
             get
             {
-                return new Point(Bounds.X/Size, Bounds.Y/Size);
+                return new Point(Bounds.X/SIZE, Bounds.Y/SIZE);
             }        
         }
 

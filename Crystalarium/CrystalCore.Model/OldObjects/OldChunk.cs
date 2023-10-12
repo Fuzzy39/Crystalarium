@@ -1,7 +1,7 @@
 ﻿using CrystalCore.Model.Core;
 using Microsoft.Xna.Framework;
 
-namespace CrystalCore.Model.DefaultObjects
+namespace CrystalCore.Model.OldObjects
 {
     public class OldChunk : OldMapObject
     {
@@ -42,7 +42,7 @@ namespace CrystalCore.Model.DefaultObjects
         internal OldChunk(DefaultMap m, Point pos) : base(m, pos * new Point(SIZE), new Point(SIZE))
         {
             // check that this chunk does not exist over another chunk.
-            if (m.grid != null)
+            if (m._grid != null)
             {
                 CheckOverlap();
             }

@@ -1,5 +1,5 @@
 ﻿using CrystalCore.Model.Core;
-using CrystalCore.Model.DefaultObjects;
+using CrystalCore.Model.OldObjects;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 
@@ -59,9 +59,9 @@ namespace CrystalCore.Model.Simulation
             List<Connection> intersecting = new List<Connection>();
             Rectangle bounds = parent.Bounds;
             bounds.Inflate(1, 1);
-            List<OldChunk> chunks = parent.Map.ChunksInBounds(Rectangle.Intersect(bounds, parent.Map.Bounds));
+            List<Chunk> chunks = parent.Map.ChunksInBounds(Rectangle.Intersect(bounds, parent.Map.Bounds));
 
-            foreach (OldChunk ch in chunks)
+            foreach (Chunk ch in chunks)
             {
                 foreach (ChunkMember chm in ch.MembersWithin)
                 {

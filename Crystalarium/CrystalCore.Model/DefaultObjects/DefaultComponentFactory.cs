@@ -11,17 +11,17 @@ namespace CrystalCore.Model.DefaultObjects
 {
     internal class DefaultComponentFactory : ComponentFactory
     {
-        public Chunk CreateChunk(Map map, Point chunkCoords)
+        public Chunk CreateChunk(Point chunkCoords)
         {
-            return new DefaultChunk(map, chunkCoords);
+            return new DefaultChunk(chunkCoords);
         }
 
-        public MapObject CreateObject(PARAMETERS_GO_HERE )
+        public MapObject CreateObject( )
         {
             throw new NotImplementedException();
         }
 
-        public MapObject CreateObjectWithCollision(PARAMETERS_GO_HERE )
+        public MapObject CreateObjectWithCollision( )
         {
             throw new NotImplementedException();
         }

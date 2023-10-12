@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.DefaultObjects;
+﻿using CrystalCore.Model.OldObjects;
 using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
@@ -15,13 +15,13 @@ namespace CrystalCore.Model.Core
         /// <param name="ch"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static Point GetChunkPos(this DefaultMap cg, OldChunk ch)
+        public static Point GetChunkPos(this Map cg, Chunk ch)
         {
             // get the chunk
 
             for (int x = 0; x < cg.grid.ElementList.Count; x++)
             {
-                List<OldChunk> list = cg.grid.Elements[x];
+                List<Chunk> list = cg.grid.Elements[x];
                 for (int y = 0; y < list.Count; y++)
                 {
                     if (list[y] == ch)
@@ -36,9 +36,9 @@ namespace CrystalCore.Model.Core
         }
 
 
-        public static Agent getAgentAtPos(this DefaultMap g, Point coords)
+        public static Agent getAgentAtPos(this Map g, Point coords)
         {
-            OldChunk ch = g.getChunkAtCoords(coords);
+            Chunk ch = g.getChunkAtCoords(coords);
 
             if (ch == null)
             {
@@ -69,21 +69,21 @@ namespace CrystalCore.Model.Core
 
 
         // returns the agents within these bounds
-        public static List<OldEntity> EntitiesWithin(this DefaultMap g, Rectangle bounds)
+        public static List<Entity> EntitiesWithin(this Map g, Rectangle bounds)
         {
-            List<OldEntity> toReturn = new List<OldEntity>();
+            List<Entity> toReturn = new List<Entity>();
 
-            foreach (OldChunk ch in g.ChunksInBounds(bounds))
+            foreach (Chunk ch in g.ChunksInBounds(bounds))
             {
                 foreach (ChunkMember chm in ch.MembersWithin)
                 {
 
-                    if (!(chm is OldEntity)) // only agents take up space.
+                    if (!(chm is Entity)) // only agents take up space.
                     {
                         continue;
                     }
 
-                    OldEntity e = (OldEntity)chm;
+                    Entity e = (Entity)chm;
 
                     if (e.Bounds.Intersects(bounds))
                     {
@@ -104,13 +104,13 @@ namespace CrystalCore.Model.Core
         }
 
 
-        public static List<Agent> AgentsWithin(this DefaultMap g, Rectangle bounds)
+        public static List<Agent> AgentsWithin(this Map g, Rectangle bounds)
         {
-            List<OldEntity> possibleList = g.EntitiesWithin(bounds);
+            List<Entity> possibleList = g.EntitiesWithin(bounds);
 
             List<Agent> toReturn = new List<Agent>();
 
-            foreach (OldEntity e in possibleList)
+            foreach (Entity e in possibleList)
             {
                 if (e is Agent)
                 {
@@ -123,7 +123,7 @@ namespace CrystalCore.Model.Core
         }
 
 
-        public static OldChunk getChunkAtCoords(this DefaultMap g, Point Coords)
+        public static Chunk getChunkAtCoords(this Map g, Point Coords)
         {
             // we could iterate through every chunk, but we could also do math.
             // math is probably better
@@ -135,10 +135,10 @@ namespace CrystalCore.Model.Core
             }
 
             // should be the coord in the grid's array where chunks are stored.
-            Point chunkCoord = (Coords - g.Bounds.Location) / new Point(OldChunk.SIZE);
+            Point chunkCoord = (Coords - g.Bounds.Location) / new Point(Chunk.SIZE);
 
             // get and return that chunk.
-            OldChunk toReturn = g.grid.Elements[chunkCoord.X][chunkCoord.Y];
+            Chunk toReturn = g.grid.Elements[chunkCoord.X][chunkCoord.Y];
 
 
             // it's possible this doesn't work. If that's true, I'd like to know.
@@ -151,18 +151,18 @@ namespace CrystalCore.Model.Core
 
 
 
-        public static List<OldChunk> ChunksInBounds(this DefaultMap g, Rectangle rect)
+        public static List<Chunk> ChunksInBounds(this Map g, Rectangle rect)
         {
             rect = Rectangle.Intersect(g.Bounds, rect);
 
 
-            List<OldChunk> toReturn = new List<OldChunk>();
+            List<Chunk> toReturn = new List<Chunk>();
 
-            OldChunk minimum = g.getChunkAtCoords(rect.Location);
+            Chunk minimum = g.getChunkAtCoords(rect.Location);
 
             // the bottom right Chunk within rect's borders
             Point extremePoint = rect.Location + rect.Size - new Point(1);
-            OldChunk extreme = g.getChunkAtCoords(extremePoint);
+            Chunk extreme = g.getChunkAtCoords(extremePoint);
 
             // iterate through all chunks between (and including) the minimum and extreme, and add them.
 
@@ -185,30 +185,7 @@ namespace CrystalCore.Model.Core
             return toReturn;
         }
 
-        public static void ExpandToFit(this DefaultMap g, Rectangle rect)
-        {
-            // First: which way to expand?
-            while (rect.Y < g.Bounds.Y)
-            {
-                g.ExpandGrid(Direction.up);
-            }
-
-            while (rect.X < g.Bounds.X)
-            {
-                g.ExpandGrid(Direction.left);
-            }
-
-            while (rect.Right > g.Bounds.Right)
-            {
-                g.ExpandGrid(Direction.right);
-            }
-
-            while (rect.Bottom > g.Bounds.Bottom)
-            {
-                g.ExpandGrid(Direction.down);
-            }
-
-        }
+      
 
 
     }
