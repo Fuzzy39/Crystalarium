@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.Core
 {
-    internal class Grid
+    public class Grid
     {
 
         private List<List<Chunk>> _chunks;

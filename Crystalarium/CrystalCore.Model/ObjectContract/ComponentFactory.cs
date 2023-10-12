@@ -4,7 +4,7 @@
 
 namespace CrystalCore.Model.ObjectContract
 {
-    internal interface ComponentFactory
+    public interface ComponentFactory
     {
 
         public Chunk CreateChunk(Point chunkCoords);

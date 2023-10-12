@@ -5,7 +5,7 @@ namespace CrystalCore.Model.ObjectContract
     /// <summary>
     /// A MapObject represents a physical region on the map. It cooresponds to an entity which has behavior in the simulation.
     /// </summary>
-    internal interface MapObject : MapComponent
+    public interface MapObject : MapComponent
     {
         public Rectangle Bounds { get; }
 

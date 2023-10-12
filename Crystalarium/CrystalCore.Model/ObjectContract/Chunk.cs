@@ -7,7 +7,7 @@ namespace CrystalCore.Model.ObjectContract
     /// <summary>
     /// A chunk represents a square 'chunk' of the map. It is used when searching for MapObjects. Chunks are responsible for the MapObjects in their borders.
     /// </summary>
-    internal interface Chunk:MapComponent
+    public interface Chunk:MapComponent
     {
 
         /// <summary>
@@ -17,14 +17,18 @@ namespace CrystalCore.Model.ObjectContract
             
 
         public Point ChunkCoords 
-        { 
-            get
-            {
-                return new Point(Bounds.X/SIZE, Bounds.Y/SIZE);
-            }        
+        {
+            get;     
         }
 
-        public Rectangle Bounds { get; }
+        public Rectangle Bounds 
+        {
+            
+            get
+            {
+                return new(ChunkCoords.X * SIZE, ChunkCoords.Y * SIZE, SIZE, SIZE);
+            }
+        }
 
         public List<MapObject> ObjectsWithin { get; }
 
