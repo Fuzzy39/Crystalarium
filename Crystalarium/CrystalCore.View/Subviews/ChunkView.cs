@@ -45,7 +45,7 @@ namespace CrystalCore.View.Subviews
 
 
             rend.Draw(config.ChunkBackground, RenderData.Bounds, determineColor());
-
+             
             return true;
 
         }

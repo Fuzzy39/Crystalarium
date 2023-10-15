@@ -7,6 +7,7 @@ namespace CrystalCore.Model.ObjectContract
     {
         Rectangle Bounds { get; }
         Vector2 Center { get; }
+
         Ruleset Ruleset { get; set; }
 
         event EventHandler OnMapObjectDestroyed;

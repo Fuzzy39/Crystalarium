@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.ObjectContract;
+using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 

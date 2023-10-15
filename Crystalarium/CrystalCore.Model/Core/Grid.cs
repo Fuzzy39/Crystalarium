@@ -11,7 +11,7 @@ namespace CrystalCore.Model.Core
         private List<List<Chunk>> _chunks;
 
         private Point _size; // the size, in chunks, of the grid.
-        private Point _origin; // the chunk index that has the chunk coords (0,0)
+        private Point _origin; // the chunk index that has the chunk with coords (0,0)
 
         private ComponentFactory _factory; // A nice factory to bake more chunks.
        

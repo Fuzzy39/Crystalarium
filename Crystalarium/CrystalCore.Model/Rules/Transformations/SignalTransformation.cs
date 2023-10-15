@@ -1,5 +1,4 @@
 ﻿using CrystalCore.Model.Language;
-using CrystalCore.NewModel.Rules;
 using CrystalCore.Util;
 using System.Collections.Generic;
 

@@ -8,6 +8,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DefaultObjects\**" />
+    <Compile Remove="OldObjects\**" />
+    <Compile Remove="Rules\Transformations\**" />
+    <Compile Remove="Simulation\**" />
+    <EmbeddedResource Remove="DefaultObjects\**" />
+    <EmbeddedResource Remove="OldObjects\**" />
+    <EmbeddedResource Remove="Rules\Transformations\**" />
+    <EmbeddedResource Remove="Simulation\**" />
+    <None Remove="DefaultObjects\**" />
+    <None Remove="OldObjects\**" />
+    <None Remove="Rules\Transformations\**" />
+    <None Remove="Simulation\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Core\MapExtensions.cs" />
+    <Compile Remove="SimulationManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="DefaultObjects\DefaultComponentFactory.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
   </ItemGroup>
 
