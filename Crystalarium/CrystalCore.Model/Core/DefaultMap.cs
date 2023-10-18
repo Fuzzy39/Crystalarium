@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.ObjectContract;
+﻿using CrystalCore.Model.CoreContract;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
@@ -13,7 +13,7 @@ namespace CrystalCore.Model.Core
 
 
 
-        private Grid _grid;
+        private DefaultGrid _grid;
 
 
 
@@ -21,11 +21,15 @@ namespace CrystalCore.Model.Core
 
 
 
-        public event EventHandler OnReset;
-        public event EventHandler OnResize;
-        public event EventHandler OnMapObjectReady;
-        public event EventHandler OnMapObjectDestroyed;
+        public event EventHandler? OnReset;
+        public event EventHandler? OnMapObjectReady;
+        public event EventHandler? OnMapObjectDestroyed;
 
+
+        public Grid Grid 
+        {
+            get => _grid;
+        }
 
         public Ruleset Ruleset
         {
@@ -40,26 +44,6 @@ namespace CrystalCore.Model.Core
         }
 
 
-        public Rectangle Bounds
-        {
-            get
-            {
-                return new Rectangle(_grid.Origin, _grid.Size);
-            }
-
-        }
-
-        public Vector2 Center
-        {
-            get
-            {
-                // the center tile coords of this grid
-                return _grid.Size.ToVector2() / 2f + Bounds.Location.ToVector2();
-
-            }
-
-
-        }
 
         public DefaultMap(Ruleset r)
         {
@@ -69,10 +53,6 @@ namespace CrystalCore.Model.Core
             }
             _ruleset = r;
             Reset();
-
-
-
-
         }
 
 
@@ -85,67 +65,17 @@ namespace CrystalCore.Model.Core
         {
 
 
-
-
             // reseting our grid should remove all references to any remaining mapObjects
             _grid.Destroy();
+            _grid = new DefaultGrid(_ruleset.ComponentFactory);
+            _grid.ExpandToFit(minimumBounds);
 
+             OnReset?.Invoke(this, new EventArgs());
 
-            _grid = new Grid(_ruleset.ComponentFactory);
-            this.ExpandToFit(minimumBounds);
-
-
-
-            if (OnReset != null)
-            {
-                OnReset(this, new EventArgs());
-
-            }
+            
         }
 
-        /// <summary>
-        /// Grow the map in a particular direction.
-        /// </summary>
-        /// <param name="d"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void Expand(Direction d)
-        {
-            _grid.Expand(d);
-
-            if (OnResize != null)
-            {
-                OnResize(this, new EventArgs());
-            }
-        }
-
-        public void ExpandToFit(Rectangle rect)
-        {
-            // First: which way to expand?
-            while (rect.Y < Bounds.Y)
-            {
-                _grid.Expand(Direction.up);
-            }
-
-            while (rect.X < Bounds.X)
-            {
-                _grid.Expand(Direction.left);
-            }
-
-            while (rect.Right > Bounds.Right)
-            {
-                _grid.Expand(Direction.right);
-            }
-
-            while (rect.Bottom > Bounds.Bottom)
-            {
-                _grid.Expand(Direction.down);
-            }
-
-            if (OnResize != null)
-            {
-                OnResize(this, new EventArgs());
-            }
-        }
+       
 
         internal void OnObjectDestroyed(object o, EventArgs e)
         {

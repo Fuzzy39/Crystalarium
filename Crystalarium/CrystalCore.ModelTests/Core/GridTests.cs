@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using CrystalCore.Util;
 using NuGet.Frameworks;
+using CrystalCore.Model.CoreContract;
 
 namespace CrystalCoreTests.Model.Core
 {
@@ -74,7 +75,7 @@ namespace CrystalCoreTests.Model.Core
         {
 
 
-            Grid g = new Grid(new MockChunkComponentFactory());
+            DefaultGrid g = new DefaultGrid(new MockChunkComponentFactory());
 
             // about the grid
             Assert.IsTrue(g.ChunkList.Count == 1);
@@ -92,7 +93,7 @@ namespace CrystalCoreTests.Model.Core
         public void UpTest()
         {
 
-            Grid g = new Grid(new MockChunkComponentFactory());
+            DefaultGrid g = new DefaultGrid(new MockChunkComponentFactory());
 
             // expand up 4 times
             for(int i = 0; i<4; i++)
@@ -119,7 +120,7 @@ namespace CrystalCoreTests.Model.Core
         public void DownTest()
         {
 
-            Grid g = new Grid(new MockChunkComponentFactory());
+            DefaultGrid g = new DefaultGrid(new MockChunkComponentFactory());
 
             // expand up 4 times
             for (int i = 0; i < 4; i++)
@@ -146,7 +147,7 @@ namespace CrystalCoreTests.Model.Core
         public void LeftTest()
         {
 
-            Grid g = new Grid(new MockChunkComponentFactory());
+            DefaultGrid g = new DefaultGrid(new MockChunkComponentFactory());
 
             // expand up 4 times
             for (int i = 0; i < 4; i++)
@@ -172,7 +173,7 @@ namespace CrystalCoreTests.Model.Core
         [TestMethod()]
         public void SquareTest()
         {
-            Grid g = new Grid(new MockChunkComponentFactory());
+            DefaultGrid g = new DefaultGrid(new MockChunkComponentFactory());
 
             
 

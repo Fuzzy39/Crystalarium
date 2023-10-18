@@ -1,5 +1,7 @@
 ﻿
 
+using CrystalCore.Model.CoreContract;
+
 namespace CrystalCore.Model.ObjectContract
 {
     public interface MapComponent

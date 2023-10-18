@@ -1,11 +1,14 @@
-﻿using CrystalCore.Model.ObjectContract;
+﻿using CrystalCore.Model.CoreContract;
+using CrystalCore.Model.ObjectContract;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
+using System;
 
 
 namespace CrystalCore.Model.Core
 {
-    public class Grid
+    public class DefaultGrid : Grid
+    // I would like this to be internal, but I also want to test it.
     {
 
         private List<List<Chunk>> _chunks;
@@ -14,7 +17,9 @@ namespace CrystalCore.Model.Core
         private Point _origin; // the chunk index that has the chunk with coords (0,0)
 
         private ComponentFactory _factory; // A nice factory to bake more chunks.
-       
+
+
+        public event EventHandler? OnResize;
 
         public List<List<Chunk>> Chunks
         {
@@ -44,7 +49,7 @@ namespace CrystalCore.Model.Core
             get => _size;
         }
 
-        
+
         /// <summary>
         /// The top left most coordinate in the grid, in chunks.
         /// </summary>
@@ -54,26 +59,23 @@ namespace CrystalCore.Model.Core
         }
 
 
-        /// <summary>
-        /// The size of the grid, in tiles.
-        /// </summary>
-        public Point Size
-        {
-            get => new(_size.X*Chunk.SIZE, _size.Y*Chunk.SIZE);
-        }
+      
 
         /// <summary>
-        /// The top left most coordinate in the grid, in tiles.
+        /// The bounds of this grid in tile coordinates.
         /// </summary>
-        public Point Origin
+        public Rectangle Bounds
         {
-            get => new(_origin.X * Chunk.SIZE,
-                   _origin.Y * Chunk.SIZE);
+            get
+            {
+                return new Rectangle(new(_origin.X * Chunk.SIZE,
+                   _origin.Y * Chunk.SIZE), new(_size.X * Chunk.SIZE, _size.Y * Chunk.SIZE));
+            }
+
         }
 
 
-
-        public Grid(ComponentFactory factory)
+        public DefaultGrid(ComponentFactory factory)
         {
 
             _factory = factory;
@@ -88,13 +90,13 @@ namespace CrystalCore.Model.Core
 
 
             // create initial chunk.
-            _chunks[0].Add(_factory.CreateChunk(new(0,0)));
+            _chunks[0].Add(_factory.CreateChunk(new(0, 0)));
 
         }
 
         public void Destroy()
         {
-            foreach(List<Chunk> elements in _chunks)
+            foreach (List<Chunk> elements in _chunks)
             {
                 foreach (Chunk chunk in elements)
                 {
@@ -105,9 +107,15 @@ namespace CrystalCore.Model.Core
             _chunks.Clear();
         }
 
+
+        /// <summary>
+        /// Grow the grid in a particular direction.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public void Expand(Direction d)
         {
-           
+
             Point start = DetermineStartingCoord(d);
 
             Chunk[] toAdd = CreateChunks(d, start);
@@ -120,7 +128,41 @@ namespace CrystalCore.Model.Core
 
             AddElements(toAdd, d);
 
-            
+            if (OnResize != null)
+            {
+                OnResize(this, new EventArgs());
+            }
+
+        }
+
+
+        public void ExpandToFit(Rectangle rect)
+        {
+            // First: which way to expand?
+            while (rect.Y < Bounds.Y)
+            {
+                Expand(Direction.up);
+            }
+
+            while (rect.X < Bounds.X)
+            {
+                Expand(Direction.left);
+            }
+
+            while (rect.Right > Bounds.Right)
+            {
+                Expand(Direction.right);
+            }
+
+            while (rect.Bottom > Bounds.Bottom)
+            {
+                Expand(Direction.down);
+            }
+
+            if (OnResize != null)
+            {
+                OnResize(this, new EventArgs());
+            }
         }
 
 
@@ -133,9 +175,9 @@ namespace CrystalCore.Model.Core
             {
                 return _chunks[0][0].ChunkCoords + d.ToPoint();
             }
-           
+
             return _origin + (_size - new Point(1)) + d.ToPoint();
-            
+
         }
 
 
@@ -164,7 +206,7 @@ namespace CrystalCore.Model.Core
             {
 
                 // calculate our distance from our start
-                Point add = new (i * traverse.X, i * traverse.Y);
+                Point add = new(i * traverse.X, i * traverse.Y);
                 Point coord = start + add;
                 // create the chunk, add it to the list.
                 toAdd[i] = _factory.CreateChunk(coord);
@@ -196,7 +238,6 @@ namespace CrystalCore.Model.Core
         }
 
 
-
         private void AddHorizontal(Chunk[] elements, Direction d)
         {
             // we are adding a new list<Chunk> to _chunks.
@@ -209,9 +250,9 @@ namespace CrystalCore.Model.Core
                 _origin.X--;
                 return;
             }
-            
-              _chunks.Add(newList);
-            
+
+            _chunks.Add(newList);
+
         }
 
 
@@ -232,11 +273,49 @@ namespace CrystalCore.Model.Core
                     _chunks[x].Insert(0, elements[x]);
                     continue;
                 }
-         
-                 _chunks[x].Add(elements[x]);
+
+                _chunks[x].Add(elements[x]);
 
             }
 
+        }
+
+
+        public Chunk ChunkAtCoords(Point tileCoords)
+        {
+            Point chunkCoord = TileToChunkCoords(tileCoords);
+
+            Point chunkIndex = chunkCoord - _origin;
+
+            return Chunks[chunkIndex.X][chunkIndex.Y];
+
+        }
+
+        public List<Chunk> ChunksIntersecting(Rectangle bounds)
+        {
+
+            bounds = Rectangle.Intersect(Bounds, bounds);
+
+            Point least = TileToChunkCoords(bounds.Location)-_origin;
+            Point greatest = TileToChunkCoords(bounds.Location+bounds.Size) - _origin;
+           
+            List<Chunk> toReturn = new List<Chunk>();
+
+            for(int x = least.X; x<greatest.X; x++)
+            {
+                for(int y =least.Y; y<greatest.Y; y++)
+                {
+                    toReturn.Add(_chunks[x][y]);
+                }
+            }
+
+            return toReturn;
+
+        }
+
+        private Point TileToChunkCoords(Point tileCoords)
+        {
+            return new(tileCoords.X/Chunk.SIZE, tileCoords.Y/Chunk.SIZE);
         }
 
     }
