@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.CoreContract;
+using CrystalCore.Model.ObjectContract;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
@@ -22,8 +23,8 @@ namespace CrystalCore.Model.Core
 
 
         public event EventHandler? OnReset;
-        public event EventHandler? OnMapObjectReady;
-        public event EventHandler? OnMapObjectDestroyed;
+        public event MapObjectEvent? OnMapObjectReady;
+        public event ComponentEvent? OnMapComponentDestroyed;
 
 
         public Grid Grid 
@@ -75,24 +76,18 @@ namespace CrystalCore.Model.Core
             
         }
 
-       
+       // These handle the events of MapComponents.
 
-        internal void OnObjectDestroyed(object o, EventArgs e)
+      
+
+        void Map.OnComponentDestroyed(MapComponent component, EventArgs e)
         {
-
-            // Remove a grid object from it's appropriate containers.
-            OnMapObjectDestroyed?.Invoke(o, new());
-
+            throw new NotImplementedException();
         }
 
-        internal void OnObjectReady(object o, EventArgs e)
+        void Map.OnObjectReady(MapObject mapObj, EventArgs e)
         {
-            OnMapObjectReady?.Invoke(o, new());
+            throw new NotImplementedException();
         }
-
-
-
-
-
     }
 }

@@ -8,10 +8,10 @@ namespace CrystalCore.Model.ObjectContract
     {
 
         public event EventHandler OnDestroy;
-        public event EventHandler OnReady;
+      
 
 
-        public Map Map { get; }
+        public Grid Grid { get; }
 
         public bool Destroyed
         {
@@ -21,7 +21,7 @@ namespace CrystalCore.Model.ObjectContract
 
         public abstract void Destroy();
 
-        protected void Ready();
+     
 
 
 

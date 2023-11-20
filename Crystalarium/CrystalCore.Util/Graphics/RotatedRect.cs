@@ -291,7 +291,7 @@ namespace CrystalCore.Util.Graphics
                            BoundingLocation.Y + w * Sin(-rotation)),
 
                 // up
-                < PI / 2f => new(BoundingLocation.X + h * Sin(rotation),
+                < PI / 2f => new(BoundingLocation.X + h * Sin(rotation),    
                                        BoundingLocation.Y),
 
                 // right

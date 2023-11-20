@@ -7,6 +7,9 @@ namespace CrystalCore.Model.ObjectContract
     /// </summary>
     public interface MapObject : MapComponent
     {
+
+        public event EventHandler OnReady;
+
         public Rectangle Bounds { get; }
 
         public Entity Entity { get; }
@@ -25,6 +28,11 @@ namespace CrystalCore.Model.ObjectContract
         {
             return "[ MapObject @ " + Bounds + " ]";
         }
+
+        /// <summary>
+        /// Called when it's Entity is initialized. Probably.
+        /// </summary>
+        protected void Ready();
 
     }
 }
