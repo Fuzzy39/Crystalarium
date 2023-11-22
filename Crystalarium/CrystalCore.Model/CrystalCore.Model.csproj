@@ -24,6 +24,11 @@
 
   <ItemGroup>
     <Compile Remove="Core\MapExtensions.cs" />
+    <Compile Remove="Rules\AgentType.cs" />
+    <Compile Remove="Rules\Operands.cs" />
+    <Compile Remove="Rules\PortIdentifier.cs" />
+    <Compile Remove="Rules\Ruleset.cs" />
+    <Compile Remove="Rules\TransformationRule.cs" />
     <Compile Remove="SimulationManager.cs" />
   </ItemGroup>
 
@@ -38,6 +43,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CrystalCore.Util\CrystalCore.Util.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Rules\" />
   </ItemGroup>
 
 </Project>

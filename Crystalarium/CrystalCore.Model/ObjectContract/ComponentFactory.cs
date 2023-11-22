@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CrystalCore.Model.CoreContract;
+using Microsoft.Xna.Framework;
 
 
 

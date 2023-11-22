@@ -1,6 +1,6 @@
 ﻿using CrystalCore.Model.CoreContract;
 using CrystalCore.Model.ObjectContract;
-using CrystalCore.Model.Rules;
+//using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 
@@ -18,7 +18,7 @@ namespace CrystalCore.Model.Core
 
 
 
-        private Ruleset _ruleset; // the ruleset this grid is following.
+        //private Ruleset _ruleset; // the ruleset this grid is following.
 
 
 
@@ -32,7 +32,7 @@ namespace CrystalCore.Model.Core
             get => _grid;
         }
 
-        public Ruleset Ruleset
+        /*public Ruleset Ruleset
         {
             get => _ruleset;
             set
@@ -42,17 +42,17 @@ namespace CrystalCore.Model.Core
                 Reset();
 
             }
-        }
+        }*/
 
 
 
-        public DefaultMap(Ruleset r)
+        public DefaultMap(/*Ruleset r*/)
         {
-            if (r == null)
+            /*if (r == null)
             {
                 throw new ArgumentNullException("Null Ruleset not viable.");
             }
-            _ruleset = r;
+            _ruleset = r;*/
             Reset();
         }
 
@@ -68,7 +68,7 @@ namespace CrystalCore.Model.Core
 
             // reseting our grid should remove all references to any remaining mapObjects
             _grid.Destroy();
-            _grid = new DefaultGrid(_ruleset.ComponentFactory);
+            //_grid = new DefaultGrid(_ruleset.ComponentFactory);
             _grid.ExpandToFit(minimumBounds);
 
              OnReset?.Invoke(this, new EventArgs());
@@ -82,7 +82,8 @@ namespace CrystalCore.Model.Core
 
         void Map.OnComponentDestroyed(MapComponent component, EventArgs e)
         {
-            throw new NotImplementedException();
+            component.OnDestroy -= ((Map)this).OnComponentDestroyed;
+            OnMapComponentDestroyed?.Invoke(component, e);
         }
 
         void Map.OnObjectReady(MapObject mapObj, EventArgs e)

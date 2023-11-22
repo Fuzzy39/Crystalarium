@@ -29,15 +29,29 @@ namespace CrystalCoreTests.Model.Core
 
             public Point ChunkCoords => _chunkCoords;
 
-            public List<MapObject> ObjectsWithin => throw new NotImplementedException();
+            public List<MapObject> ObjectsIntersecting => throw new NotImplementedException();
 
             public Map Map => throw new NotImplementedException();
 
             public bool Destroyed => throw new NotImplementedException();
 
+            public Grid Grid => throw new NotImplementedException();
 
             public event EventHandler OnDestroy = null;
             public event EventHandler OnReady = null;
+
+            event ComponentEvent MapComponent.OnDestroy
+            {
+                add
+                {
+                    throw new NotImplementedException();
+                }
+
+                remove
+                {
+                    throw new NotImplementedException();
+                }
+            }
 
             public void Destroy()
             {
@@ -46,6 +60,11 @@ namespace CrystalCoreTests.Model.Core
 
         
             public void Ready()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void RegisterObject(MapObject obj)
             {
                 throw new NotImplementedException();
             }

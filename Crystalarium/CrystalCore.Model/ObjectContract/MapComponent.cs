@@ -7,7 +7,7 @@ namespace CrystalCore.Model.ObjectContract
     public interface MapComponent
     {
 
-        public event EventHandler OnDestroy;
+        public event ComponentEvent OnDestroy;
       
 
 

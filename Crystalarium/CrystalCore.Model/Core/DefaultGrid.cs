@@ -4,7 +4,6 @@ using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 
-
 namespace CrystalCore.Model.Core
 {
     public class DefaultGrid : Grid
@@ -316,6 +315,11 @@ namespace CrystalCore.Model.Core
         private Point TileToChunkCoords(Point tileCoords)
         {
             return new(tileCoords.X/Chunk.SIZE, tileCoords.Y/Chunk.SIZE);
+        }
+
+        public override string ToString()
+        {
+            return "Grid [ size: "+_size+", top left at position: "+_origin+" (in chunks) ]";
         }
 
     }

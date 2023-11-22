@@ -30,9 +30,14 @@ namespace CrystalCore.Model.ObjectContract
             }
         }
 
-        public List<MapObject> ObjectsWithin { get; }
+        public List<MapObject> ObjectsIntersecting { get; }
 
-
+        /// <summary>
+        /// Register a Map object with a particular chunk. The map object should intersect with the chunk's boundries.
+        /// This should be done before the MapObject is ready.
+        /// </summary>
+        /// <param name="obj"></param>
+        public void RegisterObject(MapObject obj);   
 
 
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CrystalCore.Model.CoreContract;
+using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.ObjectContract
 {
@@ -8,7 +9,7 @@ namespace CrystalCore.Model.ObjectContract
     public interface MapObject : MapComponent
     {
 
-        public event EventHandler OnReady;
+
 
         public Rectangle Bounds { get; }
 
@@ -29,10 +30,7 @@ namespace CrystalCore.Model.ObjectContract
             return "[ MapObject @ " + Bounds + " ]";
         }
 
-        /// <summary>
-        /// Called when it's Entity is initialized. Probably.
-        /// </summary>
-        protected void Ready();
+
 
     }
 }

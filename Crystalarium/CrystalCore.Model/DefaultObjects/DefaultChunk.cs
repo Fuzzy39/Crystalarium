@@ -15,11 +15,10 @@ namespace CrystalCore.Model.DefaultObjects
         private bool _destroyed;
         private Point _chunkCoords;
         private Grid _grid;
-        
-        // TODO: Subscribe to object's within onDestroy...
-        // QUESTION: DO we add within or do within add us???
 
-        private List<MapObject> _children;
+       
+
+
         private List<MapObject> _objectsIntersecting;
 
         // Properties
@@ -29,7 +28,10 @@ namespace CrystalCore.Model.DefaultObjects
             get => _chunkCoords;
         }
 
-        public List<MapObject> ObjectsWithin => throw new NotImplementedException();
+        public List<MapObject> ObjectsIntersecting   
+        {
+            get { return _objectsIntersecting; }
+        }
 
         public Grid Grid
         {
@@ -43,28 +45,29 @@ namespace CrystalCore.Model.DefaultObjects
         }
 
 
-        public event EventHandler OnDestroy;
+        public event ComponentEvent OnDestroy;
      
 
         public DefaultChunk( Map map, Point chunkCoords)
         {
             _grid = map.Grid;
             _chunkCoords = chunkCoords;
-            _children = new List<MapObject>();
+  
             _objectsIntersecting = new List<MapObject>();
 
-            
-            // wrong. We shouldn't subscribe to everything.
-            // we should be more specific
-            map.OnMapComponentDestroyed += OnWithinDestroyed;
-           // OnDestroy += map.OnComponentDestroyed;
+           
+            // the map deserves to know if we get ganked.
+            OnDestroy += map.OnComponentDestroyed;
         }
 
 
 
         public void Destroy()
         {
+
             _destroyed = true;
+            OnDestroy.Invoke(this, new());
+
             // just to make sure stuff crashes if they use us.
             _chunkCoords = new();
             _grid = null;
@@ -78,30 +81,44 @@ namespace CrystalCore.Model.DefaultObjects
 
 
 
-            OnDestroy.Invoke(this, new());
+          
         }
 
 
         internal void OnWithinDestroyed(MapComponent comp, EventArgs e)
         {
-            if(comp is not MapObject)
-            {
-                return;
-            }
+          
 
             MapObject obj = (MapObject)comp;   
-            
-            // that's uglier than I feel like it should be, but I guess it discourages default interface implementations.
-            if(! obj.Bounds.Intersects( ((Chunk)this).Bounds) )
-            {
-                return;
-            }
-
             _objectsIntersecting.Remove(obj);
-            _children.Remove(obj); // children may or may not have obj in it. I assume that's fine.
+        
 
 
         }
 
+        public void RegisterObject(MapObject obj)
+        {
+            // that's uglier than I feel like it should be, but I guess it discourages default interface implementations.
+            Rectangle Bounds = (((Chunk)this).Bounds);
+
+            if (!obj.Bounds.Intersects(Bounds))
+            {
+                throw new ArgumentException("MapObject '" + obj.ToString() + "' is not within Chunk '" + this.ToString() + "'.");
+            }
+
+            _objectsIntersecting.Add(obj);
+            obj.OnDestroy += OnWithinDestroyed;
+
+        
+        }
+
+        public override string ToString()
+        {
+            if (_destroyed)
+            {
+                return "DefaultChunk [Destroyed]";
+            }
+            return "DefaultChunk [ At Chunk Coords: "+_chunkCoords+" Members: "+_objectsIntersecting.Count+" Child of: "+_grid+" ]";
+        }
     }
 }

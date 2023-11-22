@@ -1,5 +1,5 @@
 ﻿using CrystalCore.Model.ObjectContract;
-using CrystalCore.Model.Rules;
+//using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 
@@ -13,7 +13,7 @@ namespace CrystalCore.Model.CoreContract
     {
      
         public Grid Grid { get; }
-        public Ruleset Ruleset { get; set; }
+        //public Ruleset Ruleset { get; set; }
 
         // these are events that can be subscribed to by, say, the gridview.
         public event ComponentEvent? OnMapComponentDestroyed;
