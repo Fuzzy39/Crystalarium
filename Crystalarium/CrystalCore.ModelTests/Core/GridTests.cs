@@ -78,12 +78,17 @@ namespace CrystalCoreTests.Model.Core
                 return new MockChunk(chunkCoords);
             }
 
-            public MapObject CreateObject()
+            public MapObject CreateObject(Point position, Entity entity)
             {
                 throw new NotImplementedException();
             }
 
-            public MapObject CreateObjectWithCollision()
+            public bool IsValidPosition(Point position, Entity entity)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool IsValidPosition(Rectangle bounds, bool hasCollision)
             {
                 throw new NotImplementedException();
             }
@@ -215,6 +220,41 @@ namespace CrystalCoreTests.Model.Core
             {
                 Assert.IsNotNull(chunk);
             }
+        }
+
+        [TestMethod()]
+        public void ExpandToFitTest()
+        {
+            // arrange
+            DefaultGrid g = new DefaultGrid(new MockChunkComponentFactory());
+
+            // act
+            g.ExpandToFit(new(-1, -1, 20, 20));
+
+            // assert
+            Assert.AreEqual(9, g.ChunkList.Count);
+            Assert.AreEqual(new Point(-1, -1), g.ChunkOrigin);
+            Assert.AreEqual(new Point(3, 3), g.ChunkSize);
+            Assert.IsTrue(g.Chunks.Count == 3 && g.Chunks[0].Count == 3);
+
+        }
+
+        [TestMethod()]
+        public void ChunkAtCoordsTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void ChunksIntersectingTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void ObjectsIntersectingTest()
+        {
+            Assert.Fail();
         }
     }
 }

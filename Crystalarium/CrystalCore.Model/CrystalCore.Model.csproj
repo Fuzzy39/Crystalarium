@@ -1,52 +1,59 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="DefaultObjects\**" />
-    <Compile Remove="OldObjects\**" />
-    <Compile Remove="Rules\Transformations\**" />
-    <Compile Remove="Simulation\**" />
-    <EmbeddedResource Remove="DefaultObjects\**" />
-    <EmbeddedResource Remove="OldObjects\**" />
-    <EmbeddedResource Remove="Rules\Transformations\**" />
-    <EmbeddedResource Remove="Simulation\**" />
-    <None Remove="DefaultObjects\**" />
-    <None Remove="OldObjects\**" />
-    <None Remove="Rules\Transformations\**" />
-    <None Remove="Simulation\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="DefaultObjects\**" />
+		<Compile Remove="OldObjects\**" />
+		<Compile Remove="Rules\Transformations\**" />
+		<Compile Remove="Simulation\**" />
+		<EmbeddedResource Remove="DefaultObjects\**" />
+		<EmbeddedResource Remove="OldObjects\**" />
+		<EmbeddedResource Remove="Rules\Transformations\**" />
+		<EmbeddedResource Remove="Simulation\**" />
+		<None Remove="DefaultObjects\**" />
+		<None Remove="OldObjects\**" />
+		<None Remove="Rules\Transformations\**" />
+		<None Remove="Simulation\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Core\MapExtensions.cs" />
-    <Compile Remove="Rules\AgentType.cs" />
-    <Compile Remove="Rules\Operands.cs" />
-    <Compile Remove="Rules\PortIdentifier.cs" />
-    <Compile Remove="Rules\Ruleset.cs" />
-    <Compile Remove="Rules\TransformationRule.cs" />
-    <Compile Remove="SimulationManager.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Core\MapExtensions.cs" />
+		<Compile Remove="Rules\AgentType.cs" />
+		<Compile Remove="Rules\Operands.cs" />
+		<Compile Remove="Rules\PortIdentifier.cs" />
+		<Compile Remove="Rules\Ruleset.cs" />
+		<Compile Remove="Rules\TransformationRule.cs" />
+		<Compile Remove="SimulationManager.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="DefaultObjects\DefaultChunk.cs" />
-    <Compile Include="DefaultObjects\DefaultComponentFactory.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="DefaultObjects\DefaultChunk.cs" />
+		<Compile Include="DefaultObjects\DefaultComponentFactory.cs" />
+		<Compile Include="DefaultObjects\DefaultMapObject.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CrystalCore.Util\CrystalCore.Util.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\CrystalCore.Util\CrystalCore.Util.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Rules\" />
-  </ItemGroup>
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>CrystalCore.ModelTests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Folder Include="Rules\" />
+	</ItemGroup>
 
 </Project>

@@ -24,7 +24,7 @@ namespace CrystalCrash.Main
             "Same as it ever was. Same as it ever was.", "Did somebody forget a semicolon?", "I, Er, had a bit of an oopsie...", "And it was looking so good!","Aw, crap, this looks complicated.",
                 "I didn't realize how unstable computers computing computers would be.", "Maybe just do this in Minecraft?",
                 "Well, at least you can relax here.", "Take a deep breath, we'll figure this out.", "Dang. Right in the beanhole.", "Breaking: Bean-Counter blames the Compiler!"
-                , "The blue crystals are the best!", "This puts the Crystal M. in Crystalarium!", "\"This is such a roblox ripoff, smh\"  - Roblox Kid", "Use this time to draw your daily picture of Squidward."
+              , "This puts the M. in Crystal M.!", "\"This is such a roblox ripoff, smh\"  - Roblox Kid", "Use this time to draw a picture of Squidward."
             ,"This is an Obamnamation!","Ooh, look, the screen turned gay!", "*Switches your xor gates to xnor gates.*" };
             random = new Random();
             face = randomSplash[random.Next(randomSplash.Length)];

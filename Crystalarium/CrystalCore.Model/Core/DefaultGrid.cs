@@ -6,7 +6,7 @@ using System;
 
 namespace CrystalCore.Model.Core
 {
-    public class DefaultGrid : Grid
+    internal class DefaultGrid : Grid
     // I would like this to be internal, but I also want to test it.
     {
 
@@ -29,7 +29,7 @@ namespace CrystalCore.Model.Core
         {
             get
             {
-                List<Chunk> ToReturn = new();
+                List<Chunk> ToReturn = new();   
                 foreach (List<Chunk> elements in _chunks)
                 {
                     ToReturn.AddRange(elements);
@@ -72,6 +72,8 @@ namespace CrystalCore.Model.Core
             }
 
         }
+
+        public ComponentFactory ComponentFactory => _factory;
 
 
         public DefaultGrid(ComponentFactory factory)
@@ -311,6 +313,38 @@ namespace CrystalCore.Model.Core
             return toReturn;
 
         }
+
+
+        public List<MapObject> ObjectsIntersecting(Rectangle bounds) 
+        {
+            List<Chunk> chunks = ChunksIntersecting(bounds);
+            List<MapObject> toReturn = new();
+
+            foreach(Chunk chunk in chunks)
+            {
+                foreach (MapObject obj in chunk.ObjectsIntersecting)
+                {
+
+                    if (obj.Bounds.Intersects(bounds))
+                    {
+                        // only add a if it isn't already in the list
+                        // explaination of line: if element in toReturn exists such that element is obj ...
+                        // simpler explanation: if obj is already in the list...
+                        if (toReturn.Exists((test) => { return test == obj; })) 
+                        {
+                            continue;
+                        }
+
+                        toReturn.Add(obj);
+                    }
+
+
+                }
+            }
+            return toReturn;
+        
+        }
+
 
         private Point TileToChunkCoords(Point tileCoords)
         {

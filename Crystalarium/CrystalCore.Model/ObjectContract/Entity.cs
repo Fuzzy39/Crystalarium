@@ -19,6 +19,8 @@ namespace CrystalCore.Model.ObjectContract
 
         public MapObject PhysicalRepresentation { get; }
 
+        public bool HasCollision { get; }
+
         public Point Size { get; }
 
         public bool Destroyed { get; }

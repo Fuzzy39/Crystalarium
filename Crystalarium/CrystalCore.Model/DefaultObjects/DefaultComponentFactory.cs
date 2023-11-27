@@ -18,20 +18,48 @@ namespace CrystalCore.Model.DefaultObjects
         {
             _map = map;
         }
-
+            
         public Chunk CreateChunk(Point chunkCoords)
         {
             return new DefaultChunk(_map, chunkCoords);
         }
 
-        public MapObject CreateObject( )
+        public MapObject CreateObject(Point position, Entity entity)
         {
-            throw new NotImplementedException();
+            if(!IsValidPosition(position, entity))  
+            {
+                throw new ArgumentException("Bounds: " + new Rectangle(position, entity.Size) + " is invalid for " + entity.ToString());
+            }
+        
+            return new DefaultMapObject(_map, position, entity);
+          
         }
 
-        public MapObject CreateObjectWithCollision( )
+        public bool IsValidPosition(Point position, Entity entity)
         {
-            throw new NotImplementedException();
+            return IsValidPosition(new(position, entity.Size), entity.HasCollision);
         }
+
+        public bool IsValidPosition(Rectangle bounds, bool hasCollision)
+        {
+            if(!_map.Grid.Bounds.Contains(bounds)) 
+            {
+                // the position suggested is outside of bounds.
+                return false;
+            }
+
+            if(!hasCollision)
+            {
+                return true;
+            }
+
+            // test for collision.
+      
+            // if any intersecting object has collision, return false.
+            return ! _map.Grid.ObjectsIntersecting(bounds).Any(obj => obj.Entity.HasCollision);
+            // LINQ is neat, but also witchcraft.
+
+        }
+
     }
 }

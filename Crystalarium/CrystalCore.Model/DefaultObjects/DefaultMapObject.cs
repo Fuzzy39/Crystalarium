@@ -20,7 +20,7 @@ namespace CrystalCore.Model.DefaultObjects
         public event ComponentEvent OnDestroy;
 
 
-        DefaultMapObject(Point position, Entity entity, Map map)
+        public DefaultMapObject(Map map, Point position, Entity entity)
         {
             _destroyed = false;
             _grid = map.Grid;
@@ -39,16 +39,11 @@ namespace CrystalCore.Model.DefaultObjects
         }
 
         public Rectangle Bounds => _bounds;
-
         public Entity Entity => _entity;
-
         public Chunk Parent => _grid.ChunkAtCoords(Bounds.Location);
-
         public Grid Grid => _grid;
-
         public bool Destroyed => _destroyed;
 
-      
         public void Destroy()
         {
             _destroyed = true;
@@ -63,7 +58,6 @@ namespace CrystalCore.Model.DefaultObjects
             _entity = null;
             _grid = null;
 
-           
         }
 
        

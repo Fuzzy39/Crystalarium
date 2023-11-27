@@ -10,9 +10,12 @@ namespace CrystalCore.Model.ObjectContract
 
         public Chunk CreateChunk(Point chunkCoords);
 
-        public MapObject CreateObject();
+        public MapObject CreateObject(Point position, Entity entity);
 
-        public MapObject CreateObjectWithCollision();
+        public bool IsValidPosition(Point position, Entity entity);
+
+        public bool IsValidPosition(Rectangle bounds, bool hasCollision);
+
        
 
     }

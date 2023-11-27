@@ -22,7 +22,8 @@ catch (Exception e) when (e is InitializationFailedException or MapLoadException
 catch (Exception e)
 {
     using CrashHandler crash = new("Crystalarium unexpectedly crashed." +
-                    "\nIf you could report this issue with steps to reproduce it to jmcraft126@gmail.com, that'd be a big help!" +
+                    "\nIf you could report this issue with steps to reproduce it at https://github.com/Fuzzy39/Crystalarium that'd be a big help!" +
                     "\nA detailed description of the problem is below:\n\n" + e.Message + "\n" + e.StackTrace);
     crash.Run();
 }
+    
