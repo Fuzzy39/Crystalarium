@@ -11,7 +11,7 @@ using CrystalCore.Util;
 using NuGet.Frameworks;
 using CrystalCore.Model.CoreContract;
 
-namespace CrystalCoreTests.Model.Core
+namespace CrystalCoreTests.Model.DefaultCore
 {
     [TestClass()]
     public class GridTests
@@ -67,6 +67,11 @@ namespace CrystalCoreTests.Model.Core
             public void RegisterObject(MapObject obj)
             {
                 throw new NotImplementedException();
+            }
+
+            public override string ToString()
+            {
+                return "MockChunk @ " + _chunkCoords;
             }
         }
 
@@ -242,19 +247,47 @@ namespace CrystalCoreTests.Model.Core
         [TestMethod()]
         public void ChunkAtCoordsTest()
         {
-            Assert.Fail();
+
+            // arrange
+            DefaultGrid g = new DefaultGrid(new MockChunkComponentFactory());
+            g.ExpandToFit(new(-1, -1, 18, 18));
+
+           
+
+            // assert
+            Assert.AreEqual(g.Chunks[0][0], g.ChunkAtCoords(new(-7, -7)));
+
+            Assert.AreEqual(g.Chunks[1][1], g.ChunkAtCoords(new(0, 0)));
+
+            Assert.AreEqual(g.Chunks[1][2], g.ChunkAtCoords(new(0, 20)));
+
+
         }
 
         [TestMethod()]
         public void ChunksIntersectingTest()
         {
-            Assert.Fail();
+            // arrange
+            DefaultGrid g = new DefaultGrid(new MockChunkComponentFactory());
+            g.ExpandToFit(new(-1, -1, 18, 18));
+
+
+            // act
+            List < Chunk > chunks = g.ChunksIntersecting(new(-10, 0, 50, 4));
+
+            // assert
+            Assert.IsTrue(chunks.Contains(g.Chunks[0][1]));
+            Assert.IsTrue(chunks.Contains(g.Chunks[1][1]));
+            Assert.IsTrue(chunks.Contains(g.Chunks[2][1]));
+            Assert.AreEqual(3, chunks.Count);
+
+
         }
 
-        [TestMethod()]
+        /*[TestMethod()]
         public void ObjectsIntersectingTest()
         {
-            Assert.Fail();
-        }
+           // Assert.Fail();
+        }*/
     }
 }

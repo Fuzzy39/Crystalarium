@@ -7,7 +7,7 @@ using System;
 namespace CrystalCore.Model.Core
 {
     internal class DefaultGrid : Grid
-    // I would like this to be internal, but I also want to test it.
+    
     {
 
         private List<List<Chunk>> _chunks;
@@ -294,17 +294,18 @@ namespace CrystalCore.Model.Core
 
         public List<Chunk> ChunksIntersecting(Rectangle bounds)
         {
-
-            bounds = Rectangle.Intersect(Bounds, bounds);
+            // the rectangle containing all coordinates contained in the grid,as opposed to a rectangle representing the bounds of the grid.
+            Rectangle coordinateBounds = new(Bounds.Location, Bounds.Size- new Point(1));
+            bounds = Rectangle.Intersect(coordinateBounds, bounds);
 
             Point least = TileToChunkCoords(bounds.Location)-_origin;
             Point greatest = TileToChunkCoords(bounds.Location+bounds.Size) - _origin;
            
             List<Chunk> toReturn = new List<Chunk>();
 
-            for(int x = least.X; x<greatest.X; x++)
+            for(int x = least.X; x<=greatest.X; x++)
             {
-                for(int y =least.Y; y<greatest.Y; y++)
+                for(int y =least.Y; y<=greatest.Y; y++)
                 {
                     toReturn.Add(_chunks[x][y]);
                 }
@@ -348,7 +349,10 @@ namespace CrystalCore.Model.Core
 
         private Point TileToChunkCoords(Point tileCoords)
         {
-            return new(tileCoords.X/Chunk.SIZE, tileCoords.Y/Chunk.SIZE);
+            // I didn't feel like writing a whole other private function, okay?
+            Func<int, int> roundDown = (int a) => (int)MathF.Floor( ((float)a) / Chunk.SIZE );
+
+            return new(roundDown(tileCoords.X), roundDown(tileCoords.Y));
         }
 
         public override string ToString()

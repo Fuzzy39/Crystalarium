@@ -17,8 +17,6 @@ namespace CrystalCore.Model.DefaultObjects
         private Grid _grid;
 
        
-
-
         private List<MapObject> _objectsIntersecting;
 
         // Properties

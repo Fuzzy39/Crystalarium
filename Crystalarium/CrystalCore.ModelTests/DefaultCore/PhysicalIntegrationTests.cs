@@ -9,10 +9,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrystalCoreTests.Model.Core
+namespace CrystalCoreTests.Model.DefaultCore
 {
     [TestClass()]
-    public class DefaultPhysicalIntegrationTests
+    public class PhysicalIntegrationTests
     {
 
         private class MockEntity : Entity
@@ -32,13 +32,13 @@ namespace CrystalCoreTests.Model.Core
 
             public Point Size => size;
 
-            public bool Destroyed => throw new NotImplementedException();
+            public bool Destroyed => false;
 
             public event EventHandler OnReady;
 
             public void Destroy()
             {
-                throw new NotImplementedException();
+                
             }
         }
 
