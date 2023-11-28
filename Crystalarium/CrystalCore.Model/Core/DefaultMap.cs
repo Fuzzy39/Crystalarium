@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.CoreContract;
+using CrystalCore.Model.DefaultObjects;
 using CrystalCore.Model.ObjectContract;
 //using CrystalCore.Model.Rules;
 using CrystalCore.Util;
@@ -53,7 +54,10 @@ namespace CrystalCore.Model.Core
                 throw new ArgumentNullException("Null Ruleset not viable.");
             }
             _ruleset = r;*/
-            Reset();
+
+            // this seems rather hard coded... Shouldn't matter this update though.
+            _grid = new DefaultGrid(new DefaultComponentFactory(this));
+            OnReset?.Invoke(this, new EventArgs());
         }
 
 
@@ -68,7 +72,7 @@ namespace CrystalCore.Model.Core
 
             // reseting our grid should remove all references to any remaining mapObjects
             _grid.Destroy();
-            //_grid = new DefaultGrid(_ruleset.ComponentFactory);
+            _grid = new DefaultGrid(new DefaultComponentFactory(this));
             _grid.ExpandToFit(minimumBounds);
 
              OnReset?.Invoke(this, new EventArgs());

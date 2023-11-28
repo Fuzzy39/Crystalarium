@@ -229,7 +229,7 @@ namespace CrystalCoreTests.Model.Core
             DefaultGrid g = new DefaultGrid(new MockChunkComponentFactory());
 
             // act
-            g.ExpandToFit(new(-1, -1, 20, 20));
+            g.ExpandToFit(new(-1, -1, 18, 18));
 
             // assert
             Assert.AreEqual(9, g.ChunkList.Count);
