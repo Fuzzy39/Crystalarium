@@ -21,7 +21,8 @@ namespace CrystalCore.Model.DefaultObjects
             
         public Chunk CreateChunk(Point chunkCoords)
         {
-            return new DefaultChunk(_map, chunkCoords);
+            Chunk toReturn = new DefaultChunk(_map, chunkCoords);
+            toReturn.OnDestroy+=_
         }
 
         public MapObject CreateObject(Point position, Entity entity)

@@ -17,87 +17,10 @@ namespace CrystalCoreTests.Model.DefaultCore
     public class GridTests
     {
 
-        public class MockChunk : Chunk, MapComponent
-        {
-            private Point _chunkCoords;
-
-            public MockChunk(Point chunkCoords)
-            {
-                _chunkCoords = chunkCoords;
-            }
-
-
-            public Point ChunkCoords => _chunkCoords;
-
-            public List<MapObject> ObjectsIntersecting => throw new NotImplementedException();
-
-            public Map Map => throw new NotImplementedException();
-
-            public bool Destroyed => throw new NotImplementedException();
-
-            public Grid Grid => throw new NotImplementedException();
-
-            public event EventHandler OnDestroy = null;
-            public event EventHandler OnReady = null;
-
-            event ComponentEvent MapComponent.OnDestroy
-            {
-                add
-                {
-                    throw new NotImplementedException();
-                }
-
-                remove
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            public void Destroy()
-            {
-                throw new NotImplementedException();
-            }
-
         
-            public void Ready()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void RegisterObject(MapObject obj)
-            {
-                throw new NotImplementedException();
-            }
-
-            public override string ToString()
-            {
-                return "MockChunk @ " + _chunkCoords;
-            }
-        }
 
 
-        public class MockChunkComponentFactory : ComponentFactory
-        {
-            public Chunk CreateChunk(Point chunkCoords)
-            {
-                return new MockChunk(chunkCoords);
-            }
-
-            public MapObject CreateObject(Point position, Entity entity)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsValidPosition(Point position, Entity entity)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsValidPosition(Rectangle bounds, bool hasCollision)
-            {
-                throw new NotImplementedException();
-            }
-        }
+       
 
         [TestMethod()]
         public void BasicTest()

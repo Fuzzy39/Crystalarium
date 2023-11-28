@@ -15,32 +15,7 @@ namespace CrystalCoreTests.Model.DefaultCore
     public class PhysicalIntegrationTests
     {
 
-        private class MockEntity : Entity
-        {
-
-            private bool hasColl;
-            private Point size;
-            public MockEntity(bool hasColl, Point size)
-            {
-                this.hasColl = hasColl;
-                this.size = size;
-            }
-
-            public MapObject PhysicalRepresentation => throw new NotImplementedException();
-
-            public bool HasCollision => hasColl;
-
-            public Point Size => size;
-
-            public bool Destroyed => false;
-
-            public event EventHandler OnReady;
-
-            public void Destroy()
-            {
-                
-            }
-        }
+       
 
 
         [TestMethod()]
@@ -51,7 +26,7 @@ namespace CrystalCoreTests.Model.DefaultCore
             m.Grid.ExpandToFit(new(-1, -1, 18, 18)); // get a grid of 3x3 chunks centered on the origin chunk.
 
             ComponentFactory f = m.Grid.ComponentFactory;
-            
+
             // act
             MapObject test = f.CreateObject(new(0), new MockEntity(false, new(2)));
 
@@ -65,7 +40,7 @@ namespace CrystalCoreTests.Model.DefaultCore
 
             List<MapObject> list = m.Grid.ObjectsIntersecting(new(-16, -16, 48, 48));
             Assert.AreEqual(1, list.Count);
-            Assert.AreEqual(test, list[0] );
+            Assert.AreEqual(test, list[0]);
 
 
             // arrange again, hmm
@@ -93,5 +68,50 @@ namespace CrystalCoreTests.Model.DefaultCore
 
         }
 
+
+
+
+        [TestMethod()]
+        public void ObjectsTest()
+        {
+            // arrange
+            Map m = new DefaultMap();
+            Grid g = m.Grid;
+            g.ExpandToFit(new(-1, -1, 18, 18)); // get a grid of 3x3 chunks centered on the origin chunk.
+            ComponentFactory f = g.ComponentFactory;
+
+            // act
+            MapObject one = f.CreateObject(new(0, 15), new MockEntity(false, new(2))); // should be between two chunks
+            MapObject two = f.CreateObject(new(1, 14), new MockEntity(false, new(2)));
+
+            // the objects exist.
+            Assert.AreEqual(2, g.ObjectsIntersecting(new(0,0,32,16)).Count);
+            Assert.AreEqual(2, g.ObjectsIntersecting(new(1, 15, 1, 1)).Count);
+
+            Assert.AreEqual(1, g.ChunkAtCoords(new(20, 5)).ObjectsIntersecting.Count);
+            Assert.AreEqual(one, g.ChunkAtCoords(new(20, 5)).ObjectsIntersecting[0]);
+
+            Chunk origin = g.ChunkAtCoords(new(0, 0));
+            Assert.AreEqual(2, origin.ObjectsIntersecting.Count);
+            Assert.IsTrue(origin.ObjectsIntersecting.Contains(one));
+            Assert.IsTrue(origin.ObjectsIntersecting.Contains(two));
+
+            // act again
+            one.Destroy();
+
+
+            // the objects exist.
+            Assert.AreEqual(1, g.ObjectsIntersecting(new(0, 0, 32, 16)).Count);
+            Assert.AreEqual(1, g.ObjectsIntersecting(new(1, 15, 1, 1)).Count);
+
+            Assert.AreEqual(0, g.ChunkAtCoords(new(20, 5)).ObjectsIntersecting.Count);
+        
+            Assert.AreEqual(1, origin.ObjectsIntersecting.Count);
+            Assert.IsFalse(origin.ObjectsIntersecting.Contains(one));
+            Assert.IsTrue(origin.ObjectsIntersecting.Contains(two));
+
+
+
+        }
     }
 }
