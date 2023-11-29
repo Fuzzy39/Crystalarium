@@ -24,7 +24,7 @@ namespace CrystalCoreTests.Model.DefaultCore
         {
             
             // arrange
-            Chunk ch = new DefaultChunk(new MockMap(), new(0,0));
+            Chunk ch = new DefaultChunk(new MockGrid(), new(0,0));
 
             MockMapObj obj = new MockMapObj(new(0, 0, 1, 1));
 
@@ -50,7 +50,7 @@ namespace CrystalCoreTests.Model.DefaultCore
         {
 
             // arrange
-            Chunk ch = new DefaultChunk(new MockMap(), new(0, 0));
+            Chunk ch = new DefaultChunk(new MockGrid(), new(0, 0));
 
             MockMapObj obj = new MockMapObj(new(15, 0, 2, 1));
 
@@ -75,7 +75,7 @@ namespace CrystalCoreTests.Model.DefaultCore
         public void DestroyTest()
         {
             // arrange
-            Chunk ch = new DefaultChunk(new MockMap(), new(0, 0));
+            Chunk ch = new DefaultChunk(new MockGrid(), new(0, 0));
             MockMapObj obj = new MockMapObj(new(0, 0, 1, 1));
             ch.RegisterObject(obj);
 

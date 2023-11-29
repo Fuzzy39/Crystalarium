@@ -295,7 +295,10 @@ namespace CrystalCore.Model.Core
         public List<Chunk> ChunksIntersecting(Rectangle bounds)
         {
             // the rectangle containing all coordinates contained in the grid,as opposed to a rectangle representing the bounds of the grid.
+
+            bounds = new(bounds.Location, bounds.Size - new Point(1));
             Rectangle coordinateBounds = new(Bounds.Location, Bounds.Size- new Point(1));
+
             bounds = Rectangle.Intersect(coordinateBounds, bounds);
 
             Point least = TileToChunkCoords(bounds.Location)-_origin;

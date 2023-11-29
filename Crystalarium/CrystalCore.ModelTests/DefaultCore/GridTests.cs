@@ -180,9 +180,9 @@ namespace CrystalCoreTests.Model.DefaultCore
             // assert
             Assert.AreEqual(g.Chunks[0][0], g.ChunkAtCoords(new(-7, -7)));
 
-            Assert.AreEqual(g.Chunks[1][1], g.ChunkAtCoords(new(0, 0)));
+            Assert.AreEqual(g.Chunks[1][1], g.ChunkAtCoords(new(15, 0)));
 
-            Assert.AreEqual(g.Chunks[1][2], g.ChunkAtCoords(new(0, 20)));
+            Assert.AreEqual(g.Chunks[1][2], g.ChunkAtCoords(new(0, 16)));
 
 
         }
@@ -196,7 +196,7 @@ namespace CrystalCoreTests.Model.DefaultCore
 
 
             // act
-            List < Chunk > chunks = g.ChunksIntersecting(new(-10, 0, 50, 4));
+            List < Chunk > chunks = g.ChunksIntersecting(new(-10, 0, 50, 16));
 
             // assert
             Assert.IsTrue(chunks.Contains(g.Chunks[0][1]));

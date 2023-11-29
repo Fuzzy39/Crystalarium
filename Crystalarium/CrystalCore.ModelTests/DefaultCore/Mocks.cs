@@ -1,5 +1,6 @@
 ﻿using CrystalCore.Model.CoreContract;
 using CrystalCore.Model.ObjectContract;
+using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,68 @@ using System.Threading.Tasks;
 
 namespace CrystalCoreTests.Model.DefaultCore
 {
+
+    internal class MockGrid : Grid
+    {
+
+        public Chunk _chunk;
+
+        public MockGrid()
+        {
+            _chunk = new MockChunk(new(0));
+        }
+
+        public List<List<Chunk>> Chunks => throw new NotImplementedException();
+
+        public List<Chunk> ChunkList => throw new NotImplementedException();
+
+        public Point ChunkOrigin => throw new NotImplementedException();
+
+        public Point ChunkSize => throw new NotImplementedException();
+
+        public Rectangle Bounds => throw new NotImplementedException();
+
+        public ComponentFactory ComponentFactory => throw new NotImplementedException();
+
+        public event EventHandler? OnResize;
+
+        public Chunk ChunkAtCoords(Point tileCoord)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Chunk> ChunksIntersecting(Rectangle bounds)
+        {
+            List<Chunk> toReturn = new()
+            {
+                _chunk
+            };
+
+            return toReturn;
+        }
+
+        public void Destroy()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Expand(Direction d)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ExpandToFit(Rectangle rect)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<MapObject> ObjectsIntersecting(Rectangle bounds)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
     internal class MockMap : Map
     {
         // could cause issues, be careful with that.
@@ -100,9 +163,12 @@ namespace CrystalCoreTests.Model.DefaultCore
     {
         private Point _chunkCoords;
 
+        public List<MapObject> _calledRegister;
+
         public MockChunk(Point chunkCoords)
         {
             _chunkCoords = chunkCoords;
+            _calledRegister = new List<MapObject>();    
         }
 
 
@@ -145,7 +211,7 @@ namespace CrystalCoreTests.Model.DefaultCore
 
         public void RegisterObject(MapObject obj)
         {
-            throw new NotImplementedException();
+           _calledRegister.Add(obj);
         }
 
         public override string ToString()

@@ -81,12 +81,12 @@ namespace CrystalCoreTests.Model.DefaultCore
             ComponentFactory f = g.ComponentFactory;
 
             // act
-            MapObject one = f.CreateObject(new(0, 15), new MockEntity(false, new(2))); // should be between two chunks
-            MapObject two = f.CreateObject(new(1, 14), new MockEntity(false, new(2)));
+            MapObject one = f.CreateObject(new(15, 0), new MockEntity(false, new(2))); // should be between two chunks
+            MapObject two = f.CreateObject(new(14, 1), new MockEntity(false, new(2)));
 
             // the objects exist.
             Assert.AreEqual(2, g.ObjectsIntersecting(new(0,0,32,16)).Count);
-            Assert.AreEqual(2, g.ObjectsIntersecting(new(1, 15, 1, 1)).Count);
+            Assert.AreEqual(2, g.ObjectsIntersecting(new(15, 1, 1, 1)).Count);
 
             Assert.AreEqual(1, g.ChunkAtCoords(new(20, 5)).ObjectsIntersecting.Count);
             Assert.AreEqual(one, g.ChunkAtCoords(new(20, 5)).ObjectsIntersecting[0]);
@@ -102,7 +102,7 @@ namespace CrystalCoreTests.Model.DefaultCore
 
             // the objects exist.
             Assert.AreEqual(1, g.ObjectsIntersecting(new(0, 0, 32, 16)).Count);
-            Assert.AreEqual(1, g.ObjectsIntersecting(new(1, 15, 1, 1)).Count);
+            Assert.AreEqual(1, g.ObjectsIntersecting(new(15, 1, 1, 1)).Count);
 
             Assert.AreEqual(0, g.ChunkAtCoords(new(20, 5)).ObjectsIntersecting.Count);
         
@@ -110,6 +110,26 @@ namespace CrystalCoreTests.Model.DefaultCore
             Assert.IsFalse(origin.ObjectsIntersecting.Contains(one));
             Assert.IsTrue(origin.ObjectsIntersecting.Contains(two));
 
+
+
+        }
+
+
+        [TestMethod()]
+        public void CollisionTest()
+        {
+            Map m = new DefaultMap();
+            Grid g = m.Grid;
+            g.ExpandToFit(new(-1, -1, 18, 18)); // get a grid of 3x3 chunks centered on the origin chunk.
+            ComponentFactory f = g.ComponentFactory;
+            MockEntity entity = new(true, new(2));
+
+            f.CreateObject(new(15, 0),entity);
+
+            Assert.IsFalse(f.IsValidPosition(new(16, 0), entity));
+            Assert.IsTrue(f.IsValidPosition(new(16, 0), new MockEntity(false, new(2))));
+            Assert.IsFalse(f.IsValidPosition(new(14, -1), entity));
+            Assert.IsTrue(f.IsValidPosition(new(13, 0), entity));
 
 
         }

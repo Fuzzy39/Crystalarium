@@ -18,24 +18,22 @@ namespace CrystalCoreTests.Model.DefaultCore
         [TestMethod()]
         public void CreateTest()
         {
-            MapObject obj = new DefaultMapObject(new MockMap(), new(2), new MockEntity(false, new(2)));
+            MapObject obj = new DefaultMapObject(new MockGrid(), new(2), new MockEntity(false, new(2)));
 
             Assert.AreEqual(new Rectangle(2, 2, 2, 2), obj.Bounds);
 
-        }
+            // for the mock grid, this will always return the same chunk.
+            Chunk ch = ((MockGrid)obj.Grid)._chunk;
 
-        [TestMethod()]
-        public void DestroyTest()
-        {
-            Assert.Fail();
-        }
+            Assert.AreEqual(1, ((MockChunk)ch)._calledRegister.Count);
+            Assert.AreEqual(obj, ((MockChunk)ch)._calledRegister[0]);
 
 
-        [TestMethod()]
-        public void ParentTest()
-        {
-            Assert.Fail();
+
         }
+
+  
+
 
 
     }

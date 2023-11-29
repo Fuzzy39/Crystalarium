@@ -21,8 +21,9 @@ namespace CrystalCore.Model.DefaultObjects
             
         public Chunk CreateChunk(Point chunkCoords)
         {
-            Chunk toReturn = new DefaultChunk(_map, chunkCoords);
-            toReturn.OnDestroy+=_
+            Chunk toReturn = new DefaultChunk(_map.Grid, chunkCoords);
+            toReturn.OnDestroy += _map.OnComponentDestroyed;
+            return toReturn;
         }
 
         public MapObject CreateObject(Point position, Entity entity)
@@ -32,8 +33,10 @@ namespace CrystalCore.Model.DefaultObjects
                 throw new ArgumentException("Bounds: " + new Rectangle(position, entity.Size) + " is invalid for " + entity.ToString());
             }
         
-            return new DefaultMapObject(_map, position, entity);
-          
+            MapObject toReturn = new DefaultMapObject(_map.Grid, position, entity);
+            toReturn.OnDestroy += _map.OnComponentDestroyed;
+            return toReturn;
+
         }
 
         public bool IsValidPosition(Point position, Entity entity)

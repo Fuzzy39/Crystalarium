@@ -46,16 +46,12 @@ namespace CrystalCore.Model.DefaultObjects
         public event ComponentEvent OnDestroy;
      
 
-        public DefaultChunk( Map map, Point chunkCoords)
+        public DefaultChunk( Grid grid, Point chunkCoords)
         {
-            _grid = map.Grid;
+            _grid = grid;
             _chunkCoords = chunkCoords;
   
             _objectsIntersecting = new List<MapObject>();
-
-           
-            // the map deserves to know if we get ganked.
-            OnDestroy += map.OnComponentDestroyed;
         }
 
 
