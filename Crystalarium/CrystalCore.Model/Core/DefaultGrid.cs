@@ -281,15 +281,12 @@ namespace CrystalCore.Model.Core
 
         }
 
-
-        public Chunk ChunkAtCoords(Point tileCoords)
+        public Point TileToChunkCoords(Point tileCoords)
         {
-            Point chunkCoord = TileToChunkCoords(tileCoords);
+            // I didn't feel like writing a whole other private function, okay?
+            Func<int, int> roundDown = (int a) => (int)MathF.Floor( ((float)a) / Chunk.SIZE );
 
-            Point chunkIndex = chunkCoord - _origin;
-
-            return Chunks[chunkIndex.X][chunkIndex.Y];
-
+            return new(roundDown(tileCoords.X), roundDown(tileCoords.Y));
         }
 
         public List<Chunk> ChunksIntersecting(Rectangle bounds)
@@ -297,66 +294,26 @@ namespace CrystalCore.Model.Core
             // the rectangle containing all coordinates contained in the grid,as opposed to a rectangle representing the bounds of the grid.
 
             bounds = new(bounds.Location, bounds.Size - new Point(1));
-            Rectangle coordinateBounds = new(Bounds.Location, Bounds.Size- new Point(1));
+            Rectangle coordinateBounds = new(Bounds.Location, Bounds.Size - new Point(1));
 
             bounds = Rectangle.Intersect(coordinateBounds, bounds);
 
-            Point least = TileToChunkCoords(bounds.Location)-_origin;
-            Point greatest = TileToChunkCoords(bounds.Location+bounds.Size) - _origin;
-           
+            Point least = TileToChunkCoords(bounds.Location) - ChunkOrigin;
+            Point greatest = TileToChunkCoords(bounds.Location + bounds.Size) - ChunkOrigin;
+
             List<Chunk> toReturn = new List<Chunk>();
 
-            for(int x = least.X; x<=greatest.X; x++)
+            for (int x = least.X; x <= greatest.X; x++)
             {
-                for(int y =least.Y; y<=greatest.Y; y++)
+                for (int y = least.Y; y <= greatest.Y; y++)
                 {
-                    toReturn.Add(_chunks[x][y]);
+                    toReturn.Add(Chunks[x][y]);
                 }
             }
 
             return toReturn;
-
         }
 
-
-        public List<MapObject> ObjectsIntersecting(Rectangle bounds) 
-        {
-            List<Chunk> chunks = ChunksIntersecting(bounds);
-            List<MapObject> toReturn = new();
-
-            foreach(Chunk chunk in chunks)
-            {
-                foreach (MapObject obj in chunk.ObjectsIntersecting)
-                {
-
-                    if (obj.Bounds.Intersects(bounds))
-                    {
-                        // only add a if it isn't already in the list
-                        // explaination of line: if element in toReturn exists such that element is obj ...
-                        // simpler explanation: if obj is already in the list...
-                        if (toReturn.Exists((test) => { return test == obj; })) 
-                        {
-                            continue;
-                        }
-
-                        toReturn.Add(obj);
-                    }
-
-
-                }
-            }
-            return toReturn;
-        
-        }
-
-
-        private Point TileToChunkCoords(Point tileCoords)
-        {
-            // I didn't feel like writing a whole other private function, okay?
-            Func<int, int> roundDown = (int a) => (int)MathF.Floor( ((float)a) / Chunk.SIZE );
-
-            return new(roundDown(tileCoords.X), roundDown(tileCoords.Y));
-        }
 
         public override string ToString()
         {

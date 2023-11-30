@@ -25,9 +25,8 @@ namespace CrystalCore.Model.CoreContract
 
         ComponentFactory ComponentFactory { get; }
 
-       
-
         event EventHandler? OnResize;
+
 
         void Destroy();
 
@@ -35,10 +34,11 @@ namespace CrystalCore.Model.CoreContract
 
         void ExpandToFit(Rectangle rect);
 
-        Chunk ChunkAtCoords(Point tileCoord);
+        public Point TileToChunkCoords(Point tileCoords);
 
-        List<Chunk> ChunksIntersecting(Rectangle bounds);
+        public List<Chunk> ChunksIntersecting(Rectangle bounds);
 
-        List<MapObject> ObjectsIntersecting(Rectangle bounds);
+
+
     }
 }

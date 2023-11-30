@@ -1,0 +1,81 @@
+﻿using CrystalCore.Model.ObjectContract;
+using CrystalCore.Util;
+using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CrystalCore.Model.CoreContract
+{
+    internal static class GridExtensions
+    {
+        public static Chunk ChunkAtCoords(this Grid g, Point tileCoords)
+        {
+            Point chunkCoord = g.TileToChunkCoords(tileCoords);
+
+            Point chunkIndex = chunkCoord - g.ChunkOrigin;
+
+            return g.Chunks[chunkIndex.X][chunkIndex.Y];
+
+        }
+
+        public static List<MapObject> ObjectsIntersecting(this Grid g, Rectangle bounds)
+        {
+            List<Chunk> chunks = g.ChunksIntersecting(bounds);
+            List<MapObject> toReturn = new();
+
+            foreach (Chunk chunk in chunks)
+            {
+                foreach (MapObject obj in chunk.ObjectsIntersecting)
+                {
+
+                    if (obj.Bounds.Intersects(bounds))
+                    {
+                        // only add a if it isn't already in the list
+                        // explaination of line: if element in toReturn exists such that element is obj ...
+                        // simpler explanation: if obj is already in the list...
+                        if (toReturn.Exists((test) => { return test == obj; }))
+                        {
+                            continue;
+                        }
+
+                        toReturn.Add(obj);
+                    }
+
+
+                }
+            }
+            return toReturn;
+
+        }
+
+
+        public static MapObject FindClosestObjectInDirection(this Grid g, Point from, CompassPoint direction)
+        {
+            while(true)
+            {
+                from += direction.ToPoint();
+                if(!g.Bounds.Contains(from))
+                {
+                    return null;
+                }
+
+                List<MapObject> objs = g.ObjectsIntersecting(new(from, new(1)));
+                MapObject obj = (objs.Where((search) => search.Entity.HasCollision)).First();
+                if(obj!= null)
+                {
+                    return obj;
+                }
+
+                
+            }
+           
+            
+
+        }
+
+
+    }
+}

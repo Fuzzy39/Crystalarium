@@ -69,6 +69,11 @@ namespace CrystalCoreTests.Model.DefaultCore
         {
             throw new NotImplementedException();
         }
+
+        public Point TileToChunkCoords(Point tileCoords)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
