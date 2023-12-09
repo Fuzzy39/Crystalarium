@@ -8,21 +8,22 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Remove="DefaultObjects\**" />
 		<Compile Remove="OldObjects\**" />
+		<Compile Remove="OldSimulation\**" />
 		<Compile Remove="Rules\Transformations\**" />
 		<Compile Remove="Simulation\**" />
-		<EmbeddedResource Remove="DefaultObjects\**" />
 		<EmbeddedResource Remove="OldObjects\**" />
+		<EmbeddedResource Remove="OldSimulation\**" />
 		<EmbeddedResource Remove="Rules\Transformations\**" />
 		<EmbeddedResource Remove="Simulation\**" />
-		<None Remove="DefaultObjects\**" />
 		<None Remove="OldObjects\**" />
+		<None Remove="OldSimulation\**" />
 		<None Remove="Rules\Transformations\**" />
 		<None Remove="Simulation\**" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Remove="Core\Default\MapExtensions.cs" />
 		<Compile Remove="Core\MapExtensions.cs" />
 		<Compile Remove="Rules\AgentType.cs" />
 		<Compile Remove="Rules\Operands.cs" />
@@ -30,12 +31,6 @@
 		<Compile Remove="Rules\Ruleset.cs" />
 		<Compile Remove="Rules\TransformationRule.cs" />
 		<Compile Remove="SimulationManager.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Include="DefaultObjects\DefaultChunk.cs" />
-		<Compile Include="DefaultObjects\DefaultComponentFactory.cs" />
-		<Compile Include="DefaultObjects\DefaultMapObject.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -51,9 +46,9 @@
 			<_Parameter1>CrystalCoreTests.Model</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
-	
+
 	<ItemGroup>
-		<Folder Include="Rules\" />
+	  <Folder Include="Rules\" />
 	</ItemGroup>
 
 </Project>

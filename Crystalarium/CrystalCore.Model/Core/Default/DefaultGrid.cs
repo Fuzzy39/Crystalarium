@@ -1,13 +1,12 @@
-﻿using CrystalCore.Model.CoreContract;
-using CrystalCore.Model.ObjectContract;
+﻿using CrystalCore.Model.Physical;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace CrystalCore.Model.Core
+namespace CrystalCore.Model.Core.Default
 {
     internal class DefaultGrid : Grid
-    
+
     {
 
         private List<List<Chunk>> _chunks;
@@ -19,7 +18,7 @@ namespace CrystalCore.Model.Core
 
 
         public event EventHandler? OnResize;
-
+            
         public List<List<Chunk>> Chunks
         {
             get => _chunks;
@@ -29,7 +28,7 @@ namespace CrystalCore.Model.Core
         {
             get
             {
-                List<Chunk> ToReturn = new();   
+                List<Chunk> ToReturn = new();
                 foreach (List<Chunk> elements in _chunks)
                 {
                     ToReturn.AddRange(elements);
@@ -58,7 +57,7 @@ namespace CrystalCore.Model.Core
         }
 
 
-      
+
 
         /// <summary>
         /// The bounds of this grid in tile coordinates.
@@ -284,7 +283,7 @@ namespace CrystalCore.Model.Core
         public Point TileToChunkCoords(Point tileCoords)
         {
             // I didn't feel like writing a whole other private function, okay?
-            Func<int, int> roundDown = (int a) => (int)MathF.Floor( ((float)a) / Chunk.SIZE );
+            Func<int, int> roundDown = (a) => (int)MathF.Floor((float)a / Chunk.SIZE);
 
             return new(roundDown(tileCoords.X), roundDown(tileCoords.Y));
         }
@@ -317,7 +316,7 @@ namespace CrystalCore.Model.Core
 
         public override string ToString()
         {
-            return "Grid [ size: "+_size+", top left at position: "+_origin+" (in chunks) ]";
+            return "Grid [ size: " + _size + ", top left at position: " + _origin + " (in chunks) ]";
         }
 
     }

@@ -1,5 +1,5 @@
-﻿using CrystalCore.Model.CoreContract;
-using CrystalCore.Model.ObjectContract;
+﻿using CrystalCore.Model.Core;
+using CrystalCore.Model.Physical;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrystalCore.Model.DefaultObjects
+namespace CrystalCore.Model.Physical.Default
 {
     internal class DefaultChunk : Chunk
     {
@@ -16,7 +16,7 @@ namespace CrystalCore.Model.DefaultObjects
         private Point _chunkCoords;
         private Grid _grid;
 
-       
+
         private List<MapObject> _objectsIntersecting;
 
         // Properties
@@ -26,7 +26,7 @@ namespace CrystalCore.Model.DefaultObjects
             get => _chunkCoords;
         }
 
-        public List<MapObject> ObjectsIntersecting   
+        public List<MapObject> ObjectsIntersecting
         {
             get { return _objectsIntersecting; }
         }
@@ -44,13 +44,13 @@ namespace CrystalCore.Model.DefaultObjects
 
 
         public event ComponentEvent OnDestroy;
-     
 
-        public DefaultChunk( Grid grid, Point chunkCoords)
+
+        public DefaultChunk(Grid grid, Point chunkCoords)
         {
             _grid = grid;
             _chunkCoords = chunkCoords;
-  
+
             _objectsIntersecting = new List<MapObject>();
         }
 
@@ -75,17 +75,17 @@ namespace CrystalCore.Model.DefaultObjects
 
 
 
-          
+
         }
 
 
         internal void OnWithinDestroyed(MapComponent comp, EventArgs e)
         {
-          
 
-            MapObject obj = (MapObject)comp;   
+
+            MapObject obj = (MapObject)comp;
             _objectsIntersecting.Remove(obj);
-        
+
 
 
         }
@@ -93,17 +93,17 @@ namespace CrystalCore.Model.DefaultObjects
         public void RegisterObject(MapObject obj)
         {
             // that's uglier than I feel like it should be, but I guess it discourages default interface implementations.
-            Rectangle Bounds = (((Chunk)this).Bounds);
+            Rectangle Bounds = ((Chunk)this).Bounds;
 
             if (!obj.Bounds.Intersects(Bounds))
             {
-                throw new ArgumentException("MapObject '" + obj.ToString() + "' is not within Chunk '" + this.ToString() + "'.");
+                throw new ArgumentException("MapObject '" + obj.ToString() + "' is not within Chunk '" + ToString() + "'.");
             }
 
             _objectsIntersecting.Add(obj);
             obj.OnDestroy += OnWithinDestroyed;
 
-        
+
         }
 
         public override string ToString()
@@ -112,7 +112,7 @@ namespace CrystalCore.Model.DefaultObjects
             {
                 return "DefaultChunk [Destroyed]";
             }
-            return "DefaultChunk [ At Chunk Coords: "+_chunkCoords+" Members: "+_objectsIntersecting.Count+" Child of: "+_grid+" ]";
+            return "DefaultChunk [ At Chunk Coords: " + _chunkCoords + " Members: " + _objectsIntersecting.Count + " Child of: " + _grid + " ]";
         }
     }
 }

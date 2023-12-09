@@ -1,11 +1,11 @@
-﻿using CrystalCore.Model.CoreContract;
-using CrystalCore.Model.DefaultObjects;
-using CrystalCore.Model.ObjectContract;
+﻿
+using CrystalCore.Model.Physical;
+using CrystalCore.Model.Physical.Default;
 //using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 
-namespace CrystalCore.Model.Core
+namespace CrystalCore.Model.Core.Default
 {
     /// <summary>
     /// DefaultMap represents a map made of 
@@ -28,7 +28,7 @@ namespace CrystalCore.Model.Core
         public event ComponentEvent? OnMapComponentDestroyed;
 
 
-        public Grid Grid 
+        public Grid Grid
         {
             get => _grid;
         }
@@ -75,14 +75,14 @@ namespace CrystalCore.Model.Core
             _grid = new DefaultGrid(new DefaultComponentFactory(this));
             _grid.ExpandToFit(minimumBounds);
 
-             OnReset?.Invoke(this, new EventArgs());
+            OnReset?.Invoke(this, new EventArgs());
 
-            
+
         }
 
-       // These handle the events of MapComponents.
+        // These handle the events of MapComponents.
 
-      
+
 
         void Map.OnComponentDestroyed(MapComponent component, EventArgs e)
         {

@@ -1,8 +1,8 @@
-﻿using CrystalCore.Model.ObjectContract;
+﻿using CrystalCore.Model.Physical;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 
-namespace CrystalCore.Model.CoreContract
+namespace CrystalCore.Model.Core
 {
     /// <summary>
     /// The physical component of a map.
@@ -20,7 +20,7 @@ namespace CrystalCore.Model.CoreContract
 
 
         Point ChunkSize { get; }
-    
+
         Rectangle Bounds { get; }
 
         ComponentFactory ComponentFactory { get; }

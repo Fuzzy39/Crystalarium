@@ -77,6 +77,12 @@ namespace CrystalCore.Util
 
         }
 
+        /// <summary>
+        /// Whether this direction points in the positive direction of the X or Y axis.
+        /// returns true for right and down.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
         public static bool IsPositive(this Direction d)
         {
             return d == Direction.right || d == Direction.down;

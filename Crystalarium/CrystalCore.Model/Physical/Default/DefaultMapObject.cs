@@ -1,5 +1,5 @@
-﻿using CrystalCore.Model.CoreContract;
-using CrystalCore.Model.ObjectContract;
+﻿using CrystalCore.Model.Core;
+using CrystalCore.Model.Physical;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrystalCore.Model.DefaultObjects
+namespace CrystalCore.Model.Physical.Default
 {
     internal class DefaultMapObject : MapObject, MapComponent
     {
@@ -45,10 +45,10 @@ namespace CrystalCore.Model.DefaultObjects
         public void Destroy()
         {
             _destroyed = true;
-            OnDestroy.Invoke(this, new());  
+            OnDestroy.Invoke(this, new());
 
             _bounds = new();
-            if(!_entity.Destroyed)
+            if (!_entity.Destroyed)
             {
                 Entity.Destroy();
             }
@@ -58,6 +58,6 @@ namespace CrystalCore.Model.DefaultObjects
 
         }
 
-       
+
     }
 }

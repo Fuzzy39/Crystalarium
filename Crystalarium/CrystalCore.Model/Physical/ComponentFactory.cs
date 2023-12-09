@@ -1,9 +1,8 @@
-﻿using CrystalCore.Model.CoreContract;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 
 
-namespace CrystalCore.Model.ObjectContract
+namespace CrystalCore.Model.Physical
 {
     public interface ComponentFactory
     {
@@ -16,7 +15,7 @@ namespace CrystalCore.Model.ObjectContract
 
         public bool IsValidPosition(Rectangle bounds, bool hasCollision);
 
-       
+
 
     }
 }

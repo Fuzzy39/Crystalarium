@@ -1,14 +1,12 @@
-﻿ 
+﻿using CrystalCore.Model.Core;
 
-using CrystalCore.Model.CoreContract;
-
-namespace CrystalCore.Model.ObjectContract
+namespace CrystalCore.Model.Physical
 {
     public interface MapComponent
     {
 
         public event ComponentEvent OnDestroy;
-      
+
 
 
         public Grid Grid { get; }
@@ -21,7 +19,7 @@ namespace CrystalCore.Model.ObjectContract
 
         public abstract void Destroy();
 
-     
+
 
 
 

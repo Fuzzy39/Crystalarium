@@ -1,13 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CrystalCore.Model.Core;
-using CrystalCore.Model.CoreContract;
-using CrystalCore.Model.ObjectContract;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CrystalCore.Model.Core;
+using CrystalCore.Model.Physical;
+using CrystalCore.Model.Core.Default;
 
 namespace CrystalCoreTests.Model.DefaultCore
 {

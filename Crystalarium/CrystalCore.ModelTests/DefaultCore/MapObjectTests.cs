@@ -1,12 +1,6 @@
-﻿using CrystalCore.Model.CoreContract;
-using CrystalCore.Model.DefaultObjects;
-using CrystalCore.Model.ObjectContract;
+﻿using CrystalCore.Model.Physical;
+using CrystalCore.Model.Physical.Default;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalCoreTests.Model.DefaultCore
 {

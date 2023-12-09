@@ -1,14 +1,7 @@
 ﻿using CrystalCore.Model.Core;
-using CrystalCore.Model.CoreContract;
-using CrystalCore.Model.ObjectContract;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CrystalCore.Model.DefaultObjects
+namespace CrystalCore.Model.Physical.Default
 {
     internal class DefaultComponentFactory : ComponentFactory
     {
@@ -18,7 +11,7 @@ namespace CrystalCore.Model.DefaultObjects
         {
             _map = map;
         }
-            
+
         public Chunk CreateChunk(Point chunkCoords)
         {
             Chunk toReturn = new DefaultChunk(_map.Grid, chunkCoords);
@@ -28,11 +21,11 @@ namespace CrystalCore.Model.DefaultObjects
 
         public MapObject CreateObject(Point position, Entity entity)
         {
-            if(!IsValidPosition(position, entity))  
+            if (!IsValidPosition(position, entity))
             {
                 throw new ArgumentException("Bounds: " + new Rectangle(position, entity.Size) + " is invalid for " + entity.ToString());
             }
-        
+
             MapObject toReturn = new DefaultMapObject(_map.Grid, position, entity);
             toReturn.OnDestroy += _map.OnComponentDestroyed;
             return toReturn;
@@ -46,21 +39,21 @@ namespace CrystalCore.Model.DefaultObjects
 
         public bool IsValidPosition(Rectangle bounds, bool hasCollision)
         {
-            if(!_map.Grid.Bounds.Contains(bounds)) 
+            if (!_map.Grid.Bounds.Contains(bounds))
             {
                 // the position suggested is outside of bounds.
                 return false;
             }
 
-            if(!hasCollision)
+            if (!hasCollision)
             {
                 return true;
             }
 
             // test for collision.
-      
+
             // if any intersecting object has collision, return false.
-            return ! _map.Grid.ObjectsIntersecting(bounds).Any(obj => obj.Entity.HasCollision);
+            return !_map.Grid.ObjectsIntersecting(bounds).Any(obj => obj.Entity.HasCollision);
             // LINQ is neat, but also witchcraft.
 
         }

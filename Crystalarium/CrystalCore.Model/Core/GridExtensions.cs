@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.ObjectContract;
+﻿using CrystalCore.Model.Physical;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrystalCore.Model.CoreContract
+namespace CrystalCore.Model.Core
 {
     internal static class GridExtensions
     {
@@ -54,25 +54,25 @@ namespace CrystalCore.Model.CoreContract
 
         public static MapObject FindClosestObjectInDirection(this Grid g, Point from, CompassPoint direction)
         {
-            while(true)
+            while (true)
             {
                 from += direction.ToPoint();
-                if(!g.Bounds.Contains(from))
+                if (!g.Bounds.Contains(from))
                 {
                     return null;
                 }
 
                 List<MapObject> objs = g.ObjectsIntersecting(new(from, new(1)));
-                MapObject obj = (objs.Where((search) => search.Entity.HasCollision)).First();
-                if(obj!= null)
+                MapObject obj = objs.Where((search) => search.Entity.HasCollision).First();
+                if (obj != null)
                 {
                     return obj;
                 }
 
-                
+
             }
-           
-            
+
+
 
         }
 

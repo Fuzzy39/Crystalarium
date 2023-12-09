@@ -1,5 +1,5 @@
-﻿using CrystalCore.Model.CoreContract;
-using CrystalCore.Model.ObjectContract;
+﻿using CrystalCore.Model.Core;
+using CrystalCore.Model.Physical;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
@@ -120,7 +120,7 @@ namespace CrystalCoreTests.Model.DefaultCore
             this.size = size;
         }
 
-        public MapObject PhysicalRepresentation => throw new NotImplementedException();
+        public MapObject Physical => throw new NotImplementedException();
 
         public bool HasCollision => hasColl;
 

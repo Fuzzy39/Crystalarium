@@ -1,7 +1,6 @@
-﻿using CrystalCore.Model.CoreContract;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
-namespace CrystalCore.Model.ObjectContract
+namespace CrystalCore.Model.Physical
 {
     /// <summary>
     /// A MapObject represents a physical region on the map. It cooresponds to an entity which has behavior in the simulation.

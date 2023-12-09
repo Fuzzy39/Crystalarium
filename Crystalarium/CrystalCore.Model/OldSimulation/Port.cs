@@ -223,7 +223,7 @@ namespace CrystalCore.Model.Simulation
 
 
 
-            Ruleset r = Parent.Type.Ruleset;
+            Ruleset r = Parent.Type.Ruleset; // <- this is inexplicable.
 
 
             // this warning is probably a sign that this stuff is not implemented super well...

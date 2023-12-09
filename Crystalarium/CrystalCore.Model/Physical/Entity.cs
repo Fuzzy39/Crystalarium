@@ -1,13 +1,6 @@
-﻿using CrystalCore.Model.CoreContract;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
 
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CrystalCore.Model.ObjectContract
+namespace CrystalCore.Model.Physical
 {
 
     /// <summary>
@@ -17,7 +10,7 @@ namespace CrystalCore.Model.ObjectContract
     {
         public event EventHandler OnReady;
 
-        public MapObject PhysicalRepresentation { get; }
+        public MapObject Physical { get; }
 
         public bool HasCollision { get; }
 

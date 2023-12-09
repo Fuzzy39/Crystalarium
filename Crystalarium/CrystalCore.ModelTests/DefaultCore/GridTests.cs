@@ -1,6 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CrystalCore.Model.Core;
-using CrystalCore.Model.ObjectContract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using CrystalCore.Util;
 using NuGet.Frameworks;
-using CrystalCore.Model.CoreContract;
+using CrystalCore.Model.Core.Default;
+using CrystalCore.Model.Core;
+using CrystalCore.Model.Physical;
 
 namespace CrystalCoreTests.Model.DefaultCore
 {
