@@ -52,17 +52,19 @@ namespace CrystalCore.Model.Core
         }
 
 
-        public static MapObject FindClosestObjectInDirection(this Grid g, Point from, CompassPoint direction)
+        public static MapObject FindClosestObjectInDirection(this Grid g, ref Point location, CompassPoint direction, out int length)
         {
+            length = 0;
             while (true)
             {
-                from += direction.ToPoint();
-                if (!g.Bounds.Contains(from))
+                location += direction.ToPoint();
+                length++;
+                if (!g.Bounds.Contains(location))
                 {
                     return null;
                 }
 
-                List<MapObject> objs = g.ObjectsIntersecting(new(from, new(1)));
+                List<MapObject> objs = g.ObjectsIntersecting(new(location, new(1)));
                 MapObject obj = objs.Where((search) => search.Entity.HasCollision).First();
                 if (obj != null)
                 {

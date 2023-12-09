@@ -18,10 +18,12 @@ namespace CrystalCore.Model.Communication
 
         public Point Location { get; }
 
-        
+        public event EventHandler? OnDestroy;
+
         public Connection Connection { get; set; }
         public Port ConnectedTo { get; } // for convience's sake
 
+        public bool Destroyed { get; }
 
 
         /// <summary>
@@ -45,7 +47,10 @@ namespace CrystalCore.Model.Communication
         {
             return "Port: { Location:" + Location + " Descriptor:  "+Descriptor+ "(ABS):" + AbsoluteFacing + "}";
         }
+
+        public void Destroy();
     }
+
 
 
  }

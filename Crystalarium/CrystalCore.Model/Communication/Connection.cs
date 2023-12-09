@@ -40,6 +40,7 @@ namespace CrystalCore.Model.Communication
 
         public void Transmit(Port from, int value);
 
+        // what does this do?
         public void Disconnect(Port toDisconnect);
 
 

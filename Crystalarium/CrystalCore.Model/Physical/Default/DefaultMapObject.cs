@@ -48,11 +48,6 @@ namespace CrystalCore.Model.Physical.Default
             OnDestroy.Invoke(this, new());
 
             _bounds = new();
-            if (!_entity.Destroyed)
-            {
-                Entity.Destroy();
-            }
-
             _entity = null;
             _grid = null;
 
