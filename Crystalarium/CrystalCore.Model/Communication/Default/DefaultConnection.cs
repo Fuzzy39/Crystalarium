@@ -18,8 +18,7 @@ namespace CrystalCore.Model.Communication.Default
         private Port _portA;
         private Port _portB;
 
-        private int _fromA;
-        private int _fromB;
+ 
 
         private bool _destroyed;
 
@@ -28,7 +27,7 @@ namespace CrystalCore.Model.Communication.Default
 
         private ComponentFactory _factory;
 
-        public Connection(ComponentFactory factory, Port initial)
+        public DefaultConnection(ComponentFactory factory, Port initial)
         {
 
             _destroyed = false;
@@ -38,8 +37,7 @@ namespace CrystalCore.Model.Communication.Default
             _portA = initial;
             _portA.Connection = this;
 
-            _fromA = 0;
-            _fromB = 0;
+         
             _portB = null;
 
             Update();
@@ -51,9 +49,9 @@ namespace CrystalCore.Model.Communication.Default
 
         public Port PortB => _portB;
 
-        public int FromA => _fromA;
+        public int FromA => _portA==null?0:_portA.Output;
 
-        public int FromB => _fromB;
+        public int FromB => _portB==null?0:_portB.Output;
 
         public MapObject Physical => _physical;
 
@@ -69,12 +67,39 @@ namespace CrystalCore.Model.Communication.Default
 
         public void Destroy()
         {
-            throw new NotImplementedException();
+            _destroyed = true;
+            if (_portA != null)
+            {
+                Disconnect(_portA);
+            }
+            if(_portB != null)
+            {
+                Disconnect(_portB);
+            }
+
+            _physical.Destroy();
+            _physical = null;
+            _factory = null;
+            _size = new Point(0,0);
+            
         }
 
         public void Disconnect(Port toDisconnect)
         {
-            throw new NotImplementedException();
+
+            // does not leave the connection in a stable state.
+            if (IsPortA(toDisconnect))
+            {
+                _portA = null;
+            }
+            else
+            {
+                _portB = null;
+            }
+
+
+            OnValuesUpdated.Invoke(this, new(!IsPortA(toDisconnect)));
+
         }
 
         public bool IsPortA(Port p)
@@ -105,7 +130,7 @@ namespace CrystalCore.Model.Communication.Default
 
         public void Transmit(Port from, int value)
         {
-            throw new NotImplementedException();
+            OnValuesUpdated.Invoke(this, new(!IsPortA(from)));
         }
 
         public void Update()
@@ -126,13 +151,11 @@ namespace CrystalCore.Model.Communication.Default
             }
 
 
-            _fromB = 0;
-
             if (aGone)
             {
                 // swap A and B to make finding a new next port simpler.
                 _portA = _portB;
-                _fromA = _fromB;
+              
                 _portB = null;
                 
             }
@@ -147,7 +170,7 @@ namespace CrystalCore.Model.Communication.Default
                 // well. We have some work to do.
                 // TODO determine size, etc.
                 DetermineSize(length);
-                _fromB = 0;
+                
                 return;
             }
 
@@ -165,7 +188,7 @@ namespace CrystalCore.Model.Communication.Default
             Node n = (Node)obj;
             _portB = n.SomeMagicFunctionThatFindsThePortWeWant(_portA.AbsoluteFacing.Opposite, bLoc);
             _portB.Connection = this;
-            _fromB = 0;
+         
 
             // Now, determine size.
             DetermineSize(length);

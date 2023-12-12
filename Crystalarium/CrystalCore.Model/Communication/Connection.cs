@@ -40,7 +40,11 @@ namespace CrystalCore.Model.Communication
 
         public void Transmit(Port from, int value);
 
-        // what does this do?
+
+        /// <summary>
+        /// Note that disconnect does not ensure that the connection is valid. Make sure that Update is called.
+        /// </summary>
+        /// <param name="toDisconnect"></param>
         public void Disconnect(Port toDisconnect);
 
 

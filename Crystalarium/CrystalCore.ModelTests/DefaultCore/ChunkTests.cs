@@ -83,8 +83,5 @@ namespace CrystalCoreTests.Model.DefaultCore
             Assert.IsTrue(ch.Destroyed);
 
         }
-
-
-
     }
 }

@@ -23,6 +23,8 @@ namespace CrystalCore.Model.Communication.Default
         private Connection _connection;
         private bool _inputUpdated;
 
+        private int _outputting;
+
         // no clue how we're going to give port a grid, but not my problem in this exact moment.
         public DefaultPort(PortDescriptor descriptor, Direction parentRotation, Rectangle parentBounds)
         {
@@ -31,6 +33,7 @@ namespace CrystalCore.Model.Communication.Default
             _absFacing = CalculateAbsoluteFacing(parentRotation);
             _location = CalculateLocation(parentRotation, parentBounds);
             _inputUpdated = true;
+            _outputting = 0;
 
         }
 
@@ -175,16 +178,12 @@ namespace CrystalCore.Model.Communication.Default
         { 
             get
             {
-                if(_connection.IsPortA(this))
-                {
-                    return _connection.FromA;
-                }
-
-                return _connection.FromB;
+                return _outputting;
             }
 
             set 
             {
+                _outputting = value;
                 _connection.Transmit(this, value);
             }
         }
