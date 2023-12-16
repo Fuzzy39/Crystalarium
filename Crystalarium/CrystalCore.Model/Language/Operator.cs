@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CrystalCore.Model.Language
+﻿namespace CrystalCore.Model.Language
 {
     public enum Operator
     {

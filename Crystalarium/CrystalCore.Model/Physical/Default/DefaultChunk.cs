@@ -1,12 +1,5 @@
 ﻿using CrystalCore.Model.Core;
-using CrystalCore.Model.Physical;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalCore.Model.Physical.Default
 {

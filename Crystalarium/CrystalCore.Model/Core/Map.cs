@@ -1,6 +1,5 @@
 ﻿using CrystalCore.Model.Physical;
 //using CrystalCore.Model.Rules;
-using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.Core

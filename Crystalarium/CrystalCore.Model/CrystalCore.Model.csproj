@@ -11,15 +11,12 @@
 		<Compile Remove="OldObjects\**" />
 		<Compile Remove="OldSimulation\**" />
 		<Compile Remove="Rules\Transformations\**" />
-		<Compile Remove="Simulation\**" />
 		<EmbeddedResource Remove="OldObjects\**" />
 		<EmbeddedResource Remove="OldSimulation\**" />
 		<EmbeddedResource Remove="Rules\Transformations\**" />
-		<EmbeddedResource Remove="Simulation\**" />
 		<None Remove="OldObjects\**" />
 		<None Remove="OldSimulation\**" />
 		<None Remove="Rules\Transformations\**" />
-		<None Remove="Simulation\**" />
 	</ItemGroup>
 
 	<ItemGroup>

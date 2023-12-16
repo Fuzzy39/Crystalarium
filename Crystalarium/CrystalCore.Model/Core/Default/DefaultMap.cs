@@ -2,7 +2,6 @@
 using CrystalCore.Model.Physical;
 using CrystalCore.Model.Physical.Default;
 //using CrystalCore.Model.Rules;
-using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.Core.Default

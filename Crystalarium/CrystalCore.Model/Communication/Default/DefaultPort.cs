@@ -1,38 +1,30 @@
-﻿using CrystalCore.Model.Core;
-using CrystalCore.Util;
+﻿using CrystalCore.Util;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalCore.Model.Communication.Default
 {
     internal class DefaultPort : Port
     {
-       
+
         private bool _destroyed;
 
         // Port
         private readonly PortDescriptor _descriptor;
         private readonly CompassPoint _absFacing;
-      
+
         private readonly Point _location;
 
         private Connection _connection;
-        private bool _inputUpdated;
 
         private int _outputting;
 
         // no clue how we're going to give port a grid, but not my problem in this exact moment.
         public DefaultPort(PortDescriptor descriptor, Direction parentRotation, Rectangle parentBounds)
         {
-            
+
             _descriptor = descriptor;
             _absFacing = CalculateAbsoluteFacing(parentRotation);
             _location = CalculateLocation(parentRotation, parentBounds);
-            _inputUpdated = true;
             _outputting = 0;
 
         }
@@ -62,7 +54,7 @@ namespace CrystalCore.Model.Communication.Default
 
 
                 // I don't remember why this switch exists, but I guess it's important for diagonal signals?
-                switch (AbsoluteFacing) 
+                switch (AbsoluteFacing)
                 {
                     case CompassPoint.northwest:
                         return anchor;
@@ -102,7 +94,7 @@ namespace CrystalCore.Model.Communication.Default
                 else
                 {
                     x += _descriptor.ID;
-                 
+
                 }
             }
 
@@ -144,6 +136,7 @@ namespace CrystalCore.Model.Communication.Default
         public bool Destroyed => _destroyed;
 
         public event EventHandler? OnDestroy;
+        public event EventHandler? OnInputUpdated;
 
         public PortDescriptor Descriptor => _descriptor;
 
@@ -168,20 +161,20 @@ namespace CrystalCore.Model.Communication.Default
                 }
                 _connection = value;
                 _connection.OnValuesUpdated += OnPortValueChanged;
-                _inputUpdated = true;
+                OnInputUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
         public Port ConnectedTo => _connection.OtherPort(this);
 
         // TODO: when output is set, the other port has to change inputUpdated
         public int Output
-        { 
+        {
             get
             {
                 return _outputting;
             }
 
-            set 
+            set
             {
                 _outputting = value;
                 _connection.Transmit(this, value);
@@ -201,19 +194,15 @@ namespace CrystalCore.Model.Communication.Default
             }
         }
 
-        public bool InputUpdated
-        {
-            get
-            {
-                bool temp = _inputUpdated;
-                _inputUpdated = false;
-                return temp;
-            }
-        }
 
-        private void OnPortValueChanged(object sender, EventArgs e )
+
+        private void OnPortValueChanged(Connection sender, Connection.EventArgs e)
         {
-            _inputUpdated = true;
+            if (sender.IsPortA(this) == e.PortAUpdated)
+            {
+                OnInputUpdated?.Invoke(this, e);
+            }
+
         }
 
 
@@ -224,9 +213,9 @@ namespace CrystalCore.Model.Communication.Default
             _connection.Disconnect(this);
             _connection.OnValuesUpdated -= OnPortValueChanged;
             _connection = null;
-            _inputUpdated = false;
+            OnInputUpdated = null;
 
             OnDestroy?.Invoke(this, new());
         }
     }
-}   
+}

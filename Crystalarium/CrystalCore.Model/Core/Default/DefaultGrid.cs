@@ -1,7 +1,6 @@
 ﻿using CrystalCore.Model.Physical;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace CrystalCore.Model.Core.Default
 {
@@ -18,7 +17,7 @@ namespace CrystalCore.Model.Core.Default
 
 
         public event EventHandler? OnResize;
-            
+
         public List<List<Chunk>> Chunks
         {
             get => _chunks;

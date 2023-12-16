@@ -1,6 +1,4 @@
 ﻿using CrystalCore.Util;
-using System;
-using System.Collections.Generic;
 
 namespace CrystalCore.Model.Language
 {

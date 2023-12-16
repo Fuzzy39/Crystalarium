@@ -1,16 +1,9 @@
-﻿using CrystalCore.Model.Physical;
-using CrystalCore.Util;
+﻿using CrystalCore.Util;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalCore.Model.Communication
 {
-    internal interface Port 
+    internal interface Port
     {
         public PortDescriptor Descriptor { get; }
 
@@ -18,13 +11,18 @@ namespace CrystalCore.Model.Communication
 
         public Point Location { get; }
 
-        public event EventHandler? OnDestroy;
+
 
         public Connection Connection { get; set; }
         public Port ConnectedTo { get; } // for convience's sake
 
+
+        public event EventHandler? OnDestroy;
         public bool Destroyed { get; }
 
+
+
+        public event EventHandler? OnInputUpdated;
 
         /// <summary>
         /// The value being output by this port.
@@ -37,15 +35,12 @@ namespace CrystalCore.Model.Communication
         public int Input { get; }
 
 
-        /// <summary>
-        /// Whether this port's Input has changed since this property was last checked.
-        /// </summary>
-        public bool InputUpdated { get; }
+
 
 
         public string? ToString()
         {
-            return "Port: { Location:" + Location + " Descriptor:  "+Descriptor+ "(ABS):" + AbsoluteFacing + "}";
+            return "Port: { Location:" + Location + " Descriptor:  " + Descriptor + "(ABS):" + AbsoluteFacing + "}";
         }
 
         public void Destroy();
@@ -53,6 +48,5 @@ namespace CrystalCore.Model.Communication
 
 
 
- }
+}
 
-       

@@ -1,9 +1,4 @@
 ﻿using CrystalCore.Model.Physical;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalCore.Model.Communication
 {
@@ -14,8 +9,8 @@ namespace CrystalCore.Model.Communication
 
         internal class EventArgs : System.EventArgs
         {
-            public EventArgs(bool portAUpdated) 
-            { 
+            public EventArgs(bool portAUpdated)
+            {
                 PortAUpdated = portAUpdated;
             }
 
@@ -35,7 +30,7 @@ namespace CrystalCore.Model.Communication
         public event ConnectionEventHandler OnValuesUpdated;
 
         public bool IsPortA(Port p);
-        
+
         public Port OtherPort(Port port);
 
         public void Transmit(Port from, int value);
@@ -56,12 +51,12 @@ namespace CrystalCore.Model.Communication
 
         public string? ToString()
         {
-            return "Connection: { A:" + (PortA == null ? "null" : PortA.Location.ToString()) + " B: " + (PortB == null ? "null" : PortB.Location.ToString()) 
+            return "Connection: { A:" + (PortA == null ? "null" : PortA.Location.ToString()) + " B: " + (PortB == null ? "null" : PortB.Location.ToString())
                 + " Bounds:" + Physical.Bounds + "}";
 
         }
 
     }
 
-        
+
 }

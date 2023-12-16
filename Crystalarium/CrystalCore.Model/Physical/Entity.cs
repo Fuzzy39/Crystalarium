@@ -8,7 +8,6 @@ namespace CrystalCore.Model.Physical
     /// </summary>
     public interface Entity
     {
-        public event EventHandler OnReady;
 
         public MapObject Physical { get; }
 
