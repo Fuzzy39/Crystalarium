@@ -1,11 +1,13 @@
-﻿using CrystalCore.Util;
+﻿using CrystalCore.Model.Core;
+using CrystalCore.Model.Physical;
+using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.Communication.Default
 {
     internal class DefaultPort : Port
     {
-
+        
         private bool _destroyed;
 
         // Port
@@ -18,10 +20,9 @@ namespace CrystalCore.Model.Communication.Default
 
         private int _outputting;
 
-        // no clue how we're going to give port a grid, but not my problem in this exact moment.
+      
         public DefaultPort(PortDescriptor descriptor, Direction parentRotation, Rectangle parentBounds)
         {
-
             _descriptor = descriptor;
             _absFacing = CalculateAbsoluteFacing(parentRotation);
             _location = CalculateLocation(parentRotation, parentBounds);
@@ -44,93 +45,55 @@ namespace CrystalCore.Model.Communication.Default
         private Point CalculateLocation(Direction parentRotation, Rectangle parentBounds)
         {
 
-            Point anchor = parentBounds.Location;
+         
 
-            // get actual facing direction
+            // get actual facing direction.
+
             Direction? d = AbsoluteFacing.ToDirection();
             if (d == null)
             {
-                //return anchor; // diagonal ports means that the agent is 1x1.
-
-
-                // I don't remember why this switch exists, but I guess it's important for diagonal signals?
-                switch (AbsoluteFacing)
+                // diagonal ports can only exist if an agent is 1x1, so we don't need to care.
+                if(!parentBounds.Size.Equals(new(1)))
                 {
-                    case CompassPoint.northwest:
-                        return anchor;
-                    case CompassPoint.southwest:
-                        return anchor + new Point(0, parentBounds.Height - 1);
-                    case CompassPoint.northeast:
-                        return anchor + new Point(parentBounds.Width - 1, 0);
-                    case CompassPoint.southeast:
-                        return anchor - new Point(1) + parentBounds.Size;
-
-
+                    throw new ArgumentException("Diagonal ports can only exist on 1x1 nodes. If this is a problem, make this code better.");
                 }
-                throw new InvalidOperationException("Failed to interpret compass direction to location.");
-
+                return parentBounds.Location;
             }
 
-            Direction facing = (Direction)d;
+            Direction absfacing = (Direction)d;
 
 
+            // get abs parent size
+            Point absParentSize = parentBounds.Size;
+            if(parentRotation.IsHorizontal())
+            {
+               
+                absParentSize.Deconstruct(out int sizeY,  out int sizeX);
+                absParentSize = new(sizeX, sizeY);
+            }
 
-            int x = anchor.X + DetermineRelX(facing, parentRotation, parentBounds);
-            int y = anchor.Y + DetermineRelY(facing, parentRotation, parentBounds);
+            // calculate it
+            int x = parentBounds.Location.X + DetermineRel(absfacing, absParentSize.X, true);
+            int y = parentBounds.Location.Y + DetermineRel(absfacing, absParentSize.Y, false);
             return new Point(x, y);
 
         }
 
-        private int DetermineRelX(Direction facing, Direction parentRotation, Rectangle parentBounds)
+        private int DetermineRel(Direction absFacing, int MaxSize, bool isX)
         {
-            // facing is absolute here.
-            int x = 0;
-            if (facing.IsVertical())
-            {
-                if (parentRotation.IsPositive())
-                {
-                    x += parentBounds.Width - 1 - _descriptor.ID;
-                }
-                else
-                {
-                    x += _descriptor.ID;
+           // basically, if this is X, we want to check if it's vertical, if y we want to check horizontal.
+           if(absFacing.IsHorizontal() ^ isX) 
+           {
+                return _descriptor.ID;
+           }
 
-                }
-            }
+           if(absFacing.IsPositive())
+           {
+                return MaxSize-1;
+           }
 
-            if (facing == Direction.right)
-            {
-
-                x += parentBounds.Width - 1;
-            }
-
-            return x;
+           return 0;
         }
-
-
-        private int DetermineRelY(Direction facing, Direction parentRotation, Rectangle parentBounds)
-        {
-            int y = 0;
-            if (facing.IsHorizontal())
-            {
-                if (parentRotation == Direction.up || parentRotation == Direction.right)
-                {
-                    y += _descriptor.ID;
-                }
-                else
-                {
-                    y += parentBounds.Height - 1 - _descriptor.ID;
-                }
-            }
-
-            if (facing == Direction.down)
-            {
-                y += parentBounds.Height - 1;
-            }
-
-            return y;
-        }
-
 
 
         public bool Destroyed => _destroyed;
@@ -154,16 +117,17 @@ namespace CrystalCore.Model.Communication.Default
             {
                 // given that this is being called from connection, it will set things up appropriately, we just need to worry about the old
                 // connection and ourselves.
-                if (_connection != null)
+                if(_connection != null)
                 {
-                    _connection.Disconnect(this);
                     _connection.OnValuesUpdated -= OnPortValueChanged;
                 }
+
                 _connection = value;
                 _connection.OnValuesUpdated += OnPortValueChanged;
-                OnInputUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
+
+        
         public Port ConnectedTo => _connection.OtherPort(this);
 
         // TODO: when output is set, the other port has to change inputUpdated
@@ -195,7 +159,6 @@ namespace CrystalCore.Model.Communication.Default
         }
 
 
-
         private void OnPortValueChanged(Connection sender, Connection.EventArgs e)
         {
             if (sender.IsPortA(this) == e.PortAUpdated)
@@ -215,7 +178,8 @@ namespace CrystalCore.Model.Communication.Default
             _connection = null;
             OnInputUpdated = null;
 
-            OnDestroy?.Invoke(this, new());
+
+            OnDestroy?.Invoke(this, EventArgs.Empty);
         }
     }
 }

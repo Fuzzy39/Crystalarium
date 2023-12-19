@@ -2,16 +2,17 @@
 using CrystalCore.Model.Physical;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
+using System.Data.Common;
 
 namespace CrystalCore.Model.Communication.Default
 {
-    internal class DefaultConnection : Connection, Entity
+    internal class DefaultConnection : Connection
     {
         // TODO connections should not store values. when connections are mutated, they could be lost.
 
         private Port _portA;
         private Port _portB;
-
+            
 
 
         private bool _destroyed;
@@ -27,14 +28,50 @@ namespace CrystalCore.Model.Communication.Default
             _destroyed = false;
             _factory = factory;
             _size = new Point(0, 0);
+            
 
-            _portA = initial;
-            _portA.Connection = this;
-
-
+            _portA = null;
             _portB = null;
 
+            ConnectToPort(initial);
+
             Update();
+
+        }
+
+
+        private void ConnectToPort(Port p)
+        {
+
+            if (p.Connection != null)
+            {
+                p.Connection.Disconnect(p);
+
+            }
+
+            p.Connection = this;
+
+            if (_portA == null)
+            {
+                _portA = p;
+            }
+            else
+            {
+
+                if (_portB != null)
+                {
+                    throw new InvalidOperationException("Can only have two things connected to a connection...");
+                }
+
+                _portB = p;
+
+            }
+
+            // this could be seen as less than effecient, but...
+            OnValuesUpdated.Invoke(this, new(true));
+            OnValuesUpdated.Invoke(this, new(false));
+
+            // too bad.
 
         }
 
@@ -161,12 +198,21 @@ namespace CrystalCore.Model.Communication.Default
             Point bLoc = _portA.Location;
             MapObject obj = _physical.Grid.FindClosestObjectInDirection(ref bLoc, _portA.AbsoluteFacing, out int length);
 
+
+            if (_portB == obj)
+            {
+                // nothing to update.
+                return;
+            }
+
+            // B is different. how so?
+
+
             if (obj is null)
             {
                 // well. We have some work to do.
                 // TODO determine size, etc.
                 DetermineSize(length);
-
                 return;
             }
 
@@ -175,17 +221,11 @@ namespace CrystalCore.Model.Communication.Default
                 throw new NotImplementedException("An edge case that I was too lazy to write code for came up.\nTo be fair, it wasn't possible for it to happen when I wrote the code.");
             }
 
-            if (_portB == obj)
-            {
-                // nothing to update.
-                return;
-            }
+        
 
             Node n = (Node)obj;
-            _portB = n.GetPort(_portA.AbsoluteFacing.Opposite(), bLoc);
-            _portB.Connection = this;
 
-
+            ConnectToPort(n.GetPort(_portA.AbsoluteFacing.Opposite(), bLoc));
             // Now, determine size.
             DetermineSize(length);
         }

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.Communication.Default
 {
-    internal class DefaultNode : Node, Entity
+    internal class DefaultNode : Node
     {
         private Agent _agent;
         private List<List<Port>> _ports;
@@ -129,7 +129,7 @@ namespace CrystalCore.Model.Communication.Default
 
         public Port GetPort(CompassPoint facing, Point location)
         {
-
+                
             location -= _physical.Bounds.Location;
 
 
