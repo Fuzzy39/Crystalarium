@@ -65,6 +65,18 @@ namespace CrystalCoreTests.Model.DefaultCore
             throw new NotImplementedException();
         }
 
+        public MapObject ClosestObject;
+        public Point locationCalledFrom;
+        public Point Closestlocation;
+    
+
+        public MapObject FindClosestObjectInDirection(ref Point location, CompassPoint direction)
+        {
+            locationCalledFrom = location;
+            location = Closestlocation;;
+            return ClosestObject;
+        }
+
         public List<MapObject> ObjectsIntersecting(Rectangle bounds)
         {
             throw new NotImplementedException();
@@ -140,17 +152,19 @@ namespace CrystalCoreTests.Model.DefaultCore
     {
         bool _destroyed = false;
         Rectangle _bounds;
-        public MockMapObj(Rectangle b)
+        Grid _grid;
+        public MockMapObj(Grid g, Rectangle b)
         {
+            _grid = g;
             _bounds = b;
         }
         public Rectangle Bounds => _bounds;
 
-        public Entity Entity => throw new NotImplementedException();
+        public Entity Entity { get; set; }
 
         public Chunk Parent => throw new NotImplementedException();
 
-        public Grid Grid => throw new NotImplementedException();
+        public Grid Grid => _grid;
 
         public bool Destroyed => _destroyed;
 
@@ -159,7 +173,7 @@ namespace CrystalCoreTests.Model.DefaultCore
         public void Destroy()
         {
             _destroyed = true;
-            OnDestroy.Invoke(this, new EventArgs());
+            OnDestroy?.Invoke(this, new EventArgs());
 
         }
     }

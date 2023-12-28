@@ -49,12 +49,7 @@ namespace CrystalCore.Model.Communication
         /// </summary>
         public void Update();
 
-        public string? ToString()
-        {
-            return "Connection: { A:" + (PortA == null ? "null" : PortA.Location.ToString()) + " B: " + (PortB == null ? "null" : PortB.Location.ToString())
-                + " Bounds:" + Physical.Bounds + "}";
-
-        }
+    
 
     }
 

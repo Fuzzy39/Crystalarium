@@ -40,7 +40,8 @@ namespace CrystalCore.Model.Communication.Default
             _physical = factory.baseFactory.CreateObject(bounds.Location, this);
             InitPorts(createDiagonalPorts);
             OnCreate();
-            
+
+            _physical.Grid.OnResize += OnGridResize;
 
         }
 
@@ -132,6 +133,10 @@ namespace CrystalCore.Model.Communication.Default
                 
             location -= _physical.Bounds.Location;
 
+            for(CompassPoint cp =_facing.ToCompassPoint(); cp != CompassPoint.north; cp = cp.Rotate(RotationalDirection.ccw))
+            {
+                facing = facing.Rotate(RotationalDirection.ccw);
+            }
 
             if (facing.IsDiagonal() && location.Equals(new(0)))
             {
@@ -225,8 +230,11 @@ namespace CrystalCore.Model.Communication.Default
         private void OnCreate()
         {
             // find any connections intersecting our bounds
-            List<Connection> connections =
-                _physical.Grid.ObjectsIntersecting(_physical.Bounds).Where(obj => obj is Connection).Cast<Connection>().ToList();
+            List<MapObject> connectionPhysicals =
+                _physical.Grid.ObjectsIntersecting(_physical.Bounds).Where(obj => obj.Entity is Connection).ToList();
+
+            List<Connection> connections = new();
+            connectionPhysicals.ForEach(mapObj => connections.Add((Connection)(mapObj.Entity)));
 
             foreach (Connection Connection in connections)
             {
@@ -254,11 +262,29 @@ namespace CrystalCore.Model.Communication.Default
                 _facing = _facing.Opposite();
             }
 
-            bool diagonalSignalsAllowed = _ports[(int)CompassPoint.northwest].Count()>0;
-            PortList.ForEach(p => p.Destroy());
+            
+
+            bool diagonalSignalsAllowed = _ports[(int)CompassPoint.northwest].Count() > 0;
+            List<int> outputs = new List<int>();
+
+
+            PortList.ForEach(p =>
+            {
+                outputs.Add(p.Output);
+                p.Destroy();
+            });
+
 
             InitPorts(diagonalSignalsAllowed);
+
+
+
             OnCreate();
+
+            for(int i = 0; i< outputs.Count; i++)
+            {
+                PortList[i].Output = outputs[i];
+            }
 
         }
 
@@ -266,6 +292,7 @@ namespace CrystalCore.Model.Communication.Default
         {
             _destroyed = true;
 
+            _physical.Grid.OnResize -= OnGridResize;
             _physical.Destroy();
             _physical = null;
             List<Connection> connections = new();

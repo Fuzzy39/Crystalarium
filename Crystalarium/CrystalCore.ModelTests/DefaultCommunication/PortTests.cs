@@ -123,7 +123,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             // simple
             Port p = new DefaultPort(new(0, CompassPoint.north), Direction.up, new(1, 1, 1, 1));
 
-            Assert.AreEqual(new Point(1,1), p.Location);
+            Assert.AreEqual(new Point(1, 1), p.Location);
 
             p = new DefaultPort(new(0, CompassPoint.south), Direction.up, new(1, 1, 1, 1));
 
@@ -160,10 +160,14 @@ namespace CrystalCoreTests.Model.DefaultCommunication
 
             // different absolute facings
 
-            p = new DefaultPort(new(2, CompassPoint.north), Direction.left, new(1, 1, 3, 2));
+            p = new DefaultPort(new(1, CompassPoint.north), Direction.left, new(1, 1, 3, 2));
 
-            Assert.AreEqual(new Point(1, 3), p.Location);
+            Assert.AreEqual(new Point(1, 1), p.Location);
 
+
+            p = new DefaultPort(new(1, CompassPoint.south), Direction.left, new(0, 6, 1, 2));
+
+            Assert.AreEqual(new Point(0, 6), p.Location);
         }
 
         //[TestMethod()]

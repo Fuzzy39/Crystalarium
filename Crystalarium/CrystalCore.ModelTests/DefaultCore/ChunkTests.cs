@@ -14,11 +14,12 @@ namespace CrystalCoreTests.Model.DefaultCore
         [TestMethod()]
         public void RegisterObjectTest()
         {
-            
-            // arrange
-            Chunk ch = new DefaultChunk(new MockGrid(), new(0,0));
 
-            MockMapObj obj = new MockMapObj(new(0, 0, 1, 1));
+            // arrange
+            MockGrid mg = new MockGrid();
+            Chunk ch = new DefaultChunk(mg, new(0,0));
+
+            MockMapObj obj = new MockMapObj(mg, new(0, 0, 1, 1));
 
 
             //act
@@ -41,10 +42,13 @@ namespace CrystalCoreTests.Model.DefaultCore
         public void RegisterObjectTest2()
         {
 
-            // arrange
-            Chunk ch = new DefaultChunk(new MockGrid(), new(0, 0));
 
-            MockMapObj obj = new MockMapObj(new(15, 0, 2, 1));
+            // arrange
+            MockGrid mg = new MockGrid();
+
+            Chunk ch = new DefaultChunk(mg, new(0, 0));
+
+            MockMapObj obj = new MockMapObj(mg, new(15, 0, 2, 1));
 
 
             //act
@@ -67,8 +71,10 @@ namespace CrystalCoreTests.Model.DefaultCore
         public void DestroyTest()
         {
             // arrange
-            Chunk ch = new DefaultChunk(new MockGrid(), new(0, 0));
-            MockMapObj obj = new MockMapObj(new(0, 0, 1, 1));
+            MockGrid mg = new MockGrid();
+
+            Chunk ch = new DefaultChunk(mg, new(0, 0));
+            MockMapObj obj = new MockMapObj(mg,new(0, 0, 1, 1));
             ch.RegisterObject(obj);
 
             bool eventRaised = false;

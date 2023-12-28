@@ -312,6 +312,73 @@ namespace CrystalCore.Model.Core.Default
             return toReturn;
         }
 
+        public Chunk ChunkAtCoords(Point tileCoords)
+        {
+            Point chunkCoord = TileToChunkCoords(tileCoords);
+
+            Point chunkIndex = chunkCoord - ChunkOrigin;
+
+            return Chunks[chunkIndex.X][chunkIndex.Y];
+
+        }
+
+        public List<MapObject> ObjectsIntersecting(Rectangle bounds)
+        {
+            List<Chunk> chunks = ChunksIntersecting(bounds);
+            List<MapObject> toReturn = new();
+
+            foreach (Chunk chunk in chunks)
+            {
+                foreach (MapObject obj in chunk.ObjectsIntersecting)
+                {
+
+                    if (obj.Bounds.Intersects(bounds))
+                    {
+                        // only add a if it isn't already in the list
+                        // explaination of line: if element in toReturn exists such that element is obj ...
+                        // simpler explanation: if obj is already in the list...
+                        if (toReturn.Exists((test) => { return test == obj; }))
+                        {
+                            continue;
+                        }
+
+                        toReturn.Add(obj);
+                    }
+
+
+                }
+            }
+            return toReturn;
+
+        }
+
+
+        public MapObject FindClosestObjectInDirection( ref Point location, CompassPoint direction)
+        {
+      
+            while (true)
+            {
+                location += direction.ToPoint();
+              
+                if (!Bounds.Contains(location))
+                {
+                    location -= direction.ToPoint();
+                    return null;
+                }
+
+                List<MapObject> objs = ObjectsIntersecting(new(location, new(1))).Where((search) => search.Entity.HasCollision).ToList();
+
+                if (objs.Count > 0)
+                {
+                    return objs.First();
+                }
+
+
+            }
+
+
+
+        }
 
         public override string ToString()
         {

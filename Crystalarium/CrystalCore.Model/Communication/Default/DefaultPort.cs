@@ -7,7 +7,7 @@ namespace CrystalCore.Model.Communication.Default
 {
     internal class DefaultPort : Port
     {
-        
+
         private bool _destroyed;
 
         // Port
@@ -20,7 +20,7 @@ namespace CrystalCore.Model.Communication.Default
 
         private int _outputting;
 
-      
+
         public DefaultPort(PortDescriptor descriptor, Direction parentRotation, Rectangle parentBounds)
         {
             _descriptor = descriptor;
@@ -45,7 +45,7 @@ namespace CrystalCore.Model.Communication.Default
         private Point CalculateLocation(Direction parentRotation, Rectangle parentBounds)
         {
 
-         
+
 
             // get actual facing direction.
 
@@ -53,7 +53,7 @@ namespace CrystalCore.Model.Communication.Default
             if (d == null)
             {
                 // diagonal ports can only exist if an agent is 1x1, so we don't need to care.
-                if(!parentBounds.Size.Equals(new(1)))
+                if (!parentBounds.Size.Equals(new(1)))
                 {
                     throw new ArgumentException("Diagonal ports can only exist on 1x1 nodes. If this is a problem, make this code better.");
                 }
@@ -65,35 +65,64 @@ namespace CrystalCore.Model.Communication.Default
 
             // get abs parent size
             Point absParentSize = parentBounds.Size;
-            if(parentRotation.IsHorizontal())
-            {
-               
-                absParentSize.Deconstruct(out int sizeY,  out int sizeX);
-                absParentSize = new(sizeX, sizeY);
-            }
+
 
             // calculate it
-            int x = parentBounds.Location.X + DetermineRel(absfacing, absParentSize.X, true);
-            int y = parentBounds.Location.Y + DetermineRel(absfacing, absParentSize.Y, false);
+            int x = parentBounds.Location.X + DetermineRelX(parentRotation, parentBounds);
+            int y = parentBounds.Location.Y + DetermineRelY(parentRotation, parentBounds);
             return new Point(x, y);
 
         }
 
-        private int DetermineRel(Direction absFacing, int MaxSize, bool isX)
-        {
-           // basically, if this is X, we want to check if it's vertical, if y we want to check horizontal.
-           if(absFacing.IsHorizontal() ^ isX) 
-           {
-                return _descriptor.ID;
-           }
+        private int DetermineRelX(Direction parentFacing, Rectangle parentBounds)
+        { 
+            // facing is absolute here.
+            int x = 0;
+            if (((Direction)_absFacing.ToDirection()).IsVertical())
+            {
+                if (parentFacing == Direction.up || parentFacing == Direction.left)
+                {
+                    x += _descriptor.ID;
+                }
+                else
+                {
+                    x += parentBounds.Width - 1 - _descriptor.ID;
+                }
+            }
 
-           if(absFacing.IsPositive())
-           {
-                return MaxSize-1;
-           }
+            if (_absFacing.ToDirection() == Direction.right)
+            {
 
-           return 0;
+                x += parentBounds.Width - 1;
+            }
+
+            return x;
         }
+
+
+        private int DetermineRelY(Direction parentFacing, Rectangle parentBounds)
+        {
+            int y = 0;
+            if (((Direction) _absFacing.ToDirection()).IsHorizontal())
+            {
+                if (parentFacing == Direction.up || parentFacing == Direction.right)
+                {
+                    y += _descriptor.ID;
+                }
+                else
+                {
+                    y += parentBounds.Height - 1 - _descriptor.ID;
+                }
+            }
+
+            if (_absFacing.ToDirection() == Direction.down)
+            {
+                y += parentBounds.Height - 1;
+            }
+
+            return y;
+        }
+
 
 
         public bool Destroyed => _destroyed;
@@ -117,7 +146,7 @@ namespace CrystalCore.Model.Communication.Default
             {
                 // given that this is being called from connection, it will set things up appropriately, we just need to worry about the old
                 // connection and ourselves.
-                if(_connection != null)
+                if (_connection != null)
                 {
                     _connection.OnValuesUpdated -= OnPortValueChanged;
                 }
@@ -127,7 +156,7 @@ namespace CrystalCore.Model.Communication.Default
             }
         }
 
-        
+
         public Port ConnectedTo => _connection.OtherPort(this);
 
         // TODO: when output is set, the other port has to change inputUpdated
@@ -173,13 +202,21 @@ namespace CrystalCore.Model.Communication.Default
         {
             _destroyed = true;
             // TODO: tell connection to disconnect from us
-            _connection.Disconnect(this);
             _connection.OnValuesUpdated -= OnPortValueChanged;
+            _connection.Disconnect(this);
+
             _connection = null;
             OnInputUpdated = null;
 
 
             OnDestroy?.Invoke(this, EventArgs.Empty);
         }
+
+
+        public override string ToString()
+        {
+            return "Port: { Location:" + Location + " Descriptor:  " + Descriptor + "(ABS):" + AbsoluteFacing + "}";
+        }
+
     }
 }

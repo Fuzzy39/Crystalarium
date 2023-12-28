@@ -39,7 +39,10 @@ namespace CrystalCore.Model.Core
 
         public List<Chunk> ChunksIntersecting(Rectangle bounds);
 
+        public Chunk ChunkAtCoords(Point tileCoords);
 
+        public List<MapObject> ObjectsIntersecting(Rectangle bounds);
 
+        public MapObject FindClosestObjectInDirection(ref Point location, CompassPoint direction);
     }
 }

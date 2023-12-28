@@ -8,7 +8,7 @@ namespace CrystalCore.Model.Communication.Default
 {
     internal class DefaultConnection : Connection
     {
-        // TODO connections should not store values. when connections are mutated, they could be lost.
+        
 
         private Port _portA;
         private Port _portB;
@@ -27,14 +27,14 @@ namespace CrystalCore.Model.Communication.Default
 
             _destroyed = false;
             _factory = factory;
-            _size = new Point(0, 0);
+            _size = new Point(1, 1);
             
 
             _portA = null;
             _portB = null;
 
             ConnectToPort(initial);
-
+            _physical = factory.CreateObject(_portA.Location, this);
             Update();
 
         }
@@ -68,8 +68,8 @@ namespace CrystalCore.Model.Communication.Default
             }
 
             // this could be seen as less than effecient, but...
-            OnValuesUpdated.Invoke(this, new(true));
-            OnValuesUpdated.Invoke(this, new(false));
+            OnValuesUpdated?.Invoke(this, new(true));
+            OnValuesUpdated?.Invoke(this, new(false));
 
             // too bad.
 
@@ -119,6 +119,7 @@ namespace CrystalCore.Model.Communication.Default
 
         public void Disconnect(Port toDisconnect)
         {
+            bool isPortA = IsPortA(toDisconnect);
 
             // does not leave the connection in a stable state.
             if (IsPortA(toDisconnect))
@@ -131,7 +132,7 @@ namespace CrystalCore.Model.Communication.Default
             }
 
 
-            OnValuesUpdated.Invoke(this, new(!IsPortA(toDisconnect)));
+            OnValuesUpdated?.Invoke(this, new(!isPortA));
 
         }
 
@@ -196,48 +197,51 @@ namespace CrystalCore.Model.Communication.Default
             //Now, either B is gone or present, and A is present.
 
             Point bLoc = _portA.Location;
-            MapObject obj = _physical.Grid.FindClosestObjectInDirection(ref bLoc, _portA.AbsoluteFacing, out int length);
-
-
-            if (_portB == obj)
-            {
-                // nothing to update.
-                return;
-            }
-
-            // B is different. how so?
+            MapObject obj = _physical.Grid.FindClosestObjectInDirection(ref bLoc, _portA.AbsoluteFacing);
 
 
             if (obj is null)
             {
                 // well. We have some work to do.
                 // TODO determine size, etc.
-                DetermineSize(length);
+                DetermineSize(_portA.Location, bLoc);
                 return;
             }
 
-            if (obj is not Node)
+
+
+            if (obj.Entity is not Node)
             {
                 throw new NotImplementedException("An edge case that I was too lazy to write code for came up.\nTo be fair, it wasn't possible for it to happen when I wrote the code.");
             }
 
-        
 
-            Node n = (Node)obj;
+            Node node = (Node)(obj.Entity);
+            Port toConnect = node.GetPort(_portA.AbsoluteFacing.Opposite(), bLoc);
 
-            ConnectToPort(n.GetPort(_portA.AbsoluteFacing.Opposite(), bLoc));
+            if (_portB == toConnect)
+            {
+                // nothing to update.
+                return;
+            }
+
+            ConnectToPort(toConnect);
             // Now, determine size.
-            DetermineSize(length);
+            DetermineSize(_portA.Location, bLoc);
         }
 
 
-        private void DetermineSize(int length)
+        private void DetermineSize(Point start, Point end)
         {
-            Rectangle bounds = GetBounds(_portA, _portB, length);
-            if (bounds.Size != _size)
+            Rectangle bounds = MiscUtil.RectFromPoints(start, end);
+            bounds.Size += new Point(1); // fix off by one errors due to having to include the end point in the rectangle.
+
+            if (bounds.Size.Equals( _size) && _physical != null)
             {
-                _size = bounds.Size;
+                return;
             }
+
+            _size = bounds.Size;
 
             if (_physical != null)
             {
@@ -249,70 +253,12 @@ namespace CrystalCore.Model.Communication.Default
         }
 
 
-        // I guess we can trust this...
-        private static Rectangle GetBounds(Port from, Port to, int length)
+
+
+        public override string ToString()
         {
-            if (from == null)
-            {
-                throw new ArgumentException("first port may not be null!");
-            }
-
-            // hideous
-            // if this breaks, I'm probably just gonna rewrite it from scratch.
-            // not a clue what it does.
-
-            Point size;
-            CompassPoint dirfrom = from.AbsoluteFacing;
-            if (dirfrom.IsDiagonal())
-            {
-                Point p = dirfrom.ToPoint();
-
-                size = p * new Point(length);
-                size.X = Math.Abs(size.X);
-                size.Y = Math.Abs(size.Y);
-
-                Point loc = from.Location;
-
-                if (p.X == -1)
-                {
-                    loc.X -= size.X - 1;
-                }
-                if (p.Y == -1)
-                {
-                    loc.Y -= size.Y - 1;
-                }
-
-                return new Rectangle(loc, size);
-            }
-
-
-            size = new Point(length, 1);
-            Direction d = (Direction)dirfrom.ToDirection();
-
-            if (d.IsVertical())
-            {
-                size = new Point(size.Y, size.X);
-            }
-
-            if (d.IsPositive())
-            {
-                return new Rectangle(from.Location, size);
-            }
-
-            Point start = from.Location;
-
-            if (d.IsVertical())
-            {
-                start.Y += -size.Y + (to == null ? 1 : 0);
-
-            }
-            else
-            {
-                start.X += -size.X + (to == null ? 1 : 0);
-            }
-
-            Rectangle toReturn = new Rectangle(start, size);
-            return toReturn;
+            return "Connection: { A:" + (PortA == null ? "null" : PortA.Location.ToString()) + " B: " + (PortB == null ? "null" : PortB.Location.ToString())
+                + " Bounds:" + Physical.Bounds + "}";
 
         }
     }

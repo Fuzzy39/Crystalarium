@@ -38,11 +38,7 @@ namespace CrystalCore.Model.Communication
 
 
 
-        public string? ToString()
-        {
-            return "Port: { Location:" + Location + " Descriptor:  " + Descriptor + "(ABS):" + AbsoluteFacing + "}";
-        }
-
+        
         public void Destroy();
     }
 
