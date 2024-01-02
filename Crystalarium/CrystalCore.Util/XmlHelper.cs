@@ -41,7 +41,7 @@ namespace CrystalCore.Util
 
                 if (p.X == -1)
                 {
-                    return "(Unkown)";
+                    return "(Unknown)";
                 }
 
                 return "(" + p.X + ", " + p.Y + ")";

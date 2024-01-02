@@ -152,7 +152,10 @@ namespace CrystalCore.Model.Communication.Default
                 }
 
                 _connection = value;
-                _connection.OnValuesUpdated += OnPortValueChanged;
+                if (_connection != null)
+                {
+                    _connection.OnValuesUpdated += OnPortValueChanged;
+                }
             }
         }
 

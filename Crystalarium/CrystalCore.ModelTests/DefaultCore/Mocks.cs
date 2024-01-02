@@ -65,21 +65,28 @@ namespace CrystalCoreTests.Model.DefaultCore
             throw new NotImplementedException();
         }
 
-        public MapObject ClosestObject;
-        public Point locationCalledFrom;
-        public Point Closestlocation;
+
+        public MapObject FindClosestObjectInDirection_result;
+        public Point FindClosestObjectInDirection_locationIn;
+        public Point FindClosestObjectInDirection_locationOut;
     
 
         public MapObject FindClosestObjectInDirection(ref Point location, CompassPoint direction)
         {
-            locationCalledFrom = location;
-            location = Closestlocation;;
-            return ClosestObject;
+            FindClosestObjectInDirection_locationIn = location;
+            location = FindClosestObjectInDirection_locationOut;
+            return FindClosestObjectInDirection_result;
         }
+
+
+
+        public List<MapObject> ObjectsIntersecting_result = new();
+        public Rectangle ObjectsIntersecting_bounds;
 
         public List<MapObject> ObjectsIntersecting(Rectangle bounds)
         {
-            throw new NotImplementedException();
+            ObjectsIntersecting_bounds = bounds;
+            return ObjectsIntersecting_result;
         }
 
         public Point TileToChunkCoords(Point tileCoords)

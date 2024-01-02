@@ -49,8 +49,8 @@ namespace CrystalCoreTests.Model.DefaultCommunication
 
             MockGrid mg = new MockGrid
             {
-                ClosestObject = null,
-                Closestlocation = new(0, 15)
+                FindClosestObjectInDirection_result = null,
+                FindClosestObjectInDirection_locationOut = new(0, 15)
             };
 
             MockMapObjectFactory cf = new MockMapObjectFactory(mg);
@@ -59,7 +59,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             Assert.IsNull(conn.PortB);
 
             Assert.AreEqual(new Rectangle(0, 0, 1, 16), conn.Physical.Bounds);
-            Assert.AreEqual(new Point(0, 0), mg.locationCalledFrom);
+            Assert.AreEqual(new Point(0, 0), mg.FindClosestObjectInDirection_locationIn);
         }
 
         [TestMethod()]
@@ -75,7 +75,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
 
             MockGrid mg = new MockGrid
             {
-                Closestlocation = new(0, 1)
+                FindClosestObjectInDirection_locationOut = new(0, 1)
             };
 
             MockNode node = new()
@@ -87,7 +87,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             };
 
             ((MockMapObj)node.Physical).Entity = node;
-            mg.ClosestObject = node.Physical;
+            mg.FindClosestObjectInDirection_result = node.Physical;
 
 
             MockMapObjectFactory cf = new MockMapObjectFactory(mg);
@@ -100,7 +100,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             Assert.AreEqual(portB, conn.PortB);
 
             Assert.AreEqual(new Rectangle(0, 0, 1, 2), conn.Physical.Bounds);
-            Assert.AreEqual(new Point(0, 0), mg.locationCalledFrom);
+            Assert.AreEqual(new Point(0, 0), mg.FindClosestObjectInDirection_locationIn);
 
             Assert.AreEqual(CompassPoint.north, node.lastAbsFacingSought);
             Assert.AreEqual(new Point(0, 1), node.lastPortLocationSought);
@@ -127,8 +127,8 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             };
 
             ((MockMapObj)node.Physical).Entity = node;
-            mg.ClosestObject = node.Physical;
-            mg.Closestlocation = node.Physical.Bounds.Location;
+            mg.FindClosestObjectInDirection_result = node.Physical;
+            mg.FindClosestObjectInDirection_locationOut = node.Physical.Bounds.Location;
 
 
             MockMapObjectFactory cf = new MockMapObjectFactory(mg);
@@ -143,8 +143,8 @@ namespace CrystalCoreTests.Model.DefaultCommunication
 
 
             // set up mocks... (the connection shouldn't find anything to connect to...
-            mg.Closestlocation = new(0, 0);
-            mg.ClosestObject = null;
+            mg.FindClosestObjectInDirection_locationOut = new(0, 0);
+            mg.FindClosestObjectInDirection_result = null;
 
             conn.Update();
 
@@ -155,7 +155,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             Assert.AreEqual(null, conn.PortB);
 
             Assert.AreEqual(new Rectangle(0, 0, 1, 2), conn.Physical.Bounds);
-            Assert.AreEqual(new Point(0, 1), mg.locationCalledFrom);
+            Assert.AreEqual(new Point(0, 1), mg.FindClosestObjectInDirection_locationIn);
 
         }
 
@@ -181,8 +181,8 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             };
 
             ((MockMapObj)node.Physical).Entity = node;
-            mg.ClosestObject = node.Physical;
-            mg.Closestlocation = node.Physical.Bounds.Location;
+            mg.FindClosestObjectInDirection_result = node.Physical;
+            mg.FindClosestObjectInDirection_locationOut = node.Physical.Bounds.Location;
 
 
             MockMapObjectFactory cf = new MockMapObjectFactory(mg);
@@ -197,8 +197,8 @@ namespace CrystalCoreTests.Model.DefaultCommunication
 
 
             // set up mocks... (the connection shouldn't find anything to connect to...
-            mg.Closestlocation = new(0, 15);
-            mg.ClosestObject = null;
+            mg.FindClosestObjectInDirection_locationOut = new(0, 15);
+            mg.FindClosestObjectInDirection_result = null;
 
             conn.Update();
 
@@ -209,7 +209,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             Assert.AreEqual(null, conn.PortB);
 
             Assert.AreEqual(new Rectangle(0, 0, 1, 16), conn.Physical.Bounds);
-            Assert.AreEqual(new Point(0, 0), mg.locationCalledFrom);
+            Assert.AreEqual(new Point(0, 0), mg.FindClosestObjectInDirection_locationIn);
 
         }
 
@@ -223,16 +223,16 @@ namespace CrystalCoreTests.Model.DefaultCommunication
 
             MockGrid mg = new MockGrid
             {
-                ClosestObject = null,
-                Closestlocation = new(0, 15)
+                FindClosestObjectInDirection_result = null,
+                FindClosestObjectInDirection_locationOut = new(0, 15)
             };
 
             MockMapObjectFactory cf = new MockMapObjectFactory(mg);
             Connection conn = new DefaultConnection(cf, p);
          
 
-            mg.ClosestObject = null;
-            mg.Closestlocation = new(0, 31);
+            mg.FindClosestObjectInDirection_result = null;
+            mg.FindClosestObjectInDirection_locationOut = new(0, 31);
 
             conn.Update();
 
@@ -241,7 +241,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             Assert.IsNull(conn.PortB);
 
             Assert.AreEqual(new Rectangle(0, 0, 1, 32), conn.Physical.Bounds);
-            Assert.AreEqual(new Point(0, 0), mg.locationCalledFrom);
+            Assert.AreEqual(new Point(0, 0), mg.FindClosestObjectInDirection_locationIn);
 
         }
 
@@ -291,8 +291,8 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             ((MockMapObj)Anode.Physical).Entity = Anode;
 
             // mg needs setup.
-            mg.ClosestObject = Bnode.Physical;
-            mg.Closestlocation = new(0, 2);
+            mg.FindClosestObjectInDirection_result = Bnode.Physical;
+            mg.FindClosestObjectInDirection_locationOut = new(0, 2);
 
 
             // actually create the thing we're supposed to test.
@@ -304,7 +304,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             Assert.AreEqual(portB, conn.PortB);
 
             Assert.AreEqual(new Rectangle(0, 1, 1, 2), conn.Physical.Bounds);
-            Assert.AreEqual(new Point(0, 1), mg.locationCalledFrom);
+            Assert.AreEqual(new Point(0, 1), mg.FindClosestObjectInDirection_locationIn);
 
             Assert.AreEqual(CompassPoint.north, Bnode.lastAbsFacingSought);
             Assert.AreEqual(new Point(0, 2), Bnode.lastPortLocationSought);
@@ -314,8 +314,8 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             conn.Disconnect(conn.PortA);
 
 
-            mg.ClosestObject = Anode.Physical;
-            mg.Closestlocation = new(0, 0);
+            mg.FindClosestObjectInDirection_result = Anode.Physical;
+            mg.FindClosestObjectInDirection_locationOut = new(0, 0);
 
             conn.Update();
 
@@ -325,7 +325,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             Assert.AreEqual(portNewA, conn.PortB);
 
             Assert.AreEqual(new Rectangle(0, 0, 1, 3), conn.Physical.Bounds);
-            Assert.AreEqual(new Point(0, 2), mg.locationCalledFrom);
+            Assert.AreEqual(new Point(0, 2), mg.FindClosestObjectInDirection_locationIn);
 
             Assert.AreEqual(CompassPoint.south, Anode.lastAbsFacingSought);
             Assert.AreEqual(new Point(0, 0), Anode.lastPortLocationSought);

@@ -122,17 +122,19 @@ namespace CrystalCore.Model.Communication.Default
             bool isPortA = IsPortA(toDisconnect);
 
             // does not leave the connection in a stable state.
-            if (IsPortA(toDisconnect))
+            if (isPortA)
             {
+                _portA.Connection = null;
                 _portA = null;
             }
             else
             {
+                _portB.Connection = null;
                 _portB = null;
             }
 
-
-            OnValuesUpdated?.Invoke(this, new(!isPortA));
+            //Somebody else is responsible for this port now, we don't care.
+            //OnValuesUpdated?.Invoke(this, new(!isPortA));
 
         }
 
@@ -148,6 +150,10 @@ namespace CrystalCore.Model.Communication.Default
                 throw new ArgumentException("Port: " + p + " is not connected to Connection: " + this);
             }
 
+            if(p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
             return false;
         }
 
@@ -173,11 +179,8 @@ namespace CrystalCore.Model.Communication.Default
             // complex.
 
             // should never have a destroyed port, the call disconnect on destroy.
-            bool aGone = _portA == null;
-            bool bGone = _portB == null;
 
-
-            if (aGone && bGone)
+            if ((_portA == null) && (_portB == null))
             {
                 // we have no reason to exist anymore. nothing to connect to.
                 Destroy();
@@ -185,7 +188,7 @@ namespace CrystalCore.Model.Communication.Default
             }
 
 
-            if (aGone)
+            if (_portA == null)
             {
                 // swap A and B to make finding a new next port simpler.
                 _portA = _portB;
@@ -225,6 +228,11 @@ namespace CrystalCore.Model.Communication.Default
                 return;
             }
 
+            if (_portB != null)
+            {
+                Disconnect(_portB);
+            }
+
             ConnectToPort(toConnect);
             // Now, determine size.
             DetermineSize(_portA.Location, bLoc);
@@ -258,7 +266,7 @@ namespace CrystalCore.Model.Communication.Default
         public override string ToString()
         {
             return "Connection: { A:" + (PortA == null ? "null" : PortA.Location.ToString()) + " B: " + (PortB == null ? "null" : PortB.Location.ToString())
-                + " Bounds:" + Physical.Bounds + "}";
+                + " Bounds:" + (Physical == null ? "null": Physical.Bounds) + "}";
 
         }
     }

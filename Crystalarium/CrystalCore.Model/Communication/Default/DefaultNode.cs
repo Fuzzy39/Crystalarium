@@ -85,14 +85,21 @@ namespace CrystalCore.Model.Communication.Default
                 return 0;
             }
 
-            Direction facing = (Direction)portFacing.ToDirection();
+            Direction portDirection = (Direction)portFacing.ToDirection();
 
-            if (facing.IsVertical())
+            Point size = _size;
+
+            if (_facing.IsHorizontal())
             {
-                return _size.Y;
+                size = new(_size.Y, size.X);
             }
 
-            return _size.X;
+            if (portDirection.IsVertical())
+            {
+                return size.X;
+            }
+
+            return size.Y;
 
         }
 
@@ -128,17 +135,19 @@ namespace CrystalCore.Model.Communication.Default
 
 
 
-        public Port GetPort(CompassPoint facing, Point location)
+        public Port GetPort(CompassPoint facing, Point Location)
         {
                 
-            location -= _physical.Bounds.Location;
+            Point relativeLocation = Location - _physical.Bounds.Location;
 
+
+            // absoulte to relative facing.
             for(CompassPoint cp =_facing.ToCompassPoint(); cp != CompassPoint.north; cp = cp.Rotate(RotationalDirection.ccw))
             {
                 facing = facing.Rotate(RotationalDirection.ccw);
             }
 
-            if (facing.IsDiagonal() && location.Equals(new(0)))
+            if (facing.IsDiagonal() && relativeLocation.Equals(new(0)))
             {
                 return GetPort(new PortDescriptor(0, facing));
             }
@@ -149,26 +158,31 @@ namespace CrystalCore.Model.Communication.Default
 
 
             // check that we have a port at the location
-            if (location.X != 0 && location.X != Size.X - 1
-                || location.Y != 0 && location.Y != Size.Y - 1)
+            if (
+                !(relativeLocation.X == 0 || (relativeLocation.X == (Size.X - 1))
+                || (relativeLocation.Y == 0) || (relativeLocation.Y == (Size.Y - 1)))
+               )
             {
 
 
 
-                throw new ArgumentException("The point (Node relative, grid orienation) [" + location + "]" +
+                throw new ArgumentException("The point (Node relative, grid orienation) [" + relativeLocation + "]" +
                     " is either outside or interior node with size: [" + _size + "], and no port is associated with this location.");
             }
 
 
 
-            Direction orthagonalFacing = (Direction)facing.ToDirection();
 
-            if (orthagonalFacing.IsVertical())
+            // we could calculate this, presumably, but we can also just search for the correct answer.
+            foreach(Port p in Ports[(int)facing])
             {
-                return GetPort(new(location.Y, facing));
+                if(p.Location.Equals(Location))
+                {
+                    return p;
+                }
             }
 
-            return GetPort(new(location.X, facing));
+            throw new InvalidOperationException("Couldn't find port with relFacing:"+facing+ "and  relLocation: "+relativeLocation+" on node: "+_physical.Bounds+" facing "+_facing);
 
         }
 

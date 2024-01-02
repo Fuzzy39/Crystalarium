@@ -7,12 +7,13 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CrystalCoreTests.Model.DefaultCommunication
 {
-     class MockMapObjectFactory : ComponentFactory
+    class MockMapObjectFactory : ComponentFactory
     {
         public MockGrid grid;
 
@@ -48,6 +49,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
         private Connection _connection;
         private Point location;
         private CompassPoint absFacing;
+        private PortDescriptor _discriptor;
 
         public MockPort(Point loc, CompassPoint absFacing)
         {
@@ -55,7 +57,12 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             location = loc;
         }
 
-        public PortDescriptor Descriptor => throw new NotImplementedException();
+
+        public MockPort(PortDescriptor desc)
+        {
+            _discriptor= desc;
+        }
+        public PortDescriptor Descriptor => _discriptor;
 
         public CompassPoint AbsoluteFacing => absFacing;
 
@@ -63,8 +70,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
 
         public Connection Connection { get => _connection; set => _connection = value; }
 
-        public Port ConnectedTo => throw new NotImplementedException();
-
+        public Port ConnectedTo => Connection == null ? null : Connection.OtherPort(this);
         public bool Destroyed => throw new NotImplementedException();
 
         public int Output { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -147,4 +153,96 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             throw new NotImplementedException();
         }
     }
+
+    internal class MockConnection : Connection
+    {
+        public int FromA => throw new NotImplementedException();
+
+        public int FromB => throw new NotImplementedException();
+
+        public MapObject Physical => throw new NotImplementedException();
+
+        public bool HasCollision => throw new NotImplementedException();
+
+        public Point Size => throw new NotImplementedException();
+
+        public bool Destroyed => throw new NotImplementedException();
+
+        Port Connection.PortA => throw new NotImplementedException();
+
+        Port Connection.PortB => throw new NotImplementedException();
+
+        event ConnectionEventHandler Connection.OnValuesUpdated
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public void Destroy()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int timesUpdated = 0;
+
+        public void Update()
+        {
+            timesUpdated++;
+        }
+
+        void Connection.Disconnect(Port toDisconnect)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool Connection.IsPortA(Port p)
+        {
+            throw new NotImplementedException();
+        }
+
+        Port Connection.OtherPort(Port port)
+        {
+            throw new NotImplementedException();
+        }
+
+        void Connection.Transmit(Port from, int value)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    internal class MockEntityFactory : EntityFactory
+    {
+        private ComponentFactory compFact;
+        public ComponentFactory baseFactory => compFact;
+
+        public MockEntityFactory(MockGrid g)
+        {
+            compFact = new MockMapObjectFactory(g);
+        }
+
+        Connection EntityFactory.CreateConnection(Port initial)
+        {
+            return new MockConnection();
+        }
+
+        Node EntityFactory.CreateNode(Agent agent, Rectangle bounds, Direction facing, bool createDiagonalPorts)
+        {
+            throw new NotImplementedException();
+        }
+
+        Port EntityFactory.CreatePort(PortDescriptor descriptor, Direction parentRotation, Rectangle parentBounds)
+        {
+            return new MockPort(descriptor);
+        }
+    }
+
 }
