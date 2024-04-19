@@ -18,26 +18,22 @@ namespace CrystalCore.Model.Rules
 
         private List<AgentType> _agentTypes; // the types of agents that make up this ruleset.
 
-
-        private bool _rotateLock; // whether agents can be rotated or face a direction other than up.
+.
+        private bool _performTransformationsEveryStep; // whether agents should perform transformations on every tick, instead of only when their inputs change.
         private bool _diagonalSignalsAllowed; // whether signals are only allowed to face the 4 orthagonal directions. If set to false, no AgentType can be of size greater than 1 x 1.
         private bool _runDefaultStateOnRotation; // whether agents will run their default transformations after they are rotated.
 
-        // signals
-        private int _beamMinLength;
-        private int _beamMaxLength;
 
-
-
-        public bool RotateLock // whether agents can be rotated or face a direction other than up.
+        public bool PerformTransformationsEveryStep // whether signals are only allowed to face the 4 orthagonal directions. If set to false, no AgentType can be of size greater than 1 x 1.
         {
-            get => _rotateLock;
+            get => _performTransformationsEveryStep;
             set
             {
                 if (Initialized) { throw new InvalidOperationException("Cannot Modify Ruleset after it has been initialized."); }
-                _rotateLock = value;
+                _performTransformationsEveryStep = value;
             }
         }
+
 
         public bool DiagonalSignalsAllowed // whether signals are only allowed to face the 4 orthagonal directions. If set to false, no AgentType can be of size greater than 1 x 1.
         {
@@ -59,51 +55,7 @@ namespace CrystalCore.Model.Rules
             }
         }
 
-        // mildly hacky.
-        public int SignalMinLength
-        {
-            get => _beamMinLength;
-            set
-            {
-                if (Initialized) { throw new InvalidOperationException("Cannot Modify Ruleset after it has been initialized."); }
-
-
-                if (value < 1)
-                {
-                    throw new InvalidOperationException("Mainimum beam length cannot be less than one.");
-                }
-
-
-                if (_beamMaxLength != 0 & value > _beamMaxLength)
-                {
-                    throw new InvalidOperationException("Minimum beam length cannot be greater than minimum.");
-                }
-
-                _beamMinLength = value;
-            }
-        }
-
-        public int SignalMaxLength
-        {
-            get => _beamMaxLength;
-            set
-            {
-                if (Initialized) { throw new InvalidOperationException("Cannot Modify Ruleset after it has been initialized."); }
-                if (value <= 0)
-                {
-                    _beamMaxLength = 0;
-                    return;
-                }
-
-                if (value < _beamMinLength)
-                {
-                    throw new InvalidOperationException("Maximum beam length cannot be less than minimum.");
-                }
-
-                _beamMaxLength = value;
-            }
-        }
-
+      
         public string Name // the human readable name of this ruleset.
         {
             get;
@@ -125,14 +77,11 @@ namespace CrystalCore.Model.Rules
             Name = name;
             _agentTypes = new List<AgentType>();
 
-
-            RotateLock = false;
+            PerformTransformationsEveryStep = false;
             DiagonalSignalsAllowed = false;
             RunDefaultStateOnRotation = true;
-
-            SignalMinLength = 1; // defaults, infinite, unbounded beams.
-            SignalMaxLength = 0;
-
+                
+        
         }
 
         // create a new agentType.

@@ -10,23 +10,15 @@
 	<ItemGroup>
 		<Compile Remove="OldObjects\**" />
 		<Compile Remove="OldSimulation\**" />
-		<Compile Remove="Rules\Transformations\**" />
 		<EmbeddedResource Remove="OldObjects\**" />
 		<EmbeddedResource Remove="OldSimulation\**" />
-		<EmbeddedResource Remove="Rules\Transformations\**" />
 		<None Remove="OldObjects\**" />
 		<None Remove="OldSimulation\**" />
-		<None Remove="Rules\Transformations\**" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Remove="Core\Default\MapExtensions.cs" />
 		<Compile Remove="Core\MapExtensions.cs" />
-		<Compile Remove="Rules\AgentType.cs" />
-		<Compile Remove="Rules\Operands.cs" />
-		<Compile Remove="Rules\PortIdentifier.cs" />
-		<Compile Remove="Rules\Ruleset.cs" />
-		<Compile Remove="Rules\TransformationRule.cs" />
 		<Compile Remove="SimulationManager.cs" />
 	</ItemGroup>
 
@@ -42,10 +34,6 @@
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 			<_Parameter1>CrystalCoreTests.Model</_Parameter1>
 		</AssemblyAttribute>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Rules\" />
 	</ItemGroup>
 
 </Project>

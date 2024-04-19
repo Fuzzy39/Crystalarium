@@ -87,6 +87,11 @@ namespace CrystalCore.Model.Rules
                     throw new InitializationFailedException("Invalid size of " + UpwardsSize + ". Size must be positive.");
                 }
 
+                if( (UpwardsSize.X*UpwardsSize.Y)>1 && Ruleset.DiagonalSignalsAllowed)
+                {
+                    throw new InitializationFailedException("Rulesets with diagonal signals may not have agents larger than 1 by 1.");
+                }
+
                 foreach (ITransformation tf in DefaultState.Transformations)
                 {
                     if (tf.ForrbiddenInDefaultState)
