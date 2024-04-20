@@ -5,10 +5,12 @@ using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.Communication
 {
-    internal interface Node : Entity
+    public  interface Node : Entity
     {
 
-        public Agent Agent { get; }
+        public Agent Agent { get; internal set; }
+
+        public MapObject Physical { get; }
 
 
         /// <summary>

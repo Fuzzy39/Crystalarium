@@ -22,9 +22,9 @@ namespace CrystalCore.Model.Communication.Default
             return new DefaultConnection(_componentFactory, initial);
         }
 
-        public Node CreateNode(Agent agent, Rectangle bounds, Direction facing, bool createDiagonalPorts)
+        public Node CreateNode( Rectangle bounds, Direction facing, bool createDiagonalPorts)
         {
-            return new DefaultNode( agent, this, bounds, facing, createDiagonalPorts);
+            return new DefaultNode( this, bounds, facing, createDiagonalPorts);
         }
 
 

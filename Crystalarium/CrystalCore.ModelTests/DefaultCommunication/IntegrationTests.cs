@@ -5,6 +5,7 @@ using CrystalCore.Model.Communication.Default;
 using CrystalCore.Model.Core;
 using CrystalCore.Model.Core.Default;
 using CrystalCore.Model.Physical;
+using CrystalCore.Model.Rules;
 using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,12 +18,48 @@ namespace CrystalCoreTests.Model.DefaultCommunication
     public class IntegrationTests
     {
 
-        private class MockAgent : Agent { }
+        private class MockAgent : Agent
+        {
+            public AgentType Type => throw new NotImplementedException();
+
+            Node Agent.Node => throw new NotImplementedException();
+
+            public void Destroy()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Rotate(RotationalDirection rd)
+            {
+                throw new NotImplementedException();
+            }
+
+            void Agent.DoSimulationStep()
+            {
+                throw new NotImplementedException();
+            }
+
+            void Agent.Mutate(AgentType type)
+            {
+                throw new NotImplementedException();
+            }
+
+            void Agent.PrepareSimulationStep()
+            {
+                throw new NotImplementedException();
+            }
+
+            void Agent.TransmitOn(PortTransmission[] transmissions)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
 
         [TestMethod()]
         public void CreateNodeFullTest()
         {
-            Map m = new DefaultMap();
+            Map m = new DefaultMap(new("dummy"));
 
             ComponentFactory compFactory = m.Grid.ComponentFactory;
 
@@ -30,7 +67,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             EntityFactory entityFactory = new DefaultEntityFactory(compFactory);
 
             // example entity declaration
-            Node node = entityFactory.CreateNode(new MockAgent(), new Rectangle(7, 7, 1, 1), Direction.up, false);
+            Node node = entityFactory.CreateNode(new Rectangle(7, 7, 1, 1), Direction.up, false);
 
             // if it didn't crash at this point, that's a good sign. but is it actually working?
 
@@ -128,7 +165,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
         public void CreateNodesConnectionTest()
         {
 
-            Map m = new DefaultMap();
+            Map m = new DefaultMap(new("dummy"));
 
             ComponentFactory compFactory = m.Grid.ComponentFactory;
 
@@ -136,9 +173,9 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             EntityFactory entityFactory = new DefaultEntityFactory(compFactory);
 
             // create two nodes.
-            Node nodeA = entityFactory.CreateNode(new MockAgent(), new Rectangle(7, 7, 1, 1), Direction.up, false);
+            Node nodeA = entityFactory.CreateNode( new Rectangle(7, 7, 1, 1), Direction.up, false);
 
-            Node nodeB = entityFactory.CreateNode(new MockAgent(), new Rectangle(0, 6, 1, 2), Direction.left, false);
+            Node nodeB = entityFactory.CreateNode(new Rectangle(0, 6, 1, 2), Direction.left, false);
 
             Port portA = nodeA.GetPort(new PortDescriptor(0, CompassPoint.west));
             Port portB = nodeB.GetPort(new PortDescriptor(0, CompassPoint.south));
@@ -232,7 +269,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
 
             // now we get a whole bunch of nodes in here so we can test node's stuff.
 
-            Map m = new DefaultMap();
+            Map m = new DefaultMap(new("dummy"));
 
             ComponentFactory compFactory = m.Grid.ComponentFactory;
 
@@ -240,10 +277,10 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             EntityFactory entityFactory = new DefaultEntityFactory(compFactory);
 
             // create the nodes we aren't really directly testing.
-            Node useless = entityFactory.CreateNode(new MockAgent(), new Rectangle(1, 0, 1, 1), Direction.up, false);
+            Node useless = entityFactory.CreateNode( new Rectangle(1, 0, 1, 1), Direction.up, false);
 
-            Node  left = entityFactory.CreateNode(new MockAgent(), new Rectangle(0, 1, 1, 2), Direction.right, false);
-            Node right = entityFactory.CreateNode(new MockAgent(), new Rectangle(4, 2, 2, 1), Direction.down, false);
+            Node  left = entityFactory.CreateNode( new Rectangle(0, 1, 1, 2), Direction.right, false);
+            Node right = entityFactory.CreateNode( new Rectangle(4, 2, 2, 1), Direction.down, false);
 
             Port leftPort = left.GetPort(new PortDescriptor(1, CompassPoint.north));
             Port rightPort = right.GetPort(new PortDescriptor(0, CompassPoint.east));
@@ -259,7 +296,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
 
             // time for the most interesting node.
 
-            Node center = entityFactory.CreateNode(new MockAgent(), new Rectangle(2, 2, 1, 1), Direction.up, false);
+            Node center = entityFactory.CreateNode( new Rectangle(2, 2, 1, 1), Direction.up, false);
 
             Port centerLeft = center.GetPort(new PortDescriptor(0, CompassPoint.west));
 
@@ -315,7 +352,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
         public void SimulationTest()
         {
 
-            Map m = new DefaultMap();
+            Map m = new DefaultMap(new("dummy"));
 
             ComponentFactory compFactory = m.Grid.ComponentFactory;
 
@@ -323,9 +360,9 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             EntityFactory entityFactory = new DefaultEntityFactory(compFactory);
 
             Node[] nodes = new Node[3];
-            nodes[0] = new DefaultNode(new MockAgent(), entityFactory, new(0, 0, 1, 1), Direction.up, false);
-            nodes[1] = new DefaultNode(new MockAgent(), entityFactory, new(2, 0, 1, 3), Direction.right, false);
-            nodes[2] = new DefaultNode(new MockAgent(), entityFactory, new(0, 2, 1, 1), Direction.down, false);
+            nodes[0] = new DefaultNode(entityFactory, new(0, 0, 1, 1), Direction.up, false);
+            nodes[1] = new DefaultNode(entityFactory, new(2, 0, 3, 3), Direction.right, false);
+            nodes[2] = new DefaultNode( entityFactory, new(0, 2, 1, 1), Direction.down, false);
 
             // simulation step 1 (of 3)
 

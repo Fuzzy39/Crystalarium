@@ -19,7 +19,6 @@
 	<ItemGroup>
 		<Compile Remove="Core\Default\MapExtensions.cs" />
 		<Compile Remove="Core\MapExtensions.cs" />
-		<Compile Remove="SimulationManager.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

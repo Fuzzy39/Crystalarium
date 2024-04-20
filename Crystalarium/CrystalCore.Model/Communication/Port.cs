@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace CrystalCore.Model.Communication
 {
-    internal interface Port
+    public interface Port
     {
         public PortDescriptor Descriptor { get; }
 

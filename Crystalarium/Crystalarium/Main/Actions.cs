@@ -1,6 +1,6 @@
 ﻿using CrystalCore;
 using CrystalCore.Input;
-using CrystalCore.Model;
+using CrystalCore.Model.Core;
 using CrystalCore.Model.Elements;
 using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;

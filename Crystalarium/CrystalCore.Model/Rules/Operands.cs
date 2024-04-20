@@ -1,4 +1,6 @@
-﻿using CrystalCore.Model.Language;
+﻿using CrystalCore.Model.Communication;
+using CrystalCore.Model.Language;
+using CrystalCore.Model.Simulation;
 using System;
 
 namespace CrystalCore.Model.Rules
@@ -63,10 +65,10 @@ namespace CrystalCore.Model.Rules
 
             int toReturn = 0;
 
-            foreach (Port p in a.PortList)
+            foreach (Port p in a.Node.PortList)
             {
 
-                if (MeetsThreshold(p.Value))
+                if (MeetsThreshold(p.Input))
                 {
                     toReturn++;
                 }
@@ -91,9 +93,9 @@ namespace CrystalCore.Model.Rules
 
     public class PortValueOperand : Expression
     {
-        private PortID portID;
+        private PortDescriptor portID;
 
-        public PortValueOperand(PortID portID) : base(TokenType.integer)
+        public PortValueOperand(PortDescriptor portID) : base(TokenType.integer)
         {
 
             this.portID = portID;
@@ -113,9 +115,9 @@ namespace CrystalCore.Model.Rules
                 throw new ArgumentException("agent parameter must of of type Agent");
             }
             Agent a = (Agent)agent;
-            Port p = a.GetPort(portID);
+            Port p = a.Node.GetPort(portID);
 
-            return new Token(ReturnType, p.Value);
+            return new Token(ReturnType, p.Input);
 
         }
     }

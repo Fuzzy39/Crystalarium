@@ -1,6 +1,6 @@
-﻿using CrystalCore.Model.Elements;
-using CrystalCore.Model.Objects;
+﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Rules;
+using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
@@ -18,12 +18,14 @@ namespace CrystalCore.View.Subviews.Agents
         private AgentViewConfig config;
         private List<DebugPort> _ports; // the ports that this agentview may render. 
 
+        private Agent _agent;
+
         internal AgentType CurrentType
         {
             get { return config.AgentType; }
         }
 
-        internal AgentView(GridView v, Agent a, List<AgentViewConfig> configs) : base(v, a)
+        internal AgentView(GridView v, Agent a, List<AgentViewConfig> configs) : base(v, a.Node.Physical)
         {
 
             _ports = null;
@@ -74,7 +76,7 @@ namespace CrystalCore.View.Subviews.Agents
             }
 
             // render the Agent.
-            Direction facing = ((Entity)RenderData).Facing;
+            Direction facing = _agent.Node.Facing;
             float textureFacing = facing.ToRadians() - config.TextureFacing.ToRadians();
 
             RectangleF loc = ShrinkBorders();

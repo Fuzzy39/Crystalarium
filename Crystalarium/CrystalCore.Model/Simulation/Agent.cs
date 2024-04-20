@@ -20,16 +20,33 @@ namespace CrystalCore.Model.Simulation
 
 
         // this could maybe be private (i.e., not in the interface)
-        internal Node Node { get; }
+        public Node Node { get; }
 
-        internal void Rotate(RotationalDirection rd);
+        public void Rotate(RotationalDirection rd);
 
         internal void Mutate(AgentType type);
+
+        internal void TransmitOn(PortTransmission[] transmissions);
+     
+
+        public void Destroy();
 
         internal void PrepareSimulationStep();
 
         internal void DoSimulationStep();
-        
+
+
+
+        public string ToString()
+        {
+            if(Type == null)
+            {
+                return "Agent { Destroyed }";
+            }
+
+            return "Agent { Type:\"" + Type.Name + "\", Location:" + Node.Physical.Bounds.Location + ", Facing:" + Node.Facing + " }";
+        }
+
 
     }
 }

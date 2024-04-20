@@ -15,7 +15,7 @@ namespace CrystalCoreTests.Model.DefaultCore
         public void ObjectTest()
         {
             // arrange
-            Map m = new DefaultMap();
+            Map m = new DefaultMap(new("dummy"));
             m.Grid.ExpandToFit(new(-1, -1, 18, 18)); // get a grid of 3x3 chunks centered on the origin chunk.
 
             ComponentFactory f = m.Grid.ComponentFactory;
@@ -68,7 +68,7 @@ namespace CrystalCoreTests.Model.DefaultCore
         public void ObjectsTest()
         {
             // arrange
-            Map m = new DefaultMap();
+            Map m = new DefaultMap(new("dummy"));
             Grid g = m.Grid;
             g.ExpandToFit(new(-1, -1, 18, 18)); // get a grid of 3x3 chunks centered on the origin chunk.
             ComponentFactory f = g.ComponentFactory;
@@ -111,7 +111,7 @@ namespace CrystalCoreTests.Model.DefaultCore
         [TestMethod()]
         public void CollisionTest()
         {
-            Map m = new DefaultMap();
+            Map m = new DefaultMap(new("dummy"));
             Grid g = m.Grid;
             g.ExpandToFit(new(-1, -1, 18, 18)); // get a grid of 3x3 chunks centered on the origin chunk.
             ComponentFactory f = g.ComponentFactory;

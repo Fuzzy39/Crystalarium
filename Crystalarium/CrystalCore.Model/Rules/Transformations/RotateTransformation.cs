@@ -1,4 +1,5 @@
-﻿using CrystalCore.Util;
+﻿using CrystalCore.Model.Simulation;
+using CrystalCore.Util;
 
 namespace CrystalCore.Model.Rules.Transformations
 {

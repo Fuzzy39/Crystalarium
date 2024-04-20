@@ -1,4 +1,6 @@
-﻿using CrystalCore.Model.Language;
+﻿using CrystalCore.Model.Communication;
+using CrystalCore.Model.Language;
+using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
 using System.Collections.Generic;
 
@@ -23,10 +25,10 @@ namespace CrystalCore.Model.Rules.Transformations
             }
         }
 
-        private PortID[] ports;
+        private PortDescriptor[] ports;
         private Expression value;
 
-        public SignalTransformation(Expression value, params PortID[] ports)
+        public SignalTransformation(Expression value, params PortDescriptor[] ports)
         {
 
 
@@ -37,7 +39,7 @@ namespace CrystalCore.Model.Rules.Transformations
 
         }
 
-        public SignalTransformation(int value, params PortID[] ports)
+        public SignalTransformation(int value, params PortDescriptor[] ports)
         {
             this.value = new IntOperand(value);
             this.ports = ports;
@@ -69,9 +71,9 @@ namespace CrystalCore.Model.Rules.Transformations
         public void Validate(AgentType at)
         {
 
-            foreach (PortID port in ports)
+            foreach (PortDescriptor port in ports)
             {
-                if (!port.CheckValidity(at))
+                if (!at.IsDescriptorValid(port))
                 {
                     throw new InitializationFailedException(
                         "Signal Transformation: Port ID: " + port.ID + " is not valid for AgentType '" + at.Name + "'.");

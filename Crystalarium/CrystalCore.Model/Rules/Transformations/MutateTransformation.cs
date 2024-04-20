@@ -1,4 +1,5 @@
-﻿using CrystalCore.Util;
+﻿using CrystalCore.Model.Simulation;
+using CrystalCore.Util;
 using System;
 
 namespace CrystalCore.Model.Rules.Transformations
@@ -55,7 +56,6 @@ namespace CrystalCore.Model.Rules.Transformations
 
         public Transform CreateTransform(Agent a)
         {
-
 
             return a => a.Mutate(mutateTo);
 

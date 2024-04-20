@@ -18,7 +18,7 @@ namespace CrystalCore.Model.Rules
 
         private List<AgentType> _agentTypes; // the types of agents that make up this ruleset.
 
-.
+
         private bool _performTransformationsEveryStep; // whether agents should perform transformations on every tick, instead of only when their inputs change.
         private bool _diagonalSignalsAllowed; // whether signals are only allowed to face the 4 orthagonal directions. If set to false, no AgentType can be of size greater than 1 x 1.
         private bool _runDefaultStateOnRotation; // whether agents will run their default transformations after they are rotated.

@@ -101,7 +101,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
 
         public bool Destroyed => throw new NotImplementedException();
 
-        Agent Node.Agent => throw new NotImplementedException();
+        Agent Node.Agent { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } } 
 
         List<List<Port>> Node.Ports => throw new NotImplementedException();
 
@@ -234,7 +234,7 @@ namespace CrystalCoreTests.Model.DefaultCommunication
             return new MockConnection();
         }
 
-        Node EntityFactory.CreateNode(Agent agent, Rectangle bounds, Direction facing, bool createDiagonalPorts)
+        Node EntityFactory.CreateNode(Rectangle bounds, Direction facing, bool createDiagonalPorts)
         {
             throw new NotImplementedException();
         }

@@ -1,5 +1,5 @@
 ﻿using CrystalCore.Input;
-using CrystalCore.Model;
+using CrystalCore.Model.Core;
 using CrystalCore.Model.Elements;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;

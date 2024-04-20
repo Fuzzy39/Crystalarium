@@ -1,9 +1,7 @@
-﻿using CrystalCore.Model.Core;
-using CrystalCore.Model.Simulation;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 
-namespace CrystalCore.Model
+namespace CrystalCore.Model.Core
 {
     public class SimulationManager
     {
@@ -26,7 +24,7 @@ namespace CrystalCore.Model
 
         private bool _paused; // TODO: implement simulation pausing
 
-        private List<DefaultMap> _grids; // The grids currently in existence.
+        private List<Map> _grids; // The grids currently in existence.
 
 
         public bool Paused
@@ -56,7 +54,7 @@ namespace CrystalCore.Model
 
         public int ActualStepsPS => _actualStepsPS;
 
-        public List<DefaultMap> Grids => _grids;
+        public List<Map> Grids => _grids;
 
         public SimulationManager(double secondsBetweenFrames)
         {
@@ -68,7 +66,7 @@ namespace CrystalCore.Model
 
             overdueSteps = 0;
 
-            _grids = new List<DefaultMap>();
+            _grids = new List<Map>();
             _paused = true;
 
         }
@@ -160,7 +158,7 @@ namespace CrystalCore.Model
             // do a simulation step.
 
 
-            foreach (DefaultMap g in Grids)
+            foreach (Map g in Grids)
             {
                 g.Step();
             }
@@ -170,47 +168,47 @@ namespace CrystalCore.Model
         // add a grid to the list of grids
         // I wanted to make this protected, but apparently in C# that means something slightly different than java.
         // Apparently internal is closer to what I wanted, but still isn't...
-        internal void addGrid(DefaultMap g)
+        internal void addGrid(Map g)
         {
             _grids.Add(g);
         }
 
         // remove a grid from the list of grids.
-        internal void removeGrid(DefaultMap g)
+        internal void removeGrid(Map g)
         {
             _grids.Remove(g);
         }
 
 
-        /// <summary>
-        /// Perform a simulation step for this grid.
-        /// </summary>
-        internal void Step()
-        {
+        ///// <summary>
+        ///// Perform a simulation step for this grid.
+        ///// </summary>
+        //internal void Step()
+        //{
 
 
-            // have each agent determine the state they will be in next step based on the state of the grid last step.
-            foreach (Agent a in _agents)
-            {
-                a.CalculateNextStep();
-            }
+        //    // have each agent determine the state they will be in next step based on the state of the grid last step.
+        //    foreach (Agent a in _agents)
+        //    {
+        //        a.CalculateNextStep();
+        //    }
 
-            // have each agent perform it's next step, no longer needing to look at the state of the grid.
-            for (int i = 0; i < _agents.Count; i++)
-            {
-                Agent a = _agents[i];
+        //    // have each agent perform it's next step, no longer needing to look at the state of the grid.
+        //    for (int i = 0; i < _agents.Count; i++)
+        //    {
+        //        Agent a = _agents[i];
 
-                a.Update();
+        //        a.Update();
 
-                // transformations applied to agents can destroy them.
-                if (a.Destroyed)
-                {
-                    i--;
-                }
+        //        // transformations applied to agents can destroy them.
+        //        if (a.Destroyed)
+        //        {
+        //            i--;
+        //        }
 
 
-            }
-        }
+        //    }
+        //}
 
     }
 }

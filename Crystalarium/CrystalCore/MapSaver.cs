@@ -1,6 +1,6 @@
-﻿using CrystalCore.Model.Elements;
-using CrystalCore.Model.Objects;
+﻿using CrystalCore.Model.Core;
 using CrystalCore.Model.Rules;
+using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
@@ -44,13 +44,13 @@ namespace CrystalCore
 
                 writer.WriteStartElement("Geometry");
 
-                xml.WritePoint(m.grid.Origin);
-                xml.WritePoint(m.grid.Size);
+                xml.WritePoint(m.Grid.ChunkOrigin);
+                xml.WritePoint(m.Grid.ChunkSize);
 
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("Agents");
-                List<Agent> agents = m.AgentsWithin(m.Bounds);
+                List<Agent> agents = m.AgentsWithin(m.Grid.Bounds);
 
                 foreach (Agent a in agents)
                 {
@@ -74,10 +74,10 @@ namespace CrystalCore
             xml.Writer.WriteValue(a.Type.Name);
             xml.Writer.WriteEndElement();
 
-            xml.WritePoint(a.Bounds.Location);
-            xml.WriteDirection(a.Facing);
+            xml.WritePoint(a.Node.Physical.Bounds.Location);
+            xml.WriteDirection(a.Node.Facing);
 
-            WriteTransmissions(xml, a.PortList);
+            WriteTransmissions(xml, a.Node.PortList);
             xml.Writer.WriteEndElement();
 
         }
@@ -108,11 +108,11 @@ namespace CrystalCore
             xml.Writer.WriteEndElement();
 
             xml.Writer.WriteStartElement("Facing");
-            xml.Writer.WriteValue((int)pt.portID.Facing);
+            xml.Writer.WriteValue((int)pt.descriptor.Facing);
             xml.Writer.WriteEndElement();
 
             xml.Writer.WriteStartElement("ID");
-            xml.Writer.WriteValue(pt.portID.ID);
+            xml.Writer.WriteValue(pt.descriptor.ID);
             xml.Writer.WriteEndElement();
 
             xml.Writer.WriteEndElement();
@@ -291,7 +291,7 @@ namespace CrystalCore
 
             foreach (PortTransmission trans in transmissions)
             {
-                Port p = a.GetPort(trans.portID);
+                Port p = a.GetPort(trans.descriptor);
                 p.Transmit(trans.value);
             }
 

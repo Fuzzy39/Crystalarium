@@ -14,9 +14,9 @@ namespace CrystalCore.Model.Communication
         public readonly int ID;
         public readonly CompassPoint Facing;
 
-        public PortDescriptor(int portID, CompassPoint compassPoint)
+        public PortDescriptor(int PortID, CompassPoint compassPoint)
         {
-            ID = portID;
+            ID = PortID;
             Facing = compassPoint;
         }
 

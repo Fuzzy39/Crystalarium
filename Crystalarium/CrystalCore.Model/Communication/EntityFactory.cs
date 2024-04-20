@@ -9,7 +9,7 @@ namespace CrystalCore.Model.Communication
     {
 
         public ComponentFactory baseFactory { get; }
-        public Node CreateNode(Agent agent, Rectangle bounds, Direction facing, bool createDiagonalPorts);
+        public Node CreateNode(Rectangle bounds, Direction facing, bool createDiagonalPorts);
 
         public Connection CreateConnection(Port initial);
 

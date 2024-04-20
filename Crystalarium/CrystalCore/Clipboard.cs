@@ -1,6 +1,6 @@
-﻿using CrystalCore.Model.Elements;
-using CrystalCore.Model.Objects;
+﻿using CrystalCore.Model.Core;
 using CrystalCore.Model.Rules;
+using CrystalCore.Model.Simulation;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 

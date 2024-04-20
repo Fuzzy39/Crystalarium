@@ -26,10 +26,13 @@ namespace CrystalCore.Model.Communication.Default
 
 
 
-        public DefaultNode(Agent agent, EntityFactory factory, Rectangle bounds, Direction facing, bool createDiagonalPorts)
+ 
+
+
+        public DefaultNode( EntityFactory factory, Rectangle bounds, Direction facing, bool createDiagonalPorts)
         {
 
-            _agent = agent;
+            _agent = null;
             _destroyed = false;
             _size = bounds.Size;
             _changedLastStep = true;
@@ -104,7 +107,15 @@ namespace CrystalCore.Model.Communication.Default
         }
 
 
-        public Agent Agent => _agent;
+        public Agent Agent
+        {
+            get=>_agent;
+            set
+            {
+                _agent = value;
+            }
+        }
+
         public List<List<Port>> Ports => _ports;
 
         public List<Port> PortList

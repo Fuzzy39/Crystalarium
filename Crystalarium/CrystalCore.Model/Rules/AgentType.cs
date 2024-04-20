@@ -1,4 +1,5 @@
-﻿using CrystalCore.Model.Rules.Transformations;
+﻿using CrystalCore.Model.Communication;
+using CrystalCore.Model.Rules.Transformations;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
@@ -138,6 +139,44 @@ namespace CrystalCore.Model.Rules
             {
                 return new Point(_size.Y, _size.X);
             }
+        }
+
+
+        public bool IsDescriptorValid(PortDescriptor pd)
+        {
+
+
+
+            if (!Ruleset.DiagonalSignalsAllowed & pd.Facing.IsDiagonal())
+            {
+                return false;
+            }
+
+            if (pd.Facing.IsDiagonal())
+            {
+                if (pd.ID != 0)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+
+            Direction d = (Direction)pd.Facing.ToDirection();
+
+            if (d.IsVertical() & UpwardsSize.X <= pd.ID)
+            {
+                return false;
+            }
+
+            if (d.IsHorizontal() & UpwardsSize.Y <= pd.ID)
+            {
+                return false;
+            }
+
+            return true;
+
         }
 
 

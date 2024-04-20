@@ -1,4 +1,5 @@
-﻿using CrystalCore.Util;
+﻿using CrystalCore.Model.Communication;
+using CrystalCore.Util;
 using System;
 
 namespace CrystalCore.Model.Rules
@@ -11,16 +12,16 @@ namespace CrystalCore.Model.Rules
 
     public struct PortTransmission
     {
-        public PortID portID;
+        public PortDescriptor descriptor;
         public int value;
 
-        public PortTransmission(int value, PortID pid)
+        public PortTransmission(int value, PortDescriptor pid)
         {
-            portID = pid;
+            descriptor = pid;
             this.value = value;
         }
 
-        public PortTransmission(int value, int portID, CompassPoint compassPoint) : this(value, new PortID(portID, compassPoint))
+        public PortTransmission(int value, int portID, CompassPoint compassPoint) : this(value, new (portID, compassPoint))
         {
 
 

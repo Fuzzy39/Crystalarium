@@ -1,4 +1,6 @@
-﻿namespace CrystalCore.Model.Rules.Transformations
+﻿using CrystalCore.Model.Simulation;
+
+namespace CrystalCore.Model.Rules.Transformations
 {
     /// <summary>
     /// A way an agent can change itself or it's environment

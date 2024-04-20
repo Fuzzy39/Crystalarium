@@ -4,7 +4,7 @@ namespace CrystalCore.Model.Communication
 {
     internal delegate void ConnectionEventHandler(Connection con, Connection.EventArgs e);
 
-    internal interface Connection : Entity
+    public interface Connection : Entity
     {
 
         internal class EventArgs : System.EventArgs
@@ -27,7 +27,7 @@ namespace CrystalCore.Model.Communication
         public int FromB { get; }
 
 
-        public event ConnectionEventHandler OnValuesUpdated;
+        internal event ConnectionEventHandler OnValuesUpdated;
 
         public bool IsPortA(Port p);
 

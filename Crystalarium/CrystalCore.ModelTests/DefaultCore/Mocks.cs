@@ -1,5 +1,7 @@
 ﻿using CrystalCore.Model.Core;
 using CrystalCore.Model.Physical;
+using CrystalCore.Model.Rules;
+using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 using System;
@@ -101,6 +103,8 @@ namespace CrystalCoreTests.Model.DefaultCore
         // could cause issues, be careful with that.
         public Grid Grid => null;
 
+        public Ruleset Ruleset { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public event ComponentEvent? OnMapComponentDestroyed;
         public event MapObjectEvent? OnMapObjectReady;
         public event EventHandler? OnReset;
@@ -122,7 +126,18 @@ namespace CrystalCoreTests.Model.DefaultCore
             OnMapComponentDestroyed?.Invoke(component, e);
         }
 
-        void Map.OnObjectReady(MapObject mapObj, EventArgs e)
+
+        Agent Map.CreateAgent(AgentType at, Point location, Direction facing)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Step()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsValidPosition(AgentType at, Point location, Direction facing)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,6 @@
-﻿namespace CrystalCore.Model.Rules.Transformations
+﻿using CrystalCore.Model.Simulation;
+
+namespace CrystalCore.Model.Rules.Transformations
 {
     internal class DestroyTransformation : ITransformation
     {
