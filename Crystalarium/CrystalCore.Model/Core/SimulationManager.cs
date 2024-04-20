@@ -24,7 +24,7 @@ namespace CrystalCore.Model.Core
 
         private bool _paused; // TODO: implement simulation pausing
 
-        private List<Map> _grids; // The grids currently in existence.
+        private List<Map> _maps; // The grids currently in existence.
 
 
         public bool Paused
@@ -54,7 +54,7 @@ namespace CrystalCore.Model.Core
 
         public int ActualStepsPS => _actualStepsPS;
 
-        public List<Map> Grids => _grids;
+        public List<Map> Grids => _maps;
 
         public SimulationManager(double secondsBetweenFrames)
         {
@@ -66,7 +66,7 @@ namespace CrystalCore.Model.Core
 
             overdueSteps = 0;
 
-            _grids = new List<Map>();
+            _maps = new List<Map>();
             _paused = true;
 
         }
@@ -168,15 +168,15 @@ namespace CrystalCore.Model.Core
         // add a grid to the list of grids
         // I wanted to make this protected, but apparently in C# that means something slightly different than java.
         // Apparently internal is closer to what I wanted, but still isn't...
-        internal void addGrid(Map g)
+        public void addMap(Map g)
         {
-            _grids.Add(g);
+            _maps.Add(g);
         }
 
         // remove a grid from the list of grids.
-        internal void removeGrid(Map g)
+        public void removeMap(Map g)
         {
-            _grids.Remove(g);
+            _maps.Remove(g);
         }
 
 

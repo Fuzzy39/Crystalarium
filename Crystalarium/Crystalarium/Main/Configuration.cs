@@ -1,7 +1,7 @@
-﻿using CrystalCore.Model.Interface;
+﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Language;
-using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
+using CrystalCore.Model.Rules.Transformations;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
@@ -47,10 +47,10 @@ namespace Crystalarium.Main
 
         private void CreateRulesets()
         {
-            PortID up = new PortID(0, CompassPoint.north);
-            PortID down = new PortID(0, CompassPoint.south);
-            PortID left = new PortID(0, CompassPoint.west);
-            PortID right = new PortID(0, CompassPoint.east);
+            PortDescriptor up = new PortDescriptor(0, CompassPoint.north);
+            PortDescriptor down = new PortDescriptor(0, CompassPoint.south);
+            PortDescriptor left = new PortDescriptor(0, CompassPoint.west);
+            PortDescriptor right = new PortDescriptor(0, CompassPoint.east);
 
             #region Crystalarium
             // create a ruleset
@@ -316,49 +316,49 @@ namespace Crystalarium.Main
             #endregion
 
             #region wireworld
-            // setup wireworld
-            WireRules = game.Engine.addRuleset("Wire World");
+            //// setup wireworld
+            //WireRules = game.Engine.addRuleset("Wire World");
 
-            WireRules.RotateLock = true;
-            WireRules.SignalMaxLength = 1;
-            WireRules.DiagonalSignalsAllowed = true;
+            //WireRules.RotateLock = true;
+            //WireRules.SignalMaxLength = 1;
+            //WireRules.DiagonalSignalsAllowed = true;
 
-            // Wire
-            t = WireRules.CreateType("wire", new Point(1, 1));
-            AgentType wire = t;
-            t.Rules.Add(new TransformationRule());
-            // FunctionCall: active ports > 0
-            t.Rules[0].Requirements = new FunctionCall
-                (
-                    and,
-                    new FunctionCall(greaterThan, new ThresholdOperand(1), Zero()),
+            //// Wire
+            //t = WireRules.CreateType("wire", new Point(1, 1));
+            //AgentType wire = t;
+            //t.Rules.Add(new TransformationRule());
+            //// FunctionCall: active ports > 0
+            //t.Rules[0].Requirements = new FunctionCall
+            //    (
+            //        and,
+            //        new FunctionCall(greaterThan, new ThresholdOperand(1), Zero()),
 
-                    new FunctionCall(Operator.LessThan, new ThresholdOperand(1), new IntOperand(3))
-                );
-
-
-            // Electron tail
-            t = WireRules.CreateType("electron tail", new Point(1, 1));
-            AgentType electronTail = t;
-            t.Rules.Add(new TransformationRule());
-            t.Rules[0].Requirements = null;
+            //        new FunctionCall(Operator.LessThan, new ThresholdOperand(1), new IntOperand(3))
+            //    );
 
 
-            // Electron Head
-            t = WireRules.CreateType("electron head", new Point(1, 1));
-            AgentType electronHead = t;
-            t.DefaultState.Transformations.Add(new SignalTransformation(1, up, down, left, right,
-              new PortID(0, CompassPoint.northwest), new PortID(0, CompassPoint.northeast),
-              new PortID(0, CompassPoint.southwest), new PortID(0, CompassPoint.southeast)));
-
-            t.Rules.Add(new TransformationRule());
-            t.Rules[0].Requirements = null;
+            //// Electron tail
+            //t = WireRules.CreateType("electron tail", new Point(1, 1));
+            //AgentType electronTail = t;
+            //t.Rules.Add(new TransformationRule());
+            //t.Rules[0].Requirements = null;
 
 
-            // describe everything's mutations
-            wire.Rules[0].Transformations.Add(new MutateTransformation(electronHead));
-            electronTail.Rules[0].Transformations.Add(new MutateTransformation(wire));
-            electronHead.Rules[0].Transformations.Add(new MutateTransformation(electronTail));
+            //// Electron Head
+            //t = WireRules.CreateType("electron head", new Point(1, 1));
+            //AgentType electronHead = t;
+            //t.DefaultState.Transformations.Add(new SignalTransformation(1, up, down, left, right,
+            //  new PortDescriptor(0, CompassPoint.northwest), new PortDescriptor(0, CompassPoint.northeast),
+            //  new PortDescriptor(0, CompassPoint.southwest), new PortDescriptor(0, CompassPoint.southeast)));
+
+            //t.Rules.Add(new TransformationRule());
+            //t.Rules[0].Requirements = null;
+
+
+            //// describe everything's mutations
+            //wire.Rules[0].Transformations.Add(new MutateTransformation(electronHead));
+            //electronTail.Rules[0].Transformations.Add(new MutateTransformation(wire));
+            //electronHead.Rules[0].Transformations.Add(new MutateTransformation(electronTail));
 
             #endregion
 
@@ -523,7 +523,7 @@ namespace Crystalarium.Main
 
         private FunctionCall ReceivingOnSide(Direction d)
         {
-            return new FunctionCall(Operator.GreaterThan, new PortValueOperand(new PortID(0, d.ToCompassPoint())), Zero());
+            return new FunctionCall(Operator.GreaterThan, new PortValueOperand(new PortDescriptor(0, d.ToCompassPoint())), Zero());
         }
 
         private void CreateDefaultSkins()

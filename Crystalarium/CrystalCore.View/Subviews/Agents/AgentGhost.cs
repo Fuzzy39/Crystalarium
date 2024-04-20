@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.Elements;
+﻿using CrystalCore.Model.Core;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
@@ -60,7 +60,7 @@ namespace CrystalCore.View.Subviews.Agents
             Color c;
 
             // get the color of the agent. if the agent cannot be placed, make it red, instead.
-            if (Entity.IsValidLocation(map, Bounds))
+            if (map.IsValidPosition(map, Bounds))
             {
                 // these ought to be exposed better.
                 c = config.Color; //Color.Green;

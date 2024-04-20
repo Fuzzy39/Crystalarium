@@ -1,5 +1,5 @@
 ﻿using CrystalCore;
-using CrystalCore.Model.Elements;
+using CrystalCore.Model.Core;
 using CrystalCore.Model.Rules;
 using CrystalCore.View;
 using CrystalCore.View.Core;
@@ -138,7 +138,7 @@ namespace Crystalarium.Main
             UI = new CrudeUI(this);
 
             // create a test grid, and do some test things to it.
-            Map = Engine.addGrid(CurrentRuleset);
+            Map = Engine.addMap(CurrentRuleset);
             Map.OnReset += Actions.OnMapReset;
 
 

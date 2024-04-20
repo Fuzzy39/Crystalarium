@@ -1,9 +1,8 @@
 ﻿using CrystalCore;
 using CrystalCore.Input;
 using CrystalCore.Model.Core;
-using CrystalCore.Model.Elements;
-using CrystalCore.Model.Objects;
 using CrystalCore.Model.Rules;
+using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
 using CrystalCore.View.Rendering;
 using Microsoft.Xna.Framework;
@@ -265,9 +264,10 @@ namespace Crystalarium.Main
                     }
 
                     // create agent
-                    if (Entity.IsValidLocation(game.Map, clickCoords, CurrentType.UpwardsSize, Rotation))
+                    if (game.Map.IsValidLocation(game.Map, clickCoords, CurrentType.UpwardsSize, Rotation))
                     {
-                        new Agent(game.Map, clickCoords, CurrentType, Rotation);
+                  
+                        game.Map.CreateAgent(CurrentType, clickCoords, Rotation);
                     }
 
 
@@ -312,7 +312,7 @@ namespace Crystalarium.Main
 
 
                     a.Rotate(RotationalDirection.cw);
-                    Rotation = a.Facing;
+                    Rotation = a.Node.Facing;
 
 
                 });
@@ -421,7 +421,7 @@ namespace Crystalarium.Main
 
 
                     CurrentType = a.Type;
-                    Rotation = a.Facing;
+                    Rotation = a.Node.Facing;
 
                 });
 

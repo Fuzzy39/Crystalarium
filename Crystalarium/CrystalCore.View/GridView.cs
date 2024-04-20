@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.Elements;
+﻿using CrystalCore.Model.Core;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using CrystalCore.View.Configs;
@@ -269,12 +269,12 @@ namespace CrystalCore.View
         {
             try
             {
-                _cameraRend.Update(_map.Bounds);
+                _cameraRend.Update(_map.Grid.Bounds);
             }
             catch
             {
 
-                Camera.Position = Map.Center;
+                Camera.Position = Map.Grid.Bounds.Center.ToVector2();
                 Console.WriteLine("Camera is out of bounds. Resetting position to " + Camera.Position);
             }
         }
@@ -285,7 +285,7 @@ namespace CrystalCore.View
 
             if (bound)
             {
-                Camera.Position = _map.Center; // we want to prevent a crash, if the camera is in an invalid position when it is bound.
+                Camera.Position = Map.Grid.Bounds.Center.ToVector2(); // we want to prevent a crash, if the camera is in an invalid position when it is bound.
             }
             Camera.IsBound = bound;
 
@@ -301,7 +301,7 @@ namespace CrystalCore.View
         {
 
             Manager.Reset();
-            Camera.Reset(_map.Bounds);
+            Camera.Reset(_map.Grid.Bounds);
 
 
         }

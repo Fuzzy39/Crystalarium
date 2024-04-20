@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.Elements;
+﻿using CrystalCore.Model.Physical;
 using CrystalCore.View.Configs;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
@@ -13,12 +13,13 @@ namespace CrystalCore.View.Subviews
 
 
         private ChunkViewConfig config;
-
+        private Chunk chunk;
 
         // Constructor
         internal ChunkView(GridView v, Chunk ch, ChunkViewConfig config) : base(v, ch)
         {
             this.config = config;
+            chunk = ch;
 
         }
 
@@ -31,7 +32,7 @@ namespace CrystalCore.View.Subviews
             }
 
             // check that we are visible on screen.
-            if (!renderTarget.Camera.TileBounds.Intersects(_renderData.Bounds))
+            if (!renderTarget.Camera.TileBounds.Intersects(chunk.Bounds))
             {
 
                 return true;
@@ -44,7 +45,7 @@ namespace CrystalCore.View.Subviews
             }
 
 
-            rend.Draw(config.ChunkBackground, RenderData.Bounds, determineColor());
+            rend.Draw(config.ChunkBackground, chunk.Bounds, determineColor());
              
             return true;
 
@@ -61,7 +62,7 @@ namespace CrystalCore.View.Subviews
             // brighten checkboard tiles, if needbe.
             if (config.DoCheckerBoardColoring)
             {
-                Point pos = RenderData.Map.GetChunkPos((Chunk)RenderData);
+                Point pos = chunk.ChunkCoords;
                 if ((pos.X + pos.Y) % 2 == 0)
                 {
                     brighten(ref toReturn, 1);
@@ -86,7 +87,7 @@ namespace CrystalCore.View.Subviews
 
             if (config.OriginChunkColor != null)
             {
-                if (((Chunk)RenderData).Coords.Equals(new Point(0)))
+                if (chunk.ChunkCoords.Equals(new Point(0)))
                 {
                     return (Color)config.OriginChunkColor;
                 }

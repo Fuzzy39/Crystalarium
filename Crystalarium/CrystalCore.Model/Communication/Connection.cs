@@ -18,6 +18,8 @@ namespace CrystalCore.Model.Communication
         }
 
 
+        public MapObject Physical { get;  }
+
         public Port PortA { get; }
 
         public Port PortB { get; }

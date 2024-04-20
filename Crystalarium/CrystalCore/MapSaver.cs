@@ -1,4 +1,6 @@
-﻿using CrystalCore.Model.Core;
+﻿using CrystalCore.Model.Communication;
+using CrystalCore.Model.Core;
+using CrystalCore.Model.Physical;
 using CrystalCore.Model.Rules;
 using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
@@ -91,7 +93,7 @@ namespace CrystalCore
             {
 
                 Port port = ports[i];
-                WriteTransmission(xml, new PortTransmission(port.TransmittingValue, port.ID, port.Facing));
+                WriteTransmission(xml, new PortTransmission(port.Output, port.Descriptor));
 
             }
 
@@ -269,7 +271,7 @@ namespace CrystalCore
 
             Direction d = xml.ReadDirection();
 
-            Agent a = new Agent(m, loc, type, d);
+            Agent a = m.CreateAgent(type, loc, d);
 
             LoadTransmissions(xml, a);
 
@@ -291,8 +293,8 @@ namespace CrystalCore
 
             foreach (PortTransmission trans in transmissions)
             {
-                Port p = a.GetPort(trans.descriptor);
-                p.Transmit(trans.value);
+                Port p = a.Node.GetPort(trans.descriptor);
+                p.Output= trans.value;
             }
 
 

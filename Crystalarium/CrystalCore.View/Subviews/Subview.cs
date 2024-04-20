@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.Elements;
+﻿using CrystalCore.Model.Physical;
 using CrystalCore.View.Core;
 
 namespace CrystalCore.View.Subviews
@@ -9,16 +9,16 @@ namespace CrystalCore.View.Subviews
     internal abstract class Subview : IRenderable
     {
 
-        protected MapObject _renderData; // the thing we view
+        protected MapComponent _renderData; // the thing we view
         protected GridView renderTarget;
 
-        internal MapObject RenderData
+        internal MapComponent RenderData
         {
             get => _renderData;
         }
 
 
-        protected Subview(GridView v, MapObject o)
+        protected Subview(GridView v, MapComponent o)
         {
 
             _renderData = o;

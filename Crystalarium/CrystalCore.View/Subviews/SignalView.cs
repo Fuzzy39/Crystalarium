@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.Objects;
+﻿using CrystalCore.Model.Communication;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
@@ -16,6 +16,7 @@ namespace CrystalCore.View.Subviews
     {
 
         private SignalViewConfig config;
+        private Connection connection;
 
         private enum ChannelState
         {
@@ -25,9 +26,10 @@ namespace CrystalCore.View.Subviews
         }
 
 
-        public SignalView(GridView v, Connection b, SignalViewConfig config) : base(v, b)
+        public SignalView(GridView v, Connection b, SignalViewConfig config) : base(v, b.Physical)
         {
             this.config = config;
+            connection = b;
 
 
         }
@@ -44,7 +46,7 @@ namespace CrystalCore.View.Subviews
             }
 
             // check that we are visible on screen.
-            if (!renderTarget.Camera.TileBounds.Intersects(_renderData.Bounds))
+            if (!renderTarget.Camera.TileBounds.Intersects(connection.Physical.Bounds))
             {
 
                 return true;
@@ -72,16 +74,16 @@ namespace CrystalCore.View.Subviews
         {
 
             Connection beam = (Connection)_renderData;
-            CompassPoint absfacing = beam.Start.AbsoluteFacing;
+            CompassPoint absfacing = beam.PortA.AbsoluteFacing;
             CompassPoint facing = absfacing;
 
             // if portA is null, then the direction from A would be reversed from the start, which is B.
-            if (beam.PortA != beam.Start)
-            {
-                facing = absfacing.Opposite();
-            }
+            //if (beam.PortA != beam.Start)
+            //{
+            //    facing = absfacing.Opposite();
+            //}
 
-            bool hasEnd = beam.End != null;
+            bool hasEnd = beam.PortB != null;
             int value = beam.FromA;
             RenderChannel(rend, facing, absfacing, hasEnd, value);
         }
@@ -90,18 +92,13 @@ namespace CrystalCore.View.Subviews
         {
 
             Connection beam = (Connection)_renderData;
-            CompassPoint absfacing = beam.Start.AbsoluteFacing;
+            CompassPoint absfacing = beam.PortB.AbsoluteFacing;
             CompassPoint facing = absfacing;
 
             // if portA is null, then the direction from A would be reversed from the start, which is B.
-            if (beam.PortB != beam.Start)
-            {
-                facing = absfacing.Opposite();
-            }
-
-            bool hasEnd = beam.End != null;
+      
             int value = beam.FromB;
-            RenderChannel(rend, facing, absfacing, hasEnd, value);
+            RenderChannel(rend, facing, absfacing, beam.PortA!=null, value);
         }
 
 
@@ -123,7 +120,7 @@ namespace CrystalCore.View.Subviews
 
             // Main goal here is to find the rotatedrect that makes sense for our situation
 
-            float length = signal.Length;
+            float length = signal.Size.X > signal.Size.Y? signal.Size.X : signal.Size.Y;
 
             if (!hasEnd)
             {
@@ -139,7 +136,7 @@ namespace CrystalCore.View.Subviews
 
 
             // let's start location with the center of the tile our port comes from.
-            Vector2 location = signal.Start.Location.ToVector2() + new Vector2(.5f);
+            Vector2 location = signal.PortA.Location.ToVector2() + new Vector2(.5f);
 
             float yAxisAngle = absFacing.ToRadians() + (MathF.PI / 2f); // the angle the 
             float dist = .25f; // the edge
@@ -189,11 +186,6 @@ namespace CrystalCore.View.Subviews
 
             return Color.DimGray;
         }
-
-
-
-
-
 
 
         // the bean beam? I'm confused...

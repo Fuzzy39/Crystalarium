@@ -76,6 +76,7 @@ namespace CrystalCore.Model.Communication.Default
         }
 
 
+        public MapObject Physical => _physical;
         public Port PortA => _portA;
 
         public Port PortB => _portB;
@@ -84,7 +85,6 @@ namespace CrystalCore.Model.Communication.Default
 
         public int FromB => _portB == null ? 0 : _portB.Output;
 
-        public MapObject Physical => _physical;
 
         public bool HasCollision => false;
 

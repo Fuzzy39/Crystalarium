@@ -29,6 +29,7 @@ namespace CrystalCore.View.Subviews.Agents
         {
 
             _ports = null;
+            _agent = a;
             this.configs = configs;
             setCurrentConfig();
 
@@ -56,7 +57,7 @@ namespace CrystalCore.View.Subviews.Agents
             }
 
             // check that we are visible on screen.
-            if (!renderTarget.Camera.TileBounds.Intersects(_renderData.Bounds))
+            if (!renderTarget.Camera.TileBounds.Intersects(_agent.Node.Physical.Bounds))
             {
 
                 return true;
@@ -125,7 +126,7 @@ namespace CrystalCore.View.Subviews.Agents
                 return;
             }
 
-            RectangleF bounds = new RectangleF(RenderData.Bounds);
+            RectangleF bounds = new RectangleF(_agent.Node.Physical.Bounds);
 
 
             if (config.DoBackgroundShrinkage)
@@ -149,7 +150,7 @@ namespace CrystalCore.View.Subviews.Agents
                 throw new InvalidOperationException("Agent Type " + ((Agent)RenderData).Type.Name + "'s RenderConfig requires a background texture to render debug ports.");
             }
 
-            foreach (Port p in ((Agent)RenderData).PortList)
+            foreach (Port p in _agent.Node.PortList)
             {
                 _ports.Add(new DebugPort(config.Background, p, this));
             }
@@ -162,7 +163,7 @@ namespace CrystalCore.View.Subviews.Agents
         {
 
 
-            RectangleF toReturn = new RectangleF(RenderData.Bounds);
+            RectangleF toReturn = new RectangleF(_agent.Node.Physical.Bounds);
 
             // Perform shrinkage.
             return toReturn.Inflate(-config.Shrinkage, -config.Shrinkage);

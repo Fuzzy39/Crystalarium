@@ -1,5 +1,6 @@
-﻿using CrystalCore.Model.Elements;
-using CrystalCore.Model.Objects;
+﻿using CrystalCore.Model.Communication;
+using CrystalCore.Model.Physical;
+using CrystalCore.Model.Simulation;
 using CrystalCore.View.Core;
 using CrystalCore.View.Subviews;
 using CrystalCore.View.Subviews.Agents;
@@ -104,7 +105,7 @@ namespace CrystalCore.View
 
             // we now need to add all appropriate objects
 
-            List<Chunk> chunks = Parent.Map.ChunksInBounds(Parent.Map.Bounds);
+            List<Chunk> chunks = Parent.Map.Grid.ChunksIntersecting(Parent.Map.Grid.Bounds);
 
             foreach (Chunk ch in chunks)
             {

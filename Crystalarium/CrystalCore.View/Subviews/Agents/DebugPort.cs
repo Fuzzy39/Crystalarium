@@ -1,4 +1,4 @@
-﻿using CrystalCore.Model.Objects;
+﻿using CrystalCore.Model.Communication;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Core;
@@ -93,22 +93,22 @@ namespace CrystalCore.View.Subviews.Agents
         private Color DetermineColor()
         {
 
-            if (Port.HasConnection == false)
+            if (Port.Connection==null)
             {
                 return Color.Magenta;
             }
 
-            if (Port.Value == 0 & Port.TransmittingValue == 0)
+            if (Port.Input == 0 && Port.Output == 0)
             {
                 return Color.DimGray;
             }
 
-            if (Port.Value != 0 & Port.TransmittingValue != 0)
+            if (Port.Input != 0 && Port.Output != 0)
             {
                 return Color.Purple;
             }
 
-            if (Port.Value != 0)
+            if (Port.Input != 0)
             {
                 return Color.Blue;
             }

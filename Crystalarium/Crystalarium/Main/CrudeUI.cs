@@ -1,6 +1,6 @@
 ﻿using CrystalCore;
 using CrystalCore.Input;
-using CrystalCore.Model.Elements;
+using CrystalCore.Model.Core;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;

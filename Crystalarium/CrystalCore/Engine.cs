@@ -1,6 +1,6 @@
 ﻿using CrystalCore.Input;
 using CrystalCore.Model.Core;
-using CrystalCore.Model.Elements;
+using CrystalCore.Model.Core.Default;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using CrystalCore.View;
@@ -34,7 +34,6 @@ namespace CrystalCore
 
 
         private List<GridView> _viewports;
-        private List<Map> _grids;
 
         private List<Ruleset> _rulesets;
         private List<SkinSet> _skinSets;
@@ -80,7 +79,6 @@ namespace CrystalCore
 
 
             _viewports = new List<GridView>();
-            _grids = new List<Map>();
 
             _skinSets = new List<SkinSet>();
             _rulesets = new List<Ruleset>();
@@ -146,31 +144,32 @@ namespace CrystalCore
         }
 
         // manual ways to create gridviews
-        public GridView addView(Map g, int x, int y, int width, int height, SkinSet skinSet)
+        public GridView addView(Map map, int x, int y, int width, int height, SkinSet skinSet)
         {
-            return addView(g, new Point(x, y), new Point(width, height), skinSet);
+            return addView(map, new Point(x, y), new Point(width, height), skinSet);
         }
 
 
-        public GridView addView(Map g, Point location, Point size, SkinSet skinSet)
+        public GridView addView(Map map, Point location, Point size, SkinSet skinSet)
         {
             if (!Initialized)
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before gridviews can be created. call Engine.Initialize().");
             }
-            return new GridView(_primaryRenderer, _viewports, g, location, size, skinSet);
+            return new GridView(_primaryRenderer, _viewports, map, location, size, skinSet);
         }
 
-        public Map addGrid(Ruleset r)
+        public Map addMap(Ruleset r)
         {
             if (!Initialized)
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before grids can be created. call Engine.Initialize().");
             }
 
-            _grids.Add(new Map(Sim, r));
+            Map m = new DefaultMap(r);
+            _sim.addMap(m);
 
-            return _grids[_grids.Count - 1];
+            return m;
         }
 
         public SkinSet addSkinSet(string name)
