@@ -41,6 +41,10 @@ namespace CrystalCore.Model.Communication.Default
             _factory = factory;
 
             _physical = factory.baseFactory.CreateObject(bounds.Location, this);
+            if(_physical==null)
+            {
+                throw new ArgumentException("Node exploded in a particularly violent way: physical representation could not be made.");
+            }
             InitPorts(createDiagonalPorts);
             OnCreate();
 

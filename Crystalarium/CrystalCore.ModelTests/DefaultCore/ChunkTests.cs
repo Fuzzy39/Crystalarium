@@ -16,10 +16,10 @@ namespace CrystalCoreTests.Model.DefaultCore
         {
 
             // arrange
-            MockGrid mg = new MockGrid();
+            MockMap mg = new MockMap();
             Chunk ch = new DefaultChunk(mg, new(0,0));
 
-            MockMapObj obj = new MockMapObj(mg, new(0, 0, 1, 1));
+            MockMapObj obj = new MockMapObj(mg.Grid, new(0, 0, 1, 1));
 
 
             //act
@@ -44,11 +44,11 @@ namespace CrystalCoreTests.Model.DefaultCore
 
 
             // arrange
-            MockGrid mg = new MockGrid();
+            MockMap mg = new();
 
             Chunk ch = new DefaultChunk(mg, new(0, 0));
 
-            MockMapObj obj = new MockMapObj(mg, new(15, 0, 2, 1));
+            MockMapObj obj = new MockMapObj(mg.Grid, new(15, 0, 2, 1));
 
 
             //act
@@ -71,10 +71,10 @@ namespace CrystalCoreTests.Model.DefaultCore
         public void DestroyTest()
         {
             // arrange
-            MockGrid mg = new MockGrid();
+            MockMap mg = new();
 
             Chunk ch = new DefaultChunk(mg, new(0, 0));
-            MockMapObj obj = new MockMapObj(mg,new(0, 0, 1, 1));
+            MockMapObj obj = new MockMapObj(mg.Grid,new(0, 0, 1, 1));
             ch.RegisterObject(obj);
 
             bool eventRaised = false;

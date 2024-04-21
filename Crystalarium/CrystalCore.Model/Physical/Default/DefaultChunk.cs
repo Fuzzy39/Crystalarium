@@ -39,12 +39,13 @@ namespace CrystalCore.Model.Physical.Default
         public event ComponentEvent OnDestroy;
 
 
-        public DefaultChunk(Grid grid, Point chunkCoords)
+        public DefaultChunk(Map map, Point chunkCoords)
         {
-            _grid = grid;
+            _grid = map.Grid;
             _chunkCoords = chunkCoords;
 
             _objectsIntersecting = new List<MapObject>();
+            map.OnComponentReady(this, new());
         }
 
 

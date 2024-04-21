@@ -19,7 +19,9 @@ namespace CrystalCore.Model.Communication.Default
 
         public Connection CreateConnection(Port initial)
         {
-            return new DefaultConnection(_componentFactory, initial);
+            Connection c =  new DefaultConnection(_componentFactory, initial);
+            _componentFactory.Map.OnComponentReady(c.Physical, new());
+            return c;
         }
 
         public Node CreateNode( Rectangle bounds, Direction facing, bool createDiagonalPorts)

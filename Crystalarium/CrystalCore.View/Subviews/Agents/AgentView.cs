@@ -37,7 +37,7 @@ namespace CrystalCore.View.Subviews.Agents
 
         private void setCurrentConfig()
         {
-            AgentType t = ((Agent)RenderData).Type;
+            AgentType t = _agent.Type;
             foreach (AgentViewConfig config in configs)
             {
                 if (config.AgentType == t)
@@ -71,7 +71,7 @@ namespace CrystalCore.View.Subviews.Agents
             }
 
 
-            if (((Agent)RenderData).Type != CurrentType)
+            if (_agent.Type != CurrentType)
             {
                 setCurrentConfig();
             }
@@ -118,12 +118,18 @@ namespace CrystalCore.View.Subviews.Agents
         /// This method, made especially for agents, is weird, and maybe should be generalized...
         /// </summary>
         /// <param name="sb"></param>
-        internal void DrawBackground(IRenderer rend)
+        internal bool DrawBackground(IRenderer rend)
         {
+
+            if (!base.Draw(rend))
+            {
+                return false;
+            }
+
             // render the background.
             if (config.Background == null)
             {
-                return;
+                return true;
             }
 
             RectangleF bounds = new RectangleF(_agent.Node.Physical.Bounds);
@@ -138,6 +144,7 @@ namespace CrystalCore.View.Subviews.Agents
 
             RotatedRect pos = RotatedRect.FromBoundingLocation(bounds.Location, bounds.Size, 0);
             rend.Draw(config.Background, pos, config.BackgroundColor);
+            return true;
         }
 
 
@@ -147,7 +154,7 @@ namespace CrystalCore.View.Subviews.Agents
 
             if (config.Background == null)
             {
-                throw new InvalidOperationException("Agent Type " + ((Agent)RenderData).Type.Name + "'s RenderConfig requires a background texture to render debug ports.");
+                throw new InvalidOperationException("Agent Type " +_agent.Type.Name + "'s RenderConfig requires a background texture to render debug ports.");
             }
 
             foreach (Port p in _agent.Node.PortList)

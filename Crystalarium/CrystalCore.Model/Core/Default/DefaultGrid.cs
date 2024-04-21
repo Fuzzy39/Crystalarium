@@ -291,10 +291,11 @@ namespace CrystalCore.Model.Core.Default
         {
             // the rectangle containing all coordinates contained in the grid,as opposed to a rectangle representing the bounds of the grid.
 
-            bounds = new(bounds.Location, bounds.Size - new Point(1));
-            Rectangle coordinateBounds = new(Bounds.Location, Bounds.Size - new Point(1));
+            
+            Rectangle coordinateBounds = new(Bounds.Location, Bounds.Size);
 
             bounds = Rectangle.Intersect(coordinateBounds, bounds);
+            bounds = new(bounds.Location, bounds.Size - new Point(1));
 
             Point least = TileToChunkCoords(bounds.Location) - ChunkOrigin;
             Point greatest = TileToChunkCoords(bounds.Location + bounds.Size) - ChunkOrigin;

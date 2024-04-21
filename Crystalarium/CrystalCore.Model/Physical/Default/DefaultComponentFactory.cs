@@ -7,6 +7,8 @@ namespace CrystalCore.Model.Physical.Default
     {
         private Map _map;
 
+        public Map Map => _map;
+
         public DefaultComponentFactory(Map map)
         {
             _map = map;
@@ -14,7 +16,7 @@ namespace CrystalCore.Model.Physical.Default
 
         public Chunk CreateChunk(Point chunkCoords)
         {
-            Chunk toReturn = new DefaultChunk(_map.Grid, chunkCoords);
+            Chunk toReturn = new DefaultChunk(_map, chunkCoords);
             toReturn.OnDestroy += _map.OnComponentDestroyed;
             return toReturn;
         }

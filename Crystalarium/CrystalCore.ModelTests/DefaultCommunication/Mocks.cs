@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Communication;
+using CrystalCore.Model.Core;
 using CrystalCore.Model.Physical;
 using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
@@ -21,6 +22,8 @@ namespace CrystalCoreTests.Model.DefaultCommunication
         {
             grid = g;
         }
+
+        Map ComponentFactory.Map => throw new NotImplementedException();
 
         public Chunk CreateChunk(Point chunkCoords)
         {

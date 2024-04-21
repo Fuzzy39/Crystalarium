@@ -157,8 +157,7 @@ namespace Crystalarium.Main
             // some debug text. We'll clear this out sooner or later...
 
 
-            DrawString("FPS: " + Math.Round(frameRate, 1) + " Sim Speed: " + Engine.Sim.ActualStepsPS + " Steps/Second Chunks: "
-                + Map.ChunkCount + " Agents: " + Map.AgentCount + " Connections: " + Map.ConnectionCount, new(10, 10), rend);
+            DrawString("FPS: " + Math.Round(frameRate, 1) + " Sim Speed: " + Engine.Sim.ActualStepsPS + " Steps/Second Agents: " + Map.AgentCount, new(10, 10), rend);
 
             DrawString("Placing: " + game.Actions.CurrentType.Name + " (facing " + game.Actions.Rotation + ") \n" + info + "\n" + rules, new(10, 30), rend);
 

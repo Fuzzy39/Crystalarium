@@ -184,6 +184,7 @@ namespace CrystalCoreTests.Model.DefaultCore
 
             Assert.AreEqual(g.Chunks[1][2], g.ChunkAtCoords(new(0, 16)));
 
+            Assert.AreEqual(g.Chunks[1][2], g.ChunkAtCoords(new(0, 31)));
 
         }
 
@@ -204,6 +205,11 @@ namespace CrystalCoreTests.Model.DefaultCore
             Assert.IsTrue(chunks.Contains(g.Chunks[2][1]));
             Assert.AreEqual(3, chunks.Count);
 
+
+            // edge case:
+            chunks = g.ChunksIntersecting(new(0, 31, 1, 1));
+            Assert.IsTrue(chunks.Contains(g.Chunks[1][2]));
+            Assert.AreEqual(1, chunks.Count);
 
         }
 

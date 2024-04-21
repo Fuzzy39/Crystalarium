@@ -211,9 +211,9 @@ namespace Crystalarium.Main
                     Vector2 pos = panPos + (originPos - mousePos);
 
 
-                    if (!game.Map.Bounds.Contains(pos))
+                    if (!game.Map.Grid.Bounds.Contains(pos))
                     {
-                        originPos = originPos - DistanceFrom(pos, game.Map.Bounds);
+                        originPos = originPos - DistanceFrom(pos, game.Map.Grid.Bounds);
                         panOrigin = game.view.Camera.TileToPixelCoords(originPos);
 
                         // redo calculation
@@ -245,7 +245,7 @@ namespace Crystalarium.Main
                     Rectangle boundsToCheck = new(clickCoords, CurrentType.GetSize(Rotation));
 
                     // grow grid
-                    game.Map.ExpandToFit(boundsToCheck);
+                    game.Map.Grid.ExpandToFit(boundsToCheck);
 
                     // destroy agents intersecting bounds
 
@@ -264,7 +264,7 @@ namespace Crystalarium.Main
                     }
 
                     // create agent
-                    if (game.Map.IsValidLocation(game.Map, clickCoords, CurrentType.UpwardsSize, Rotation))
+                    if (game.Map.IsValidPosition( CurrentType, clickCoords, Rotation))
                     {
                   
                         game.Map.CreateAgent(CurrentType, clickCoords, Rotation);

@@ -669,32 +669,32 @@ namespace Crystalarium.Main
             #endregion
 
             #region WireWorld
-            // ##### Wire World #####
-            Skin wire = new Skin(WireRules, DefaultSkin);
-            wire.GridViewBG = Textures.viewboxBG;
+            //// ##### Wire World #####
+            //Skin wire = new Skin(WireRules, DefaultSkin);
+            //wire.GridViewBG = Textures.viewboxBG;
 
-            baseConfig = new AgentViewConfig(null);
-            baseConfig.DefaultTexture = Textures.pixel;
-            baseConfig.Background = Textures.pixel;
-            baseConfig.Color = Color.White;
+            //baseConfig = new AgentViewConfig(null);
+            //baseConfig.DefaultTexture = Textures.pixel;
+            //baseConfig.Background = Textures.pixel;
+            //baseConfig.Color = Color.White;
 
-            // bright
-            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("wire"));
-            conf.Color = new Color(110, 140, 110);
-            wire.AgentConfigs.Add(conf);
+            //// bright
+            //conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("wire"));
+            //conf.Color = new Color(110, 140, 110);
+            //wire.AgentConfigs.Add(conf);
 
-            // dark 
-            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron head"));
-            conf.Color = new Color(0, 255, 0);
-            wire.AgentConfigs.Add(conf);
+            //// dark 
+            //conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron head"));
+            //conf.Color = new Color(0, 255, 0);
+            //wire.AgentConfigs.Add(conf);
 
-            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron tail"));
-            conf.Color = new Color(40, 220, 40);
-            wire.AgentConfigs.Add(conf);
+            //conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron tail"));
+            //conf.Color = new Color(40, 220, 40);
+            //wire.AgentConfigs.Add(conf);
 
 
-            // chunks
-            wire.ChunkConfig.ChunkBackground = Textures.altChunkGrid;
+            //// chunks
+            //wire.ChunkConfig.ChunkBackground = Textures.altChunkGrid;
             #endregion
 
 
@@ -790,29 +790,29 @@ namespace Crystalarium.Main
             #endregion
 
             #region WireWorld
-            Skin wire = new Skin(WireRules, MiniMapSkin);
-            wire.GridViewBG = Textures.viewboxBG;
+            //Skin wire = new Skin(WireRules, MiniMapSkin);
+            //wire.GridViewBG = Textures.viewboxBG;
 
-            baseConfig = new AgentViewConfig(null);
-            baseConfig.DefaultTexture = Textures.pixel;
-            baseConfig.Color = Color.White;
+            //baseConfig = new AgentViewConfig(null);
+            //baseConfig.DefaultTexture = Textures.pixel;
+            //baseConfig.Color = Color.White;
 
-            // bright
-            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("wire"));
-            conf.Color = new Color(110, 140, 110);
-            wire.AgentConfigs.Add(conf);
+            //// bright
+            //conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("wire"));
+            //conf.Color = new Color(110, 140, 110);
+            //wire.AgentConfigs.Add(conf);
 
-            // dark 
-            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron head"));
-            conf.Color = new Color(0, 255, 0);
-            wire.AgentConfigs.Add(conf);
+            //// dark 
+            //conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron head"));
+            //conf.Color = new Color(0, 255, 0);
+            //wire.AgentConfigs.Add(conf);
 
-            conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron tail"));
-            conf.Color = new Color(40, 220, 40);
-            wire.AgentConfigs.Add(conf);
+            //conf = new AgentViewConfig(baseConfig, WireRules.GetAgentType("electron tail"));
+            //conf.Color = new Color(40, 220, 40);
+            //wire.AgentConfigs.Add(conf);
 
 
-            wire.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
+            //wire.ChunkConfig = new ChunkViewConfig(beams.ChunkConfig);
             #endregion
 
             #region Ternary

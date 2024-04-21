@@ -15,6 +15,8 @@ namespace Crystalarium.Main
     public class CrystalGame : Game
     {
 
+ 
+
         /*
          * Welcome to Crystalarium! This is the primary file of the game.
          * At the moment, much of it is 'test code' and liable to some big changes, and maybe a complete rewrite or two down the road.
@@ -29,7 +31,7 @@ namespace Crystalarium.Main
         // version number.
         private const int MAJOR = 8;
         private const int MINOR = 2;
-        private const int BUILD = 1210; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 1222; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {

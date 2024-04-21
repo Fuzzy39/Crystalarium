@@ -27,17 +27,18 @@ namespace CrystalCore.Model.Simulation.Default
 
 
 
-        public DefaultAgent(Node node, AgentType t)
+        public DefaultAgent(Map m, Node node, AgentType t)
         {
           
 
             _type = t;
          
             _node = node;
+            _node.Agent = this;
 
             _nextTransforms = new List<Transform>();
 
-            
+            m.OnComponentReady(_node.Physical, new());
 
         }
  
@@ -73,6 +74,7 @@ namespace CrystalCore.Model.Simulation.Default
         {
             Node.Destroy();
             _type = null; // not that this really matters.
+            _node = null;
         }
 
 

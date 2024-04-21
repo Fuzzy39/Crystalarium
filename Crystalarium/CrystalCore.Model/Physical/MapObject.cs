@@ -24,6 +24,8 @@ namespace CrystalCore.Model.Physical
             return entity == Entity;
         }
 
+       
+
         public string ToString()
         {
             return "[ MapObject @ " + Bounds + " ]";

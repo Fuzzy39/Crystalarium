@@ -58,7 +58,7 @@ namespace CrystalCore.View
 
             _parent = parent;
 
-            parent.Map.OnMapObjectReady += OnMapObjectReady;
+            parent.Map.OnMapComponentReady += OnMapObjectReady;
 
             Reset();
 
@@ -67,26 +67,34 @@ namespace CrystalCore.View
         }
 
 
-        private void OnMapObjectReady(object o, EventArgs e)
+        private void OnMapObjectReady(MapComponent o, EventArgs e)
         {
-            if (o is Agent)
+            if(o is not MapObject)
             {
-
-                Agent a = (Agent)o;
-                _agentViews.Add(new AgentView(Parent, a, Parent.CurrentSkin.AgentConfigs));
-            }
-
-            if (o is Connection)
-            {
-                Connection c = (Connection)o;
-                _beamViews.Add(new SignalView(Parent, c, Parent.CurrentSkin.SignalConfig));
-            }
-
-            if (o is Chunk)
-            {
+                // it's a chunk!
                 Chunk c = (Chunk)o;
                 _chunkViews.Add(new ChunkView(Parent, c, Parent.CurrentSkin.ChunkConfig));
+                return;
             }
+
+            MapObject obj = (MapObject)o;
+
+
+            if ( obj.Entity is Node)
+            {
+
+                Agent a = ((Node)(obj.Entity)).Agent;
+                _agentViews.Add(new AgentView(Parent, a, Parent.CurrentSkin.AgentConfigs));
+                return;
+            }
+
+            if (obj.Entity is Connection)
+            {
+                Connection c = (Connection)(obj.Entity);
+                _beamViews.Add(new SignalView(Parent, c, Parent.CurrentSkin.SignalConfig));
+                return;
+            }
+
 
         }
 
@@ -110,7 +118,8 @@ namespace CrystalCore.View
             foreach (Chunk ch in chunks)
             {
 
-                OnMapObjectReady(ch, new());
+
+                _chunkViews.Add(new ChunkView(Parent, ch, Parent.CurrentSkin.ChunkConfig));
 
                 /* foreach(ChunkMember chm in ch.Children)
                  {
@@ -152,6 +161,7 @@ namespace CrystalCore.View
                 }
 
 
+             
                 DrawObjects(rend, _beamViews);
                 DrawObjects(rend, _agentViews);
 
@@ -186,6 +196,9 @@ namespace CrystalCore.View
 
             }
         }
+
+
+     
 
         private void DrawGhosts(IRenderer rend)
         {

@@ -101,13 +101,16 @@ namespace CrystalCoreTests.Model.DefaultCore
     internal class MockMap : Map
     {
         // could cause issues, be careful with that.
-        public Grid Grid => null;
+        public Grid Grid => new MockGrid();
 
         public Ruleset Ruleset { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public int AgentCount => throw new NotImplementedException();
 
         public event ComponentEvent? OnMapComponentDestroyed;
         public event MapObjectEvent? OnMapObjectReady;
         public event EventHandler? OnReset;
+        public event ComponentEvent? OnMapComponentReady;
 
         public void Reset()
         {
@@ -140,6 +143,26 @@ namespace CrystalCoreTests.Model.DefaultCore
         public bool IsValidPosition(AgentType at, Point location, Direction facing)
         {
             throw new NotImplementedException();
+        }
+
+        public bool IsValidPosition(Rectangle bounds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Agent> AgentsWithin(Rectangle bounds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Agent getAgentAtPos(Point coords)
+        {
+            throw new NotImplementedException();
+        }
+
+        void Map.OnComponentReady(MapComponent mapObj, EventArgs e)
+        {
+            return;
         }
     }
 
@@ -263,6 +286,8 @@ namespace CrystalCoreTests.Model.DefaultCore
 
     internal class MockChunkComponentFactory : ComponentFactory
     {
+        Map ComponentFactory.Map => throw new NotImplementedException();
+
         public Chunk CreateChunk(Point chunkCoords)
         {
             return new MockChunk(chunkCoords);

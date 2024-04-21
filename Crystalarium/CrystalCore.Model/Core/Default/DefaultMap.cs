@@ -32,7 +32,7 @@ namespace CrystalCore.Model.Core.Default
 
 
         public event EventHandler? OnReset;
-        public event MapObjectEvent? OnMapObjectReady;
+        public event ComponentEvent? OnMapComponentReady;
         public event ComponentEvent? OnMapComponentDestroyed;
 
 
@@ -53,7 +53,10 @@ namespace CrystalCore.Model.Core.Default
             }
         }
 
-
+        public int AgentCount
+        {
+            get => _agents.Count; 
+        }
 
         public DefaultMap(Ruleset r)
         {
@@ -81,11 +84,19 @@ namespace CrystalCore.Model.Core.Default
         public void Reset(Rectangle minimumBounds)
         {
 
+           
+            for(int i = 0; i < _agents.Count;)
+            {
+                _agents[i].Destroy();
+            }
+            _agents.Clear();
 
             // reseting our grid should remove all references to any remaining mapObjects
             _grid.Destroy();
             _grid = new DefaultGrid(new DefaultComponentFactory(this));
             _grid.ExpandToFit(minimumBounds);
+
+          
 
             OnReset?.Invoke(this, new EventArgs());
 
@@ -98,14 +109,21 @@ namespace CrystalCore.Model.Core.Default
 
         void Map.OnComponentDestroyed(MapComponent component, EventArgs e)
         {
+            if(component is MapObject && ((MapObject)component).Entity is Node)
+            {
+              
+                _agents.Remove(((Node)(((MapObject)component).Entity)).Agent);
+            }
+
+
             component.OnDestroy -= ((Map)this).OnComponentDestroyed;
             OnMapComponentDestroyed?.Invoke(component, e);
         }
 
-        /*void Map.OnObjectReady(MapObject mapObj, EventArgs e)
+        void Map.OnComponentReady(MapComponent component, EventArgs e)
         {
-            throw new NotImplementedException();
-        }*/
+            OnMapComponentReady?.Invoke(component, e);
+        }
 
         public Agent CreateAgent(AgentType at, Point location, Direction facing)
         {
@@ -120,7 +138,7 @@ namespace CrystalCore.Model.Core.Default
             }
 
             Node node = _entityFactory.CreateNode( new Rectangle(location, at.GetSize(facing)), facing, _ruleset.DiagonalSignalsAllowed);
-            Agent a =  new DefaultAgent(node, at);
+            Agent a =  new DefaultAgent(this, node, at);
             _agents.Add(a);
             return a;
         }
@@ -128,6 +146,12 @@ namespace CrystalCore.Model.Core.Default
         public bool IsValidPosition(AgentType at, Point location, Direction facing)
         {
             return Grid.ComponentFactory.IsValidPosition(new Rectangle(location, at.GetSize(facing)), true);
+        }
+
+
+        public bool IsValidPosition(Rectangle bounds)
+        {
+            return Grid.ComponentFactory.IsValidPosition(bounds, true);
         }
 
         public void Step()
@@ -148,6 +172,39 @@ namespace CrystalCore.Model.Core.Default
             foreach (Agent a in _agents) { a.PrepareSimulationStep(); }
             foreach (Agent a in _agents) { a.DoSimulationStep(); }
         }
+
+
+
+        public List<Agent> AgentsWithin(Rectangle bounds)
+        {
+            List<MapObject> possibleList = _grid.ObjectsIntersecting(bounds);
+
+            List<Agent> toReturn = new ();
+
+            foreach (MapObject obj in possibleList)
+            {
+                if (obj.Entity is Node)
+                {
+                    toReturn.Add(((Node)(obj.Entity)).Agent);
+                }
+            }
+
+            return toReturn;
+
+        }
+
+
+
+        public  Agent getAgentAtPos(Point coords)
+        {
+            List<Agent> agents = AgentsWithin(new(coords, new(1, 1)));
+
+            if (agents.Count == 0) return null;
+
+            return agents[0];
+        }
+
+
 
     }
 }

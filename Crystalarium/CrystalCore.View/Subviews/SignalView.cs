@@ -40,7 +40,7 @@ namespace CrystalCore.View.Subviews
         public override bool Draw(IRenderer rend)
         {
 
-            if (!base.Draw(rend))
+            if (connection.Destroyed)
             {
                 return false;
             }
@@ -73,7 +73,7 @@ namespace CrystalCore.View.Subviews
         private void RenderFromA(IRenderer rend)
         {
 
-            Connection beam = (Connection)_renderData;
+            Connection beam = connection;
             CompassPoint absfacing = beam.PortA.AbsoluteFacing;
             CompassPoint facing = absfacing;
 
@@ -91,14 +91,14 @@ namespace CrystalCore.View.Subviews
         private void RenderFromB(IRenderer rend)
         {
 
-            Connection beam = (Connection)_renderData;
-            CompassPoint absfacing = beam.PortB.AbsoluteFacing;
-            CompassPoint facing = absfacing;
+            Connection beam = connection;
+            CompassPoint absfacing = beam.PortA.AbsoluteFacing;
+            CompassPoint facing = absfacing.Opposite();
 
             // if portA is null, then the direction from A would be reversed from the start, which is B.
       
             int value = beam.FromB;
-            RenderChannel(rend, facing, absfacing, beam.PortA!=null, value);
+            RenderChannel(rend, facing, absfacing, beam.PortB!=null, value);
         }
 
 
@@ -106,9 +106,9 @@ namespace CrystalCore.View.Subviews
 
         private void RenderChannel(IRenderer rend, CompassPoint facing, CompassPoint absFacing, bool hasEnd, int value)
         {
-
+            
             ChannelState cs = DetermineState(value, hasEnd);
-            Connection signal = (Connection)RenderData;
+            Connection signal = connection;
 
 
             if (cs != ChannelState.Active && !renderTarget.DoDebugRendering)
@@ -122,7 +122,11 @@ namespace CrystalCore.View.Subviews
 
             float length = signal.Size.X > signal.Size.Y? signal.Size.X : signal.Size.Y;
 
-            if (!hasEnd)
+            if (hasEnd)
+            {
+                length -= 1f;
+            }
+            else
             {
                 length -= .5f;
             }
