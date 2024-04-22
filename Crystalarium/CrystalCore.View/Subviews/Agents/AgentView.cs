@@ -159,7 +159,7 @@ namespace CrystalCore.View.Subviews.Agents
 
             foreach (Port p in _agent.Node.PortList)
             {
-                _ports.Add(new DebugPort(config.Background, p, this));
+                _ports.Add(new DebugPort(config.Background, p.Descriptor, _agent, this));
             }
 
         }

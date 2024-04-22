@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Communication;
+using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Core;
@@ -15,13 +16,15 @@ namespace CrystalCore.View.Subviews.Agents
 
         private Texture2D background;
 
-        private Port _port;
+        private Agent _agent;
+
+        private PortDescriptor _portDesc;
 
         private AgentView _parent;
 
-        public Port Port
+        public PortDescriptor PortDescriptor
         {
-            get => _port;
+            get => _portDesc;
         }
 
         public AgentView Parent
@@ -29,10 +32,11 @@ namespace CrystalCore.View.Subviews.Agents
             get => _parent;
         }
 
-        public DebugPort(Texture2D background, Port port, AgentView parent)
+        public DebugPort(Texture2D background, PortDescriptor port, Agent agent, AgentView parent)
         {
             this.background = background;
-            _port = port;
+            _portDesc = port;
+            _agent = agent;
             _parent = parent;
         }
 
@@ -55,7 +59,8 @@ namespace CrystalCore.View.Subviews.Agents
             float thickness = .15f; // the amount of tile through
 
             // a horrible ugly switch statement.
-            switch (Port.AbsoluteFacing)
+           
+            switch (_agent.Node.GetPort(_portDesc).AbsoluteFacing)
             {
                 case CompassPoint.north:
                     bounds = new RectangleF((1 - width) / 2f, 0, width, thickness);
@@ -86,13 +91,14 @@ namespace CrystalCore.View.Subviews.Agents
             }
 
 
-            return new RectangleF(bounds.Location + Port.Location.ToVector2(), bounds.Size);
+            return new RectangleF(bounds.Location + _agent.Node.GetPort(_portDesc).Location.ToVector2(), bounds.Size);
 
         }
 
         private Color DetermineColor()
         {
 
+            Port Port = _agent.Node.GetPort(_portDesc);
             if (Port.Connection==null)
             {
                 return Color.Magenta;
