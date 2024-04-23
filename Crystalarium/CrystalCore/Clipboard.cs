@@ -58,11 +58,39 @@ namespace CrystalCore
                 return;
             }
 
+            if(content.Count == 0) { return; }
+
+            Point min = content[0].Location;
+            Point max = content[0].Location + maxSquare(content[0].Type.UpwardsSize);
+
+            foreach(AgentRepresentation ar in content)
+            {
+                Point newMin = ar.Location;
+                Point newMax = ar.Location + maxSquare(ar.Type.UpwardsSize);
+
+                min = new(min.X < newMin.X ? min.X : newMin.X, min.Y < newMin.Y ? min.Y : newMin.Y);
+                max = new(max.X < newMax.X ? max.X : newMax.X, max.Y < newMax.Y ? max.Y : newMax.Y);
+            }
+
+            Rectangle pasteBounds = Util.MiscUtil.RectFromPoints(min, max);
+            pasteBounds.Inflate(1, 1);
+            m.Grid.ExpandToFit(pasteBounds);
+
             foreach (AgentRepresentation ar in content)
             {
                 ar.CreateAgent(m, location);
             }
         }
 
+
+        private Point maxSquare(Point p)
+        {
+            if(p.X>p.Y)
+            {
+                return new(p.X, p.X);
+            }
+
+            return new(p.Y, p.Y);
+        }
     }
 }

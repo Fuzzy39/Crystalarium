@@ -243,9 +243,11 @@ namespace Crystalarium.Main
 
                     Point clickCoords = GetMousePos();
                     Rectangle boundsToCheck = new(clickCoords, CurrentType.GetSize(Rotation));
+                    Rectangle expand = new(boundsToCheck.Location, boundsToCheck.Size);
+                    expand.Inflate(1, 1);
 
                     // grow grid
-                    game.Map.Grid.ExpandToFit(boundsToCheck);
+                    game.Map.Grid.ExpandToFit(expand);
 
                     // destroy agents intersecting bounds
 

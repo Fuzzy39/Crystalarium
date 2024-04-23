@@ -30,8 +30,8 @@ namespace Crystalarium.Main
 
         // version number.
         private const int MAJOR = 8;
-        private const int MINOR = 2;
-        private const int BUILD = 1223; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int MINOR = 3;
+        private const int BUILD = 1228; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {

@@ -15,9 +15,20 @@ namespace CrystalCore
     /// </summary>
     internal struct AgentRepresentation
     {
+
         private AgentType type;
         private Point location;
         private Direction facing;
+
+        public Point Location
+        {
+            get => location;
+        }
+
+        public AgentType Type
+        {
+            get => type;
+        }
 
         public AgentRepresentation(Point location, Direction facing, AgentType type)
         {

@@ -137,28 +137,33 @@ namespace CrystalCore.Model.Core.Default
 
         public void ExpandToFit(Rectangle rect)
         {
+            bool expanded = false;
             // First: which way to expand?
             while (rect.Y < Bounds.Y)
             {
+                expanded = true;
                 Expand(Direction.up);
             }
 
             while (rect.X < Bounds.X)
             {
+                expanded = true;
                 Expand(Direction.left);
             }
 
             while (rect.Right > Bounds.Right)
             {
+                expanded = true;
                 Expand(Direction.right);
             }
 
             while (rect.Bottom > Bounds.Bottom)
             {
+                expanded = true;
                 Expand(Direction.down);
             }
 
-            if (OnResize != null)
+            if (OnResize != null && expanded)
             {
                 OnResize(this, new EventArgs());
             }
