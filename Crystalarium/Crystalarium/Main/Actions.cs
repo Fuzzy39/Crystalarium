@@ -672,7 +672,10 @@ namespace Crystalarium.Main
 
             try
             {
-                game.Engine.saveManager.Load(path, game.Map);
+                if (!game.Engine.saveManager.GetRulesetName(path).Equals("?"))
+                {
+                    game.Engine.saveManager.Load(path, game.Map);
+                }
 
             }
             catch (MapLoadException e)

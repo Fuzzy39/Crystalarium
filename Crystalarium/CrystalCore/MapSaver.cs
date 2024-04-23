@@ -123,6 +123,33 @@ namespace CrystalCore
 
         }
 
+        public string GetRulesetName(string path)
+        {
+            // we assume the path is a ruleset
+            try
+            {
+                using (XmlHelper xml = new XmlHelper(path, writing: false))
+                {
+
+                    xml.Reader.Read();
+
+                    xml.Reader.ReadStartElement("Map");
+
+                    xml.VerifyElementToRead("Ruleset");
+                    string ruleset = xml.Reader.ReadElementContentAsString();
+                    GetRuleset(ruleset);
+                    return ruleset;
+
+
+                }
+            }
+            catch (Exception e) when (e is XmlException || e is MapLoadException)
+            {
+                return "?";
+            }
+        }
+
+
         public void Load(string path, Map m)
         {
 

@@ -69,7 +69,8 @@ namespace Crystalarium.Main
                 (int i) =>
                 {
                     string path = Path.Combine("Saves", i + ".xml");
-                    return "Press " + i + " to " + "load from slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB).") : "Empty).");
+                    string ruleset = Engine.saveManager.GetRulesetName(path);
+                    return "Press " + i + " to " + "load from slot " + i + " (" + (File.Exists(path) ? (new FileInfo(path).Length / 1024 + " KB) ") : "Empty) ")+(ruleset.Equals("?")?"Invalid":ruleset);
 
                 },
                 (int i) => { return false; },
