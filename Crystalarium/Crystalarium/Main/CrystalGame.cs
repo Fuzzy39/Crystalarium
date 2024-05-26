@@ -103,17 +103,9 @@ namespace Crystalarium.Main
 
         public void OnResize(object sender, EventArgs e)
         {
-
-            if (_graphics.PreferredBackBufferWidth != _graphics.GraphicsDevice.Viewport.Width ||
-               _graphics.PreferredBackBufferHeight != _graphics.GraphicsDevice.Viewport.Height)
-            {
-                _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-                _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
-
-                _graphics.ApplyChanges();
-
-
-            }
+            // uh, actively resizing seems to make things glitch out.
+            // this is reasonable.
+            // so I guess we don't. That works betterg
         }
 
 

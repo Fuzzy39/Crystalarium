@@ -179,13 +179,9 @@ namespace CrystalCore.Model.Communication.Default
                )
             {
 
-
-
                 throw new ArgumentException("The point (Node relative, grid orienation) [" + relativeLocation + "]" +
                     " is either outside or interior node with size: [" + _size + "], and no port is associated with this location.");
             }
-
-
 
 
             // we could calculate this, presumably, but we can also just search for the correct answer.
