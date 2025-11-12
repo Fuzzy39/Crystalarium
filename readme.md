@@ -1,5 +1,10 @@
-Crystalarium
-=======
+
+<p align="center"><img  src="https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/logotype/logotype.png"></p>
+
+
+---
+
+
 Crystalarium is a software toy for experimenting with digital and ternary logic built in monogame. With it you can experiment with logic gates, latches, and even build a calculator or full fleged CPU.
 [More description]
 
