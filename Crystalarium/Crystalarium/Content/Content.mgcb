@@ -37,18 +37,6 @@
 /processorParam:TextureFormat=Color
 /build:Agents/channel.png
 
-#begin Agents/channel.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Agents/channel.png
-
 #begin Agents/decrement.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -60,18 +48,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Agents/decrement.png
-
-#begin Agents/emitter.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Agents/emitter.png
 
 #begin Agents/emitter.png
 /importer:TextureImporter
@@ -109,18 +85,6 @@
 /processorParam:TextureFormat=Color
 /build:Agents/luminalGate.png
 
-#begin Agents/luminalGate.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Agents/luminalGate.png
-
 #begin Agents/mirror.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -132,30 +96,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Agents/mirror.png
-
-#begin Agents/mirror.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Agents/mirror.png
-
-#begin Agents/not.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Agents/not.png
 
 #begin Agents/not.png
 /importer:TextureImporter
@@ -193,7 +133,7 @@
 /processorParam:TextureFormat=Color
 /build:Agents/prism.png
 
-#begin Agents/prism.png
+#begin Agents/splitter.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -203,31 +143,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Agents/prism.png
-
-#begin Agents/Splitter.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Agents/Splitter.png
-
-#begin Agents/Splitter.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Agents/Splitter.png
+/build:Agents/splitter.png
 
 #begin Agents/stopper.png
 /importer:TextureImporter
@@ -241,7 +157,7 @@
 /processorParam:TextureFormat=Color
 /build:Agents/stopper.png
 
-#begin Agents/stopper.png
+#begin altChunkGrid.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -251,9 +167,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Agents/stopper.png
+/build:altChunkGrid.png
 
-#begin AltChunkGrid.png
+#begin chunkGrid.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -263,19 +179,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:AltChunkGrid.png
-
-#begin ChunkGrid.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:ChunkGrid.png
+/build:chunkGrid.png
 
 #begin Consolas 6.spritefont
 /importer:FontDescriptionImporter
@@ -338,7 +242,7 @@
 /processorParam:TextureFormat=Color
 /build:pixel.bmp
 
-#begin SampleAgent.png
+#begin sampleAgent.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -348,7 +252,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SampleAgent.png
+/build:sampleAgent.png
 
 #begin testSquare.png
 /importer:TextureImporter
@@ -374,7 +278,7 @@
 /processorParam:TextureFormat=Color
 /build:tile.png
 
-#begin ViewportBG.png
+#begin viewportBG.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -384,5 +288,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:ViewportBG.png
+/build:viewportBG.png
 

@@ -67,28 +67,27 @@ namespace Crystalarium.Main
                 });
 
             // textures.
-            Textures.pixel = Content.Load<Texture2D>("pixel");
-            Textures.tile = Content.Load<Texture2D>("tile");
-            Textures.testSquare = Content.Load<Texture2D>("testSquare");
-            Textures.viewboxBG = Content.Load<Texture2D>("ViewportBG");
-            Textures.chunkGrid = Content.Load<Texture2D>("chunkGrid");
-            Textures.altChunkGrid = Content.Load<Texture2D>("AltChunkGrid");
-            Textures.sampleAgent = Content.Load<Texture2D>("SampleAgent");
+            Textures.pixel =        Content.Load<Texture2D>("pixel");
+            Textures.tile =         Content.Load<Texture2D>("tile");
+            Textures.testSquare =   Content.Load<Texture2D>("testSquare");
+            Textures.viewboxBG =    Content.Load<Texture2D>("viewportBG");
+            Textures.chunkGrid =    Content.Load<Texture2D>("chunkGrid");
+            Textures.altChunkGrid = Content.Load<Texture2D>("altChunkGrid");
+            Textures.sampleAgent =  Content.Load<Texture2D>("sampleAgent");
 
             // agent textures
-            Textures.emitter = Content.Load<Texture2D>("Agents/emitter");
-            Textures.channel = Content.Load<Texture2D>("Agents/channel");
-            Textures.luminalGate = Content.Load<Texture2D>("Agents/luminalGate");
-            Textures.mirror = Content.Load<Texture2D>("Agents/mirror");
-            Textures.notGate = Content.Load<Texture2D>("Agents/not");
-            Textures.prism = Content.Load<Texture2D>("Agents/prism");
-            Textures.stopper = Content.Load<Texture2D>("Agents/stopper");
-            splitter = Content.Load<Texture2D>("Agents/splitter");
-            and = Content.Load<Texture2D>("Agents/and");
-            or = Content.Load<Texture2D>("Agents/or");
-
-            increment = Content.Load<Texture2D>("Agents/increment");
-            decrement = Content.Load<Texture2D>("Agents/decrement");
+            Textures.emitter =      Content.Load<Texture2D>("Agents/emitter");
+            Textures.channel =      Content.Load<Texture2D>("Agents/channel");
+            Textures.luminalGate =  Content.Load<Texture2D>("Agents/luminalGate");
+            Textures.mirror =       Content.Load<Texture2D>("Agents/mirror");
+            Textures.notGate =      Content.Load<Texture2D>("Agents/not");
+            Textures.prism =        Content.Load<Texture2D>("Agents/prism");
+            Textures.stopper =      Content.Load<Texture2D>("Agents/stopper");
+            splitter =              Content.Load<Texture2D>("Agents/splitter");
+            and =                   Content.Load<Texture2D>("Agents/and");
+            or =                    Content.Load<Texture2D>("Agents/or");
+            increment =             Content.Load<Texture2D>("Agents/increment");
+            decrement =             Content.Load<Texture2D>("Agents/decrement");
 
 
         }

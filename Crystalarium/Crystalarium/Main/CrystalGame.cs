@@ -31,7 +31,7 @@ namespace Crystalarium.Main
         // version number.
         private const int MAJOR = 8;
         private const int MINOR = 3;
-        private const int BUILD = 1228; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 1231; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
@@ -127,6 +127,10 @@ namespace Crystalarium.Main
 
             // setup our interaction related code and register it with the engine.
             Actions = new Actions(Engine.Controller, this);
+
+            // let's get this show on the road!
+            Engine.Initialize();
+
 
             // Make the UI
             UI = new CrudeUI(this);

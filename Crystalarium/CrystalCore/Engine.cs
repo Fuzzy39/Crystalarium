@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace CrystalCore
 {
@@ -94,6 +95,10 @@ namespace CrystalCore
         {
             try
             {
+                // initialize the controller by loading controls from Controls.xml
+                _controller.LoadKeyboindsFromFile(Path.Combine("Settings", "Controls.xml"), false);
+                ReportKeybindConflicts();
+
                 foreach (Ruleset rs in _rulesets)
                 {
                     rs.Initialize();

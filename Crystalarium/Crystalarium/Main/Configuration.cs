@@ -39,8 +39,7 @@ namespace Crystalarium.Main
             CreateDefaultSkins();
             CreateMinimapSkins();
 
-            // let's get this show on the road!
-            game.Engine.Initialize();
+            
 
         }
 

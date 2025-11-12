@@ -61,7 +61,7 @@ namespace Crystalarium.Main
 
             CurrentType = game.CurrentRuleset.AgentTypes[0];
 
-            game.Engine.ReportKeybindConflicts();
+            
 
 
 
@@ -93,65 +93,11 @@ namespace Crystalarium.Main
 
             SetupMenuInteraction();
 
-            ReadBindings();
+
 
         }
 
-        private void ReadBindings()
-        {
-
-            try
-            {
-
-                using (XmlHelper xml = new XmlHelper(Path.Combine("Settings", "Controls.xml"), writing: false))
-                {
-                    xml.Reader.Read();
-
-                    xml.Reader.ReadStartElement("Controls");
-
-                    // xml.Reader.ReadStartElement();
-
-                    while (xml.Reader.NodeType != XmlNodeType.EndElement)
-                    {
-
-                        //xml.Reader.Read();
-                        string s = xml.Reader.Name;
-                        Control con = c.GetAction(s);
-
-                        if (con == null) { throw new XmlException("invalid Element at " + xml.FormattedReaderPosition + "."); }
-
-
-                        s = xml.Reader.ReadElementContentAsString();
-
-                        string[] strings = s.Split(',');
-                        Button[] buttons = new Button[strings.Length];
-
-                        int index = 0;
-                        foreach (string i in strings)
-                        {
-                            string j = i.Trim();
-                            if (!Enum.TryParse(j, out buttons[index]))
-                            {
-                                throw new XmlException("invalid button '" + j + "' at " + xml.FormattedReaderPosition + ".");
-                            }
-
-                            index++;
-                        }
-
-                        con.Bind(buttons);
-
-
-                    }
-
-                }
-            }
-            catch (XmlException e)
-            {
-
-
-                throw new XmlException("Crystalarium Could not find its keybind file, or there was an error in parsing it.\n" + e.Message);
-            }
-        }
+     
 
 
         private void SetupViewInteraction()
@@ -490,10 +436,6 @@ namespace Crystalarium.Main
                 });
 
             c.CreateControl("Close", Keystate.OnPress)
-                .AddAction("play", () =>
-                {
-                    game.Exit();
-                })
                 .AddAction("menu", () =>
                 {
                     c.Context = "play";
