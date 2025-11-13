@@ -1,5 +1,5 @@
 
-<p align="center"><img  src="https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/logotype/logotype.png"></p>
+<p align="center"><img  src="https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/promo/logotype.png"></p>
 
 
 ---
