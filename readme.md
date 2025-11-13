@@ -18,14 +18,14 @@ Crystalarium is a software toy about experimenting with digital and ternary logi
 
 ## Rulesets
 Crystalarium supports multiple different simulation systems, called rulesets, which define what placable objects (agents) exist and how they interact. As of the current version, three rulesets are available.
-The Crystalarium ruleset is the default. It features 6 agent types, including the luminal gate, which allows you to easily construct most logic gates.
-There is also the Minimal ruleset, which only contains 3 agent types, including the not gate.
-The Ternary ruleset allows you to play with balanced ternary. It contains 8 agent types, inlcuding the ternary equivalent of and, or and not gates.
+- The Crystalarium ruleset is the default. It features 6 agent types, including the luminal gate, which allows you to easily construct most logic gates.
+- The Minimal ruleset contains only 3 agent types, including the not gate for logic.
+- The Ternary ruleset allows you to play with balanced ternary. It contains 8 agent types, inlcuding the ternary equivalent of and, or and not gates.
 
 For information on how the included rulesets work, refer to [LINK]
 
 ## Current State / Caveats
-Crystalarium is currently in what I'd call an alpha state. The core simulation is present, but some capabilities are missing. Only a few hardcoded rulesets are available, and users cannot yet make their own ruleset. The user interface is very minimal and there aren't many quality of life features. The simulation system supports light-beam based rulesets, but not cellular automata, which was part of the initial premise of the project. Additionally, performance is an issue, particularly with the graphics. This makes it impractacle to build anything too large.
+Crystalarium is currently in what I'd call an alpha state. The core simulation is present, but some capabilities are missing. Only a few hardcoded rulesets are available, and users cannot yet make their own ruleset. The simulation system supports light-beam based rulesets, but not cellular automata. Both of these features were part of the initial premise of the project. In addition, The user interface is very minimal and there aren't many quality of life features, and performance is an issue, particularly with the graphics. This makes it impractacle to build anything too large.
 
 I make no promise that I'll continue developing Crystalarium, but I think at some point I'd like to.
 If you'd like to see what I might work on next, check out the [ROADMAP?]
