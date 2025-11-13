@@ -4,9 +4,9 @@
 
 ---
 
-Crystalarium is a software toy about emergent complexity. It allows users to experiement and play with digital and ternary logic. With it, you can experiment with logic gates, latches, or even build a calculator or full fleged CPU.
-[More description here, probably, describe rulesets, etc.]
+Crystalarium is a software toy about experimenting with digital and ternary logic by shooting blocks with lasers. With it, you can build and play with logic gates, latches, or even build a calculator or full fleged CPU.
 
+<br>
 
 <div style="display:flex; flex-direction:row;" align="center">
   <img width="40%" src = "https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/promo/memory.png">
@@ -15,16 +15,18 @@ Crystalarium is a software toy about emergent complexity. It allows users to exp
 
 <p align="center" ><i>Left: 3 words of 7 bit memory in the Crystalarium ruleset. Right: A half adder in the ternary ruleset.</i></p>
 
-## Controls
-blah blah
 
 ## Rulesets
 Crystalarium supports multiple different simulation systems, called rulesets, which define what placable objects (agents) exist and how they interact. As of the current version, three rulesets are available.
+The Crystalarium ruleset is the default. It features 6 agent types, including the luminal gate, which allows you to easily construct most logic gates.
+There is also the Minimal ruleset, which only contains 3 agent types, including the not gate.
+The Ternary ruleset allows you to play with balanced ternary. It contains 8 agent types, inlcuding the ternary equivalent of and, or and not gates.
+
 For information on how the included rulesets work, refer to [LINK]
 
-## Current State
-Crystalarium is currently in what I'd call an alpha state. The core simulation is present, but some capabilities are missing, only a few hardcoded rulesets are available, and users cannot yet make their own ruleset. The user interface is very minimal and there aren't many quality of life features. I make no promise that I'll continue developing Crystalarium, but I think at some point I'd like to.
+## Current State / Caveats
+Crystalarium is currently in what I'd call an alpha state. The core simulation is present, but some capabilities are missing. Only a few hardcoded rulesets are available, and users cannot yet make their own ruleset. The user interface is very minimal and there aren't many quality of life features. The simulation system supports light-beam based rulesets, but not cellular automata, which was part of the initial premise of the project. Additionally, performance is an issue, particularly with the graphics. This makes it impractacle to build anything too large.
 
-# Roadmap
-Yada yada
+I make no promise that I'll continue developing Crystalarium, but I think at some point I'd like to.
+If you'd like to see what I might work on next, check out the [ROADMAP?]
 
