@@ -1,12 +1,19 @@
 
-<p align="center"><img  src="https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/promo/logotype.png"></p>
+<p align="center"><img width="60%"  src="https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/promo/logotype.png"></p>
 
 
 ---
 
+Crystalarium is a software toy about emergent complexity. It allows users to experiement and play with digital and ternary logic. With it, you can experiment with logic gates, latches, or even build a calculator or full fleged CPU.
+[More description here, probably, describe rulesets, etc.]
 
-Crystalarium is a software toy for experimenting with digital and ternary logic built in monogame. With it you can experiment with logic gates, latches, and even build a calculator or full fleged CPU.
-[More description]
+
+<div style="display:flex; flex-direction:row;" align="center">
+  <img width="40%" src = "https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/promo/memory.png">
+   <img width="40%" src = "https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/promo/ternary.png">
+</div>
+
+<p align="center" ><i>Left: 3 words of 7 bit memory in the Crystalarium ruleset. Right: A half adder in the ternary ruleset.</i></p>
 
 ## Controls
 blah blah
