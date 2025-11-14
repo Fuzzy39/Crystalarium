@@ -4,7 +4,7 @@
 
 ---
 
-Crystalarium is a software toy about experimenting with digital and ternary logic by shooting blocks with lasers. With it, you can build and play with logic gates, latches, or even build a calculator or full fleged CPU.
+Crystalarium is a software toy about experimenting with digital and ternary logic by shooting blocks with lasers. It can be used to build and play with logic gates, latches, or even build a calculator or full fleged CPU.
 
 <br>
 
