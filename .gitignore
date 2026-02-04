@@ -2,6 +2,9 @@
 [Tt]humbs.db
 *.DS_Store
 
+# Jetbrains Rider
+*.idea
+
 #Visual Studio files
 **/.vs/
 *.vsidx
