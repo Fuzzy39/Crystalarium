@@ -61,7 +61,7 @@ namespace CrystalCrash.Main
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            Consolas = Content.Load<SpriteFont>("Consolas");
+            Consolas = Content.Load<SpriteFont>("Consolas48");
 
             error = new ErrorSplash(errorMessage, _spriteBatch);
         }
