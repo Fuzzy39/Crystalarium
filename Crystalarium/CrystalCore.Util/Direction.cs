@@ -5,9 +5,9 @@ namespace CrystalCore.Util
     public enum Direction
     {
         up,
+        right,
         down,
         left,
-        right
     }
 
     public enum RotationalDirection
@@ -148,10 +148,10 @@ namespace CrystalCore.Util
         // Yes, really. We do need this.
         // the code contains more trig than you might expect.
         // not like an enormous amount, but I bet you'd expect none.
+        // Right is 0, clockwise is positive.
         public static float ToRadians(this Direction d)
         {
-
-            return d.ToCompassPoint().ToRadians();
+            return MathHelper.WrapAngle(((int)d - 1) * (MathF.PI / 2f));
 
         }
 
@@ -200,11 +200,13 @@ namespace CrystalCore.Util
 
         public static CompassPoint Rotate(this CompassPoint cp, RotationalDirection r)
         {
+            // changed for performance reasons
+            const int compassPoints = 8; // Enum.GetNames(typeof(CompassPoint)).Length
             int toReturn = (int)cp;
             if (r == RotationalDirection.cw)
             {
                 toReturn++;
-                if (toReturn >= Enum.GetNames(typeof(CompassPoint)).Length)
+                if (toReturn >= compassPoints)
                 {
                     toReturn = 0;
                 }
@@ -217,7 +219,7 @@ namespace CrystalCore.Util
             toReturn--;
             if (toReturn < 0)
             {
-                toReturn = Enum.GetNames(typeof(CompassPoint)).Length - 1;
+                toReturn = compassPoints - 1;
             }
 
             return (CompassPoint)toReturn;
@@ -226,11 +228,20 @@ namespace CrystalCore.Util
 
         public static CompassPoint Opposite(this CompassPoint cp)
         {
-            for (int i = 0; i < 4; i++)
+           
+            return cp switch
             {
-                cp = cp.Rotate(RotationalDirection.cw);
-            }
-            return cp;
+                CompassPoint.north => CompassPoint.south,
+                CompassPoint.northeast => CompassPoint.southwest,
+                CompassPoint.east => CompassPoint.west,
+                CompassPoint.southeast => CompassPoint.northwest,
+                CompassPoint.south => CompassPoint.north,
+                CompassPoint.southwest => CompassPoint.northeast,
+                CompassPoint.west => CompassPoint.east,
+                CompassPoint.northwest => CompassPoint.southeast,
+                _ => throw new ArgumentOutOfRangeException("This shouldn't've happened...")
+            };
+            //return cp;
         }
 
         public static CompassPoint ToCompassPoint(this Direction d)
@@ -322,27 +333,16 @@ namespace CrystalCore.Util
         }
 
         /// <summary>
-        /// Returns the angle a compsspoint represents in radians, where North is zero and clockwise is positive.
+        /// Returns the angle a compsspoint represents in radians, where East is zero and clockwise is positive.
         /// </summary>
         /// <param name="cp"></param>
         /// <returns></returns>
         public static float ToRadians(this CompassPoint cp)
         {
-            float toReturn = -MathF.PI / 2f;
-
-            foreach (int i in Enum.GetValues<CompassPoint>())
-            {
-                CompassPoint point = (CompassPoint)i;
-
-                if (point == cp)
-                {
-                    return MathHelper.WrapAngle(toReturn);
-                }
-
-                toReturn += MathF.PI / 4f;
-            }
-
-            throw new InvalidOperationException("This should neer happen - this method done borked");
+            
+            return MathHelper.WrapAngle( ((int)cp -2)  * (MathF.PI / 4f));
+            
+         
         }
     }
 

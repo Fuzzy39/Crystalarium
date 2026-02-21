@@ -176,8 +176,13 @@ namespace CrystalCore.Util.Graphics
             float OwnY = y * Height;
 
             // do a bit of trig
-            float realX = Cos(-Rotation) * OwnX + Sin(-Rotation) * OwnY;
-            float realY = Sin(Rotation) * OwnX + Cos(Rotation) * OwnY;
+
+            // the intermediate variables save on calculation
+            float cosrot = Cos(Rotation);
+            float sinrot = Sin(Rotation);
+
+            float realX = cosrot * OwnX - sinrot* OwnY;
+            float realY = sinrot * OwnX + cosrot * OwnY;
 
             return new Vector2(realX + X, realY + Y);
 
