@@ -1,23 +1,36 @@
 
-<p align="center"><img  src="https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/promo/logotype.png"></p>
+<p align="center"><img width="60%"  src="https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/promo/logotype.png"></p>
 
 
 ---
 
+Crystalarium is a software toy about experimenting with digital and ternary logic by shooting blocks with lasers. It can be used to build and play with logic gates, latches, or even build a calculator or full fleged CPU.
 
-Crystalarium is a software toy for experimenting with digital and ternary logic built in monogame. With it you can experiment with logic gates, latches, and even build a calculator or full fleged CPU.
-[More description]
+<br>
 
-## Controls
-blah blah
+<div style="display:flex; flex-direction:row;" align="center">
+  <img width="40%" src = "https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/promo/memory.png">
+   <img width="40%" src = "https://github.com/Fuzzy39/Crystalarium/blob/master/Assets/promo/ternary.png">
+</div>
+
+<p align="center" ><i>Left: 3 words of 7 bit memory in the Crystalarium ruleset. Right: A half adder in the ternary ruleset.</i></p>
+
 
 ## Rulesets
 Crystalarium supports multiple different simulation systems, called rulesets, which define what placable objects (agents) exist and how they interact. As of the current version, three rulesets are available.
-For information on how the included rulesets work, refer to [LINK]
+- The Crystalarium ruleset is the default. It features 6 agent types, including the luminal gate, which allows you to easily construct most logic gates.
+- The Minimal ruleset contains only 3 agent types, including the not gate for logic.
+- The Ternary ruleset allows you to play with balanced ternary. It contains 8 agent types, inlcuding the ternary equivalent of and, or and not gates.
 
-## Current State
-Crystalarium is currently in what I'd call an alpha state. The core simulation is present, but some capabilities are missing, only a few hardcoded rulesets are available, and users cannot yet make their own ruleset. The user interface is very minimal and there aren't many quality of life features. I make no promise that I'll continue developing Crystalarium, but I think at some point I'd like to.
+For information on how the included rulesets work, refer to [the wiki](https://github.com/Fuzzy39/Crystalarium/wiki).
 
-# Roadmap
-Yada yada
+
+## Download
+The latest release is [version 8.3](https://github.com/Fuzzy39/Crystalarium/releases/tag/v8.3.1128-pre-alpha).
+
+## Caveats
+Crystalarium is not yet finished. The core simulation is present, but some capabilities are missing. Only a few hardcoded rulesets are available, and users cannot yet make their own ruleset. The simulation system supports light-beam based rulesets, but not cellular automata. Both of these features were part of the initial premise of the project. In addition, The user interface is very minimal and there aren't many quality of life features, and performance is an issue, particularly with the graphics. This makes it impractical to build anything too large.
+
+I should note: I make no promise that I'll continue developing Crystalarium, but I think at some point I'd like to.
+
 
