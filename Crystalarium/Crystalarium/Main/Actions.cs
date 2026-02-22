@@ -10,7 +10,9 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.Metadata.Ecma335;
 using System.Xml;
+using static Crystalarium.Main.CrudeUI;
 
 namespace Crystalarium.Main
 {
@@ -172,8 +174,6 @@ namespace Crystalarium.Main
                 });
 
 
-            c.CreateControl("ToggleDebugView", Keystate.OnPress)
-                .AddAction("play", () => game.view.DoDebugRendering = !game.view.DoDebugRendering);
 
 
         }
@@ -482,6 +482,24 @@ namespace Crystalarium.Main
                  });
 
 
+            c.CreateControl("DebugMenu", Keystate.OnPress)
+                .AddAction("play", () =>
+                {
+                    game.UI.currentMenu = game.UI.DebugMenu;
+                    c.Context = "menu";
+                })
+               .AddAction("menu", () =>
+                {
+                    if (game.UI.currentMenu == game.UI.DebugMenu)
+                    {
+                        c.Context = "play";
+                        game.UI.currentMenu = null;
+                    }
+
+                    game.UI.currentMenu = game.UI.DebugMenu;
+
+
+                });
 
             c.CreateControl("MenuAction1", Keystate.OnPress)
                 .AddAction("play", () => SwitchAgent(0))
@@ -597,6 +615,24 @@ namespace Crystalarium.Main
                 return;
             }
 
+
+            if(game.UI.currentMenu == game.UI.DebugMenu)
+            {
+
+                switch((DebugOptions)i) 
+                {
+                    case DebugOptions.RenderDebugSignals:
+                        game.view.RenderDebugSignals = !game.view.RenderDebugSignals;
+                        break;
+
+                    case DebugOptions.RenderDebugPorts:
+                        game.view.RenderDebugPorts = !game.view.RenderDebugPorts; 
+                        break;
+                };
+                return;
+            }
+
+
             string path = Path.Combine("Saves", (i + 1) + ".xml");
 
 
@@ -608,6 +644,11 @@ namespace Crystalarium.Main
                 return;
             }
 
+
+            if (game.UI.currentMenu != game.UI.LoadMenu)
+            {
+                throw new InvalidOperationException("Unknown menu.");
+            }
             // must be loading.
             if (!File.Exists(path))
             {

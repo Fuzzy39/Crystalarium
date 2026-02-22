@@ -94,7 +94,7 @@ namespace CrystalCore.View.Subviews.Agents
             rend.Draw(config.DefaultTexture, pos, config.Color);
 
             // debug port rendering
-            if (renderTarget.DoDebugRendering)
+            if (renderTarget.RenderDebugPorts)
             {
                 if (_ports == null)
                 {

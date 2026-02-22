@@ -161,7 +161,9 @@ namespace CrystalCore
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before gridviews can be created. call Engine.Initialize().");
             }
-            return new GridView(_primaryRenderer, _viewports, map, location, size, skinSet);
+            GridView gv = new GridView(_primaryRenderer, map, location, size, skinSet);
+            _viewports.Add(gv);
+            return gv;
         }
 
         public Map addMap(Ruleset r)

@@ -25,6 +25,15 @@ namespace Crystalarium.Main
 
         internal Menu InstructionsMenu { get; private set; }
 
+        internal Menu DebugMenu { get; private set; }
+
+        internal enum DebugOptions
+        {
+            RenderDebugPorts,
+            RenderDebugSignals,
+        }
+
+
 
 
         public CrudeUI(CrystalGame game)
@@ -112,6 +121,25 @@ namespace Crystalarium.Main
              (int i) => { return i > 1; },
              (int i) => { return false; }
              );
+
+
+            DebugMenu = new Menu("Debug Options",
+                "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
+                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
+                (int i) => {
+                    bool state = (DebugOptions)(i - 1) switch
+                    {
+                        DebugOptions.RenderDebugSignals => game.view.RenderDebugSignals,
+                        DebugOptions.RenderDebugPorts => game.view.RenderDebugPorts,
+                        _=> false
+                    };
+
+                    return Enum.GetNames(typeof(DebugOptions))[i-1]+": "+(state?"ON":"OFF")+". Press "+i+" to toggle.";
+                },
+                (int i) => { return i > Enum.GetNames(typeof(DebugOptions)).Length; },
+                (int i) => { return false; }
+
+            );
 
 
 
