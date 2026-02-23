@@ -97,7 +97,7 @@ namespace Crystalarium.Main
                  "\n\nCamera: Move: " + c.GetAction("CamUp").FirstKeybindAsString() + c.GetAction("CamLeft").FirstKeybindAsString()
                  + c.GetAction("CamDown").FirstKeybindAsString() + c.GetAction("CamRight").FirstKeybindAsString()
                  + ". Zoom: Scrollwheel. Pan: " + c.GetAction("Pan").FirstKeybindAsString()
-                 + ". Toggle Debug View: " + c.GetAction("ToggleDebugView").FirstKeybindAsString() +
+                 + ". Open Debug Menu: " + c.GetAction("DebugMenu").FirstKeybindAsString() +
 
                  ".\nInteract: Place: " + c.GetAction("PlaceAgent").FirstKeybindAsString() + ". Remove: "
                  + c.GetAction("RemoveAgent").FirstKeybindAsString() + ". Rotate: " + c.GetAction("RotateAgent").FirstKeybindAsString() +
