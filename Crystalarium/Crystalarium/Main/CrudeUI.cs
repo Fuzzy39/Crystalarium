@@ -1,6 +1,7 @@
 ﻿using CrystalCore;
 using CrystalCore.Input;
 using CrystalCore.Model.Core;
+using CrystalCore.Profiling;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
@@ -29,10 +30,12 @@ namespace Crystalarium.Main
 
         internal enum DebugOptions
         {
+            ShowPerformanceReport,
             RenderDebugPorts,
             RenderDebugSignals,
         }
 
+        internal bool ShowProfilingReport { get; set; }
 
 
 
@@ -40,7 +43,7 @@ namespace Crystalarium.Main
         {
 
             this.game = game;
-
+            ShowProfilingReport = true;
 
             // well, what is ui structure but a bunch of data definitions and hooks into actual code?
             // this will be expanded on in the future, I bet.
@@ -129,6 +132,7 @@ namespace Crystalarium.Main
                 (int i) => {
                     bool state = (DebugOptions)(i - 1) switch
                     {
+                        DebugOptions.ShowPerformanceReport => ShowProfilingReport,
                         DebugOptions.RenderDebugSignals => game.view.RenderDebugSignals,
                         DebugOptions.RenderDebugPorts => game.view.RenderDebugPorts,
                         _=> false
@@ -189,6 +193,11 @@ namespace Crystalarium.Main
             DrawString("FPS: " + Math.Round(frameRate, 1) + " Sim Speed: " + Engine.Sim.ActualStepsPS + " Steps/Second Agents: " + Map.AgentCount, new(10, 10), rend);
 
             DrawString("Placing: " + game.Actions.CurrentType.Name + " (facing " + game.Actions.Rotation + ") \n" + info + "\n" + rules, new(10, 30), rend);
+
+            if(ShowProfilingReport)
+            {
+                DrawString(Profiler.GetReport(), new(10, 95), rend);
+            }
 
             DrawString("Press " + Engine.Controller.GetAction("Instructions").FirstKeybindAsString() + " For instructions.", new(10, rend.Height - 50), rend);
 

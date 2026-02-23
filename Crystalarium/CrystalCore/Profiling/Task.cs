@@ -1,66 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CrystalCore.Profiling
 {
     /// <summary>
-    /// A task is a duration used to measure a single event
+    /// This class represents a profiling task that is currently in progress. It is complete when it is disposed.
     /// </summary>
-    public class Task : Duration
+    public class Task : IDisposable
     {
 
+  
+        string _name;
 
-        private TimeSpan startTime;
-        private bool running;
+        public string Name { get { return _name; } }
+
+        internal TimeSpan TimeStarted { get; set; }
 
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="time"></param>
-        /// <param name="averageSpan">The amount of frames to average to get a timing.</param>
-        internal Task(string name, int averageSpan) : base(name, averageSpan)
+        public Task(string name) 
         {
-            startTime = new TimeSpan();
-            running = false;
+            _name = name;
+            Profiler.GetInstance().StartTask(this);
         }
 
-
-        internal void Start(TimeSpan time)
+        public void Dispose()
         {
-            if (running)
-            {
-                throw new InvalidOperationException("A Task cannot be started when it is already running");
-            }
-
-            startTime = time;
-            running = true;
-
+            Profiler.GetInstance().FinishTask(this);
         }
 
-        internal void Stop(TimeSpan time)
+        public override string ToString()
         {
-            if (!running)
-            {
-                throw new InvalidOperationException("A Task cannot be stoppen when it is not running.");
-            }
-
-            lengthThisFrame += time - startTime;
-            running = false;
-        }
-
-        internal override void Reset()
-        {
-            if (running)
-            {
-                throw new InvalidOperationException("Task '" + Name + "' was not stopped before the end of the frame.");
-            }
-
-            base.Reset();
+            return Name;
         }
     }
 }

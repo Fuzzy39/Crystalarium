@@ -94,7 +94,7 @@ namespace CrystalCore.Util
 
                 toReturn += "\n    " + sub;
             }
-            return toReturn;
+            return toReturn.Substring(1);
         }
 
 

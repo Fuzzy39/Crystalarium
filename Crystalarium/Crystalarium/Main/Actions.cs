@@ -621,6 +621,10 @@ namespace Crystalarium.Main
 
                 switch((DebugOptions)i) 
                 {
+                    case DebugOptions.ShowPerformanceReport:
+                        game.UI.ShowProfilingReport = !game.UI.ShowProfilingReport;
+                        break;
+
                     case DebugOptions.RenderDebugSignals:
                         game.view.RenderDebugSignals = !game.view.RenderDebugSignals;
                         break;
