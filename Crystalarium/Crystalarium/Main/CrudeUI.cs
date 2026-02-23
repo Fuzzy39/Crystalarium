@@ -1,6 +1,7 @@
 ﻿using CrystalCore;
 using CrystalCore.Input;
 using CrystalCore.Model.Core;
+using CrystalCore.Profiling;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
@@ -25,13 +26,24 @@ namespace Crystalarium.Main
 
         internal Menu InstructionsMenu { get; private set; }
 
+        internal Menu DebugMenu { get; private set; }
+
+        internal enum DebugOptions
+        {
+            ShowPerformanceReport,
+            RenderDebugPorts,
+            RenderDebugSignals,
+        }
+
+        internal bool ShowProfilingReport { get; set; }
+
 
 
         public CrudeUI(CrystalGame game)
         {
 
             this.game = game;
-
+            ShowProfilingReport = true;
 
             // well, what is ui structure but a bunch of data definitions and hooks into actual code?
             // this will be expanded on in the future, I bet.
@@ -88,7 +100,7 @@ namespace Crystalarium.Main
                  "\n\nCamera: Move: " + c.GetAction("CamUp").FirstKeybindAsString() + c.GetAction("CamLeft").FirstKeybindAsString()
                  + c.GetAction("CamDown").FirstKeybindAsString() + c.GetAction("CamRight").FirstKeybindAsString()
                  + ". Zoom: Scrollwheel. Pan: " + c.GetAction("Pan").FirstKeybindAsString()
-                 + ". Toggle Debug View: " + c.GetAction("ToggleDebugView").FirstKeybindAsString() +
+                 + ". Open Debug Menu: " + c.GetAction("DebugMenu").FirstKeybindAsString() +
 
                  ".\nInteract: Place: " + c.GetAction("PlaceAgent").FirstKeybindAsString() + ". Remove: "
                  + c.GetAction("RemoveAgent").FirstKeybindAsString() + ". Rotate: " + c.GetAction("RotateAgent").FirstKeybindAsString() +
@@ -112,6 +124,26 @@ namespace Crystalarium.Main
              (int i) => { return i > 1; },
              (int i) => { return false; }
              );
+
+
+            DebugMenu = new Menu("Debug Options",
+                "Press " + Engine.Controller.GetAction("OpenRulesetMenu").FirstKeybindAsString() +
+                " or " + Engine.Controller.GetAction("Close").FirstKeybindAsString() + " to return to game.",
+                (int i) => {
+                    bool state = (DebugOptions)(i - 1) switch
+                    {
+                        DebugOptions.ShowPerformanceReport => ShowProfilingReport,
+                        DebugOptions.RenderDebugSignals => game.view.RenderDebugSignals,
+                        DebugOptions.RenderDebugPorts => game.view.RenderDebugPorts,
+                        _=> false
+                    };
+
+                    return Enum.GetNames(typeof(DebugOptions))[i-1]+": "+(state?"ON":"OFF")+". Press "+i+" to toggle.";
+                },
+                (int i) => { return i > Enum.GetNames(typeof(DebugOptions)).Length; },
+                (int i) => { return false; }
+
+            );
 
 
 
@@ -161,6 +193,11 @@ namespace Crystalarium.Main
             DrawString("FPS: " + Math.Round(frameRate, 1) + " Sim Speed: " + Engine.Sim.ActualStepsPS + " Steps/Second Agents: " + Map.AgentCount, new(10, 10), rend);
 
             DrawString("Placing: " + game.Actions.CurrentType.Name + " (facing " + game.Actions.Rotation + ") \n" + info + "\n" + rules, new(10, 30), rend);
+
+            if(ShowProfilingReport)
+            {
+                DrawString(Profiler.GetReport(), new(10, 95), rend);
+            }
 
             DrawString("Press " + Engine.Controller.GetAction("Instructions").FirstKeybindAsString() + " For instructions.", new(10, rend.Height - 50), rend);
 

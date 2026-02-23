@@ -27,7 +27,6 @@ namespace CrystalCore.View
 
 
         // basic
-        private List<GridView> container; // the list of all existing viewports.
         private Rectangle _pixelBounds; // the bounds, in pixels, of the viewport on the game window.
 
         // elements
@@ -42,9 +41,14 @@ namespace CrystalCore.View
 
 
 
-        private bool _doAgentRendering; // whether a gridview with this skin renders agents and signals.
+        public bool DoAgentRendering { get; set; } // whether a gridview with this skin renders agents and signals. 
+                                                   // Why is this option a thing?
         public bool AllowMultipleGhosts { get; set; } // can this gridview contain multiple ghosts, or just one?
-        public bool DoDebugRendering { get; set; } // should agents render their debug ports and signals?
+                                                      // Not clear why this option is here... Seems like a bad way to implement... whatever I was doing.
+        public bool RenderDebugPorts { get; set; } // should agents render their debug ports and signals?
+
+        public bool RenderDebugSignals {  get; set; } // Should signals that are not connected or have a value of 0 be rendered?
+
 
         private RenderTarget2D renderTarget;
 
@@ -88,16 +92,7 @@ namespace CrystalCore.View
             }
         }
 
-        public bool DoAgentRendering // whether agents are rendered in this gridview
-        {
-            get => _doAgentRendering;
-            set
-            {
-                _doAgentRendering = value;
-            }
-
-        }
-
+        
 
         public GridView ViewCastTarget
         {
@@ -138,14 +133,12 @@ namespace CrystalCore.View
 
 
         // create the viewport
-        public GridView(IBatchRenderer rend, List<GridView> container, Map g, Point pos, Point dimensions, SkinSet skinSet)
+        public GridView(IBatchRenderer rend, Map g, Point pos, Point dimensions, SkinSet skinSet)
         {
             // initialize from parameters
             _map = g;
             g.OnReset += OnGridReset;
 
-            this.container = container;
-            this.container.Add(this);
             _pixelBounds = new Rectangle(pos, dimensions);
 
             _cameraRend = new CameraRenderer(new(new(), PixelBounds.Size), rend);
@@ -161,7 +154,8 @@ namespace CrystalCore.View
             // Rendering options.
             DoAgentRendering = true;
             AllowMultipleGhosts = false;
-            DoDebugRendering = false;
+            RenderDebugPorts = false;
+            RenderDebugSignals = false;
 
             _viewCastTarget = null;
 
@@ -172,14 +166,9 @@ namespace CrystalCore.View
         }
 
         // an alternate viewport constructor, without points.
-        internal GridView(IBatchRenderer rend, List<GridView> container, Map g, int x, int y, int width, int height, SkinSet skinSet)
-            : this(rend, container, g, new Point(x, y), new Point(width, height), skinSet) { }
+        internal GridView(IBatchRenderer rend, Map g, int x, int y, int width, int height, SkinSet skinSet)
+            : this(rend, g, new Point(x, y), new Point(width, height), skinSet) { }
 
-
-        public void Destroy()
-        {
-            container.Remove(this);
-        }
 
 
         public Point LocalizeCoords(Point p)

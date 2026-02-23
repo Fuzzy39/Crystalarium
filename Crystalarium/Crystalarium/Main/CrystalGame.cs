@@ -1,6 +1,7 @@
 ﻿using CrystalCore;
 using CrystalCore.Model.Core;
 using CrystalCore.Model.Rules;
+using CrystalCore.Profiling;
 using CrystalCore.View;
 using CrystalCore.View.Core;
 using CrystalCore.View.Rendering;
@@ -31,7 +32,7 @@ namespace Crystalarium.Main
         // version number.
         private const int MAJOR = 8;
         private const int MINOR = 3;
-        private const int BUILD = 1233; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 1248; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
@@ -65,6 +66,8 @@ namespace Crystalarium.Main
         // Engine external game state
         internal Ruleset CurrentRuleset { get; set; }
 
+        private CrystalCore.Profiling.Task frameTask;
+
 
         public CrystalGame()
         {
@@ -72,6 +75,7 @@ namespace Crystalarium.Main
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true; // I guess there are reasons this might be false, but it used to be false by default, which was confusing.
+            IsFixedTimeStep = false;
 
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
@@ -95,6 +99,7 @@ namespace Crystalarium.Main
                 Directory.CreateDirectory("Saves");
             }
 
+           
 
             base.Initialize();
 
@@ -155,6 +160,7 @@ namespace Crystalarium.Main
                 SetupMinimap((int)r.Width);
             }
 
+            
         }
 
         private void SetupMinimap(int width)
@@ -178,40 +184,41 @@ namespace Crystalarium.Main
         // mostly ugly hacks
         protected override void Update(GameTime gameTime)
         {
-
-
-            // almost all of this code probably deserves to be moved.
-
-            if (Engine.Controller.Context == "play" && IsActive)
+            //frameTask = new("Frame");
+            //using (new Task("Update"))
             {
-                view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
-                // HACK
-                view.Camera.ZoomOrigin = view.LocalizeCoords(
-                    //Mouse.GetState().Position); // For basic Renderer
-                    ((ScaledRenderer)Engine.Renderer).ToVirtualResolution(Mouse.GetState().Position.ToVector2()).ToPoint());
+                // almost all of this code probably deserves to be moved.
 
-                // create ghosts.
-                view.CreateGhost(Actions.CurrentType, Actions.GetMousePos(), Actions.Rotation);
+                if (Engine.Controller.Context == "play" && IsActive)
+                {
+                    view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
+                    // HACK
+                    view.Camera.ZoomOrigin = view.LocalizeCoords(
+                        //Mouse.GetState().Position); // For basic Renderer
+                        ((ScaledRenderer)Engine.Renderer).ToVirtualResolution(Mouse.GetState().Position.ToVector2()).ToPoint());
+
+                    // create ghosts.
+                    view.CreateGhost(Actions.CurrentType, Actions.GetMousePos(), Actions.Rotation);
+                }
+                else
+                {
+                    // stop the camera
+                    view.Camera.Velocity = new Vector3(0);
+                }
+
+                // minimap positions
+                if (minimapEnabled)
+                {
+                    minimap.Camera.Position = view.Camera.Position;
+                    minimap.Camera.Zoom = view.Camera.Zoom;
+                }
+
+
+                Engine.Update(gameTime, IsActive);
+
+
+                base.Update(gameTime);
             }
-            else
-            {
-                // stop the camera
-                view.Camera.Velocity = new Vector3(0);
-            }
-
-            // minimap positions
-            if (minimapEnabled)
-            {
-                minimap.Camera.Position = view.Camera.Position;
-                minimap.Camera.Zoom = view.Camera.Zoom;
-            }
-
-
-            Engine.Update(gameTime, IsActive);
-
-
-            base.Update(gameTime);
-
 
         }
 
@@ -220,20 +227,25 @@ namespace Crystalarium.Main
         protected override void Draw(GameTime gameTime)
         {
 
+            using (new CrystalCore.Profiling.Task("Draw"))
+            {
+                // make everything a flat color.
+                GraphicsDevice.Clear(new Color(70, 70, 70));
+                using (new CrystalCore.Profiling.Task("StartDraw"))
+                {
+                    // draw the game
+                    Engine.StartDraw();
+                }
 
-            // make everything a flat color.
-            GraphicsDevice.Clear(new Color(70, 70, 70));
+                // for the time being, the game handles the 'UI' as the engine has no such systems. 
+                UI.Draw(Engine.Renderer, gameTime);
 
-            // draw the game
-            Engine.StartDraw();
-
-            // for the time being, the game handles the 'UI' as the engine has no such systems. 
-            UI.Draw(Engine.Renderer, gameTime);
-
-            // wrap up.
-            Engine.EndDraw();
-            base.Draw(gameTime);
-
+                // wrap up.
+                Engine.EndDraw();
+                base.Draw(gameTime);
+            }
+            //frameTask.Dispose();
+            frameTask = null;
         }
 
 

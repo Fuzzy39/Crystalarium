@@ -21,8 +21,8 @@
 
 	
 	<!-- primarily for testing -->
-	<!-- For the most part, this fills the screen with garbage -->
-	<ToggleDebugView> OemTilde </ToggleDebugView>
+	<!-- Opens a menu with options to fill the screen with various garbage -->
+	<DebugMenu> OemTilde </DebugMenu>
 	<Crash> LeftControl, Space, Back </Crash> <!--Back is backspace.-->
 
 	

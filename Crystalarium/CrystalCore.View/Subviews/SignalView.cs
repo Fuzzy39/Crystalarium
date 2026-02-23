@@ -111,7 +111,7 @@ namespace CrystalCore.View.Subviews
             Connection signal = connection;
 
 
-            if (cs != ChannelState.Active && !renderTarget.DoDebugRendering)
+            if (cs != ChannelState.Active && !renderTarget.RenderDebugSignals)
             {
                 return;
             }
