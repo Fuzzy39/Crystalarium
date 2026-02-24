@@ -254,11 +254,11 @@ namespace CrystalCore.View
             );
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             try
             {
-                _cameraRend.Update(_map.Grid.Bounds);
+                _cameraRend.Update(gameTime, _map.Grid.Bounds);
             }
             catch
             {

@@ -556,7 +556,7 @@ namespace Crystalarium.Main
         private void MoveCamera(Direction d)
         {
 
-            float camSpeed = 1.2f; // I guess this is acceleration
+            float camSpeed = 80f; // I guess this is acceleration
             game.view.Camera.AddVelocity(camSpeed, d);
         }
 

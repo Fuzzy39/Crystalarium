@@ -219,7 +219,7 @@ namespace CrystalCore.View.Rendering
         /// </summary>
         /// <param name="bounds">The new value of <see cref="Bounds">Bounds</see>. </param>
         /// <exception cref="InvalidOperationException">Thrown if the Camera is bound and is outside of it's bounds.</exception>
-        internal virtual void Update(Rectangle bounds)
+        internal virtual void Update(GameTime gametime, Rectangle bounds)
         {
             _bounds = bounds;
 

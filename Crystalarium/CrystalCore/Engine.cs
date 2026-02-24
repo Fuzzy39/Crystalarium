@@ -223,7 +223,7 @@ namespace CrystalCore
             // update viewports. (Camera Controls, mostly)
             foreach (GridView v in _viewports)
             {
-                v.Update();
+                v.Update(gameTime);
             }
 
             if (!isWindowActive)

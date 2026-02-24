@@ -192,7 +192,7 @@ namespace Crystalarium.Main
 
                 if (Engine.Controller.Context == "play" && IsActive)
                 {
-                    view.Camera.VelZ += Engine.Controller.DeltaScroll / 150f;
+                    view.Camera.VelZ += Engine.Controller.DeltaScroll*60f / 150f;
                     // HACK
                     view.Camera.ZoomOrigin = view.LocalizeCoords(
                         //Mouse.GetState().Position); // For basic Renderer

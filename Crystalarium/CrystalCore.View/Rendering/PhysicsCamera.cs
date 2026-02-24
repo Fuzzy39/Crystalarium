@@ -15,10 +15,10 @@ namespace CrystalCore.View.Rendering
 
         // 'Camera' controls
 
-        private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions. (in pixels/frame)
-        private Vector3 friction = new Vector3(.05f, .05f, .000f); // the rate which camera velocity is reduced, as a ratio of velocity lost per frame.
-        private const float MIN_FRICTION = .3f; // the minimum amount of friction that can be applied, if the camera is in motion, in pixels/frame.
-        private const float MAX_SPEED = 15f; // the maximum velocity per dimension of the camera in pixels/frame.
+        private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions. (in pixels/second)
+        private Vector3 friction = new Vector3(180f, 180f, .000f); // the rate which camera velocity is reduced, as a ratio of velocity lost per second.
+        private const float MIN_FRICTION = 1500f; // the minimum amount of friction that can be applied, if the camera is in motion, in pixels/second.
+        private const float MAX_SPEED = 900f; // the maximum velocity per dimension of the camera in pixels/second.
 
 
 
@@ -178,20 +178,20 @@ namespace CrystalCore.View.Rendering
 
 
         // bounds represents the boundries of this 
-        internal override void Update(Rectangle bounds)
+        internal override void Update(GameTime gametime, Rectangle bounds)
         {
 
-            base.Update(bounds);
+            base.Update(gametime, bounds);
+            float seconds = (float)gametime.ElapsedGameTime.TotalSeconds;
 
+            UpdatePosition(gametime);
 
-            UpdatePosition();
-
-            UpdateZoom(Zoom + Velocity.Z);
+            UpdateZoom(Zoom + Velocity.Z *seconds);
 
             // Apply friction.
-            _velocity.X = ApplyFriction(Velocity.X, friction.X);
-            _velocity.Y = ApplyFriction(Velocity.Y, friction.Y);
-            _velocity.Z = ApplyFriction(Velocity.Z, friction.Z);
+            _velocity.X = ApplyFriction(seconds, Velocity.X, friction.X );
+            _velocity.Y = ApplyFriction(seconds, Velocity.Y, friction.Y );
+            _velocity.Z = ApplyFriction(seconds, Velocity.Z, friction.Z );
 
 
         }
@@ -200,9 +200,10 @@ namespace CrystalCore.View.Rendering
 
 
 
-        private void UpdatePosition()
+        private void UpdatePosition(GameTime gametime)
         {
-            Vector2 nextPos = OriginPosition + new Vector2(Velocity.X / (float)Scale, Velocity.Y / (float)Scale);
+            float seconds = (float)gametime.ElapsedGameTime.TotalSeconds;
+            Vector2 nextPos = OriginPosition + new Vector2(seconds* Velocity.X / (float)Scale, seconds*Velocity.Y / (float)Scale);
 
             //Console.WriteLine(Scale);
             // prevent camera movement outside the bounds.
@@ -225,15 +226,15 @@ namespace CrystalCore.View.Rendering
         }
 
 
-        private float ApplyFriction(float before, float frict)
+        private float ApplyFriction(float seconds, float before, float frict)
         {
-            if (MathF.Abs(frict * before) < MIN_FRICTION)
+            if (MathF.Abs(frict * before*seconds) < MIN_FRICTION)
             {
 
-                return MiscUtil.Reduce(before, MIN_FRICTION);
+                return MiscUtil.Reduce(before, MIN_FRICTION*seconds);
             }
 
-            return MiscUtil.Reduce(before, before * frict);
+            return MiscUtil.Reduce(before, before * frict*seconds*seconds);
         }
 
 

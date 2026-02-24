@@ -35,9 +35,9 @@ namespace CrystalCore.View.Rendering
         /// 
         /// </summary>
         /// <param name="bounds">The bounds in tilespace that the camera is restrained to.</param>
-        public void Update(Rectangle bounds)
+        public void Update(GameTime gametime, Rectangle bounds)
         {
-            camera.Update(bounds);
+            camera.Update(gametime, bounds);
         }
 
 
