@@ -184,8 +184,9 @@ namespace Crystalarium.Main
         // mostly ugly hacks
         protected override void Update(GameTime gameTime)
         {
-            //frameTask = new("Frame");
-            //using (new Task("Update"))
+            if(frameTask==null || frameTask.Finished) frameTask = new("Frame");
+           
+            using (new Task("Update"))
             {
                 // almost all of this code probably deserves to be moved.
 
@@ -231,11 +232,10 @@ namespace Crystalarium.Main
             {
                 // make everything a flat color.
                 GraphicsDevice.Clear(new Color(70, 70, 70));
-                using (new CrystalCore.Profiling.Task("StartDraw"))
-                {
-                    // draw the game
-                    Engine.StartDraw();
-                }
+             
+                // draw the game
+                Engine.StartDraw();
+                
 
                 // for the time being, the game handles the 'UI' as the engine has no such systems. 
                 UI.Draw(Engine.Renderer, gameTime);
@@ -244,7 +244,7 @@ namespace Crystalarium.Main
                 Engine.EndDraw();
                 base.Draw(gameTime);
             }
-            //frameTask.Dispose();
+            frameTask.Dispose();
             frameTask = null;
         }
 

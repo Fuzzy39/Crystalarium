@@ -14,6 +14,8 @@ namespace CrystalCore.Profiling
 
   
         string _name;
+        
+        public bool Finished { get; private set; }
 
         public string Name { get { return _name; } }
 
@@ -23,11 +25,13 @@ namespace CrystalCore.Profiling
         public Task(string name) 
         {
             _name = name;
+            Finished = false;
             Profiler.GetInstance().StartTask(this);
         }
 
         public void Dispose()
         {
+            Finished = true;
             Profiler.GetInstance().FinishTask(this);
         }
 

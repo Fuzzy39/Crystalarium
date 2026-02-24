@@ -53,6 +53,11 @@ namespace CrystalCore.Profiling
         internal void StartTask(Task task)
         {
             // try to get the corresponding record.
+            if (task.Name.Equals(_head?.Name))
+            {
+                throw new InvalidOperationException("Cannot Start the same task twice. Name: '" + task.Name+"'.");
+            }
+            
             ProfilerRecord? record;
             if (_head == null)
             {

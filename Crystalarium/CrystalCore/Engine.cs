@@ -248,17 +248,24 @@ namespace CrystalCore
 
 
 
-            // draw viewports
-            foreach (GridView v in _viewports)
+            using (new CrystalCore.Profiling.Task("Gridview Draw"))
             {
-                v.PreDraw(_primaryRenderer);
-            }
+                // draw viewports
+               
+                foreach (GridView v in _viewports)
+                {
+                    v.PreDraw(_primaryRenderer);
+                }
+                
+                _primaryRenderer.Begin();
 
-            _primaryRenderer.Begin();
-
-            foreach (GridView v in _viewports)
-            {
-                v.Draw(_primaryRenderer);
+                using (new CrystalCore.Profiling.Task("Final Draw"))
+                {
+                    foreach (GridView v in _viewports)
+                    {
+                        v.Draw(_primaryRenderer);
+                    }
+                }
             }
 
         }
