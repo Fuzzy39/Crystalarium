@@ -16,7 +16,7 @@ namespace CrystalCore.View.Rendering
         // 'Camera' controls
 
         private Vector3 _velocity; // the velocity of the camera in x, y, and z dimensions. (in pixels/second)
-        private Vector3 friction = new Vector3(180f, 180f, .000f); // the rate which camera velocity is reduced, as a ratio of velocity lost per second.
+        private Vector3 friction = new Vector3(4f, 4f, .000f); // the rate which camera velocity is reduced, as a ratio of velocity lost per second. (Unit: Hz)
         private const float MIN_FRICTION = 1500f; // the minimum amount of friction that can be applied, if the camera is in motion, in pixels/second.
         private const float MAX_SPEED = 900f; // the maximum velocity per dimension of the camera in pixels/second.
 
@@ -25,6 +25,9 @@ namespace CrystalCore.View.Rendering
         private Point _zoomOrigin; // the point, in pixels relative to the top left corner of our gridview,
                                    // that serves as the origin for dilation translations/zooming.
 
+        // a small hack. Granted, we should probably just pass gametime in the constructor if we're doing this? (or is there a new gametime every frame?)
+        private GameTime _gameTime;
+        // with any luck this will get refactored at some point.
 
         public override Vector2 Position
         {
@@ -182,6 +185,7 @@ namespace CrystalCore.View.Rendering
         {
 
             base.Update(gametime, bounds);
+            _gameTime = gametime;
             float seconds = (float)gametime.ElapsedGameTime.TotalSeconds;
 
             UpdatePosition(gametime);
@@ -228,13 +232,14 @@ namespace CrystalCore.View.Rendering
 
         private float ApplyFriction(float seconds, float before, float frict)
         {
-            if (MathF.Abs(frict * before*seconds) < MIN_FRICTION)
+            if (MathF.Abs(frict*before) < MIN_FRICTION)
             {
 
-                return MiscUtil.Reduce(before, MIN_FRICTION*seconds);
+                 return MiscUtil.Reduce(before, MIN_FRICTION*seconds);
             }
 
-            return MiscUtil.Reduce(before, before * frict*seconds*seconds);
+
+            return MiscUtil.Reduce(before, before*frict*seconds); 
         }
 
 
@@ -285,10 +290,12 @@ namespace CrystalCore.View.Rendering
 
         }
 
+    
+
         public void AddVelocity(float vel, Direction d)
         {
             // get the velocity we need to add.
-            Vector2 toAdd = d.ToPoint().ToVector2() * vel;
+            Vector2 toAdd = d.ToPoint().ToVector2() * (float)(vel*_gameTime.ElapsedGameTime.TotalSeconds);
             VelX += toAdd.X;
             VelY += toAdd.Y;
 
