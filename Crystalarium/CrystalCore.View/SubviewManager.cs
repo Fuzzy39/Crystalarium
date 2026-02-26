@@ -1,6 +1,7 @@
 ﻿using CrystalCore.Model.Communication;
 using CrystalCore.Model.Physical;
 using CrystalCore.Model.Simulation;
+using CrystalCore.Util.Profiling;
 using CrystalCore.View.Core;
 using CrystalCore.View.Subviews;
 using CrystalCore.View.Subviews.Agents;
@@ -150,20 +151,21 @@ namespace CrystalCore.View
 
 
             // first update the chunk list and draw chunks.
-            DrawObjects(rend, _chunkViews);
+
+            using (new ProfilingTask("Chunks")) DrawObjects(rend, _chunkViews);
 
             // do the same with agents.
             if (Parent.DoAgentRendering)
             {
-                foreach (AgentView av in _agentViews)
+                using (new ProfilingTask("Agent BG"))
                 {
-                    av.DrawBackground(rend);
+                    foreach (AgentView av in _agentViews) av.DrawBackground(rend);
                 }
 
 
-             
-                DrawObjects(rend, _beamViews);
-                DrawObjects(rend, _agentViews);
+
+                using (new ProfilingTask("Signals")) DrawObjects(rend, _beamViews);
+                using (new ProfilingTask("Agents")) DrawObjects(rend, _agentViews);
 
 
             }

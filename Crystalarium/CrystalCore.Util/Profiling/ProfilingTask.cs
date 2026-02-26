@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrystalCore.Profiling
+namespace CrystalCore.Util.Profiling
 {
     /// <summary>
     /// This class represents a profiling task that is currently in progress. It is complete when it is disposed.
     /// </summary>
-    public class Task : IDisposable
+    public class ProfilingTask : IDisposable
     {
 
-  
+
         string _name;
-        
+
         public bool Finished { get; private set; }
 
         public string Name { get { return _name; } }
@@ -22,7 +22,7 @@ namespace CrystalCore.Profiling
         internal TimeSpan TimeStarted { get; set; }
 
 
-        public Task(string name) 
+        public ProfilingTask(string name)
         {
             _name = name;
             Finished = false;

@@ -3,6 +3,7 @@ using CrystalCore.Model.Core;
 using CrystalCore.Model.Core.Default;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
+using CrystalCore.Util.Profiling;
 using CrystalCore.View;
 using CrystalCore.View.Configs;
 using CrystalCore.View.Core;
@@ -248,7 +249,7 @@ namespace CrystalCore
 
 
 
-            using (new CrystalCore.Profiling.Task("Gridview Draw"))
+            using (new ProfilingTask("Gridview Draw"))
             {
                 // draw viewports
                
@@ -259,7 +260,7 @@ namespace CrystalCore
                 
                 _primaryRenderer.Begin();
 
-                using (new CrystalCore.Profiling.Task("Final Draw"))
+                using (new ProfilingTask("Final Draw"))
                 {
                     foreach (GridView v in _viewports)
                     {

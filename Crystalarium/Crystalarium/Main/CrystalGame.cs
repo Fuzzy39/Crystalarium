@@ -1,7 +1,7 @@
 ﻿using CrystalCore;
 using CrystalCore.Model.Core;
 using CrystalCore.Model.Rules;
-using CrystalCore.Profiling;
+using CrystalCore.Util.Profiling;
 using CrystalCore.View;
 using CrystalCore.View.Core;
 using CrystalCore.View.Rendering;
@@ -66,7 +66,7 @@ namespace Crystalarium.Main
         // Engine external game state
         internal Ruleset CurrentRuleset { get; set; }
 
-        private CrystalCore.Profiling.Task frameTask;
+        private ProfilingTask frameTask;
 
 
         public CrystalGame()
@@ -184,12 +184,13 @@ namespace Crystalarium.Main
         // mostly ugly hacks
         protected override void Update(GameTime gameTime)
         {
-            if(frameTask==null || frameTask.Finished) frameTask = new("Frame");
-           
-            using (new Task("Update"))
+            base.Update(gameTime); // this should go first, apparently.
+
+            // start profiling
+            if (frameTask==null || frameTask.Finished) frameTask = new("Frame");
+            using (new ProfilingTask("Update"))
             {
                 // almost all of this code probably deserves to be moved.
-
                 if (Engine.Controller.Context == "play" && IsActive)
                 {
                     view.Camera.VelZ += Engine.Controller.DeltaScroll*60f / 150f;
@@ -218,7 +219,7 @@ namespace Crystalarium.Main
                 Engine.Update(gameTime, IsActive);
 
 
-                base.Update(gameTime);
+                
             }
 
         }
@@ -228,7 +229,7 @@ namespace Crystalarium.Main
         protected override void Draw(GameTime gameTime)
         {
 
-            using (new CrystalCore.Profiling.Task("Draw"))
+            using (new ProfilingTask("Draw"))
             {
                 // make everything a flat color.
                 GraphicsDevice.Clear(new Color(70, 70, 70));

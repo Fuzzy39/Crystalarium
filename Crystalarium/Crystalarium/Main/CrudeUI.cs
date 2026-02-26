@@ -1,8 +1,8 @@
 ﻿using CrystalCore;
 using CrystalCore.Input;
 using CrystalCore.Model.Core;
-using CrystalCore.Profiling;
 using CrystalCore.Util.Graphics;
+using CrystalCore.Util.Profiling;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using System;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrystalCore.Profiling
+namespace CrystalCore.Util.Profiling
 {
     /// <summary>
     /// The profiler is for keeping track of the amount of time various tasks take up, to help find performance issues.
@@ -18,22 +18,22 @@ namespace CrystalCore.Profiling
         private static Profiler _instance;
         private static string _report;
 
-        private Stack<Task> _currentTasks;
+        private Stack<ProfilingTask> _currentTasks;
         private List<ProfilerRecord> _records;
         private ProfilerRecord? _head;
         private Stopwatch _stopwatch;
-        
+
 
         public static int SampleSize
         {
             get; set;
         }
 
-        private Profiler() 
+        private Profiler()
         {
             SampleSize = 30;
             _report = string.Empty;
-            _currentTasks = new Stack<Task>();
+            _currentTasks = new Stack<ProfilingTask>();
             _records = new(); // arguably we should store a list of children so it could be more flexible...
             _head = null;
             _instance = this;
@@ -50,14 +50,14 @@ namespace CrystalCore.Profiling
 
 
 
-        internal void StartTask(Task task)
+        internal void StartTask(ProfilingTask task)
         {
             // try to get the corresponding record.
             if (task.Name.Equals(_head?.Name))
             {
-                throw new InvalidOperationException("Cannot Start the same task twice. Name: '" + task.Name+"'.");
+                throw new InvalidOperationException("Cannot Start the same task twice. Name: '" + task.Name + "'.");
             }
-            
+
             ProfilerRecord? record;
             if (_head == null)
             {
@@ -72,10 +72,10 @@ namespace CrystalCore.Profiling
             else
             {
                 record = _head.GetChild(task.Name);
-                if(record == null) record = _head.AddChild(task.Name);
+                if (record == null) record = _head.AddChild(task.Name);
             }
 
-            
+
             _head = record;
 
             // finally update the task
@@ -84,24 +84,25 @@ namespace CrystalCore.Profiling
         }
 
 
-        internal void FinishTask(Task task)
+        internal void FinishTask(ProfilingTask task)
         {
-       
-            if(_currentTasks.Peek()!= task)
+
+            if (_currentTasks.Peek() != task)
             {
                 throw new InvalidOperationException("Can only finish the most recently started active task. Need to finish '"
-                    +_currentTasks.Peek().Name+"' before '"+task.Name+"'.");
+                    + _currentTasks.Peek().Name + "' before '" + task.Name + "'.");
             }
 
             // record the time for this task.
-            _head.Update(_stopwatch.Elapsed-task.TimeStarted, SampleSize);
-            
+            _head.Update(_stopwatch.Elapsed - task.TimeStarted, SampleSize);
+
             // return the current task to its parent.
             _currentTasks.Pop();
 
-            if(_head.Parent == null)
+            if (_head.Parent == null)
             {
                 _report = _head.CreateReport(null);
+                _head.Reset();
                 _stopwatch.Stop();
             }
             _head = _head.Parent;
@@ -118,7 +119,7 @@ namespace CrystalCore.Profiling
         {
             return _report;
         }
-        
+
 
     }
 }
