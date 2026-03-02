@@ -32,7 +32,7 @@ namespace Crystalarium.Main
         // version number.
         private const int MAJOR = 8;
         private const int MINOR = 3;
-        private const int BUILD = 1258; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 1259; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
@@ -46,13 +46,48 @@ namespace Crystalarium.Main
         }
 
 
-        private bool minimapEnabled = true; // setting false is useful for testing graphics stuff.
 
         // Engine facing objects
         internal Engine Engine { get; private set; } // the 'engine'
 
         internal GridView view { get; private set; } // the primary view
         private GridView minimap; // the minimap
+
+        private bool _minimapEnabled;
+        internal bool MinimapEnabled 
+        { 
+            get
+            {
+                return _minimapEnabled;
+            }
+
+            set
+            {
+                _minimapEnabled = value;
+                if (!value)
+                {
+                    Engine.removeView(minimap);
+                    return;
+                }
+            
+
+                minimap = Engine.addView(Map, (int)Engine.Renderer.Width - 250, 0, 250, 250, Configuration.MiniMapSkin);
+
+                // setup borders
+                minimap.Border.SetTextures(Textures.pixel, Textures.pixel);
+                minimap.Border.Width = 2;
+
+                // Set the camera of the minimap.
+                minimap.Camera.MaxScale = 15;
+                minimap.Camera.MinScale = 1;
+
+                // to make it a minimap!
+                minimap.ViewCastTarget = view; // note that this must be done after view has been initialized.
+                                               //minimap.DoAgentRendering = false;
+            }
+
+        }
+
         internal Map Map { get; private set; } // the world seen by the view and minimap
 
 
@@ -76,6 +111,7 @@ namespace Crystalarium.Main
             Content.RootDirectory = "Content";
             IsMouseVisible = true; // I guess there are reasons this might be false, but it used to be false by default, which was confusing.
             IsFixedTimeStep = false;
+         
 
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
@@ -155,31 +191,11 @@ namespace Crystalarium.Main
 
 
             // setup the minimap.
-            if (minimapEnabled)
-            {
-                SetupMinimap((int)r.Width);
-            }
+            MinimapEnabled = true;
 
-            
         }
 
-        private void SetupMinimap(int width)
-        {
-            minimap = Engine.addView(Map, width - 250, 0, 250, 250, Configuration.MiniMapSkin);
-
-            // setup borders
-            minimap.Border.SetTextures(Textures.pixel, Textures.pixel);
-            minimap.Border.Width = 2;
-
-            // Set the camera of the minimap.
-            minimap.Camera.MaxScale = 15;
-            minimap.Camera.MinScale = 1;
-
-            // to make it a minimap!
-            minimap.ViewCastTarget = view; // note that this must be done after view has been initialized.
-            //minimap.DoAgentRendering = false;
-        }
-
+       
 
         // mostly ugly hacks
         protected override void Update(GameTime gameTime)
@@ -209,7 +225,7 @@ namespace Crystalarium.Main
                 }
 
                 // minimap positions
-                if (minimapEnabled)
+                if (MinimapEnabled)
                 {
                     minimap.Camera.Position = view.Camera.Position;
                     minimap.Camera.Zoom = view.Camera.Zoom;

@@ -31,12 +31,13 @@ namespace Crystalarium.Main
         internal enum DebugOptions
         {
             ShowPerformanceReport,
+            MinimapEnabled,
             RenderDebugPorts,
             RenderDebugSignals,
         }
 
         internal bool ShowProfilingReport { get; set; }
-
+  
 
 
         public CrudeUI(CrystalGame game)
@@ -44,6 +45,7 @@ namespace Crystalarium.Main
 
             this.game = game;
             ShowProfilingReport = true;
+           
 
             // well, what is ui structure but a bunch of data definitions and hooks into actual code?
             // this will be expanded on in the future, I bet.
@@ -133,6 +135,7 @@ namespace Crystalarium.Main
                     bool state = (DebugOptions)(i - 1) switch
                     {
                         DebugOptions.ShowPerformanceReport => ShowProfilingReport,
+                        DebugOptions.MinimapEnabled => game.MinimapEnabled,
                         DebugOptions.RenderDebugSignals => game.view.RenderDebugSignals,
                         DebugOptions.RenderDebugPorts => game.view.RenderDebugPorts,
                         _=> false

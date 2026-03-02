@@ -167,6 +167,15 @@ namespace CrystalCore
             return gv;
         }
 
+        public void removeView(GridView gridview)
+        {
+            if(!_viewports.Remove(gridview))
+            {
+                throw new InvalidOperationException("This gridview does not exist/belong to the engine!");
+            }
+
+        }
+
         public Map addMap(Ruleset r)
         {
             if (!Initialized)
