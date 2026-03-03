@@ -199,6 +199,8 @@ namespace Crystalarium.Main
 
             if(ShowProfilingReport)
             {
+                
+                rend.Draw(Textures.pixel, new RotatedRect(new(0, 90), new(450,  400), 0, new()), new Color(0, 0, 0, 120));
                 DrawString(Profiler.GetReport(), new(10, 95), rend);
             }
 

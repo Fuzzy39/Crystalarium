@@ -3,6 +3,7 @@ using CrystalCore.Model.Rules;
 using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
+using CrystalCore.Util.Profiling;
 using CrystalCore.View.Configs;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
@@ -19,6 +20,10 @@ namespace CrystalCore.View.Subviews.Agents
         private List<DebugPort> _ports; // the ports that this agentview may render. 
 
         private Agent _agent;
+        
+        // cached results:
+        private RotatedRect backgroundRect;
+        
 
         internal AgentType CurrentType
         {
@@ -32,6 +37,11 @@ namespace CrystalCore.View.Subviews.Agents
             _agent = a;
             this.configs = configs;
             setCurrentConfig();
+            
+            // background rectangle
+            RectangleF bounds = new RectangleF(_agent.Node.Physical.Bounds);
+            if (config.DoBackgroundShrinkage) bounds = ShrinkBorders();
+            backgroundRect = RotatedRect.FromBoundingLocation(bounds.Location, bounds.Size, 0);
 
         }
 
@@ -120,7 +130,7 @@ namespace CrystalCore.View.Subviews.Agents
         /// <param name="sb"></param>
         internal bool DrawBackground(IRenderer rend)
         {
-
+        
             if (!base.Draw(rend))
             {
                 return false;
@@ -131,19 +141,10 @@ namespace CrystalCore.View.Subviews.Agents
             {
                 return true;
             }
-
-            RectangleF bounds = new RectangleF(_agent.Node.Physical.Bounds);
-
-
-            if (config.DoBackgroundShrinkage)
-            {
-                bounds = ShrinkBorders();
-            }
-
-
-
-            RotatedRect pos = RotatedRect.FromBoundingLocation(bounds.Location, bounds.Size, 0);
-            rend.Draw(config.Background, pos, config.BackgroundColor);
+            
+       
+         
+            rend.Draw(config.Background, backgroundRect, config.BackgroundColor);
             return true;
         }
 

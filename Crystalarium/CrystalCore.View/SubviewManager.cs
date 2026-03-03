@@ -152,7 +152,8 @@ namespace CrystalCore.View
 
             // first update the chunk list and draw chunks.
 
-            using (new ProfilingTask("Chunks")) DrawObjects(rend, _chunkViews);
+            using (new ProfilingTask("Chunks")) 
+                DrawObjects(rend, _chunkViews);
 
             // do the same with agents.
             if (Parent.DoAgentRendering)
@@ -164,8 +165,10 @@ namespace CrystalCore.View
 
 
 
-                using (new ProfilingTask("Signals")) DrawObjects(rend, _beamViews);
-                using (new ProfilingTask("Agents")) DrawObjects(rend, _agentViews);
+                using (new ProfilingTask("Signals")) 
+                    DrawObjects(rend, _beamViews);
+                using (new ProfilingTask("Agents"))
+                    DrawObjects(rend, _agentViews);
 
 
             }
