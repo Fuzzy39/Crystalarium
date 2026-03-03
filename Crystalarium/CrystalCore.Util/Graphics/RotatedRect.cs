@@ -158,11 +158,22 @@ namespace CrystalCore.Util.Graphics
         {
             get
             {
-                float X1 = MiscUtil.PickLeast(TopLeft.X, TopRight.X, BottomLeft.X, BottomRight.X);
-                float X2 = MiscUtil.PickGreatest(TopLeft.X, TopRight.X, BottomLeft.X, BottomRight.X);
+                // the goal is to not ask for the coordinates a bunch and hopefully do this somewhat quickly.
+                Vector2[] corners = new Vector2[]{TopRight, BottomLeft, BottomRight};
 
-                float Y1 = MiscUtil.PickLeast(TopLeft.Y, TopRight.Y, BottomLeft.Y, BottomRight.Y);
-                float Y2 = MiscUtil.PickGreatest(TopLeft.Y, TopRight.Y, BottomLeft.Y, BottomRight.Y);
+                Vector2 topLeft = TopLeft; // top left is 0,0, right? X, Y? this could be made faster, maybe.
+                float X1 = topLeft.X;
+                float X2 = topLeft.X;
+                float Y1 = topLeft.Y;
+                float Y2 = topLeft.Y;
+
+                foreach (Vector2 corner in corners)
+                {
+                    if (corner.X < X1) X1 = corner.X;
+                    if(corner.X > X2) X2 = corner.X;
+                    if(corner.Y < Y1) Y1 = corner.Y;
+                    if(corner.Y > Y2) Y2 = corner.Y;
+                }
 
                 return new RectangleF(X1, Y1, X2 - X1, Y2 - Y1);
 

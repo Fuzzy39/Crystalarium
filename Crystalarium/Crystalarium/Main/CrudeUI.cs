@@ -7,6 +7,7 @@ using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Crystalarium.Main
 {
@@ -199,9 +200,11 @@ namespace Crystalarium.Main
 
             if(ShowProfilingReport)
             {
+                string report = Profiler.GetReport();
                 
-                rend.Draw(Textures.pixel, new RotatedRect(new(0, 90), new(450,  400), 0, new()), new Color(0, 0, 0, 120));
-                DrawString(Profiler.GetReport(), new(10, 95), rend);
+
+                rend.Draw(Textures.pixel, new RotatedRect(new(0, 90), new(475, report.Count(ch => ch == '\n')*25), 0, new()), new Color(0, 0, 0, 120));
+                DrawString(report, new(10, 95), rend);
             }
 
             DrawString("Press " + Engine.Controller.GetAction("Instructions").FirstKeybindAsString() + " For instructions.", new(10, rend.Height - 50), rend);
