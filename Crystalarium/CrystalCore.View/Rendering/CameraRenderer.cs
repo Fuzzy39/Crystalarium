@@ -44,7 +44,7 @@ namespace CrystalCore.View.Rendering
 
         public void Draw(Texture2D texture, RotatedRect rect, Rectangle source, Color c)
         {
-            using (new ProfilingTask("CameraDraw"))
+            //using (new ProfilingTask("CameraDraw"))
             {
                 if (texture.Width != source.Width || texture.Height != source.Height)
                 {

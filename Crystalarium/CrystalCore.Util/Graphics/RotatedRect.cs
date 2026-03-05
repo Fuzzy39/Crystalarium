@@ -74,7 +74,7 @@ namespace CrystalCore.Util.Graphics
         {
             get
             {
-                return PositionOfSizeRelativePoint(0, 0);
+                return new(X, Y);
             }
         }
 
@@ -189,8 +189,9 @@ namespace CrystalCore.Util.Graphics
             // do a bit of trig
 
             // the intermediate variables save on calculation
-            float cosrot = Cos(Rotation);
-            float sinrot = Sin(Rotation);
+            float rot = Rotation;
+            float cosrot = Cos(rot);
+            float sinrot = Sin(rot);
 
             float realX = cosrot * OwnX - sinrot* OwnY;
             float realY = sinrot * OwnX + cosrot * OwnY;

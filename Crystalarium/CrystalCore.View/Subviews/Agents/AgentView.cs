@@ -22,8 +22,8 @@ namespace CrystalCore.View.Subviews.Agents
         private Agent _agent;
         
         // cached results:
-        private RotatedRect backgroundRect;
-        
+        private RotatedRect _backgroundRect;
+        private RectangleF _bounds;
 
         internal AgentType CurrentType
         {
@@ -41,7 +41,18 @@ namespace CrystalCore.View.Subviews.Agents
             // background rectangle
             RectangleF bounds = new RectangleF(_agent.Node.Physical.Bounds);
             if (config.DoBackgroundShrinkage) bounds = ShrinkBorders();
-            backgroundRect = RotatedRect.FromBoundingLocation(bounds.Location, bounds.Size, 0);
+            _backgroundRect = RotatedRect.FromBoundingLocation(bounds.Location, bounds.Size, 0);
+
+            // 
+            RectangleF loc = ShrinkBorders();
+            Vector2 size = loc.Size;
+            if (_agent.Node.Facing.IsHorizontal()) // we swap if it's horizontal. if it's square it doesn't matter.
+                                                   // the agent could be rotated anytime, but it's footprint will never change.
+            {
+                size = new(size.Y, size.X);
+            }
+            _bounds = new RectangleF(loc.Location, size);
+
 
         }
 
@@ -90,14 +101,7 @@ namespace CrystalCore.View.Subviews.Agents
             Direction facing = _agent.Node.Facing;
             float textureFacing = facing.ToRadians() - config.TextureFacing.ToRadians();
 
-            RectangleF loc = ShrinkBorders();
-            Vector2 size = loc.Size;
-            if (facing.IsHorizontal())
-            {
-                size = new(size.Y, size.X);
-            }
-
-            RotatedRect pos = RotatedRect.FromBoundingLocation(loc.Location, size, textureFacing);
+            RotatedRect pos = RotatedRect.FromBoundingLocation(_bounds.Location, _bounds.Size, textureFacing);
 
             //pos.RotateAbout( textureFacing- facing.ToRadians(), RenderData.Bounds.Location.ToVector2()+new Vector2(.5f) );
 
@@ -144,7 +148,7 @@ namespace CrystalCore.View.Subviews.Agents
             
        
          
-            rend.Draw(config.Background, backgroundRect, config.BackgroundColor);
+            rend.Draw(config.Background, _backgroundRect, config.BackgroundColor);
             return true;
         }
 
