@@ -262,7 +262,6 @@ namespace CrystalCore.View
             }
             catch
             {
-
                 Camera.Position = Map.Grid.Bounds.Center.ToVector2();
                 Console.WriteLine("Camera is out of bounds. Resetting position to " + Camera.Position);
             }

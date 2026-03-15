@@ -1,4 +1,5 @@
-﻿using CrystalCore.Util.Graphics;
+﻿using CrystalCore.Util;
+using CrystalCore.Util.Graphics;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -67,6 +68,19 @@ namespace CrystalCore.View.Rendering
 
             base.Draw(texture, real, sourceRect, color);
 
+        }
+        
+        public void Draw(Texture2D texture, RectangleF position, Direction d, Color color)
+        {
+            // not 100% on why this needs to be here any more
+            if (hasTarget)
+            {
+                base.Draw(texture, position, d, color);
+                return;
+            }
+
+            RectangleF realPos=new RectangleF(ToRealResolution(position.Location), ToRealResolution(position.Size));
+            base.Draw(texture, realPos, d, color);
         }
 
 

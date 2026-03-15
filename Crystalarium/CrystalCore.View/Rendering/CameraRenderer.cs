@@ -44,45 +44,56 @@ namespace CrystalCore.View.Rendering
 
         public void Draw(Texture2D texture, RotatedRect rect, Rectangle source, Color c)
         {
-            using (new ProfilingTask("CameraDraw"))
+            
+            if (texture.Width != source.Width || texture.Height != source.Height)
             {
-                if (texture.Width != source.Width || texture.Height != source.Height)
-                {
-                    throw new NotImplementedException("Wait for render target!");
-                }
-
-                RectangleF bounds = rect.AsRectangleF;
-                if (bounds.Area < 0)
-                {
-                    throw new ArgumentException("A Camera was asked to render a texture with bounds " + bounds +
-                                                ". Negative size is not acceptable.");
-                }
-
-                if (bounds.Area == 0)
-                {
-                    return;
-                }
-
-                //Console.WriteLine(rect.BoundingBox);
-
-                Vector2 size = rect.Size;
-                Point pixelCoords = camera.TileToPixelCoords(rect.BoundingBox.Location) - new Point(1) +
-                                    pixelBounds.Location;
-                Point pixelSize = new Point((int)(size.X * camera.Scale), (int)(size.Y * camera.Scale)) +
-                                  new Point(1, 1);
-
-
-                //Rectangle footprint = new Rectangle(pixelCoords, pixelSize);
-                Direction facing = DirectionUtil.FromRadians(rect.Rotation);
-
-                //  baseRenderer.Draw(texture, RotatedRect.FromFootprint(footprint, facing), c);
-                baseRenderer.Draw(texture, RotatedRect.FromBoundingLocation(pixelCoords, pixelSize, rect.Rotation), c);
+                throw new NotImplementedException("Wait for render target!");
             }
+
+            RectangleF bounds = rect.AsRectangleF;
+            if (bounds.Area < 0)
+            {
+                throw new ArgumentException("A Camera was asked to render a texture with bounds " + bounds +
+                                            ". Negative size is not acceptable.");
+            }
+
+            if (bounds.Area == 0)
+            {
+                return;
+            }
+
+            //Console.WriteLine(rect.BoundingBox);
+
+            Vector2 size = rect.Size;
+            Point pixelCoords = camera.TileToPixelCoords(rect.BoundingBox.Location) - new Point(1) +
+                                pixelBounds.Location;
+            Point pixelSize = new Point((int)(size.X * camera.Scale), (int)(size.Y * camera.Scale)) +
+                              new Point(1, 1);
+
+
+            //Rectangle footprint = new Rectangle(pixelCoords, pixelSize);
+            Direction facing = DirectionUtil.FromRadians(rect.Rotation);
+
+            //  baseRenderer.Draw(texture, RotatedRect.FromFootprint(footprint, facing), c);
+            baseRenderer.Draw(texture, RotatedRect.FromBoundingLocation(pixelCoords, pixelSize, rect.Rotation), c);
+            
         }
 
 
 
-        // whatever, I'll fix this in a bit, once we have rendertargets
+       
+        public void Draw(Texture2D texture, RectangleF position, Direction d, Color color)
+        {
+            Vector2 size = position.Size;
+            Point pixelCoords = camera.TileToPixelCoords(position.Location) - new Point(1) +
+                                pixelBounds.Location;
+            Point pixelSize = new Point((int)(size.X * camera.Scale), (int)(size.Y * camera.Scale)) +
+                              new Point(1, 1);
+         
+
+            baseRenderer.Draw(texture,new Rectangle(pixelCoords, pixelSize), d, color);
+        }
+
         public void DrawString(FontFamily font, string text, Vector2 position, float height, Color color)
         {
             throw new NotImplementedException();

@@ -22,7 +22,7 @@ namespace CrystalCore.View.Core
         /// <param name="rotation">rotation around center of destination in radians</param>
         /// 
 
-        public void Draw(Texture2D texture, RotatedRect position, Rectangle sourceRect, Color color);
+        public void Draw(Texture2D texture, RotatedRect position, Rectangle sourceRect, Color color);   
 
         public void Draw(Texture2D texture, RotatedRect position, Color color)
         {
@@ -32,18 +32,23 @@ namespace CrystalCore.View.Core
 
         public void Draw(Texture2D texture, RectangleF position, Color color)
         {
-            Draw(texture, new RotatedRect(position.Location, position.Size, 0, new(0)), color);
+            //Draw(texture, new RotatedRect(position.Location, position.Size, 0, new(0)), color);
+            Draw(texture, position, Direction.right, color);
         }
 
         public void Draw(Texture2D texture, Rectangle position, Color color)
         {
             Draw(texture, new RectangleF(position), color);
         }
-
-        public void Draw(Texture2D texture, RectangleF position, Direction d, Color color)
+        
+        public void Draw(Texture2D texture, Rectangle position, Direction d, Color color)
         {
-            Draw(texture, new RotatedRect(position.Location, position.Size, d.ToRadians(), new(.5f)), color);
+            Draw(texture, new RectangleF(position), d, color);
         }
+
+
+        public void Draw(Texture2D texture, RectangleF position, Direction d, Color color);
+       
 
 
         // primary method

@@ -31,22 +31,21 @@ namespace CrystalCore.View.Subviews.Agents
             float shrink = config.Shrinkage;
             RectangleF loc = new RectangleF(Bounds).Inflate(-shrink, -shrink);
 
-            float textureFacing = Facing.ToRadians() - config.TextureFacing.ToRadians();
+            Direction textureFacing = DirectionUtil.FromRadians(Facing.ToRadians() - config.TextureFacing.ToRadians());
 
 
             Vector2 size = loc.Size;
-            if (Facing.IsHorizontal())
-            {
-                size = new(size.Y, size.X);
-            }
-
-            RotatedRect pos = RotatedRect.FromBoundingLocation(loc.Location, size, textureFacing);
+            // if (Facing.IsHorizontal())
+            // {
+            //     //size = new(size.Y, size.X);
+            // }
 
             // render the ghost.
             renderer.Draw
             (
                 config.DefaultTexture,
-                pos,
+                new RectangleF(loc.Location, size),
+                textureFacing,
                 DetermineColor()
             );
 

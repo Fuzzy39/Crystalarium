@@ -22,7 +22,7 @@ namespace CrystalCore.View.Subviews.Agents
         private Agent _agent;
         
         // cached results:
-        private RotatedRect backgroundRect;
+
         
 
         internal AgentType CurrentType
@@ -39,9 +39,8 @@ namespace CrystalCore.View.Subviews.Agents
             setCurrentConfig();
             
             // background rectangle
-            RectangleF bounds = new RectangleF(_agent.Node.Physical.Bounds);
-            if (config.DoBackgroundShrinkage) bounds = ShrinkBorders();
-            backgroundRect = RotatedRect.FromBoundingLocation(bounds.Location, bounds.Size, 0);
+            
+          
 
         }
 
@@ -88,7 +87,8 @@ namespace CrystalCore.View.Subviews.Agents
 
             // render the Agent.
             Direction facing = _agent.Node.Facing;
-            float textureFacing = facing.ToRadians() - config.TextureFacing.ToRadians();
+            Direction textureFacing = DirectionUtil.FromRadians(facing.ToRadians() - config.TextureFacing.ToRadians());
+
 
             RectangleF loc = ShrinkBorders();
             Vector2 size = loc.Size;
@@ -97,11 +97,11 @@ namespace CrystalCore.View.Subviews.Agents
                 size = new(size.Y, size.X);
             }
 
-            RotatedRect pos = RotatedRect.FromBoundingLocation(loc.Location, size, textureFacing);
+            //RotatedRect pos = RotatedRect.FromBoundingLocation(loc.Location, size, textureFacing);
 
             //pos.RotateAbout( textureFacing- facing.ToRadians(), RenderData.Bounds.Location.ToVector2()+new Vector2(.5f) );
 
-            rend.Draw(config.DefaultTexture, pos, config.Color);
+            rend.Draw(config.DefaultTexture, new RectangleF(loc.Location, size), textureFacing, config.Color);
 
             // debug port rendering
             if (renderTarget.RenderDebugPorts)
@@ -124,7 +124,7 @@ namespace CrystalCore.View.Subviews.Agents
 
         }
 
-        /// <summary?
+        /// <summary> 
         /// This method, made especially for agents, is weird, and maybe should be generalized...
         /// </summary>
         /// <param name="sb"></param>
@@ -142,9 +142,8 @@ namespace CrystalCore.View.Subviews.Agents
                 return true;
             }
             
-       
-         
-            rend.Draw(config.Background, backgroundRect, config.BackgroundColor);
+            
+            rend.Draw(config.Background, _agent.Node.Physical.Bounds, config.BackgroundColor);
             return true;
         }
 

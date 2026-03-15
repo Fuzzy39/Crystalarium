@@ -1,4 +1,5 @@
-﻿using CrystalCore.Util.Graphics;
+﻿using CrystalCore.Util;
+using CrystalCore.Util.Graphics;
 using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -58,6 +59,22 @@ namespace CrystalCore.View.Rendering
                 hasDrawntoPrimary = true;
             }
 
+        }
+
+
+        public void Draw(Texture2D texture, RectangleF position, Direction d, Color color)
+        {
+
+          
+            spriteBatch.Draw(
+                texture,
+                new RectangleF(position.Location+.5f*position.Size, position.Size).toRectangle(),
+                new(new(), new(texture.Width, texture.Height)),
+                color,
+                d.ToRadians(),
+                .5f*(new Vector2(texture.Width, texture.Height)),
+                SpriteEffects.None, 0f
+            );
         }
 
         public virtual void DrawString(FontFamily font, string text, Vector2 position, float height, Color color)
