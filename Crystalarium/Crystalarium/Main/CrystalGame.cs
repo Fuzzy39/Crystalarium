@@ -98,7 +98,8 @@ namespace Crystalarium.Main
                 if(_map!=null) Engine.removeMap(_map); 
                 _map = value;
                 if(view!=null) view.Map = _map;
-               
+                if (_minimapEnabled) minimap.Map = _map;
+
             } 
         } 
 
