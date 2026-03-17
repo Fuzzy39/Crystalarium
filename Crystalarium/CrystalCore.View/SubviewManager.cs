@@ -3,6 +3,7 @@ using CrystalCore.Model.Physical;
 using CrystalCore.Model.Simulation;
 using CrystalCore.Util.Profiling;
 using CrystalCore.View.Core;
+using CrystalCore.View.Rendering;
 using CrystalCore.View.Subviews;
 using CrystalCore.View.Subviews.Agents;
 
@@ -160,7 +161,9 @@ namespace CrystalCore.View
             {
                 using (new ProfilingTask("Agent BG"))
                 {
-                    foreach (AgentView av in _agentViews) av.DrawBackground(rend);
+                    // render agent backgrounds only if they are close to the camera.
+                    if(!(rend is CameraRenderer) || ((CameraRenderer)rend).Camera.Scale > 25 )
+                        foreach (AgentView av in _agentViews) av.DrawBackground(rend);
                 }
 
 
@@ -168,7 +171,7 @@ namespace CrystalCore.View
                 using (new ProfilingTask("Signals")) 
                     DrawObjects(rend, _beamViews);
                 using (new ProfilingTask("Agents"))
-                    DrawObjects(rend, _agentViews);
+                   DrawObjects(rend, _agentViews);
 
 
             }

@@ -85,10 +85,9 @@ namespace CrystalCore.View.Rendering
         public void Draw(Texture2D texture, RectangleF position, Direction d, Color color)
         {
             Vector2 size = position.Size;
-            Point pixelCoords = camera.TileToPixelCoords(position.Location) - new Point(1) +
+            Point pixelCoords = camera.TileToPixelCoords(position.Location) +
                                 pixelBounds.Location;
-            Point pixelSize = new Point((int)(size.X * camera.Scale), (int)(size.Y * camera.Scale)) +
-                              new Point(1, 1);
+            Point pixelSize = new Point((int)(size.X * camera.Scale), (int)(size.Y * camera.Scale));
          
 
             baseRenderer.Draw(texture,new Rectangle(pixelCoords, pixelSize), d, color);
