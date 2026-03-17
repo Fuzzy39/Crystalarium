@@ -3,6 +3,7 @@ using CrystalCore.Model.Core;
 using CrystalCore.Model.Core.Default;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
+using CrystalCore.Util.Graphics;
 using CrystalCore.Util.Profiling;
 using CrystalCore.View;
 using CrystalCore.View.Configs;
@@ -40,6 +41,8 @@ namespace CrystalCore
         private List<Ruleset> _rulesets;
         private List<SkinSet> _skinSets;
 
+        private FontFamily _defaultFont;
+
         public SimulationManager Sim
         {
             get => _sim;
@@ -69,7 +72,7 @@ namespace CrystalCore
 
 
 
-        public Engine(TimeSpan timeBetweenFrames, GraphicsDevice gd)
+        public Engine(TimeSpan timeBetweenFrames, GraphicsDevice gd, FontFamily defaultFont)
         {
             _sim = new SimulationManager(timeBetweenFrames.TotalSeconds);
 
@@ -85,7 +88,7 @@ namespace CrystalCore
             _skinSets = new List<SkinSet>();
             _rulesets = new List<Ruleset>();
 
-
+            _defaultFont = defaultFont;
 
 
 
@@ -162,7 +165,7 @@ namespace CrystalCore
             {
                 throw new InvalidOperationException("CrystalCore must be initalized before gridviews can be created. call Engine.Initialize().");
             }
-            GridView gv = new GridView(_primaryRenderer, map, location, size, skinSet);
+            GridView gv = new GridView(_primaryRenderer, map, location, size, skinSet, _defaultFont);
             _viewports.Add(gv);
             return gv;
         }
@@ -187,6 +190,12 @@ namespace CrystalCore
             _sim.addMap(m);
 
             return m;
+        }
+
+        public void removeMap(Map map)
+        {
+            map.Destroy();
+            _sim.removeMap(map);
         }
 
         public SkinSet addSkinSet(string name)

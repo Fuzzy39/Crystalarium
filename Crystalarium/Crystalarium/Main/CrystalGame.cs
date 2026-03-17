@@ -32,7 +32,7 @@ namespace Crystalarium.Main
         // version number.
         private const int MAJOR = 8;
         private const int MINOR = 3;
-        private const int BUILD = 1280; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 1289; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
@@ -88,7 +88,19 @@ namespace Crystalarium.Main
 
         }
 
-        internal Map Map { get; private set; } // the world seen by the view and minimap
+        private Map _map;
+        // the world seen by the view and minimap
+        internal Map Map 
+        {
+            get { return _map; }
+            set 
+            { 
+                if(_map!=null) Engine.removeMap(_map); 
+                _map = value;
+                if(view!=null) view.Map = _map;
+               
+            } 
+        } 
 
 
 
@@ -158,7 +170,7 @@ namespace Crystalarium.Main
             Textures.LoadContent(Content);
 
             // create the engine
-            Engine = new Engine(TargetElapsedTime, GraphicsDevice);
+            Engine = new Engine(TargetElapsedTime, GraphicsDevice, Textures.Consolas);
 
 
             // setup the engine's configuration.
@@ -178,7 +190,7 @@ namespace Crystalarium.Main
 
             // create a test grid, and do some test things to it.
             Map = Engine.addMap(CurrentRuleset);
-            Map.OnReset += Actions.OnMapReset;
+            Map.OnMapDestroyed += Actions.OnMapReset;
 
 
             IBatchRenderer r = Engine.Renderer;

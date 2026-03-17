@@ -150,9 +150,9 @@ namespace CrystalCore
         }
 
 
-        public void Load(string path, Map m)
+        public Map Load(string path)
         {
-
+            Map m = null;
             int version = -1;
             try
             {
@@ -174,7 +174,7 @@ namespace CrystalCore
 
 
                     // get the ruleset.
-                    m.Ruleset = GetRuleset(ruleName); // triggers a map reset
+                    m = engine.addMap(GetRuleset(ruleName));
 
                     LoadGeometry(xml, m); // triggers another map reset, with the correct size.
 
@@ -201,6 +201,7 @@ namespace CrystalCore
                 throw new MapLoadException(tothrow);
             }
 
+            return m;
 
         }
 
@@ -234,7 +235,7 @@ namespace CrystalCore
 
                 origin *= new Point(Chunk.SIZE);
                 size *= new Point(Chunk.SIZE);
-                m.Reset(new Rectangle(origin, size));
+                m.Grid.ExpandToFit(new Rectangle(origin, size));
 
                 xml.Reader.ReadEndElement();
             }

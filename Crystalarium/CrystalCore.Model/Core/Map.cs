@@ -15,7 +15,7 @@ namespace CrystalCore.Model.Core
     {
 
         public Grid Grid { get; }
-        public Ruleset Ruleset { get; set; }
+        public Ruleset Ruleset { get; }
 
         public int AgentCount { get; }
 
@@ -23,11 +23,10 @@ namespace CrystalCore.Model.Core
         // these are events that can be subscribed to by, say, the gridview.
         public event ComponentEvent? OnMapComponentDestroyed;
         public event ComponentEvent? OnMapComponentReady;
-        public event EventHandler? OnReset;
+        public event EventHandler? OnMapDestroyed;
 
 
-        public void Reset();
-        public void Reset(Rectangle minimumBounds);
+        public void Destroy();
 
         public Agent CreateAgent(AgentType at, Point location, Direction facing);
 

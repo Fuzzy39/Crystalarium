@@ -665,7 +665,7 @@ namespace Crystalarium.Main
             {
                 if (!game.Engine.saveManager.GetRulesetName(path).Equals("?"))
                 {
-                    game.Engine.saveManager.Load(path, game.Map);
+                    game.Map = game.Engine.saveManager.Load(path);
                 }
 
             }
@@ -685,7 +685,8 @@ namespace Crystalarium.Main
             {
 
                 game.CurrentRuleset = rulesets[i];
-                game.Map.Ruleset = game.CurrentRuleset;
+                game.Map = game.Engine.addMap(game.CurrentRuleset);
+                
 
 
                 CurrentType = game.CurrentRuleset.AgentTypes[0];

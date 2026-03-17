@@ -31,7 +31,7 @@ namespace CrystalCore.Model.Core.Default
         private List<Agent> _agents;
 
 
-        public event EventHandler? OnReset;
+        public event EventHandler? OnMapDestroyed;
         public event ComponentEvent? OnMapComponentReady;
         public event ComponentEvent? OnMapComponentDestroyed;
 
@@ -44,13 +44,6 @@ namespace CrystalCore.Model.Core.Default
         public Ruleset Ruleset
         {
             get => _ruleset;
-            set
-            {
-                _ruleset = value;
-
-                Reset();
-
-            }
         }
 
         public int AgentCount
@@ -72,35 +65,13 @@ namespace CrystalCore.Model.Core.Default
 
             _agents = new();
 
-            OnReset?.Invoke(this, new EventArgs());
+            OnMapDestroyed?.Invoke(this, new EventArgs());
         }
 
 
-        public void Reset()
+        public void Destroy()
         {
-            Reset(new Rectangle(0, 0, 0, 0));
-        }
-
-        public void Reset(Rectangle minimumBounds)
-        {
-
-           
-            for(int i = 0; i < _agents.Count;)
-            {
-                _agents[i].Destroy();
-            }
-            _agents.Clear();
-
-            // reseting our grid should remove all references to any remaining mapObjects
-            _grid.Destroy();
-            _grid = new DefaultGrid(new DefaultComponentFactory(this));
-            _grid.ExpandToFit(minimumBounds);
-
-          
-
-            OnReset?.Invoke(this, new EventArgs());
-
-
+            OnMapDestroyed?.Invoke(this, new EventArgs());
         }
 
         // These handle the events of MapComponents.

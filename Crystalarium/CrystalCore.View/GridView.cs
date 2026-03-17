@@ -1,6 +1,7 @@
 ﻿using CrystalCore.Model.Core;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
+using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
 using CrystalCore.View.Core;
 using CrystalCore.View.Rendering;
@@ -30,14 +31,15 @@ namespace CrystalCore.View
         private Rectangle _pixelBounds; // the bounds, in pixels, of the viewport on the game window.
 
         // elements
-        private Map _map; // the grid that this GridView is rendering.
+        private Map? _map; // the grid that this GridView is rendering.
         private Border _border; // the border of this Gridview (which exists, whether it is being rendered or not)
         private CameraRenderer _cameraRend; // the camera of the gridview. Responsible for zooming and Panning and actual image rendering
         //private RenderTarget2D _target; // the target this gridview is rendered to.
         private SubviewManager _subviewManager; // our subview manager, who kindly takes after our subviews.
         private SkinSet _skinSet; // Our Current Skinset, which defines any graphical settings for anything we could possibly render.
-        private GridView _viewCastTarget; // if not null, chunks viewed by this gridview (assuming it has the same grid) will be brightened.
-
+        private GridView? _viewCastTarget; // if not null, chunks viewed by this gridview (assuming it has the same grid) will be brightened.
+        
+        private FontFamily _fontFamily; // In case we need to draw text...
 
 
 
@@ -58,9 +60,15 @@ namespace CrystalCore.View
             get => _pixelBounds;
         }
 
-        public Map Map
+        public Map? Map
         {
             get => _map;
+            set
+            {
+                Manager.ChangeMap(value);
+                _map = value;
+                Reset();
+            }
         }
 
         public Border Border
@@ -84,17 +92,18 @@ namespace CrystalCore.View
             set { _skinSet = value; Reset(); }
         }
 
-        public Skin CurrentSkin
+        public Skin? CurrentSkin
         {
             get
             {
+                if (Map == null) return null;
                 return _skinSet.GetSkin(Map.Ruleset);
             }
         }
 
         
 
-        public GridView ViewCastTarget
+        public GridView? ViewCastTarget
         {
             get => _viewCastTarget;
             set
@@ -133,23 +142,22 @@ namespace CrystalCore.View
 
 
         // create the viewport
-        public GridView(IBatchRenderer rend, Map g, Point pos, Point dimensions, SkinSet skinSet)
+        public GridView(IBatchRenderer rend,  Map m, Point pos, Point dimensions, SkinSet skinSet, FontFamily font)
         {
             // initialize from parameters
-            _map = g;
-            g.OnReset += OnGridReset;
+            _map = m;
+            m.OnMapDestroyed += OnGridDestroyed;
 
+            // members
             _pixelBounds = new Rectangle(pos, dimensions);
-
             _cameraRend = new CameraRenderer(new(new(), PixelBounds.Size), rend);
-
             _skinSet = skinSet;
-
             _subviewManager = new SubviewManager(this);
-
+            _fontFamily = font;
 
             // border
             _border = new Border(this);
+
 
             // Rendering options.
             DoAgentRendering = true;
@@ -157,8 +165,8 @@ namespace CrystalCore.View
             RenderDebugPorts = false;
             RenderDebugSignals = false;
 
+            // view cast
             _viewCastTarget = null;
-
             renderTarget = rend.CreateTarget(dimensions);
 
 
@@ -166,9 +174,11 @@ namespace CrystalCore.View
         }
 
         // an alternate viewport constructor, without points.
-        internal GridView(IBatchRenderer rend, Map g, int x, int y, int width, int height, SkinSet skinSet)
-            : this(rend, g, new Point(x, y), new Point(width, height), skinSet) { }
+        internal GridView(IBatchRenderer rend, Map g, int x, int y, int width, int height, SkinSet skinSet, FontFamily font)
+            : this(rend, g, new Point(x, y), new Point(width, height), skinSet, font) { }
 
+
+        
 
 
         public Point LocalizeCoords(Point p)
@@ -178,7 +188,10 @@ namespace CrystalCore.View
 
         public void CreateGhost(AgentType t, Point loc, Direction facing)
         {
-            AgentViewConfig conf = CurrentSkin.GetAgentViewConfig(t);
+            // doesn't make sense to make a ghost if the map is null
+            if (Map == null) return;
+
+            AgentViewConfig conf = CurrentSkin!.GetAgentViewConfig(t);
             Manager.AddGhost(new AgentGhost(Map, conf, loc, facing));
         }
 
@@ -189,6 +202,24 @@ namespace CrystalCore.View
 
 
             rend.StartTarget(renderTarget);
+
+         
+
+            if(Map == null)
+            {
+                // yes it's very important to render the size of the error font correctly. totally.
+                float fontSize = _pixelBounds.Height / 30;
+                fontSize = fontSize < 16 ? 16 : fontSize;
+                rend.DrawString(
+                    _fontFamily,
+                    // yes, it's a haiku. Why wouldn't it be?
+                    "There's no Map that should\nbe rendered by this GridView.\nThis may be a bug.",
+                    (.5f * _pixelBounds.Size.ToVector2()) + new Vector2(-6.5f*fontSize, -1.5f*fontSize), 
+                    fontSize, Color.White
+                );
+                rend.EndTarget();
+                return;
+            }
 
             // draw the background.
             DrawBackground(rend);
@@ -256,9 +287,11 @@ namespace CrystalCore.View
 
         public void Update(GameTime gameTime)
         {
+            if (Map == null) return;
+
             try
             {
-                _cameraRend.Update(gameTime, _map.Grid.Bounds);
+                _cameraRend.Update(gameTime, Map.Grid.Bounds);
             }
             catch
             {
@@ -271,7 +304,7 @@ namespace CrystalCore.View
         public void SetCameraBound(bool bound)
         {
 
-            if (bound)
+            if (bound && Map!=null)
             {
                 Camera.Position = Map.Grid.Bounds.Center.ToVector2(); // we want to prevent a crash, if the camera is in an invalid position when it is bound.
             }
@@ -279,18 +312,23 @@ namespace CrystalCore.View
 
         }
 
-        public void OnGridReset(Object sender, EventArgs e)
+
+
+
+        public void OnGridDestroyed(Object? sender, EventArgs e)
         {
-            Reset();
+            Map = null;
         }
 
         // this should be called whenever our skin changes.
         public void Reset()
         {
 
-            Manager.Reset();
-            Camera.Reset(_map.Grid.Bounds);
-
+           
+            if (Map != null)
+            {
+                Camera.Reset(Map.Grid.Bounds);
+            }
 
         }
     }

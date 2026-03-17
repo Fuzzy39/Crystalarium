@@ -109,7 +109,7 @@ namespace CrystalCoreTests.Model.DefaultCore
 
         public event ComponentEvent? OnMapComponentDestroyed;
         public event MapObjectEvent? OnMapObjectReady;
-        public event EventHandler? OnReset;
+        public event EventHandler? OnMapDestroyed;
         public event ComponentEvent? OnMapComponentReady;
 
         public void Reset()

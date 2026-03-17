@@ -54,7 +54,7 @@ namespace CrystalCore.Model.Core
 
         public int ActualStepsPS => _actualStepsPS;
 
-        public List<Map> Grids => _maps;
+        public List<Map> Maps => _maps;
 
         public SimulationManager(double secondsBetweenFrames)
         {
@@ -158,7 +158,7 @@ namespace CrystalCore.Model.Core
             // do a simulation step.
 
 
-            foreach (Map g in Grids)
+            foreach (Map g in Maps)
             {
                 g.Step();
             }

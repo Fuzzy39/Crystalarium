@@ -1,4 +1,5 @@
 ﻿using CrystalCore.Model.Communication;
+using CrystalCore.Model.Core;
 using CrystalCore.Model.Physical;
 using CrystalCore.Model.Simulation;
 using CrystalCore.Util.Profiling;
@@ -60,8 +61,8 @@ namespace CrystalCore.View
 
             _parent = parent;
 
-            parent.Map.OnMapComponentReady += OnMapObjectReady;
 
+            ChangeMap(parent.Map);
             Reset();
 
 
@@ -102,9 +103,10 @@ namespace CrystalCore.View
 
         // methods
 
-        internal void Reset()
+        internal void ChangeMap(Map? newMap)
         {
-
+            if (_parent.Map != null) _parent.Map.OnMapComponentReady -= OnMapObjectReady;
+            if (newMap != null) newMap.OnMapComponentReady += OnMapObjectReady;
             // remove all curent  ghosts: they are now outdated.
             _ghosts = new List<AgentGhost>();
 
@@ -112,6 +114,21 @@ namespace CrystalCore.View
             _chunkViews = new List<Subview>();
             _agentViews = new List<Subview>();
             _beamViews = new List<Subview>();
+        }
+         
+
+
+        internal void Reset()
+        {
+            // remove all curent  ghosts: they are now outdated.
+            _ghosts = new List<AgentGhost>();
+
+            // initialize our lists
+            _chunkViews = new List<Subview>();
+            _agentViews = new List<Subview>();
+            _beamViews = new List<Subview>();
+
+            if (Parent.Map == null) return;
 
             // we now need to add all appropriate objects
 
@@ -133,7 +150,6 @@ namespace CrystalCore.View
 
 
         }
-
 
         internal void AddGhost(AgentGhost gh)
         {
