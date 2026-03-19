@@ -287,7 +287,7 @@ namespace CrystalCore.View.Rendering
         /// </summary>
         /// <param name="tilePos"></param>
         /// <returns>the pixel coords where tilePos is located, relative to the top left corner of this camera's bounds.</returns>
-        public Point TileToPixelCoords(Vector2 tilePos)
+        public Vector2 TileToPixelCoords(Vector2 tilePos)
         {
 
             // tile to pixel:
@@ -295,9 +295,9 @@ namespace CrystalCore.View.Rendering
             // how do we do that?
             // -(camera tile pos - tile pos) tile pos relative to base
 
-            int x = (int)(Scale * -1.0 * (_position.X - (float)tilePos.X));
-            int y = (int)(Scale * -1.0 * (_position.Y - (float)tilePos.Y));
-            return new Point(x, y);
+            float x = (float)(Scale * -1.0 * (_position.X - (float)tilePos.X));
+            float y = (float)(Scale * -1.0 * (_position.Y - (float)tilePos.Y));
+            return new (x, y);
 
         }
 

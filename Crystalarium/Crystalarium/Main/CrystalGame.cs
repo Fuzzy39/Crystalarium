@@ -32,7 +32,7 @@ namespace Crystalarium.Main
         // version number.
         private const int MAJOR = 8;
         private const int MINOR = 3;
-        private const int BUILD = 1296; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 1298; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
@@ -69,9 +69,9 @@ namespace Crystalarium.Main
                     Engine.removeView(minimap);
                     return;
                 }
-            
 
-                minimap = Engine.addView(Map, (int)Engine.Renderer.Width - 250, 0, 250, 250, Configuration.MiniMapSkin);
+                Point size = new Point(350, 300);
+                minimap = Engine.addView(Map, (int)Engine.Renderer.Width - size.X, 0, size.X, size.Y, Configuration.MiniMapSkin);
 
                 // setup borders
                 minimap.Border.SetTextures(Textures.pixel, Textures.pixel);

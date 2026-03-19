@@ -65,7 +65,7 @@ namespace CrystalCore.View.Rendering
             //Console.WriteLine(rect.BoundingBox);
 
             Vector2 size = rect.Size;
-            Point pixelCoords = camera.TileToPixelCoords(rect.BoundingBox.Location) - new Point(1) +
+            Point pixelCoords = camera.TileToPixelCoords(rect.BoundingBox.Location).ToPoint() - new Point(1) +
                                 pixelBounds.Location;
             Point pixelSize = new Point((int)(size.X * camera.Scale), (int)(size.Y * camera.Scale)) +
                               new Point(1, 1);
@@ -85,12 +85,18 @@ namespace CrystalCore.View.Rendering
         public void Draw(Texture2D texture, RectangleF position, Direction d, Color color)
         {
             Vector2 size = position.Size;
-            Point pixelCoords = camera.TileToPixelCoords(position.Location) +
-                                pixelBounds.Location;
-            Point pixelSize = new Point((int)(size.X * camera.Scale), (int)(size.Y * camera.Scale));
-         
+            Vector2 pixelCoords = camera.TileToPixelCoords(position.Location) +
+                                pixelBounds.Location.ToVector2();
+            Vector2 pixelSize = new ((float)(size.X * camera.Scale), (float)(size.Y * camera.Scale));
 
-            baseRenderer.Draw(texture,new Rectangle(pixelCoords, pixelSize), d, color);
+            // round everything!
+            Rectangle rect = new Rectangle(
+                (int)MathF.Round(pixelCoords.X), (int)MathF.Round(pixelCoords.Y), 
+                (int)MathF.Round(pixelSize.X), (int)MathF.Round(pixelSize.Y));
+
+            // avoiding rounding, I guess? Everything still looks sorta funky.
+            //if(rect.Width*rect.Height>100)  rect.Inflate(1, 1);
+            baseRenderer.Draw(texture, rect, d, color);
         }
 
         public void DrawString(FontFamily font, string text, Vector2 position, float height, Color color)

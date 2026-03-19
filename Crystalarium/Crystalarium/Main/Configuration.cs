@@ -710,6 +710,7 @@ namespace Crystalarium.Main
             AgentViewConfig baseConfig = new AgentViewConfig(null);
             baseConfig.DefaultTexture = Textures.pixel;
             baseConfig.Color = Color.Magenta;
+            baseConfig.Shrinkage = 0;
 
             #region Crystalarium
             // Signals skin
@@ -755,8 +756,8 @@ namespace Crystalarium.Main
             // chunks
             beams.ChunkConfig.ChunkBackground = Textures.pixel;
             beams.ChunkConfig.DoCheckerBoardColoring = true;
-            beams.ChunkConfig.BackgroundColor = new Color(50, 50, 150);
-            beams.ChunkConfig.OriginChunkColor = new Color(150, 50, 50);
+            beams.ChunkConfig.BackgroundColor = new Color(40, 40, 40);
+            beams.ChunkConfig.OriginChunkColor = null;
             #endregion
 
             #region Minimal

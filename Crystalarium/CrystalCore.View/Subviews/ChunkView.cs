@@ -69,11 +69,12 @@ namespace CrystalCore.View.Subviews
                 }
             }
 
+            /*
             // check if we are being viewed.
             if (renderTarget.ViewCastTarget != null && isRenderedByTarget((Chunk)RenderData))
             {
                 brighten(ref toReturn, 2.5);
-            }
+            }*/
 
             return toReturn;
 
@@ -112,15 +113,10 @@ namespace CrystalCore.View.Subviews
         // is our viewcast target rendering our chunk?
         private bool isRenderedByTarget(Chunk ch)
         {
-            foreach (ChunkView r in renderTarget.ViewCastTarget.Manager.ChunkViews)
-            {
-                if (r.RenderData == ch)
-                {
-                    return true;
-                }
-            }
+            
+            // I guess? We sorta render everything all the time now... (Probably shouldn't...)
+            return renderTarget.ViewCastTarget.Camera.TileBounds.Intersects(ch.Bounds);
 
-            return false;
         }
     }
 }

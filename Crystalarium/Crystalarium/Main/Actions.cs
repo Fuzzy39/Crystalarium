@@ -157,7 +157,7 @@ namespace Crystalarium.Main
                     if (!game.Map.Grid.Bounds.Contains(pos))
                     {
                         originPos = originPos - DistanceFrom(pos, game.Map.Grid.Bounds);
-                        panOrigin = game.view.Camera.TileToPixelCoords(originPos);
+                        panOrigin = game.view.Camera.TileToPixelCoords(originPos).ToPoint();
 
                         // redo calculation
                         pos = panPos + (originPos - mousePos);
