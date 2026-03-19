@@ -48,7 +48,7 @@ namespace CrystalCrash.Main
             // print the error message.
             sb.Begin();
             DrawString(sb, new Vector2(50, 50), face, .4f);
-            DrawString(sb, new Vector2(50, 100), errorMessage, .16f);
+            DrawString(sb, new Vector2(50, 100), errorMessage, .2f);
 
             i += .005f;
 

@@ -223,7 +223,7 @@ namespace Crystalarium.Main
 
 
 
-            game.CurrentRuleset = CrystalRules;
+            
 
             #endregion
 

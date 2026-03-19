@@ -31,6 +31,9 @@ namespace CrystalCore.Model.Physical
 
         public List<MapObject> ObjectsIntersecting { get; }
 
+        // children exist so that MapObjects can be iterated through if needbe.
+        public List<MapObject> Children { get; }
+
 
 
         /// <summary>

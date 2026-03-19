@@ -137,13 +137,13 @@ namespace CrystalCore.View
             foreach (Chunk ch in chunks)
             {
 
+                // current skin will be non-null because the map isn't null.
+                _chunkViews.Add(new ChunkView(Parent, ch, Parent.CurrentSkin!.ChunkConfig));
 
-                _chunkViews.Add(new ChunkView(Parent, ch, Parent.CurrentSkin.ChunkConfig));
-
-                /* foreach(ChunkMember chm in ch.Children)
+                 foreach(MapObject obj in ch.Children)
                  {
-                     OnMapObjectReady(chm, new());
-                 }*/
+                     OnMapObjectReady(obj, new());
+                 }
 
             }
 

@@ -207,16 +207,7 @@ namespace CrystalCore.View
 
             if(Map == null)
             {
-                // yes it's very important to render the size of the error font correctly. totally.
-                float fontSize = _pixelBounds.Height / 30;
-                fontSize = fontSize < 16 ? 16 : fontSize;
-                rend.DrawString(
-                    _fontFamily,
-                    // yes, it's a haiku. Why wouldn't it be?
-                    "There's no Map that should\nbe rendered by this GridView.\nThis may be a bug.",
-                    (.5f * _pixelBounds.Size.ToVector2()) + new Vector2(-6.5f*fontSize, -1.5f*fontSize), 
-                    fontSize, Color.White
-                );
+                DrawErrorMessage(rend);
                 rend.EndTarget();
                 return;
             }
@@ -234,6 +225,20 @@ namespace CrystalCore.View
             rend.EndTarget();
 
 
+        }
+
+        private void DrawErrorMessage(IRenderer rend)
+        {
+            // yes it's very important to render the size of the error font correctly. totally.
+            float fontSize = _pixelBounds.Height / 30;
+            fontSize = fontSize < 16 ? 16 : fontSize;
+            rend.DrawString(
+                _fontFamily,
+                // yes, it's a haiku. Why wouldn't it be?
+                "There's no Map that should\nbe rendered by this GridView.\nThis may be a bug.",
+                (.5f * _pixelBounds.Size.ToVector2()) + new Vector2(-6.5f * fontSize, -1.5f * fontSize),
+                fontSize, Color.White
+            );
         }
 
 
@@ -329,7 +334,7 @@ namespace CrystalCore.View
             {
                 Camera.Reset(Map.Grid.Bounds);
             }
-
+            _subviewManager.Reset();
         }
     }
 }

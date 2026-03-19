@@ -12,6 +12,8 @@ namespace CrystalCore.Model.Physical.Default
 
         private List<MapObject> _objectsIntersecting;
 
+        private List<MapObject> _children;
+
         // Properties
 
         public Point ChunkCoords
@@ -23,6 +25,12 @@ namespace CrystalCore.Model.Physical.Default
         {
             get { return _objectsIntersecting; }
         }
+
+        public List<MapObject> Children
+        {
+            get { return _children; }
+        }
+
 
         public Grid Grid
         {
@@ -45,6 +53,7 @@ namespace CrystalCore.Model.Physical.Default
             _chunkCoords = chunkCoords;
 
             _objectsIntersecting = new List<MapObject>();
+            _children = new List<MapObject>();
             map.OnComponentReady(this, new());
         }
 
@@ -79,7 +88,10 @@ namespace CrystalCore.Model.Physical.Default
 
             MapObject obj = (MapObject)comp;
             _objectsIntersecting.Remove(obj);
-
+            if(((Chunk)this).Bounds.Contains( obj.Bounds.Location))
+            {
+                _children.Remove(obj);
+            }
 
 
         }
@@ -97,6 +109,12 @@ namespace CrystalCore.Model.Physical.Default
             _objectsIntersecting.Add(obj);
             obj.OnDestroy += OnWithinDestroyed;
 
+
+            // add to children if needbe.
+            if (((Chunk)this).Bounds.Contains(obj.Bounds.Location))
+            {
+                _children.Add(obj);
+            }
 
         }
 

@@ -32,7 +32,7 @@ namespace Crystalarium.Main
         // version number.
         private const int MAJOR = 8;
         private const int MINOR = 3;
-        private const int BUILD = 1289; // I like to increment this number every time I run the code after changing it. I don't always though.
+        private const int BUILD = 1296; // I like to increment this number every time I run the code after changing it. I don't always though.
 
         internal static string VersionString
         {
@@ -97,7 +97,11 @@ namespace Crystalarium.Main
             { 
                 if(_map!=null) Engine.removeMap(_map); 
                 _map = value;
-                if(view!=null) view.Map = _map;
+
+                Actions.onMapChange(); // this is silly.
+
+                // setup views
+                if (view!=null) view.Map = _map;
                 if (_minimapEnabled) minimap.Map = _map;
 
             } 
@@ -112,7 +116,7 @@ namespace Crystalarium.Main
 
 
         // Engine external game state
-        internal Ruleset CurrentRuleset { get; set; }
+        internal Ruleset CurrentRuleset { get => Map.Ruleset; }
 
         private ProfilingTask frameTask;
 
@@ -182,16 +186,18 @@ namespace Crystalarium.Main
             // setup our interaction related code and register it with the engine.
             Actions = new Actions(Engine.Controller, this);
 
+
             // let's get this show on the road!
             Engine.Initialize();
-
+        
 
             // Make the UI
             UI = new CrudeUI(this);
 
             // create a test grid, and do some test things to it.
-            Map = Engine.addMap(CurrentRuleset);
-            Map.OnMapDestroyed += Actions.OnMapReset;
+            Map = Engine.addMap(Engine.Rulesets[0]);
+
+
 
 
             IBatchRenderer r = Engine.Renderer;

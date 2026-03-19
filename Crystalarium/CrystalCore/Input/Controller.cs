@@ -102,7 +102,7 @@ namespace CrystalCore.Input
 			// find the control we will be binding to.
 			string controlName = xml.Reader.Name;
 			Control con = GetAction(controlName);
-			if (con == null) { throw new XmlException("Invalid element at " + positionOfKeybind + "."); }
+			if (con == null) { throw new XmlException("Unknown Control at " + positionOfKeybind + "."); }
 
 			// attempt to read every button in a keybind.
 			string[] buttonStrings = xml.Reader.ReadElementContentAsString().Split(',');

@@ -131,9 +131,9 @@ namespace CrystalCore.View.Configs
                 }
             }
 
-            throw new ArgumentException("This agent type is not supported by this skin!");
+            throw new ArgumentException("Agent Type "+type+" is not supported by this skin!");
 
-        }
+        }   
         public override void Initialize()
         {
 

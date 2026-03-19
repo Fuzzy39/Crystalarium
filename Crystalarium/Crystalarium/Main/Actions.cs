@@ -61,7 +61,7 @@ namespace Crystalarium.Main
 
             SetupController();
 
-            CurrentType = game.CurrentRuleset.AgentTypes[0];
+           
 
             
 
@@ -69,15 +69,10 @@ namespace Crystalarium.Main
 
         }
 
-        internal void OnMapReset(object sender, EventArgs e)
+        public void onMapChange()
         {
-
-            game.CurrentRuleset = game.Map.Ruleset;
             CurrentType = game.CurrentRuleset.AgentTypes[0];
         }
-
-
-
 
 
 
@@ -666,6 +661,7 @@ namespace Crystalarium.Main
                 if (!game.Engine.saveManager.GetRulesetName(path).Equals("?"))
                 {
                     game.Map = game.Engine.saveManager.Load(path);
+                    CurrentType = game.CurrentRuleset.AgentTypes[0];
                 }
 
             }
@@ -684,12 +680,11 @@ namespace Crystalarium.Main
             if (rulesets.Count > i)
             {
 
-                game.CurrentRuleset = rulesets[i];
-                game.Map = game.Engine.addMap(game.CurrentRuleset);
                 
-
-
+                game.Map = game.Engine.addMap(rulesets[i]);
                 CurrentType = game.CurrentRuleset.AgentTypes[0];
+
+
                 c.Context = "play";
             }
         }

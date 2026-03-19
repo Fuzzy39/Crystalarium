@@ -179,6 +179,10 @@ namespace CrystalCore.Model.Rules
 
         }
 
+        public override string ToString()
+        {
+            return _ruleset.Name + ":" + Name;
+        }
 
     }
 }
