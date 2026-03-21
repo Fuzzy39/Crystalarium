@@ -9,7 +9,7 @@ namespace CrystalCore.Input.Tests
         [TestMethod()]
         public void KeybindSupersetTest()
         {
-            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67), null);
+            Engine e = new Engine(TimeSpan.FromMilliseconds(16.67), null, null);
 
             Controller c = e.Controller;
 

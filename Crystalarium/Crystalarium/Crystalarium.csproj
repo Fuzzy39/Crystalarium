@@ -10,6 +10,7 @@
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
 		<StartupObject></StartupObject>
+		<AssemblyVersion>8.4.1301.0</AssemblyVersion>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Remove="Icon.ico" />

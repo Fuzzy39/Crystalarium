@@ -12,7 +12,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-[assembly: AssemblyVersion("8.4.1301")]
+
 
 namespace Crystalarium.Main
 {

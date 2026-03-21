@@ -164,6 +164,11 @@ namespace CrystalCoreTests.Model.DefaultCore
         {
             return;
         }
+
+        public void Destroy()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     internal class MockEntity : Entity
@@ -245,6 +250,8 @@ namespace CrystalCoreTests.Model.DefaultCore
         public bool Destroyed => throw new NotImplementedException();
 
         public Grid Grid => throw new NotImplementedException();
+
+        public List<MapObject> Children => throw new NotImplementedException();
 
         public event EventHandler OnDestroy = null;
         public event EventHandler OnReady = null;
