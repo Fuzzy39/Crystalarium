@@ -10,6 +10,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.IO;
+using System.Reflection;
+
+[assembly: AssemblyVersion("8.4.1301")]
 
 namespace Crystalarium.Main
 {
@@ -30,18 +33,23 @@ namespace Crystalarium.Main
         private GraphicsDeviceManager _graphics;
 
         // version number.
-        private const int MAJOR = 8;
-        private const int MINOR = 3;
-        private const int BUILD = 1298; // I like to increment this number every time I run the code after changing it. I don't always though.
+
 
         internal static string VersionString
         {
             get
             {
-                // (Release)
-                // (Development)
-                // (Experimental)
-                return "Milestone " + (MAJOR + 1) + " (Development) v" + MAJOR + "." + MINOR + "." + BUILD;
+
+                Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+#if DEBUG
+                string type = "(Experiemental)";
+#else
+                string type = "(Development)";
+                if(version.Minor == 0)
+                    type = "(Release)";
+                
+#endif
+                return "Milestone " + (version.Major + 1) + " "+type+" v" + version.Major+"."+version.Minor+"."+version.Build;
             }
         }
 
