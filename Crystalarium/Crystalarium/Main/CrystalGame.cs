@@ -40,7 +40,8 @@ namespace Crystalarium.Main
             get
             {
 
-                Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                Version version = new Version(8, 5, 1302);//System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
 #if DEBUG
                 string type = "(Experiemental)";
 #else

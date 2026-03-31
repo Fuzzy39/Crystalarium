@@ -45,7 +45,7 @@ namespace Crystalarium.Main
         {
 
             this.game = game;
-            ShowProfilingReport = false;
+            ShowProfilingReport = true;
            
 
             // well, what is ui structure but a bunch of data definitions and hooks into actual code?

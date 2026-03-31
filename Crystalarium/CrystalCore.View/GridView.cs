@@ -203,18 +203,6 @@ namespace CrystalCore.View
 
             rend.StartTarget(renderTarget);
 
-         
-
-            if(Map == null)
-            {
-                DrawErrorMessage(rend);
-                rend.EndTarget();
-                return;
-            }
-
-            // draw the background.
-            DrawBackground(rend);
-
             // Update our subview manager and have it render its subviews.
             _subviewManager.Draw(_cameraRend);
 
@@ -249,6 +237,14 @@ namespace CrystalCore.View
             // no, I don't know what these settings do.
             // could look it up...
 
+            if (Map == null)
+            {
+                DrawErrorMessage(rend);
+                return true;
+            }
+
+            // draw the background.
+            DrawBackground(rend);
 
             // the actual juice.
             rend.Draw(renderTarget, _pixelBounds, Color.White);
