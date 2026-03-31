@@ -26,7 +26,7 @@ For information on how the included rulesets work, refer to [the wiki](https://g
 
 
 ## Download
-The latest release is [version 8.3](https://github.com/Fuzzy39/Crystalarium/releases/tag/v8.3.1128-pre-alpha).
+The latest release is [version 8.4](https://github.com/Fuzzy39/Crystalarium/releases/tag/v8.4.1301-pre-alpha).
 
 ## Caveats
 Crystalarium is not yet finished. The core simulation is present, but some capabilities are missing. Only a few hardcoded rulesets are available, and users cannot yet make their own ruleset. The simulation system supports light-beam based rulesets, but not cellular automata. Both of these features were part of the initial premise of the project. In addition, The user interface is very minimal and there aren't many quality of life features, and performance is an issue, particularly with the graphics. This makes it impractical to build anything too large.
