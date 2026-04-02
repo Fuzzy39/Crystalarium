@@ -1,4 +1,4 @@
-﻿namespace CrystalCore.View.Core
+﻿namespace CrystalCore.Graphics.Core
 {
     public interface IRenderable
     {

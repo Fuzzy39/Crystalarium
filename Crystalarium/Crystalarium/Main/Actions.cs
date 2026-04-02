@@ -4,7 +4,6 @@ using CrystalCore.Model.Core;
 using CrystalCore.Model.Rules;
 using CrystalCore.Model.Simulation;
 using CrystalCore.Util;
-using CrystalCore.View.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection.Metadata.Ecma335;
 using System.Xml;
+using CrystalCore.Graphics.Rendering;
 using static Crystalarium.Main.CrudeUI;
 
 namespace Crystalarium.Main

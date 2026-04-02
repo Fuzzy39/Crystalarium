@@ -1,10 +1,11 @@
-﻿using CrystalCore.Model.Core;
+﻿using CrystalCore.Graphics.Core;
+using CrystalCore.Graphics.Rendering;
+using CrystalCore.Model.Core;
 using CrystalCore.Model.Rules;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;
 using CrystalCore.View.Core;
-using CrystalCore.View.Rendering;
 using CrystalCore.View.Subviews.Agents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

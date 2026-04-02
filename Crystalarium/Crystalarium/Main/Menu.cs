@@ -1,4 +1,5 @@
-﻿using CrystalCore.View.Core;
+﻿using CrystalCore.Graphics.Core;
+using CrystalCore.View.Core;
 using Microsoft.Xna.Framework;
 
 namespace Crystalarium.Main

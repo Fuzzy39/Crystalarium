@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.IO;
 using System.Linq;
+using CrystalCore.Graphics.Core;
 
 namespace Crystalarium.Main
 {

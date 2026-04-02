@@ -1,4 +1,5 @@
-﻿using CrystalCore.Model.Physical;
+﻿using CrystalCore.Graphics.Core;
+using CrystalCore.Model.Physical;
 using CrystalCore.View.Core;
 
 namespace CrystalCore.View.Subviews

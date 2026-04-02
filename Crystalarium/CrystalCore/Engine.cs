@@ -8,12 +8,13 @@ using CrystalCore.Util.Profiling;
 using CrystalCore.View;
 using CrystalCore.View.Configs;
 using CrystalCore.View.Core;
-using CrystalCore.View.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CrystalCore.Graphics.Core;
+using CrystalCore.Graphics.Rendering;
 
 namespace CrystalCore
 {

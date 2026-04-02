@@ -1,4 +1,5 @@
-﻿using CrystalCore.Model.Communication;
+﻿using CrystalCore.Graphics.Core;
+using CrystalCore.Model.Communication;
 using CrystalCore.Util;
 using CrystalCore.Util.Graphics;
 using CrystalCore.View.Configs;

@@ -1,10 +1,11 @@
-﻿using CrystalCore.Model.Communication;
+﻿using CrystalCore.Graphics.Core;
+using CrystalCore.Graphics.Rendering;
+using CrystalCore.Model.Communication;
 using CrystalCore.Model.Core;
 using CrystalCore.Model.Physical;
 using CrystalCore.Model.Simulation;
 using CrystalCore.Util.Profiling;
 using CrystalCore.View.Core;
-using CrystalCore.View.Rendering;
 using CrystalCore.View.Subviews;
 using CrystalCore.View.Subviews.Agents;
 

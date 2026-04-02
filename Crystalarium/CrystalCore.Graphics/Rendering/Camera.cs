@@ -1,7 +1,7 @@
 ﻿using CrystalCore.Util.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace CrystalCore.View.Rendering
+namespace CrystalCore.Graphics.Rendering
 {
     /// <summary>
     /// The Camera Class translates two cooridinate spaces
@@ -52,7 +52,7 @@ namespace CrystalCore.View.Rendering
         public bool IsBound
         {
             get => _isBound;
-            internal set
+            set
             {
 
                 _isBound = value;
@@ -232,7 +232,7 @@ namespace CrystalCore.View.Rendering
         }
 
 
-        internal virtual void Reset(Rectangle bounds)
+        public virtual void Reset(Rectangle bounds)
         {
             _bounds = bounds;
             Position = bounds.Center.ToVector2();

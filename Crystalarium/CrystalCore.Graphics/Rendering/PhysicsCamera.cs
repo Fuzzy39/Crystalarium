@@ -1,9 +1,7 @@
 ﻿using CrystalCore.Util;
 using Microsoft.Xna.Framework;
 
-
-
-namespace CrystalCore.View.Rendering
+namespace CrystalCore.Graphics.Rendering
 {
     /// <summary>
     /// A physics camera creates a more linear zoom on top of a camera's scaling abilities and adds velocity to panning and zooming.

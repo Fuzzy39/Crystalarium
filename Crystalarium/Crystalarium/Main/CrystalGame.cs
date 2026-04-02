@@ -4,14 +4,14 @@ using CrystalCore.Model.Rules;
 using CrystalCore.Util.Profiling;
 using CrystalCore.View;
 using CrystalCore.View.Core;
-using CrystalCore.View.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.IO;
 using System.Reflection;
-
+using CrystalCore.Graphics.Core;
+using CrystalCore.Graphics.Rendering;
 
 
 namespace Crystalarium.Main
@@ -40,7 +40,7 @@ namespace Crystalarium.Main
             get
             {
 
-                Version version = new Version(8, 5, 1302);//System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                Version version = new Version(8, 5, 1303);
 
 #if DEBUG
                 string type = "(Experiemental)";

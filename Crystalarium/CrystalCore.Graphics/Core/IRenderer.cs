@@ -3,7 +3,7 @@ using CrystalCore.Util.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace CrystalCore.View.Core
+namespace CrystalCore.Graphics.Core
 {
 
 

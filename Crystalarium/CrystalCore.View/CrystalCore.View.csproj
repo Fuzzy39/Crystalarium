@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CrystalCore.Graphics\CrystalCore.Graphics.csproj" />
     <ProjectReference Include="..\CrystalCore.Model\CrystalCore.Model.csproj" />
     <ProjectReference Include="..\CrystalCore.Util\CrystalCore.Util.csproj" />
   </ItemGroup>
